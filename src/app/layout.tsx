@@ -3,7 +3,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "myturn 管理画面",
+  title: "myturn管理",
   icons: {
     icon: "/favicon.png",
     apple: "/apple-touch-icon.png",
