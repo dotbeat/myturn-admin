@@ -1,5 +1,7 @@
+import { Typography } from "@mui/material";
+
 export default function Page() {
   return (
-    <p>myturn</p>
+    <Typography>myturn</Typography>
   );
 }
