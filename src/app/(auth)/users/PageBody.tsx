@@ -34,6 +34,8 @@ export default function PageBody() {
     region: "",
     registerDateStart: null,
     registerDateEnd: null,
+    leaveDateStart: null,
+    leaveDateEnd: null,
     university: "",
     faculty: "",
     department: "",
