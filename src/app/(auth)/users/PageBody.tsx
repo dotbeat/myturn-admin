@@ -4,6 +4,7 @@ import { DefaultValues, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
+import { mockUsers } from "@/mock/user";
 import {
   UserFilterFormData,
   userFilterFormSchema,
@@ -14,14 +15,19 @@ import IndicateItem from "@/components/common/IndicateItem";
 import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import UserFilterForm from "@/components/user/UserFilterForm";
+import UserList from "@/components/user/UserList";
 
 export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+
+  const users = mockUsers;
 
   const allUserCount = 1349; // 合計登録者数
   const appliedCount = 478; // 応募者数
   const acceptedCount = 26; // 採用者数
   const withdrawnCount = 0; // 退会者数
+
+  const searchResultCount = 38; // 検索結果数
 
   const initForm: DefaultValues<UserFilterFormData> = {
     gender: "",
@@ -90,6 +96,15 @@ export default function PageBody() {
         <FormProvider {...methods}>
           <UserFilterForm />
         </FormProvider>
+        <Box className="min-w-0 flex-1">
+          <Typography className="mb-2 px-4 text-lg font-semibold">
+            検索結果 {searchResultCount} 件
+          </Typography>
+          <UserList
+            items={users}
+            className="overflow-x-auto rounded-lg bg-[var(--background)]"
+          />
+        </Box>
       </Box>
     </Box>
   );
