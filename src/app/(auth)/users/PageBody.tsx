@@ -30,6 +30,7 @@ export default function PageBody() {
   const searchResultCount = 38; // 検索結果数
 
   const initForm: DefaultValues<UserFilterFormData> = {
+    name: "",
     gender: "",
     region: "",
     registerDateStart: null,
