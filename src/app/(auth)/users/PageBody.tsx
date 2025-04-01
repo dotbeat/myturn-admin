@@ -57,7 +57,7 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">ダッシュボード</PageTitle>
+      <PageTitle className="mb-8">求職者アカウント管理</PageTitle>
       <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
         <IndicateItem
           label="合計登録者数"

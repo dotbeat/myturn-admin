@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import PageBody from "./PageBody";
 
 export const metadata: Metadata = {
-  title: "ダッシュボード - myturn管理",
+  title: "求職者アカウント - myturn管理",
 };
 
 export default function Page() {
