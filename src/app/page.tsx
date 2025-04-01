@@ -1,7 +1,20 @@
-import { Typography } from "@mui/material";
+import { Metadata } from "next";
+import { Box, Link, Stack } from "@mui/material";
+import PageTitle from "@/components/common/PageTitle";
+
+export const metadata: Metadata = {
+  title: "ダッシュボード - myturn管理",
+};
 
 export default function Page() {
   return (
-    <Typography>myturn</Typography>
+    <Box className="flex-1 px-8 py-6">
+      <PageTitle className="mb-8">ダッシュボード</PageTitle>
+      <Stack spacing={3}>
+        <Link href="/users" className="underline">
+          求職者アカウント
+        </Link>
+      </Stack>
+    </Box>
   );
 }
