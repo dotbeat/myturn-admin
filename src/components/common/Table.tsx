@@ -35,7 +35,7 @@ export default function Table({
             <TableCell
               key={i}
               align="center"
-              className="px-2 py-4 text-base text-[var(--myturn-sub-text)]"
+              className="p-2 text-base text-[var(--myturn-sub-text)]"
             >
               {column.label}
             </TableCell>
