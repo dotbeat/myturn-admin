@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, useForm } from "react-hook-form";
+import { DefaultValues, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
@@ -13,6 +13,7 @@ import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
 import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
+import UserFilterForm from "@/components/user/UserFilterForm";
 
 export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
@@ -84,6 +85,11 @@ export default function PageBody() {
             </MenuItem>
           ))}
         </PopUp>
+      </Box>
+      <Box className="flex items-start gap-4">
+        <FormProvider {...methods}>
+          <UserFilterForm />
+        </FormProvider>
       </Box>
     </Box>
   );
