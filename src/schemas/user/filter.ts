@@ -6,6 +6,8 @@ export const userFilterFormSchema = z.object({
   region: z.string(), // 都道府県
   registerDateStart: z.string().length(10).nullable(), // 登録日(開始)
   registerDateEnd: z.string().length(10).nullable(), // 登録日(終了)
+  leaveDateStart: z.string().length(10).nullable(), // 退会日(開始)
+  leaveDateEnd: z.string().length(10).nullable(), // 退会日(終了)
   university: z.string().trim(), // 大学
   faculty: z.string().trim(), // 学部
   department: z.string(), // 学科系統

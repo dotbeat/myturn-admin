@@ -69,7 +69,7 @@ export default function UserList({
 
   return (
     <Box className={className}>
-      <Table columns={columns} rows={rows} className="text-nowrap" />
+      <Table columns={columns} rows={rows} className="text-nowrap py-2" />
       {items.length === 0 && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">

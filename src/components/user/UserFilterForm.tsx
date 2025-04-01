@@ -51,6 +51,13 @@ export default function UserFilterForm({
             <TextFieldMini type="date" name="registerDateEnd" />
           </Box>
         </FilterItem>
+        <FilterItem label="退会日">
+          <Box>
+            <TextFieldMini type="date" name="leaveDateStart" />
+            <Typography className="px-2 text-sm">〜</Typography>
+            <TextFieldMini type="date" name="leaveDateEnd" />
+          </Box>
+        </FilterItem>
       </FilterGroup>
       <FilterGroup heading="学校情報">
         <FilterItem label="大学名">
