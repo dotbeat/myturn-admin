@@ -53,7 +53,7 @@ export default function PageBody() {
           className="py-4"
         />
         <IndicateItem label="新規掲載数" count={newCount} className="py-4" />
-        <IndicateItem label="新規掲載数" count={closedCount} className="py-4" />
+        <IndicateItem label="掲載終了数" count={closedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
