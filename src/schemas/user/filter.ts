@@ -3,7 +3,7 @@ import { z } from "zod";
 export const userFilterFormSchema = z.object({
   name: z.string().trim(), // 名前
   gender: z.string(), // 性別
-  region: z.string(), // 都道府県
+  prefecture: z.string(), // 都道府県
   registerDateStart: z.string().length(10).nullable(), // 登録日(開始)
   registerDateEnd: z.string().length(10).nullable(), // 登録日(終了)
   leaveDateStart: z.string().length(10).nullable(), // 退会日(開始)

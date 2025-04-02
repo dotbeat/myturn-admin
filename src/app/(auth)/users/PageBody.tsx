@@ -32,7 +32,7 @@ export default function PageBody() {
   const initForm: DefaultValues<UserFilterFormData> = {
     name: "",
     gender: "",
-    region: "",
+    prefecture: "",
     registerDateStart: null,
     registerDateEnd: null,
     leaveDateStart: null,
