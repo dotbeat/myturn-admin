@@ -14,18 +14,6 @@ export default function Page() {
         <Link href="/users" className="underline">
           求職者アカウント
         </Link>
-        <Link href="/companies" className="underline">
-          企業アカウント
-        </Link>
-        <Link href="/jobs" className="underline">
-          求人
-        </Link>
-        <Link href="/applicants" className="underline">
-          応募者
-        </Link>
-        <Link href="/magazine" className="underline">
-          Magazine
-        </Link>
       </Stack>
     </Box>
   );
