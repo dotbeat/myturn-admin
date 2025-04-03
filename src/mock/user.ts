@@ -1,3 +1,4 @@
+import { ApplicantItem } from "@/types/applicant";
 import { UserItem } from "@/types/user";
 
 export const mockUsers: UserItem[] = [
@@ -34,5 +35,21 @@ export const mockUsers: UserItem[] = [
     availableHoursPerWeek: 32,
     availableDurationMonths: 12,
     applyCount: 0,
+  },
+];
+
+export const mockApplicants: ApplicantItem[] = [
+  {
+    id: 1,
+    avatarUrl: "/assets/user/avatar.png",
+    lastName: "求職",
+    firstName: "引担",
+    companyName: "株式会社バベル",
+    jobType: "エンジニア",
+    industry: "IT",
+    jobTitle:
+      "理想的なマッチングで世の中を変えたいデータサイエンティストを募集",
+    applyDate: new Date(2025, 1, 27),
+    status: "PENDING",
   },
 ];
