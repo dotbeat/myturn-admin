@@ -10,6 +10,7 @@ import {
 export type TableColumn<T = string> = {
   property: T;
   label: string | React.ReactNode;
+  headCellClass?: string;
 };
 
 export type TableRow<T extends string> = Record<T, React.ReactNode> &
@@ -35,7 +36,7 @@ export default function Table({
             <TableCell
               key={i}
               align="center"
-              className="p-2 text-base text-[var(--myturn-sub-text)]"
+              className={`p-2 text-base text-[var(--myturn-sub-text)] ${column.headCellClass ?? ""}`}
             >
               {column.label}
             </TableCell>

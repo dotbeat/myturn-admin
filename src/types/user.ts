@@ -1,8 +1,8 @@
 export type UserItem = {
   id: number;
   avatarUrl: string;
-  firstName: string;
   lastName: string;
+  firstName: string;
   prefecture: string;
   university: string;
   faculty: string;
