@@ -20,22 +20,22 @@ export default function SideNavigation({
       </Button>
       <List>
         <ListItem className="p-0">
-          <SideNavigationItem href="/" label="ダッシュボード" />
+          <SideNavigationItem href="#" label="ダッシュボード" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/users" label="求職者アカウント" />
+          <SideNavigationItem href="#" label="求職者アカウント" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/companies" label="企業アカウント" />
+          <SideNavigationItem href="#" label="企業アカウント" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/jobs" label="求人" />
+          <SideNavigationItem href="#" label="求人" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/applicants" label="応募者" />
+          <SideNavigationItem href="#" label="MAGAZINE" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/magazine" label="Magazine" />
+          <SideNavigationItem href="#" label="お知らせ" />
         </ListItem>
       </List>
     </Box>
