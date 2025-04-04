@@ -30,15 +30,13 @@ export default function PageBody() {
   const [error, setError] = useState<string | null>(null);
 
   const initForm: DefaultValues<MagazineEditFormData> = {
-    articles: new Array(5).fill([
-      {
-        title: "",
-        description: "",
-        category: "",
-        thumbnail: null,
-        url: "",
-      },
-    ]),
+    articles: new Array(5).fill(null).map(() => ({
+      title: "",
+      description: "",
+      category: "",
+      thumbnail: null,
+      url: "",
+    })),
   };
   const methods = useForm<MagazineEditFormData>({
     resolver: zodResolver(magazineEditFormSchema),
