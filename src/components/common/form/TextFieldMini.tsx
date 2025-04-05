@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 import { Box } from "@mui/material";
 
 export default function TextFieldMini({
@@ -26,6 +26,14 @@ export default function TextFieldMini({
     register,
     formState: { errors },
   } = useFormContext();
+  const error = (() => {
+    let errorObj = errors;
+    name.split(".").forEach((nameLevel) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errorObj = errorObj != null ? (errorObj[nameLevel] as any) : null;
+    });
+    return errorObj as Partial<FieldError> | null;
+  })();
 
   return (
     <Box className={`space-y-1 ${className}`}>
@@ -37,7 +45,7 @@ export default function TextFieldMini({
         autoFocus={autoFocus}
         disabled={disabled}
         {...register(name)}
-        className={`w-full rounded-md border border-[var(--myturn-support-middle)] px-1 py-1 text-xs shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${errors[name] ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
+        className={`w-full rounded-md border px-1 py-1 text-xs shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
         onInput={onInput}
       />
     </Box>

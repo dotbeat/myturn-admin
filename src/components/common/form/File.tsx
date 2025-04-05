@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
 import { handleFileChange } from "@/utils/frontend/file";
-import { useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 
 export default function File({
   name,
@@ -28,6 +28,14 @@ export default function File({
     register,
     formState: { errors },
   } = useFormContext();
+  const error = (() => {
+    let errorObj = errors;
+    name.split(".").forEach((nameLevel) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errorObj = errorObj != null ? (errorObj[nameLevel] as any) : null;
+    });
+    return errorObj as Partial<FieldError> | null;
+  })();
 
   return (
     <Box className={`space-y-1 ${className}`}>
@@ -50,9 +58,9 @@ export default function File({
           }
         />
       </Button>
-      {errors[name] && (
+      {error?.message && (
         <Typography variant="body2" className="text-[var(--myturn-accent)]">
-          {errors[name]?.message as string}
+          {error.message}
         </Typography>
       )}
     </Box>

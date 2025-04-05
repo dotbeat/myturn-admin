@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 import { Box, Typography } from "@mui/material";
 
 export default function TextField({
@@ -32,6 +32,14 @@ export default function TextField({
     register,
     formState: { errors },
   } = useFormContext();
+  const error = (() => {
+    let errorObj = errors;
+    name.split(".").forEach((nameLevel) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errorObj = errorObj != null ? (errorObj[nameLevel] as any) : null;
+    });
+    return errorObj as Partial<FieldError> | null;
+  })();
 
   return (
     <Box className={`space-y-1 ${className}`}>
@@ -51,12 +59,12 @@ export default function TextField({
         required={required}
         disabled={disabled}
         {...register(name)}
-        className={`w-full rounded-md border border-[var(--myturn-sub-text)] px-3 py-2.5 shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${errors[name] ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
+        className={`w-full rounded-md border px-3 py-2.5 shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
         onInput={onInput}
       />
-      {errors[name] && (
+      {error?.message && (
         <Typography variant="body2" className="text-[var(--myturn-accent)]">
-          {errors[name]?.message as string}
+          {error.message}
         </Typography>
       )}
     </Box>
