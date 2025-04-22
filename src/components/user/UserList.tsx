@@ -25,12 +25,12 @@ export default function UserList({
     { property: "belong", label: "大学・学部" },
     { property: "department", label: "学科系統" },
     { property: "grade", label: "学年" },
-    { property: "registerDate", label: "登録日" },
-    { property: "leaveDate", label: "退会日" },
+    { property: "createdAt", label: "登録日" },
+    { property: "deletedAt", label: "退会日" },
     { property: "availableDaysPerWeek", label: "勤務日数" },
     { property: "availableHoursPerWeek", label: "勤務時間" },
     { property: "availableDurationMonths", label: "継続期間" },
-    { property: "applyCount", label: "応募件数" },
+    { property: "entryCount", label: "応募件数" },
   ] as const satisfies TableColumn<(keyof UserItem)[number]>[];
 
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
@@ -53,8 +53,10 @@ export default function UserList({
     ),
     department: getSelectItem(departments, item.department)?.label ?? "",
     grade: getSelectItem(schoolGrades, item.grade)?.label ?? "",
-    registerDate: item.registerDate?.toLocaleDateString("ja") ?? "—",
-    leaveDate: item.leaveDate?.toLocaleDateString("ja") ?? "—",
+    createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
+    deletedAt: item.deletedAt
+      ? new Date(item.deletedAt).toLocaleDateString("ja")
+      : "—",
     availableDaysPerWeek:
       getSelectItem(availableDaysPerWeeks, item.availableDaysPerWeek)?.label ??
       "",
@@ -64,7 +66,7 @@ export default function UserList({
     availableDurationMonths:
       getSelectItem(availableDurationMonths, item.availableDurationMonths)
         ?.label ?? "",
-    applyCount: item.applyCount,
+    entryCount: item.entryCount,
   }));
 
   return (
