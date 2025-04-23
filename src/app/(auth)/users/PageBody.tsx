@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
@@ -31,7 +31,7 @@ export default function PageBody() {
 
   const searchResultCount = 38; // 検索結果数
 
-  const [formData, setFormData] = useState<DefaultValues<UserFilterFormData>>({
+  const [formData, setFormData] = useState<UserFilterFormData>({
     name: "",
     gender: "",
     prefecture: "",
@@ -51,6 +51,8 @@ export default function PageBody() {
     availableDurationMonthsMax: 0,
     interestedIndustry: "",
     interestedJobType: "",
+    entryCountMin: 0,
+    entryCountMax: 0,
   });
 
   const methods = useForm<UserFilterFormData>({
@@ -61,7 +63,7 @@ export default function PageBody() {
 
   // 求職者一覧情報を取得
   const { refetch } = useQuery(SEARCH_USERS, {
-    variables: { input: formData },
+    variables: { input: { ...formData, limit: 30 } },
     fetchPolicy: "no-cache",
     onCompleted: (result) => {
       setIsLoading(false);

@@ -1,4 +1,3 @@
-"use client";
 import { Box, Button, Typography } from "@mui/material";
 import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
 import { regionsAndEmpty } from "@/const/region";
