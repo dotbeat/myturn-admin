@@ -1,5 +1,5 @@
 import { FieldError, useFormContext } from "react-hook-form";
-import { Box, FormControl, Typography } from "@mui/material";
+import { Box, FormControl } from "@mui/material";
 import { SelectGroup, SelectItem } from "@/types/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 
