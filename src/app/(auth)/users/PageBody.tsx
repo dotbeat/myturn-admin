@@ -1,7 +1,16 @@
 "use client";
 import { useState } from "react";
+import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { useQuery } from "@apollo/client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
+import {
+  UserFilterFormData,
+  userFilterFormSchema,
+} from "@/schemas/user/filter";
+import { SEARCH_USERS } from "@/server/graphql/user/queries";
+import { UserItem } from "@/types/user";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -9,11 +18,11 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import UserFilterForm from "@/components/user/UserFilterForm";
 import UserList from "@/components/user/UserList";
-import { UserItem } from "@/types/user";
 
 export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
   const [users, setUsers] = useState<UserItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const allUserCount = 1349; // 合計登録者数
   const appliedCount = 478; // 応募者数
@@ -21,6 +30,54 @@ export default function PageBody() {
   const withdrawnCount = 0; // 退会者数
 
   const searchResultCount = 38; // 検索結果数
+
+  const [formData, setFormData] = useState<DefaultValues<UserFilterFormData>>({
+    name: "",
+    gender: "",
+    prefecture: "",
+    registerDateStart: null,
+    registerDateEnd: null,
+    leaveDateStart: null,
+    leaveDateEnd: null,
+    university: "",
+    faculty: "",
+    department: "",
+    grade: "",
+    availableDaysPerWeekMin: 0,
+    availableDaysPerWeekMax: 0,
+    availableHoursPerWeekMin: 0,
+    availableHoursPerWeekMax: 0,
+    availableDurationMonthsMin: 0,
+    availableDurationMonthsMax: 0,
+    interestedIndustry: "",
+    interestedJobType: "",
+  });
+
+  const methods = useForm<UserFilterFormData>({
+    resolver: zodResolver(userFilterFormSchema),
+    mode: "onChange", // リアルタイムバリデーション
+    defaultValues: formData,
+  });
+
+  // 求職者一覧情報を取得
+  const { refetch } = useQuery(SEARCH_USERS, {
+    variables: { input: formData },
+    fetchPolicy: "no-cache",
+    onCompleted: (result) => {
+      setIsLoading(false);
+      setUsers(result.searchUsers.items);
+    },
+    onError: () => setIsLoading(false),
+  });
+
+  const onSubmit = (data: UserFilterFormData) => {
+    setIsLoading(true);
+    setFormData(data);
+    refetch()
+      .then((result) => setUsers(result.data.searchUsers.items))
+      .catch((error) => console.error(error))
+      .finally(() => setIsLoading(false));
+  };
 
   return (
     <Box className="flex-1 px-8 py-6">
@@ -62,7 +119,14 @@ export default function PageBody() {
         </PopUp>
       </Box>
       <Box className="flex items-start gap-4">
-        <UserFilterForm onFetched={(result) => setUsers(result.items)} />
+        <FormProvider {...methods}>
+          <form
+            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <UserFilterForm isLoading={isLoading} />
+          </form>
+        </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
             検索結果 {searchResultCount} 件
