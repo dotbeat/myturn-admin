@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
@@ -9,8 +8,6 @@ import {
   UserFilterFormData,
   userFilterFormSchema,
 } from "@/schemas/user/filter";
-import { SEARCH_USERS } from "@/server/graphql/user/queries";
-import { UserItem } from "@/types/user";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -18,19 +15,17 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import UserFilterForm from "@/components/user/UserFilterForm";
 import UserList from "@/components/user/UserList";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
-  const [users, setUsers] = useState<UserItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
 
   const allUserCount = 1349; // 合計登録者数
   const appliedCount = 478; // 応募者数
   const acceptedCount = 26; // 採用者数
   const withdrawnCount = 0; // 退会者数
 
-  const [formData, setFormData] = useState<UserFilterFormData>({
+  const initialFormData: UserFilterFormData = {
     name: "",
     gender: "",
     prefecture: "",
@@ -52,36 +47,19 @@ export default function PageBody() {
     interestedJobType: "",
     entryCountMin: 0,
     entryCountMax: 0,
-  });
+  };
 
   const methods = useForm<UserFilterFormData>({
     resolver: zodResolver(userFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: formData,
+    defaultValues: initialFormData,
   });
 
-  // 求職者一覧情報を取得
-  const { refetch } = useQuery(SEARCH_USERS, {
-    variables: { input: { ...formData, limit: 30 } },
-    fetchPolicy: "no-cache",
-    onCompleted(result) {
-      setTotalCount(result.searchUsers.totalCount);
-      setUsers(result.searchUsers.items);
-      setIsLoading(false);
-    },
-    onError() {
-      setIsLoading(false);
-    },
-  });
+  const { users, totalCount, loading, refetchUsers } =
+    useUsers(initialFormData);
 
   const onSubmit = (data: UserFilterFormData) => {
-    setUsers([]);
-    setFormData(data);
-    setIsLoading(true);
-    refetch()
-      .then((result) => setUsers(result.data.searchUsers.items))
-      .catch((error) => console.error(error))
-      .finally(() => setIsLoading(false));
+    refetchUsers(data);
   };
 
   return (
@@ -129,7 +107,7 @@ export default function PageBody() {
             className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
-            <UserFilterForm isLoading={isLoading} />
+            <UserFilterForm isLoading={loading} />
           </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
@@ -138,7 +116,7 @@ export default function PageBody() {
           </Typography>
           <UserList
             items={users}
-            isLoading={isLoading}
+            isLoading={loading}
             className="overflow-x-auto rounded-lg bg-[var(--background)]"
           />
         </Box>
