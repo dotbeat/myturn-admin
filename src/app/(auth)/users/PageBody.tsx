@@ -23,13 +23,12 @@ export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
 
   const allUserCount = 1349; // 合計登録者数
   const appliedCount = 478; // 応募者数
   const acceptedCount = 26; // 採用者数
   const withdrawnCount = 0; // 退会者数
-
-  const searchResultCount = 38; // 検索結果数
 
   const [formData, setFormData] = useState<UserFilterFormData>({
     name: "",
@@ -66,10 +65,9 @@ export default function PageBody() {
     variables: { input: { ...formData, limit: 30 } },
     fetchPolicy: "no-cache",
     onCompleted: (result) => {
-      setIsLoading(false);
+      setTotalCount(result.searchUsers.totalCount);
       setUsers(result.searchUsers.items);
     },
-    onError: () => setIsLoading(false),
   });
 
   const onSubmit = (data: UserFilterFormData) => {
@@ -131,7 +129,7 @@ export default function PageBody() {
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {searchResultCount} 件
+            検索結果 {totalCount} 件
           </Typography>
           <UserList
             items={users}
