@@ -28,3 +28,14 @@ export const SEARCH_USERS = gql`
     }
   }
 `;
+
+export const GET_USERS_STATISTICS = gql`
+  query GetUsersStatistics($input: GetUsersStatisticsInput!) {
+    getUsersStatistics(input: $input) {
+      totalCount
+      applicantCount
+      acceptedCount
+      leavedCount
+    }
+  }
+`;

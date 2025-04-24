@@ -369,6 +369,11 @@ export type GetUserStatusInput = {
   userId: Scalars['Int']['input'];
 };
 
+export type GetUsersStatisticsInput = {
+  periodEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  periodStart?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type JobInfo = {
   __typename?: 'JobInfo';
   id: Scalars['Int']['output'];
@@ -894,6 +899,7 @@ export type Query = {
   getUserMessages: Array<EntryWithLastMessage>;
   getUserNotifications: Array<Notification>;
   getUserStatus: UserStatusType;
+  getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars['Boolean']['output'];
   job?: Maybe<JobWithCompanyType>;
   jobs: Array<JobWithCompanyType>;
@@ -958,6 +964,11 @@ export type QueryGetUserEntriesArgs = {
 
 export type QueryGetUserStatusArgs = {
   input: GetUserStatusInput;
+};
+
+
+export type QueryGetUsersStatisticsArgs = {
+  input: GetUsersStatisticsInput;
 };
 
 
@@ -1072,15 +1083,15 @@ export type SearchUsersInput = {
   grade?: InputMaybe<Scalars['String']['input']>;
   interestedIndustry?: InputMaybe<Scalars['String']['input']>;
   interestedJobType?: InputMaybe<Scalars['String']['input']>;
-  leaveDateEnd?: InputMaybe<Scalars['String']['input']>;
-  leaveDateStart?: InputMaybe<Scalars['String']['input']>;
+  leaveDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  leaveDateStart?: InputMaybe<Scalars['DateTime']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
   prefecture?: InputMaybe<Scalars['String']['input']>;
-  registerDateEnd?: InputMaybe<Scalars['String']['input']>;
+  registerDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
   registerDateStart?: InputMaybe<Scalars['String']['input']>;
-  university?: InputMaybe<Scalars['String']['input']>;
+  university?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type SendMessageInput = {
@@ -1357,6 +1368,14 @@ export type UserWithEntryCountType = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type UsersStatisticsResultType = {
+  __typename?: 'UsersStatisticsResultType';
+  acceptedCount: Scalars['Int']['output'];
+  applicantCount: Scalars['Int']['output'];
+  leavedCount: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
 export type VerifyCompanyPasswordResetTokenInput = {
   token: Scalars['String']['input'];
 };
@@ -1381,6 +1400,13 @@ export type SearchUsersQueryVariables = Exact<{
 
 
 export type SearchUsersQuery = { __typename?: 'Query', searchUsers: { __typename?: 'UserSearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'UserWithEntryCountType', id: number, avatarUrl: string, lastName: string, firstName: string, prefecture: string, university: string, faculty: string, department: string, grade: string, availableDaysPerWeek: number, availableHoursPerWeek: number, availableDurationMonths: number, entryCount: number, createdAt: any }> } };
+
+export type GetUsersStatisticsQueryVariables = Exact<{
+  input: GetUsersStatisticsInput;
+}>;
+
+
+export type GetUsersStatisticsQuery = { __typename?: 'Query', getUsersStatistics: { __typename?: 'UsersStatisticsResultType', totalCount: number, applicantCount: number, acceptedCount: number, leavedCount: number } };
 
 
 export const SearchUsersDocument = gql`
@@ -1444,3 +1470,46 @@ export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
 export type SearchUsersLazyQueryHookResult = ReturnType<typeof useSearchUsersLazyQuery>;
 export type SearchUsersSuspenseQueryHookResult = ReturnType<typeof useSearchUsersSuspenseQuery>;
 export type SearchUsersQueryResult = Apollo.QueryResult<SearchUsersQuery, SearchUsersQueryVariables>;
+export const GetUsersStatisticsDocument = gql`
+    query GetUsersStatistics($input: GetUsersStatisticsInput!) {
+  getUsersStatistics(input: $input) {
+    totalCount
+    applicantCount
+    acceptedCount
+    leavedCount
+  }
+}
+    `;
+
+/**
+ * __useGetUsersStatisticsQuery__
+ *
+ * To run a query within a React component, call `useGetUsersStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersStatisticsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetUsersStatisticsQuery(baseOptions: Apollo.QueryHookOptions<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables> & ({ variables: GetUsersStatisticsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>(GetUsersStatisticsDocument, options);
+      }
+export function useGetUsersStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>(GetUsersStatisticsDocument, options);
+        }
+export function useGetUsersStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>(GetUsersStatisticsDocument, options);
+        }
+export type GetUsersStatisticsQueryHookResult = ReturnType<typeof useGetUsersStatisticsQuery>;
+export type GetUsersStatisticsLazyQueryHookResult = ReturnType<typeof useGetUsersStatisticsLazyQuery>;
+export type GetUsersStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetUsersStatisticsSuspenseQuery>;
+export type GetUsersStatisticsQueryResult = Apollo.QueryResult<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>;

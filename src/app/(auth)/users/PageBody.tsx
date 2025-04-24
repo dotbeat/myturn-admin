@@ -4,6 +4,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
+import { useUsers } from "@/hooks/useUsers";
+import { useUsersStatistics } from "@/hooks/useUsersStatistics";
 import {
   UserFilterFormData,
   userFilterFormSchema,
@@ -15,15 +17,11 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import UserFilterForm from "@/components/user/UserFilterForm";
 import UserList from "@/components/user/UserList";
-import { useUsers } from "@/hooks/useUsers";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
-
-  const allUserCount = 1349; // 合計登録者数
-  const appliedCount = 478; // 応募者数
-  const acceptedCount = 26; // 採用者数
-  const withdrawnCount = 0; // 退会者数
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
   const initialFormData: UserFilterFormData = {
     name: "",
@@ -58,6 +56,14 @@ export default function PageBody() {
   const { users, totalCount, loading, refetchUsers } =
     useUsers(initialFormData);
 
+  const {
+    allUserCount, // 合計登録者数
+    applicantCount, // 応募者数
+    acceptedCount, // 採用者数
+    leavedCount, // 退会者数
+    refetchStatistics,
+  } = useUsersStatistics("");
+
   const onSubmit = (data: UserFilterFormData) => {
     refetchUsers(data);
   };
@@ -71,13 +77,13 @@ export default function PageBody() {
           count={allUserCount}
           className="py-4"
         />
-        <IndicateItem label="応募者数" count={appliedCount} className="py-4" />
-        <IndicateItem label="採用者数" count={acceptedCount} className="py-4" />
         <IndicateItem
-          label="退会者数"
-          count={withdrawnCount}
+          label="応募者数"
+          count={applicantCount}
           className="py-4"
         />
+        <IndicateItem label="採用者数" count={acceptedCount} className="py-4" />
+        <IndicateItem label="退会者数" count={leavedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
@@ -94,7 +100,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
+              }}
             >
               {period.label}
             </MenuItem>
