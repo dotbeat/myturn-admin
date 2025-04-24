@@ -1,13 +1,14 @@
 import { z } from "zod";
+import { ruleDateNullable } from "../common/date";
 
 export const userFilterFormSchema = z.object({
   name: z.string().trim(), // 名前
   gender: z.string(), // 性別
   prefecture: z.string(), // 都道府県
-  registerDateStart: z.coerce.date().nullable(), // 登録日(開始)
-  registerDateEnd: z.coerce.date().nullable(), // 登録日(終了)
-  leaveDateStart: z.coerce.date().nullable(), // 退会日(開始)
-  leaveDateEnd: z.coerce.date().nullable(), // 退会日(終了)
+  registerDateStart: ruleDateNullable(), // 登録日(開始)
+  registerDateEnd: ruleDateNullable(), // 登録日(終了)
+  leaveDateStart: ruleDateNullable(), // 退会日(開始)
+  leaveDateEnd: ruleDateNullable(), // 退会日(終了)
   university: z.string().trim(), // 大学
   faculty: z.string().trim(), // 学部
   department: z.string(), // 学科系統
