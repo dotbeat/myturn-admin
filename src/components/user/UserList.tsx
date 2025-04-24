@@ -45,29 +45,35 @@ export default function UserList({
         className="-my-1"
       />
     ),
-    name: `${item.lastName} ${item.firstName}`,
-    prefecture: item.prefecture,
-    belong: (
-      <Box>
-        <Typography>{item.university}</Typography>
-        <Typography>{item.faculty}</Typography>
-      </Box>
-    ),
-    department: getSelectItem(departments, item.department)?.label ?? "",
-    grade: getSelectItem(schoolGrades, item.grade)?.label ?? "",
+    name:
+      item.lastName && item.firstName
+        ? `${item.lastName} ${item.firstName}`
+        : "—",
+    prefecture: item.prefecture || "—",
+    belong:
+      item.university && item.faculty ? (
+        <Box>
+          <Typography>{item.university}</Typography>
+          <Typography>{item.faculty}</Typography>
+        </Box>
+      ) : (
+        "—"
+      ),
+    department: getSelectItem(departments, item.department)?.label ?? "—",
+    grade: getSelectItem(schoolGrades, item.grade)?.label ?? "—",
     createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
     deletedAt: item.deletedAt
       ? new Date(item.deletedAt).toLocaleDateString("ja")
       : "—",
     availableDaysPerWeek:
       getSelectItem(availableDaysPerWeeks, item.availableDaysPerWeek)?.label ??
-      "",
+      "—",
     availableHoursPerWeek:
       getSelectItem(availableHoursPerWeeks, item.availableHoursPerWeek)
-        ?.label ?? "",
+        ?.label ?? "—",
     availableDurationMonths:
       getSelectItem(availableDurationMonths, item.availableDurationMonths)
-        ?.label ?? "",
+        ?.label ?? "—",
     entryCount: item.entryCount,
   }));
 
