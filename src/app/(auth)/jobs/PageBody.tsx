@@ -15,7 +15,9 @@ import JobFilterForm from "@/components/job/JobFilterForm";
 import JobList from "@/components/job/JobList";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
   const jobs = mockJobs;
 

@@ -18,7 +18,9 @@ import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
 import ApplicantList from "@/components/applicant/ApplicantList";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
   const applicants: ApplicantItem[] = [];
 
