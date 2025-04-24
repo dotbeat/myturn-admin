@@ -13,9 +13,11 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
 export default function UserList({
   items,
+  isLoading,
   className = "",
 }: {
   items: UserItem[];
+  isLoading: boolean;
   className?: string;
 }) {
   const columns = [
@@ -72,7 +74,12 @@ export default function UserList({
   return (
     <Box className={className}>
       <Table columns={columns} rows={rows} className="text-nowrap py-2" />
-      {items.length === 0 && (
+      {isLoading && (
+        <Container className="flex flex-col items-center gap-4 py-8">
+          <Typography className="font-semibold">読み込み中です</Typography>
+        </Container>
+      )}
+      {!isLoading && items.length === 0 && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">
             求職者アカウントはありません

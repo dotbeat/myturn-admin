@@ -22,7 +22,7 @@ import UserList from "@/components/user/UserList";
 export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
   const [users, setUsers] = useState<UserItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
 
   const allUserCount = 1349; // 合計登録者数
@@ -64,15 +64,20 @@ export default function PageBody() {
   const { refetch } = useQuery(SEARCH_USERS, {
     variables: { input: { ...formData, limit: 30 } },
     fetchPolicy: "no-cache",
-    onCompleted: (result) => {
+    onCompleted(result) {
       setTotalCount(result.searchUsers.totalCount);
       setUsers(result.searchUsers.items);
+      setIsLoading(false);
+    },
+    onError() {
+      setIsLoading(false);
     },
   });
 
   const onSubmit = (data: UserFilterFormData) => {
-    setIsLoading(true);
+    setUsers([]);
     setFormData(data);
+    setIsLoading(true);
     refetch()
       .then((result) => setUsers(result.data.searchUsers.items))
       .catch((error) => console.error(error))
@@ -133,6 +138,7 @@ export default function PageBody() {
           </Typography>
           <UserList
             items={users}
+            isLoading={isLoading}
             className="overflow-x-auto rounded-lg bg-[var(--background)]"
           />
         </Box>
