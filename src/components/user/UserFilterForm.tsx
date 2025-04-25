@@ -1,5 +1,5 @@
-"use client";
 import { Box, Button, Typography } from "@mui/material";
+import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
 import { regionsAndEmpty } from "@/const/region";
 import {
   availableDaysPerWeeksAndEmpty,
@@ -13,17 +13,10 @@ import FilterGroup from "@/components/common/filter/FilterGroup";
 import FilterItem from "@/components/common/filter/FilterItem";
 import SelectMini from "@/components/common/form/SelectMini";
 import TextFieldMini from "@/components/common/form/TextFieldMini";
-import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
 
-export default function UserFilterForm({
-  className = "",
-}: {
-  className?: string;
-}) {
+export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
   return (
-    <form
-      className={`flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6 ${className}`}
-    >
+    <>
       <FilterGroup heading="基本情報">
         <FilterItem label="名前">
           <TextFieldMini name="name" className="w-24" />
@@ -37,7 +30,7 @@ export default function UserFilterForm({
         </FilterItem>
         <FilterItem label="都道府県">
           <SelectMini
-            name="region"
+            name="prefecture"
             groups={regionsAndEmpty("")}
             className="w-24"
           />
@@ -161,17 +154,18 @@ export default function UserFilterForm({
       </FilterGroup>
       <FilterItem label="応募数">
         <Box className="flex items-center gap-1">
-          <TextFieldMini type="number" name="applyCountMin" className="w-12" />
+          <TextFieldMini type="number" name="entryCountMin" className="w-12" />
           <Typography className="text-sm">〜</Typography>
-          <TextFieldMini type="number" name="applyCountMax" className="w-14" />
+          <TextFieldMini type="number" name="entryCountMax" className="w-14" />
         </Box>
       </FilterItem>
       <Button
         type="submit"
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base"
+        disabled={isLoading}
+        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>
-    </form>
+    </>
   );
 }

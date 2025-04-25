@@ -4,11 +4,11 @@ import { DefaultValues, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
-import { mockApplicants } from "@/mock/user";
 import {
   applicantFilterFormSchema,
   ApplicantFilterFormData,
 } from "@/schemas/applicant/filter";
+import { ApplicantItem } from "@/types/applicant";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -18,9 +18,11 @@ import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
 import ApplicantList from "@/components/applicant/ApplicantList";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
-  const applicants = mockApplicants;
+  const applicants: ApplicantItem[] = [];
 
   const allApplicantCount = 1049; // 合計応募者数
   const pendingCount = 54; // 新着応募

@@ -48,7 +48,7 @@ export default function PageBody() {
     name: "articles",
   });
 
-  const onSubmit = async (data: MagazineEditFormData) => {
+  const onSubmit = async () => {
     setIsSubmitting(true);
     try {
       // @todo フォームデータをGraphQLミューテーションの入力形式に変換

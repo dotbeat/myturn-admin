@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
-import { mockUsers } from "@/mock/user";
+import { useUsers } from "@/hooks/useUsers";
+import { useUsersStatistics } from "@/hooks/useUsersStatistics";
 import {
   UserFilterFormData,
   userFilterFormSchema,
@@ -18,18 +19,11 @@ import UserFilterForm from "@/components/user/UserFilterForm";
 import UserList from "@/components/user/UserList";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
-  const users = mockUsers;
-
-  const allUserCount = 1349; // 合計登録者数
-  const appliedCount = 478; // 応募者数
-  const acceptedCount = 26; // 採用者数
-  const withdrawnCount = 0; // 退会者数
-
-  const searchResultCount = 38; // 検索結果数
-
-  const initForm: DefaultValues<UserFilterFormData> = {
+  const initialFormData: UserFilterFormData = {
     name: "",
     gender: "",
     prefecture: "",
@@ -45,16 +39,34 @@ export default function PageBody() {
     availableDaysPerWeekMax: 0,
     availableHoursPerWeekMin: 0,
     availableHoursPerWeekMax: 0,
-    availableDurationMonthsMin: "",
-    availableDurationMonthsMax: "",
+    availableDurationMonthsMin: 0,
+    availableDurationMonthsMax: 0,
     interestedIndustry: "",
     interestedJobType: "",
+    entryCountMin: 0,
+    entryCountMax: 0,
   };
+
   const methods = useForm<UserFilterFormData>({
     resolver: zodResolver(userFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: initForm,
+    defaultValues: initialFormData,
   });
+
+  const { users, totalCount, loading, refetchUsers } =
+    useUsers(initialFormData);
+
+  const {
+    allUserCount, // 合計登録者数
+    applicantCount, // 応募者数
+    acceptedCount, // 採用者数
+    leavedCount, // 退会者数
+    refetchStatistics,
+  } = useUsersStatistics("");
+
+  const onSubmit = (data: UserFilterFormData) => {
+    refetchUsers(data);
+  };
 
   return (
     <Box className="flex-1 px-8 py-6">
@@ -65,13 +77,13 @@ export default function PageBody() {
           count={allUserCount}
           className="py-4"
         />
-        <IndicateItem label="応募者数" count={appliedCount} className="py-4" />
-        <IndicateItem label="採用者数" count={acceptedCount} className="py-4" />
         <IndicateItem
-          label="退会者数"
-          count={withdrawnCount}
+          label="応募者数"
+          count={applicantCount}
           className="py-4"
         />
+        <IndicateItem label="採用者数" count={acceptedCount} className="py-4" />
+        <IndicateItem label="退会者数" count={leavedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
@@ -88,7 +100,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
+              }}
             >
               {period.label}
             </MenuItem>
@@ -97,14 +112,20 @@ export default function PageBody() {
       </Box>
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
-          <UserFilterForm />
+          <form
+            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <UserFilterForm isLoading={loading} />
+          </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {searchResultCount} 件
+            検索結果 {totalCount} 件
           </Typography>
           <UserList
             items={users}
+            isLoading={loading}
             className="overflow-x-auto rounded-lg bg-[var(--background)]"
           />
         </Box>

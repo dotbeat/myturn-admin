@@ -18,7 +18,9 @@ import CompanyFilterForm from "@/components/company/CompanyFilterForm";
 import CompanyList from "@/components/company/CompanyList";
 
 export default function PageBody() {
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0].value);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    periods[0].value,
+  );
 
   const companies = mockCompanies;
 

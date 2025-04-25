@@ -1,6 +1,6 @@
 import { SelectItem } from "@/types/select";
 
-export const periods: SelectItem[] = [
+export const periods = [
   { value: "", label: "全期間" },
   { value: "Past30Days", label: "過去30日間" },
   { value: "Past14Days", label: "過去14日間" },
@@ -9,4 +9,4 @@ export const periods: SelectItem[] = [
   { value: "Today", label: "今日" },
   { value: "ThisMonth", label: "今月" },
   { value: "LastMonth", label: "先月" },
-];
+] as const satisfies SelectItem[];

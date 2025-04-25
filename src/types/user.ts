@@ -8,10 +8,10 @@ export type UserItem = {
   faculty: string;
   department: string;
   grade: string;
-  registerDate: Date | null;
-  leaveDate: Date | null;
+  createdAt: string;
+  deletedAt: string;
   availableDaysPerWeek: number;
   availableHoursPerWeek: number;
   availableDurationMonths: number;
-  applyCount: number;
+  entryCount: number;
 };
