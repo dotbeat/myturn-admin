@@ -8,8 +8,8 @@ export const companyFilterFormSchema = z.object({
   leaveDateStart: z.string().length(10).nullable(), // 退会日(開始)
   leaveDateEnd: z.string().length(10).nullable(), // 退会日(終了)
   industry: z.string(), // 業界
-  jobCountMax: z.coerce.number().min(0), // 掲載数(最小)
-  jobCountMin: z.coerce.number().min(0), // 掲載数(最大)
+  jobCountMin: z.coerce.number().min(0), // 掲載数(最小)
+  jobCountMax: z.coerce.number().min(0), // 掲載数(最大)
   acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
   acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
 });
