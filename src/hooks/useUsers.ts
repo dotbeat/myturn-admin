@@ -27,7 +27,6 @@ export function useUsers(initialInput: UserFilterFormData) {
   // 再リクエストする
   const refetchUsers = async (input: UserFilterFormData) => {
     setUsers([]);
-    console.timeEnd("kite");
     setLoading(true);
     setInput(input);
   };
