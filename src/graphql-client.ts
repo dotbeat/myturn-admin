@@ -104,6 +104,7 @@ export type CompanySearchResultType = {
 export type CompanyType = {
   __typename?: 'CompanyType';
   about?: Maybe<Scalars['String']['output']>;
+  acceptCount?: Maybe<Scalars['Int']['output']>;
   businessContent?: Maybe<Scalars['String']['output']>;
   capital?: Maybe<Scalars['Int']['output']>;
   city?: Maybe<Scalars['String']['output']>;
@@ -116,6 +117,7 @@ export type CompanyType = {
   iconImageUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   industry?: Maybe<Scalars['String']['output']>;
+  jobCount?: Maybe<Scalars['Int']['output']>;
   jobType?: Maybe<Scalars['String']['output']>;
   members?: Maybe<Array<CompanyMemberType>>;
   name: Scalars['String']['output'];
@@ -335,8 +337,19 @@ export type FavoriteType = {
 };
 
 export type GetCompaniesInput = {
-  limit?: Scalars['Int']['input'];
-  page?: Scalars['Int']['input'];
+  acceptCountMax?: InputMaybe<Scalars['Int']['input']>;
+  acceptCountMin?: InputMaybe<Scalars['Int']['input']>;
+  industry?: InputMaybe<Scalars['String']['input']>;
+  jobCountMax?: InputMaybe<Scalars['Int']['input']>;
+  jobCountMin?: InputMaybe<Scalars['Int']['input']>;
+  leaveDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  leaveDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  prefecture?: InputMaybe<Scalars['String']['input']>;
+  registerDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  registerDateStart?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type GetCompanyUnreadMessagesInput = {
@@ -928,7 +941,7 @@ export type QueryCompanyArgs = {
 
 
 export type QueryGetCompaniesArgs = {
-  input?: InputMaybe<GetCompaniesInput>;
+  input: GetCompaniesInput;
 };
 
 
@@ -1090,8 +1103,8 @@ export type SearchUsersInput = {
   page?: InputMaybe<Scalars['Int']['input']>;
   prefecture?: InputMaybe<Scalars['String']['input']>;
   registerDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
-  registerDateStart?: InputMaybe<Scalars['String']['input']>;
-  university?: InputMaybe<Scalars['DateTime']['input']>;
+  registerDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  university?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SendMessageInput = {
@@ -1394,6 +1407,13 @@ export type VerifyPasswordResetTokenResponse = {
   isValid: Scalars['Boolean']['output'];
 };
 
+export type GetCompaniesQueryVariables = Exact<{
+  input: GetCompaniesInput;
+}>;
+
+
+export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, jobCount?: number | null, acceptCount?: number | null }> } };
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -1409,6 +1429,61 @@ export type GetUsersStatisticsQueryVariables = Exact<{
 export type GetUsersStatisticsQuery = { __typename?: 'Query', getUsersStatistics: { __typename?: 'UsersStatisticsResultType', totalCount: number, applicantCount: number, acceptedCount: number, leavedCount: number } };
 
 
+export const GetCompaniesDocument = gql`
+    query getCompanies($input: GetCompaniesInput!) {
+  getCompanies(input: $input) {
+    items {
+      id
+      name
+      industry
+      iconImageUrl
+      prefecture
+      createdAt
+      jobCount
+      acceptCount
+    }
+    limit
+    page
+    totalCount
+    totalPages
+    hasNextPage
+    hasPreviousPage
+  }
+}
+    `;
+
+/**
+ * __useGetCompaniesQuery__
+ *
+ * To run a query within a React component, call `useGetCompaniesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompaniesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompaniesQuery(baseOptions: Apollo.QueryHookOptions<GetCompaniesQuery, GetCompaniesQueryVariables> & ({ variables: GetCompaniesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(GetCompaniesDocument, options);
+      }
+export function useGetCompaniesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompaniesQuery, GetCompaniesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(GetCompaniesDocument, options);
+        }
+export function useGetCompaniesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCompaniesQuery, GetCompaniesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(GetCompaniesDocument, options);
+        }
+export type GetCompaniesQueryHookResult = ReturnType<typeof useGetCompaniesQuery>;
+export type GetCompaniesLazyQueryHookResult = ReturnType<typeof useGetCompaniesLazyQuery>;
+export type GetCompaniesSuspenseQueryHookResult = ReturnType<typeof useGetCompaniesSuspenseQuery>;
+export type GetCompaniesQueryResult = Apollo.QueryResult<GetCompaniesQuery, GetCompaniesQueryVariables>;
 export const SearchUsersDocument = gql`
     query SearchUsers($input: SearchUsersInput!) {
   searchUsers(input: $input) {

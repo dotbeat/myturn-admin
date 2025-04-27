@@ -8,21 +8,19 @@ import SelectMini from "@/components/common/form/SelectMini";
 import TextFieldMini from "@/components/common/form/TextFieldMini";
 
 export default function CompanyFilterForm({
-  className = "",
+  isLoading,
 }: {
-  className?: string;
+  isLoading: boolean;
 }) {
   return (
-    <form
-      className={`flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6 ${className}`}
-    >
+    <>
       <FilterGroup heading="基本情報">
         <FilterItem label="名前">
           <TextFieldMini name="name" className="w-24" />
         </FilterItem>
         <FilterItem label="都道府県">
           <SelectMini
-            name="region"
+            name="prefecture"
             groups={regionsAndEmpty("")}
             className="w-24"
           />
@@ -67,10 +65,11 @@ export default function CompanyFilterForm({
       </FilterItem>
       <Button
         type="submit"
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base"
+        disabled={isLoading}
+        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>
-    </form>
+    </>
   );
 }

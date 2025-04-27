@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
-import { mockCompanies } from "@/mock/company";
+import { useCompanies } from "@/hooks/useCompanies";
 import {
   CompanyFilterFormData,
   companyFilterFormSchema,
@@ -22,16 +22,12 @@ export default function PageBody() {
     periods[0].value,
   );
 
-  const companies = mockCompanies;
-
   const allCompanyCount = 1349; // 合計登録社数
   const postedCount = 478; // 新規掲載社数
   const acceptedCount = 26; // 採用社数
   const withdrawnCount = 0; // 退会社数
 
-  const searchResultCount = 38; // 検索結果数
-
-  const initForm: DefaultValues<CompanyFilterFormData> = {
+  const initialFormData: CompanyFilterFormData = {
     name: "",
     prefecture: "",
     registerDateStart: null,
@@ -39,12 +35,23 @@ export default function PageBody() {
     leaveDateStart: null,
     leaveDateEnd: null,
     industry: "",
+    jobCountMin: 0,
+    jobCountMax: 0,
+    acceptCountMin: 0,
+    acceptCountMax: 0,
   };
   const methods = useForm<CompanyFilterFormData>({
     resolver: zodResolver(companyFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: initForm,
+    defaultValues: initialFormData,
   });
+
+  const { companies, totalCount, loading, refetchCompanies } =
+    useCompanies(initialFormData);
+
+  const onSubmit = (data: CompanyFilterFormData) => {
+    refetchCompanies(data);
+  };
 
   return (
     <Box className="flex-1 px-8 py-6">
@@ -91,14 +98,20 @@ export default function PageBody() {
       </Box>
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
-          <CompanyFilterForm />
+          <form
+            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <CompanyFilterForm isLoading={loading} />
+          </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {searchResultCount} 件
+            検索結果 {totalCount} 件
           </Typography>
           <CompanyList
             items={companies}
+            isLoading={loading}
             className="overflow-x-auto rounded-lg bg-[var(--background)]"
           />
         </Box>
