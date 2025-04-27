@@ -22,3 +22,14 @@ export const SEARCH_COMPANY = gql`
     }
   }
 `;
+
+export const GET_COMPANIES_STATISTICS = gql`
+  query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
+    getCompaniesStatistics(input: $input) {
+      totalCount
+      postedCount
+      acceptedCount
+      leavedCount
+    }
+  }
+`;

@@ -32,6 +32,14 @@ export type ApplicantInfo = {
   university?: Maybe<Scalars['String']['output']>;
 };
 
+export type CompaniesStatisticsResultType = {
+  __typename?: 'CompaniesStatisticsResultType';
+  acceptedCount: Scalars['Int']['output'];
+  leavedCount: Scalars['Int']['output'];
+  postedCount: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
 export type CompanyIdInfoType = {
   __typename?: 'CompanyIdInfoType';
   email: Scalars['String']['output'];
@@ -350,6 +358,11 @@ export type GetCompaniesInput = {
   prefecture?: InputMaybe<Scalars['String']['input']>;
   registerDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
   registerDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type GetCompaniesStatisticsInput = {
+  periodEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  periodStart?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type GetCompanyUnreadMessagesInput = {
@@ -898,6 +911,7 @@ export type Query = {
   companyMe: CompanyType;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getCompanies: CompanySearchResultType;
+  getCompaniesStatistics: CompaniesStatisticsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
   getCompanyJobsWithEntries: CompanyJobsWithSimpleEntriesType;
   getCompanyUnreadCount: CompanyUnreadCount;
@@ -942,6 +956,11 @@ export type QueryCompanyArgs = {
 
 export type QueryGetCompaniesArgs = {
   input: GetCompaniesInput;
+};
+
+
+export type QueryGetCompaniesStatisticsArgs = {
+  input: GetCompaniesStatisticsInput;
 };
 
 
@@ -1414,6 +1433,13 @@ export type GetCompaniesQueryVariables = Exact<{
 
 export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, jobCount?: number | null, acceptCount?: number | null }> } };
 
+export type GetCompaniesStatisticsQueryVariables = Exact<{
+  input: GetCompaniesStatisticsInput;
+}>;
+
+
+export type GetCompaniesStatisticsQuery = { __typename?: 'Query', getCompaniesStatistics: { __typename?: 'CompaniesStatisticsResultType', totalCount: number, postedCount: number, acceptedCount: number, leavedCount: number } };
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -1484,6 +1510,49 @@ export type GetCompaniesQueryHookResult = ReturnType<typeof useGetCompaniesQuery
 export type GetCompaniesLazyQueryHookResult = ReturnType<typeof useGetCompaniesLazyQuery>;
 export type GetCompaniesSuspenseQueryHookResult = ReturnType<typeof useGetCompaniesSuspenseQuery>;
 export type GetCompaniesQueryResult = Apollo.QueryResult<GetCompaniesQuery, GetCompaniesQueryVariables>;
+export const GetCompaniesStatisticsDocument = gql`
+    query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
+  getCompaniesStatistics(input: $input) {
+    totalCount
+    postedCount
+    acceptedCount
+    leavedCount
+  }
+}
+    `;
+
+/**
+ * __useGetCompaniesStatisticsQuery__
+ *
+ * To run a query within a React component, call `useGetCompaniesStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompaniesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompaniesStatisticsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompaniesStatisticsQuery(baseOptions: Apollo.QueryHookOptions<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables> & ({ variables: GetCompaniesStatisticsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>(GetCompaniesStatisticsDocument, options);
+      }
+export function useGetCompaniesStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>(GetCompaniesStatisticsDocument, options);
+        }
+export function useGetCompaniesStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>(GetCompaniesStatisticsDocument, options);
+        }
+export type GetCompaniesStatisticsQueryHookResult = ReturnType<typeof useGetCompaniesStatisticsQuery>;
+export type GetCompaniesStatisticsLazyQueryHookResult = ReturnType<typeof useGetCompaniesStatisticsLazyQuery>;
+export type GetCompaniesStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetCompaniesStatisticsSuspenseQuery>;
+export type GetCompaniesStatisticsQueryResult = Apollo.QueryResult<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>;
 export const SearchUsersDocument = gql`
     query SearchUsers($input: SearchUsersInput!) {
   searchUsers(input: $input) {

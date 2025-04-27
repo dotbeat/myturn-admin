@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, MenuItem, Typography } from "@mui/material";
 import { periods } from "@/const/date";
 import { useCompanies } from "@/hooks/useCompanies";
+import { useCompaniesStatistics } from "@/hooks/useCompaniesStatistics";
 import {
   CompanyFilterFormData,
   companyFilterFormSchema,
@@ -21,11 +22,6 @@ export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
-
-  const allCompanyCount = 1349; // 合計登録社数
-  const postedCount = 478; // 新規掲載社数
-  const acceptedCount = 26; // 採用社数
-  const withdrawnCount = 0; // 退会社数
 
   const initialFormData: CompanyFilterFormData = {
     name: "",
@@ -49,6 +45,14 @@ export default function PageBody() {
   const { companies, totalCount, loading, refetchCompanies } =
     useCompanies(initialFormData);
 
+  const {
+    allCompanyCount, // 合計登録者数
+    postedCount, // 求人掲載社数
+    acceptedCount, // 採用社数
+    leavedCount, // 退会社数
+    refetchStatistics,
+  } = useCompaniesStatistics("");
+
   const onSubmit = (data: CompanyFilterFormData) => {
     refetchCompanies(data);
   };
@@ -63,16 +67,12 @@ export default function PageBody() {
           className="py-4"
         />
         <IndicateItem
-          label="新規掲載社数"
+          label="求人掲載社数"
           count={postedCount}
           className="py-4"
         />
         <IndicateItem label="採用社数" count={acceptedCount} className="py-4" />
-        <IndicateItem
-          label="退会社数"
-          count={withdrawnCount}
-          className="py-4"
-        />
+        <IndicateItem label="退会社数" count={leavedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
@@ -89,7 +89,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
+              }}
             >
               {period.label}
             </MenuItem>
