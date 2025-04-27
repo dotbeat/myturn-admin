@@ -15,7 +15,7 @@ export default function CompanyFilterForm({
   return (
     <>
       <FilterGroup heading="基本情報">
-        <FilterItem label="名前">
+        <FilterItem label="企業名">
           <TextFieldMini name="name" className="w-24" />
         </FilterItem>
         <FilterItem label="都道府県">
