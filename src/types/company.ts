@@ -1,11 +1,11 @@
 export type CompanyItem = {
   id: number;
-  logo: string;
+  iconImageUrl: string;
   name: string;
   prefecture: string;
   industry: string;
-  registerDate: Date | null;
-  leaveDate: Date | null;
+  createdAt: Date;
+  deletedAt: Date | null;
   jobCount: number;
   acceptCount: number;
 };
