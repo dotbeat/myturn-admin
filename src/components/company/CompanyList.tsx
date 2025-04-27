@@ -32,7 +32,7 @@ export default function CompanyList({
         src={item.iconImageUrl}
         size={64}
         alt={`${item.name}のロゴ`}
-        className="-my-1"
+        className="-my-1 border border-[var(--myturn-border)]"
       />
     ),
     name: item.name,
