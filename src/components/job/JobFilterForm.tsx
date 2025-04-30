@@ -32,11 +32,18 @@ export default function JobFilterForm({
         </FilterItem>
       </FilterGroup>
       <FilterGroup heading="登録情報">
-        <FilterItem label="登録日">
+        <FilterItem label="公開日">
           <Box>
-            <TextFieldMini type="date" name="registerDateStart" />
+            <TextFieldMini type="date" name="openDateStart" />
             <Typography className="px-2 text-sm">〜</Typography>
-            <TextFieldMini type="date" name="registerDateEnd" />
+            <TextFieldMini type="date" name="openDateEnd" />
+          </Box>
+        </FilterItem>
+        <FilterItem label="終了日">
+          <Box>
+            <TextFieldMini type="date" name="closeDateStart" />
+            <Typography className="px-2 text-sm">〜</Typography>
+            <TextFieldMini type="date" name="closeDateEnd" />
           </Box>
         </FilterItem>
         <FilterItem label="職種">
