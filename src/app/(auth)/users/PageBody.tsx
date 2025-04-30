@@ -147,6 +147,7 @@ export default function PageBody() {
           <Box className="flex justify-center">
             <Pagination
               count={totalPages}
+              page={page}
               shape="rounded"
               renderItem={(item) => (
                 <PaginationItem
