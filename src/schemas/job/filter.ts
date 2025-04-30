@@ -17,8 +17,8 @@ export const jobFilterFormSchema = z.object({
   pvCountMax: z.coerce.number().min(0), // PV数(最大)
   favoriteCountMin: z.coerce.number().min(0), // お気に入り数(最小)
   favoriteCountMax: z.coerce.number().min(0), // お気に入り数(最大)
-  applyCountMin: z.coerce.number().min(0), // 応募数(最小)
-  applyCountMax: z.coerce.number().min(0), // 応募数(最大)
+  entryCountMin: z.coerce.number().min(0), // 応募数(最小)
+  entryCountMax: z.coerce.number().min(0), // 応募数(最大)
   acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
   acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
 });

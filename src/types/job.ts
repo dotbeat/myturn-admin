@@ -7,10 +7,10 @@ export type JobItem = {
   companyName: string;
   jobType: string;
   industry: string;
-  openDate: Date | null;
+  updatedAt: string;
   status: JobStatus;
-  pvCount: number;
+  pv: number;
   favoriteCount: number;
-  applyCount: number;
+  entryCount: number;
   acceptCount: number;
 };

@@ -428,6 +428,17 @@ export type JobSearchResultType = {
   totalPages: Scalars['Int']['output'];
 };
 
+export type JobSearchWithStatsResultType = {
+  __typename?: 'JobSearchWithStatsResultType';
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  items: Array<JobWithStatsType>;
+  limit: Scalars['Int']['output'];
+  page: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type JobType = {
   __typename?: 'JobType';
   access: Scalars['String']['output'];
@@ -530,6 +541,7 @@ export type JobWithEntriesType = {
 
 export type JobWithStatsType = {
   __typename?: 'JobWithStatsType';
+  acceptCount: Scalars['Int']['output'];
   access: Scalars['String']['output'];
   acquirableSkills: Array<Scalars['String']['output']>;
   applicationProcess?: Maybe<Scalars['String']['output']>;
@@ -936,6 +948,7 @@ export type Query = {
   me: UserType;
   recentJobs: Array<JobWithCompanyType>;
   searchJobs: JobSearchResultType;
+  searchJobsWithStats: JobSearchWithStatsResultType;
   searchUsers: UserSearchResultType;
   user?: Maybe<UserType>;
   userByEmail?: Maybe<UserType>;
@@ -1034,6 +1047,11 @@ export type QuerySearchJobsArgs = {
 };
 
 
+export type QuerySearchJobsWithStatsArgs = {
+  input: SearchJobsWithStatsInput;
+};
+
+
 export type QuerySearchUsersArgs = {
   input: SearchUsersInput;
 };
@@ -1098,6 +1116,29 @@ export type SearchJobsInput = {
   page?: InputMaybe<Scalars['Int']['input']>;
   prefectures?: InputMaybe<Array<Scalars['String']['input']>>;
   preferences?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type SearchJobsWithStatsInput = {
+  acceptCountMax?: InputMaybe<Scalars['Int']['input']>;
+  acceptCountMin?: InputMaybe<Scalars['Int']['input']>;
+  closeDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  closeDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  entryCountMax?: InputMaybe<Scalars['Int']['input']>;
+  entryCountMin?: InputMaybe<Scalars['Int']['input']>;
+  favoriteCountMax?: InputMaybe<Scalars['Int']['input']>;
+  favoriteCountMin?: InputMaybe<Scalars['Int']['input']>;
+  industry?: InputMaybe<Scalars['String']['input']>;
+  jobType?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  openDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  openDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  prefecture?: InputMaybe<Scalars['String']['input']>;
+  pvCountMax?: InputMaybe<Scalars['Int']['input']>;
+  pvCountMin?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SearchUsersInput = {
@@ -1440,6 +1481,13 @@ export type GetCompaniesStatisticsQueryVariables = Exact<{
 
 export type GetCompaniesStatisticsQuery = { __typename?: 'Query', getCompaniesStatistics: { __typename?: 'CompaniesStatisticsResultType', totalCount: number, postedCount: number, acceptedCount: number, leavedCount: number } };
 
+export type SearchJobsWithStatsQueryVariables = Exact<{
+  input: SearchJobsWithStatsInput;
+}>;
+
+
+export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, companyName: string, favoriteCount: number, entryCount: number, acceptCount: number }> } };
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -1553,6 +1601,66 @@ export type GetCompaniesStatisticsQueryHookResult = ReturnType<typeof useGetComp
 export type GetCompaniesStatisticsLazyQueryHookResult = ReturnType<typeof useGetCompaniesStatisticsLazyQuery>;
 export type GetCompaniesStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetCompaniesStatisticsSuspenseQuery>;
 export type GetCompaniesStatisticsQueryResult = Apollo.QueryResult<GetCompaniesStatisticsQuery, GetCompaniesStatisticsQueryVariables>;
+export const SearchJobsWithStatsDocument = gql`
+    query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
+  searchJobsWithStats(input: $input) {
+    items {
+      id
+      title
+      status
+      pv
+      jobHeader
+      prefecture
+      jobType
+      industry
+      updatedAt
+      companyName
+      favoriteCount
+      entryCount
+      acceptCount
+    }
+    limit
+    page
+    totalCount
+    totalPages
+    hasNextPage
+    hasPreviousPage
+  }
+}
+    `;
+
+/**
+ * __useSearchJobsWithStatsQuery__
+ *
+ * To run a query within a React component, call `useSearchJobsWithStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchJobsWithStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchJobsWithStatsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSearchJobsWithStatsQuery(baseOptions: Apollo.QueryHookOptions<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables> & ({ variables: SearchJobsWithStatsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>(SearchJobsWithStatsDocument, options);
+      }
+export function useSearchJobsWithStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>(SearchJobsWithStatsDocument, options);
+        }
+export function useSearchJobsWithStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>(SearchJobsWithStatsDocument, options);
+        }
+export type SearchJobsWithStatsQueryHookResult = ReturnType<typeof useSearchJobsWithStatsQuery>;
+export type SearchJobsWithStatsLazyQueryHookResult = ReturnType<typeof useSearchJobsWithStatsLazyQuery>;
+export type SearchJobsWithStatsSuspenseQueryHookResult = ReturnType<typeof useSearchJobsWithStatsSuspenseQuery>;
+export type SearchJobsWithStatsQueryResult = Apollo.QueryResult<SearchJobsWithStatsQuery, SearchJobsWithStatsQueryVariables>;
 export const SearchUsersDocument = gql`
     query SearchUsers($input: SearchUsersInput!) {
   searchUsers(input: $input) {

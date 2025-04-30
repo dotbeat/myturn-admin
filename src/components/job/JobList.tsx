@@ -7,9 +7,11 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
 export default function JobList({
   items,
+  isLoading,
   className = "",
 }: {
   items: JobItem[];
+  isLoading: boolean;
   className?: string;
 }) {
   const columns = [
@@ -22,7 +24,7 @@ export default function JobList({
     { property: "status", label: "ステータス" },
     { property: "pvCount", label: "PV" },
     { property: "favoriteCount", label: "❤️" },
-    { property: "applyCount", label: "応募" },
+    { property: "entryCount", label: "応募" },
     { property: "acceptCount", label: "採用" },
   ] as const satisfies TableColumn<(keyof JobItem)[number]>[];
 
@@ -55,11 +57,14 @@ export default function JobList({
     ),
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
-    openDate: item.openDate?.toLocaleDateString("ja") ?? "—",
+    openDate:
+      item.updatedAt && item.status != "DRAFT"
+        ? new Date(item.updatedAt).toLocaleDateString("ja")
+        : "—",
     status: jobOfferStatusIndex[item.status]?.label ?? "—",
-    pvCount: item.pvCount,
+    pvCount: item.pv,
     favoriteCount: item.favoriteCount,
-    applyCount: item.applyCount,
+    entryCount: item.entryCount,
     acceptCount: item.acceptCount,
   }));
 
@@ -70,11 +75,14 @@ export default function JobList({
         rows={rows}
         className="text-nowrap py-2 [word-break:break-word]"
       />
-      {items.length === 0 && (
+      {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
-          <Typography className="font-semibold">
-            企業アカウントはありません
-          </Typography>
+          <Typography className="font-semibold">読み込み中です</Typography>
+        </Container>
+      )}
+      {!isLoading && items.length === 0 && (
+        <Container className="flex flex-col items-center gap-4 py-8">
+          <Typography className="font-semibold">求人はありません</Typography>
         </Container>
       )}
     </Box>

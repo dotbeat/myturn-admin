@@ -11,15 +11,9 @@ import FilterItem from "@/components/common/filter/FilterItem";
 import SelectMini from "@/components/common/form/SelectMini";
 import TextFieldMini from "@/components/common/form/TextFieldMini";
 
-export default function JobFilterForm({
-  className = "",
-}: {
-  className?: string;
-}) {
+export default function JobFilterForm({ isLoading }: { isLoading: boolean }) {
   return (
-    <form
-      className={`flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6 ${className}`}
-    >
+    <>
       <FilterGroup heading="基本情報">
         <FilterItem label="タイトル">
           <TextFieldMini name="title" className="w-28" />
@@ -99,13 +93,13 @@ export default function JobFilterForm({
           <Box className="flex items-center gap-1">
             <TextFieldMini
               type="number"
-              name="applyCountMin"
+              name="entryCountMin"
               className="w-12"
             />
             <Typography className="text-sm">〜</Typography>
             <TextFieldMini
               type="number"
-              name="applyCountMax"
+              name="entryCountMax"
               className="w-14"
             />
           </Box>
@@ -128,10 +122,11 @@ export default function JobFilterForm({
       </FilterGroup>
       <Button
         type="submit"
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base"
+        disabled={isLoading}
+        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>
-    </form>
+    </>
   );
 }
