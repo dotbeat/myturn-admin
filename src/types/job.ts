@@ -5,11 +5,12 @@ export type JobItem = {
   jobHeader: string;
   title: string;
   companyName: string;
-  prefecture: string;
   jobType: string;
   industry: string;
-  openDate: Date | null;
+  updatedAt: string;
   status: JobStatus;
-  applyCount: number;
+  pv: number;
+  favoriteCount: number;
+  entryCount: number;
   acceptCount: number;
 };

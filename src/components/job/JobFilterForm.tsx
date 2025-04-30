@@ -1,42 +1,54 @@
 "use client";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { regionsAndEmpty } from "@/const/region";
-import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
+import {
+  industriesAndEmpty,
+  jobStatusesAndEmpty,
+  jobTypesAndEmpty,
+} from "@/const/job";
 import FilterGroup from "@/components/common/filter/FilterGroup";
 import FilterItem from "@/components/common/filter/FilterItem";
 import SelectMini from "@/components/common/form/SelectMini";
 import TextFieldMini from "@/components/common/form/TextFieldMini";
 
-export default function JobFilterForm({
-  className = "",
-}: {
-  className?: string;
-}) {
+export default function JobFilterForm({ isLoading }: { isLoading: boolean }) {
   return (
-    <form
-      className={`flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6 ${className}`}
-    >
+    <>
       <FilterGroup heading="基本情報">
         <FilterItem label="タイトル">
           <TextFieldMini name="title" className="w-28" />
         </FilterItem>
+        <FilterItem label="企業名">
+          <TextFieldMini name="companyName" className="w-28" />
+        </FilterItem>
         <FilterItem label="都道府県">
           <SelectMini
-            name="region"
+            name="prefecture"
             groups={regionsAndEmpty("")}
             className="w-28"
           />
         </FilterItem>
-        <FilterItem label="企業名">
-          <TextFieldMini name="companyName" className="w-28" />
+        <FilterItem label="募集状況">
+          <SelectMini
+            name="status"
+            items={jobStatusesAndEmpty("")}
+            className="w-28"
+          />
         </FilterItem>
       </FilterGroup>
       <FilterGroup heading="登録情報">
-        <FilterItem label="登録日">
+        <FilterItem label="公開日">
           <Box>
-            <TextFieldMini type="date" name="registerDateStart" />
+            <TextFieldMini type="date" name="openDateStart" />
             <Typography className="px-2 text-sm">〜</Typography>
-            <TextFieldMini type="date" name="registerDateEnd" />
+            <TextFieldMini type="date" name="openDateEnd" />
+          </Box>
+        </FilterItem>
+        <FilterItem label="終了日">
+          <Box>
+            <TextFieldMini type="date" name="closeDateStart" />
+            <Typography className="px-2 text-sm">〜</Typography>
+            <TextFieldMini type="date" name="closeDateEnd" />
           </Box>
         </FilterItem>
         <FilterItem label="職種">
@@ -54,18 +66,40 @@ export default function JobFilterForm({
           />
         </FilterItem>
       </FilterGroup>
-      <Stack spacing={1}>
-        <FilterItem label="応募数">
+      <FilterGroup heading="採用情報">
+        <FilterItem label="PV数">
+          <Box className="flex items-center gap-1">
+            <TextFieldMini type="number" name="pvCountMin" className="w-12" />
+            <Typography className="text-sm">〜</Typography>
+            <TextFieldMini type="number" name="pvCountMax" className="w-14" />
+          </Box>
+        </FilterItem>
+        <FilterItem label="❤️">
           <Box className="flex items-center gap-1">
             <TextFieldMini
               type="number"
-              name="acceptCountMin"
+              name="favoriteCountMin"
               className="w-12"
             />
             <Typography className="text-sm">〜</Typography>
             <TextFieldMini
               type="number"
-              name="acceptCountMax"
+              name="favoriteCountMax"
+              className="w-14"
+            />
+          </Box>
+        </FilterItem>
+        <FilterItem label="応募数">
+          <Box className="flex items-center gap-1">
+            <TextFieldMini
+              type="number"
+              name="entryCountMin"
+              className="w-12"
+            />
+            <Typography className="text-sm">〜</Typography>
+            <TextFieldMini
+              type="number"
+              name="entryCountMax"
               className="w-14"
             />
           </Box>
@@ -85,13 +119,14 @@ export default function JobFilterForm({
             />
           </Box>
         </FilterItem>
-      </Stack>
+      </FilterGroup>
       <Button
         type="submit"
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base"
+        disabled={isLoading}
+        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>
-    </form>
+    </>
   );
 }

@@ -7,21 +7,24 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
 export default function JobList({
   items,
+  isLoading,
   className = "",
 }: {
   items: JobItem[];
+  isLoading: boolean;
   className?: string;
 }) {
   const columns = [
     { property: "jobHeader", label: "ヘッダー" },
     { property: "title", label: "求人タイトル" },
     { property: "companyName", label: "企業名" },
-    { property: "prefecture", label: "都道府県" },
     { property: "jobType", label: "職種" },
     { property: "industry", label: "業界" },
     { property: "openDate", label: "公開日" },
     { property: "status", label: "ステータス" },
-    { property: "applyCount", label: "応募" },
+    { property: "pvCount", label: "PV" },
+    { property: "favoriteCount", label: "❤️" },
+    { property: "entryCount", label: "応募" },
     { property: "acceptCount", label: "採用" },
   ] as const satisfies TableColumn<(keyof JobItem)[number]>[];
 
@@ -37,17 +40,31 @@ export default function JobList({
       </Box>
     ),
     title: (
-      <Typography className="line-clamp-3 w-72 text-wrap text-left">
+      <Typography
+        title={item.title}
+        className="line-clamp-3 w-72 text-wrap text-left"
+      >
         {item.title}
       </Typography>
     ),
-    companyName: item.companyName,
-    prefecture: item.prefecture,
+    companyName: (
+      <Typography
+        title={item.companyName}
+        className="line-clamp-3 w-36 text-wrap text-left"
+      >
+        {item.companyName}
+      </Typography>
+    ),
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
-    openDate: item.openDate?.toLocaleDateString("ja") ?? "—",
+    openDate:
+      item.updatedAt && item.status != "DRAFT"
+        ? new Date(item.updatedAt).toLocaleDateString("ja")
+        : "—",
     status: jobOfferStatusIndex[item.status]?.label ?? "—",
-    applyCount: item.applyCount,
+    pvCount: item.pv,
+    favoriteCount: item.favoriteCount,
+    entryCount: item.entryCount,
     acceptCount: item.acceptCount,
   }));
 
@@ -58,11 +75,14 @@ export default function JobList({
         rows={rows}
         className="text-nowrap py-2 [word-break:break-word]"
       />
-      {items.length === 0 && (
+      {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
-          <Typography className="font-semibold">
-            企業アカウントはありません
-          </Typography>
+          <Typography className="font-semibold">読み込み中です</Typography>
+        </Container>
+      )}
+      {!isLoading && items.length === 0 && (
+        <Container className="flex flex-col items-center gap-4 py-8">
+          <Typography className="font-semibold">求人はありません</Typography>
         </Container>
       )}
     </Box>
