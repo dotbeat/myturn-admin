@@ -34,7 +34,7 @@ export const mockJobs: JobItem[] = [
     jobHeader: "/assets/company/header.jpg",
     title:
       "求人タイトルTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextText",
-    companyName: "株式会社◯◯◯◯◯",
+    companyName: "株式会社◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯◯",
     jobType: "事務",
     industry: "コンサルティング",
     openDate: null,

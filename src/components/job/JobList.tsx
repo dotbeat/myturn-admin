@@ -38,11 +38,21 @@ export default function JobList({
       </Box>
     ),
     title: (
-      <Typography className="line-clamp-3 w-72 text-wrap text-left">
+      <Typography
+        title={item.title}
+        className="line-clamp-3 w-72 text-wrap text-left"
+      >
         {item.title}
       </Typography>
     ),
-    companyName: item.companyName,
+    companyName: (
+      <Typography
+        title={item.companyName}
+        className="line-clamp-3 w-36 text-wrap text-left"
+      >
+        {item.companyName}
+      </Typography>
+    ),
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
     openDate: item.openDate?.toLocaleDateString("ja") ?? "—",
