@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { periods } from "@/const/date";
 import { useJobs } from "@/hooks/useJobs";
+import { useJobsStatistics } from "@/hooks/useJobsStatistics";
 import { JobFilterFormData, jobFilterFormSchema } from "@/schemas/job/filter";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
@@ -31,11 +32,6 @@ export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
-
-  const allJobCount = 1049; // 合計求人数
-  const activeCount = 478; // 募集中求人数
-  const newCount = 26; // 新規掲載数
-  const closedCount = 1; // 掲載終了数
 
   const initialFormData: JobFilterFormData = {
     title: "",
@@ -69,6 +65,14 @@ export default function PageBody() {
     limit,
   );
 
+  const {
+    allJobCount, // 合計求人数
+    newPostedCount, // 新規掲載数
+    activeCount, // 募集中求人数
+    closedCount, // 掲載終了数
+    refetchStatistics,
+  } = useJobsStatistics("");
+
   const onSubmit = (data: JobFilterFormData) => {
     refetchJobs(data);
   };
@@ -79,11 +83,15 @@ export default function PageBody() {
       <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
         <IndicateItem label="合計求人数" count={allJobCount} className="py-4" />
         <IndicateItem
+          label="新規掲載数"
+          count={newPostedCount}
+          className="py-4"
+        />
+        <IndicateItem
           label="募集中求人数"
           count={activeCount}
           className="py-4"
         />
-        <IndicateItem label="新規掲載数" count={newCount} className="py-4" />
         <IndicateItem label="掲載終了数" count={closedCount} className="py-4" />
         <PopUp
           id="period-filter"
@@ -101,7 +109,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
+              }}
             >
               {period.label}
             </MenuItem>

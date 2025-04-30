@@ -11,7 +11,7 @@ export function useCompaniesStatistics(initialPeriodKey: PeriodKeys) {
   const [leavedCount, setLeavedCount] = useState(0); // 退会社数
   const [loading, setLoading] = useState(true);
 
-  // 求職者一覧情報を取得
+  // 企業一覧情報を取得
   useQuery(GET_COMPANIES_STATISTICS, {
     variables: {
       input: {

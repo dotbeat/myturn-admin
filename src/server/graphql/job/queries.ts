@@ -27,3 +27,14 @@ export const SEARCH_JOB = gql`
     }
   }
 `;
+
+export const GET_JOBS_STATISTICS = gql`
+  query GetJobsStatistics($input: GetJobsStatisticsInput!) {
+    getJobsStatistics(input: $input) {
+      totalCount
+      newPostedCount
+      activeCount
+      closedCount
+    }
+  }
+`;
