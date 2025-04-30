@@ -10,8 +10,12 @@ export const jobFilterFormSchema = z.object({
   jobType: z.string(), // 職種
   industry: z.string(), // 業界
   status: z.enum(["", ...jobStatuses]), // ステータス
-  applyCountMax: z.coerce.number().min(0), // 応募数(最小)
-  applyCountMin: z.coerce.number().min(0), // 応募数(最大)
+  pvCountMin: z.coerce.number().min(0), // PV数(最小)
+  pvCountMax: z.coerce.number().min(0), // PV数(最大)
+  favoriteCountMin: z.coerce.number().min(0), // お気に入り数(最小)
+  favoriteCountMax: z.coerce.number().min(0), // お気に入り数(最大)
+  applyCountMin: z.coerce.number().min(0), // 応募数(最小)
+  applyCountMax: z.coerce.number().min(0), // 応募数(最大)
   acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
   acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
 });

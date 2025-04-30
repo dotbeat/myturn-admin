@@ -10,6 +10,8 @@ export type JobItem = {
   industry: string;
   openDate: Date | null;
   status: JobStatus;
+  pvCount: number;
+  favoriteCount: number;
   applyCount: number;
   acceptCount: number;
 };

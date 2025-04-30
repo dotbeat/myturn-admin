@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { regionsAndEmpty } from "@/const/region";
 import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
 import FilterGroup from "@/components/common/filter/FilterGroup";
@@ -20,15 +20,15 @@ export default function JobFilterForm({
         <FilterItem label="タイトル">
           <TextFieldMini name="title" className="w-28" />
         </FilterItem>
+        <FilterItem label="企業名">
+          <TextFieldMini name="companyName" className="w-28" />
+        </FilterItem>
         <FilterItem label="都道府県">
           <SelectMini
-            name="region"
+            name="prefecture"
             groups={regionsAndEmpty("")}
             className="w-28"
           />
-        </FilterItem>
-        <FilterItem label="企業名">
-          <TextFieldMini name="companyName" className="w-28" />
         </FilterItem>
       </FilterGroup>
       <FilterGroup heading="登録情報">
@@ -54,18 +54,40 @@ export default function JobFilterForm({
           />
         </FilterItem>
       </FilterGroup>
-      <Stack spacing={1}>
-        <FilterItem label="応募数">
+      <FilterGroup heading="採用情報">
+        <FilterItem label="PV数">
+          <Box className="flex items-center gap-1">
+            <TextFieldMini type="number" name="pvCountMin" className="w-12" />
+            <Typography className="text-sm">〜</Typography>
+            <TextFieldMini type="number" name="pvCountMax" className="w-14" />
+          </Box>
+        </FilterItem>
+        <FilterItem label="❤️">
           <Box className="flex items-center gap-1">
             <TextFieldMini
               type="number"
-              name="acceptCountMin"
+              name="favoriteCountMin"
               className="w-12"
             />
             <Typography className="text-sm">〜</Typography>
             <TextFieldMini
               type="number"
-              name="acceptCountMax"
+              name="favoriteCountMax"
+              className="w-14"
+            />
+          </Box>
+        </FilterItem>
+        <FilterItem label="応募数">
+          <Box className="flex items-center gap-1">
+            <TextFieldMini
+              type="number"
+              name="applyCountMin"
+              className="w-12"
+            />
+            <Typography className="text-sm">〜</Typography>
+            <TextFieldMini
+              type="number"
+              name="applyCountMax"
               className="w-14"
             />
           </Box>
@@ -85,7 +107,7 @@ export default function JobFilterForm({
             />
           </Box>
         </FilterItem>
-      </Stack>
+      </FilterGroup>
       <Button
         type="submit"
         className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base"

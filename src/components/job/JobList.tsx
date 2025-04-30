@@ -21,6 +21,8 @@ export default function JobList({
     { property: "industry", label: "業界" },
     { property: "openDate", label: "公開日" },
     { property: "status", label: "ステータス" },
+    { property: "pvCount", label: "PV" },
+    { property: "favoriteCount", label: "❤️" },
     { property: "applyCount", label: "応募" },
     { property: "acceptCount", label: "採用" },
   ] as const satisfies TableColumn<(keyof JobItem)[number]>[];
@@ -47,6 +49,8 @@ export default function JobList({
     industry: getSelectItem(industries, item.industry)?.label ?? "",
     openDate: item.openDate?.toLocaleDateString("ja") ?? "—",
     status: jobOfferStatusIndex[item.status]?.label ?? "—",
+    pvCount: item.pvCount,
+    favoriteCount: item.favoriteCount,
     applyCount: item.applyCount,
     acceptCount: item.acceptCount,
   }));
