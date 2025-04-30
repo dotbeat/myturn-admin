@@ -5,7 +5,6 @@ export type JobItem = {
   jobHeader: string;
   title: string;
   companyName: string;
-  prefecture: string;
   jobType: string;
   industry: string;
   openDate: Date | null;

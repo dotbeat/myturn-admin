@@ -16,7 +16,6 @@ export default function JobList({
     { property: "jobHeader", label: "ヘッダー" },
     { property: "title", label: "求人タイトル" },
     { property: "companyName", label: "企業名" },
-    { property: "prefecture", label: "都道府県" },
     { property: "jobType", label: "職種" },
     { property: "industry", label: "業界" },
     { property: "openDate", label: "公開日" },
@@ -44,7 +43,6 @@ export default function JobList({
       </Typography>
     ),
     companyName: item.companyName,
-    prefecture: item.prefecture,
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
     openDate: item.openDate?.toLocaleDateString("ja") ?? "—",
