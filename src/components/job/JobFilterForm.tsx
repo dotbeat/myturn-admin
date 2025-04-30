@@ -1,7 +1,11 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
 import { regionsAndEmpty } from "@/const/region";
-import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
+import {
+  industriesAndEmpty,
+  jobStatusesAndEmpty,
+  jobTypesAndEmpty,
+} from "@/const/job";
 import FilterGroup from "@/components/common/filter/FilterGroup";
 import FilterItem from "@/components/common/filter/FilterItem";
 import SelectMini from "@/components/common/form/SelectMini";
@@ -27,6 +31,13 @@ export default function JobFilterForm({
           <SelectMini
             name="prefecture"
             groups={regionsAndEmpty("")}
+            className="w-28"
+          />
+        </FilterItem>
+        <FilterItem label="募集状況">
+          <SelectMini
+            name="status"
+            items={jobStatusesAndEmpty("")}
             className="w-28"
           />
         </FilterItem>

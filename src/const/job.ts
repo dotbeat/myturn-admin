@@ -1,4 +1,21 @@
+import { JobStatus } from "@/types/job";
 import { SelectItem } from "@/types/select";
+import {
+  jobOfferStatusIndex,
+  jobStatuses as jobStatusKeys,
+} from "@/utils/shared/job";
+
+export const jobStatuses: SelectItem<JobStatus>[] = jobStatusKeys.map(
+  (key) => ({
+    value: key,
+    label: jobOfferStatusIndex[key].label,
+  }),
+);
+export function jobStatusesAndEmpty(
+  emptyLabel: string,
+): SelectItem<JobStatus | "">[] {
+  return [{ value: "", label: emptyLabel }, ...jobStatuses];
+}
 
 export const industries: SelectItem[] = [
   "IT",
