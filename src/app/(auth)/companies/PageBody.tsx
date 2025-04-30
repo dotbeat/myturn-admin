@@ -1,10 +1,19 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Link,
+  MenuItem,
+  Pagination,
+  PaginationItem,
+  Typography,
+} from "@mui/material";
 import { periods } from "@/const/date";
-import { mockCompanies } from "@/mock/company";
+import { useCompanies } from "@/hooks/useCompanies";
+import { useCompaniesStatistics } from "@/hooks/useCompaniesStatistics";
 import {
   CompanyFilterFormData,
   companyFilterFormSchema,
@@ -18,20 +27,16 @@ import CompanyFilterForm from "@/components/company/CompanyFilterForm";
 import CompanyList from "@/components/company/CompanyList";
 
 export default function PageBody() {
+  // URLパラメータから検索条件を取得
+  const searchParams = useSearchParams();
+  const page = parseInt((searchParams.get("page") as string) || "1", 10);
+  const limit = 30;
+
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
 
-  const companies = mockCompanies;
-
-  const allCompanyCount = 1349; // 合計登録社数
-  const postedCount = 478; // 新規掲載社数
-  const acceptedCount = 26; // 採用社数
-  const withdrawnCount = 0; // 退会社数
-
-  const searchResultCount = 38; // 検索結果数
-
-  const initForm: DefaultValues<CompanyFilterFormData> = {
+  const initialFormData: CompanyFilterFormData = {
     name: "",
     prefecture: "",
     registerDateStart: null,
@@ -39,12 +44,31 @@ export default function PageBody() {
     leaveDateStart: null,
     leaveDateEnd: null,
     industry: "",
+    jobCountMin: 0,
+    jobCountMax: 0,
+    acceptCountMin: 0,
+    acceptCountMax: 0,
   };
   const methods = useForm<CompanyFilterFormData>({
     resolver: zodResolver(companyFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: initForm,
+    defaultValues: initialFormData,
   });
+
+  const { companies, totalCount, totalPages, loading, refetchCompanies } =
+    useCompanies(initialFormData, page, limit);
+
+  const {
+    allCompanyCount, // 合計登録者数
+    postedCount, // 求人掲載社数
+    acceptedCount, // 採用社数
+    leavedCount, // 退会社数
+    refetchStatistics,
+  } = useCompaniesStatistics("");
+
+  const onSubmit = (data: CompanyFilterFormData) => {
+    refetchCompanies(data);
+  };
 
   return (
     <Box className="flex-1 px-8 py-6">
@@ -56,16 +80,12 @@ export default function PageBody() {
           className="py-4"
         />
         <IndicateItem
-          label="新規掲載社数"
+          label="求人掲載社数"
           count={postedCount}
           className="py-4"
         />
         <IndicateItem label="採用社数" count={acceptedCount} className="py-4" />
-        <IndicateItem
-          label="退会社数"
-          count={withdrawnCount}
-          className="py-4"
-        />
+        <IndicateItem label="退会社数" count={leavedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
@@ -82,7 +102,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
+              }}
             >
               {period.label}
             </MenuItem>
@@ -91,16 +114,35 @@ export default function PageBody() {
       </Box>
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
-          <CompanyFilterForm />
+          <form
+            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <CompanyFilterForm isLoading={loading} />
+          </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {searchResultCount} 件
+            検索結果 {totalCount} 件
           </Typography>
           <CompanyList
             items={companies}
-            className="overflow-x-auto rounded-lg bg-[var(--background)]"
+            isLoading={loading}
+            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
+          <Box className="flex justify-center">
+            <Pagination
+              count={totalPages}
+              shape="rounded"
+              renderItem={(item) => (
+                <PaginationItem
+                  component={item.page !== page ? Link : Box}
+                  href={`/companies${item.page === 1 ? "" : `?page=${item.page}`}`}
+                  {...item}
+                />
+              )}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

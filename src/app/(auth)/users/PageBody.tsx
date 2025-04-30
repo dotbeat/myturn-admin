@@ -1,8 +1,16 @@
 "use client";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Link,
+  MenuItem,
+  Pagination,
+  PaginationItem,
+  Typography,
+} from "@mui/material";
 import { periods } from "@/const/date";
 import { useUsers } from "@/hooks/useUsers";
 import { useUsersStatistics } from "@/hooks/useUsersStatistics";
@@ -19,6 +27,11 @@ import UserFilterForm from "@/components/user/UserFilterForm";
 import UserList from "@/components/user/UserList";
 
 export default function PageBody() {
+  // URLパラメータから検索条件を取得
+  const searchParams = useSearchParams();
+  const page = parseInt((searchParams.get("page") as string) || "1", 10);
+  const limit = 30;
+
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
@@ -53,8 +66,11 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { users, totalCount, loading, refetchUsers } =
-    useUsers(initialFormData);
+  const { users, totalCount, totalPages, loading, refetchUsers } = useUsers(
+    initialFormData,
+    page,
+    limit,
+  );
 
   const {
     allUserCount, // 合計登録者数
@@ -126,8 +142,21 @@ export default function PageBody() {
           <UserList
             items={users}
             isLoading={loading}
-            className="overflow-x-auto rounded-lg bg-[var(--background)]"
+            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
+          <Box className="flex justify-center">
+            <Pagination
+              count={totalPages}
+              shape="rounded"
+              renderItem={(item) => (
+                <PaginationItem
+                  component={item.page !== page ? Link : Box}
+                  href={`/companies${item.page === 1 ? "" : `?page=${item.page}`}`}
+                  {...item}
+                />
+              )}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

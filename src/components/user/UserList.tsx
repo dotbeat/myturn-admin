@@ -42,7 +42,7 @@ export default function UserList({
         src={item.avatarUrl}
         size={64}
         name={item.lastName + item.firstName}
-        className="-my-1"
+        className="-my-1 border border-[var(--myturn-border)]"
       />
     ),
     name:
