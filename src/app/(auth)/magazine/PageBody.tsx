@@ -268,16 +268,39 @@ export default function PageBody() {
                       />
                     </TableCell>
                     <TableCell className="p-2">
-                      <File
-                        name={`articles.${i}.thumbnail`}
-                        accept="image/*"
-                        buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
-                        onChangeFiles={({ file }) =>
-                          changeOneOfThumbnail(article.articleId, file)
-                        }
-                      >
-                        ファイルを選択
-                      </File>
+                      <Box>
+                        <File
+                          name={`articles.${i}.thumbnail`}
+                          accept="image/*"
+                          buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
+                          onChangeFiles={({ file }) =>
+                            changeOneOfThumbnail(article.articleId, file)
+                          }
+                        >
+                          ファイルを選択
+                        </File>
+                        {/* 入力画像のプレビュー */}
+                        {thumbnails[article.articleId] && (
+                          <Box className="mt-2 max-w-40">
+                            <img
+                              src={thumbnails[article.articleId].dataUrl}
+                              alt="記事のサムネイル"
+                              className="w-full object-contain"
+                            />
+                          </Box>
+                        )}
+                        {/* 保存済み画像の表示 */}
+                        {!thumbnails[article.articleId] &&
+                          thumbnailSrcs[article.articleId] && (
+                            <Box className="mt-2 max-w-40">
+                              <img
+                                src={thumbnailSrcs[article.articleId]}
+                                alt="記事のサムネイル"
+                                className="w-full object-contain"
+                              />
+                            </Box>
+                          )}
+                      </Box>
                     </TableCell>
                     <TableCell className="p-2 pr-4">
                       <TextField
