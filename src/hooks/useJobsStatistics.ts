@@ -21,7 +21,6 @@ export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
     },
     fetchPolicy: "no-cache",
     onCompleted(result) {
-      console.log(result);
       setAllJobCount(result.getJobsStatistics.totalCount);
       setNewPostedCount(result.getJobsStatistics.newPostedCount);
       setActiveCount(result.getJobsStatistics.activeCount);
