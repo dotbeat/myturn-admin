@@ -1,14 +1,8 @@
 {
   "git": {
     "deploymentEnabled": {
+      "production": true,
       "main": true
-    }
-  },
-  "build": {
-    "env": {
-      "PRISMA_GENERATE_IN_POSTBUILD": "true",
-      "NEXT_PUBLIC_GRAPHQL_API_URL": "https://dev.my-turn.jp/graphql",
-      "NEXT_PUBLIC_S3_IMAGE_BASE_URL": "https://myturn-dev-assets-bucket.s3.amazonaws.com"
     }
   },
   "buildCommand": "npm run build"
