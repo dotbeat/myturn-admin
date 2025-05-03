@@ -9,3 +9,14 @@ export const handleFileChange = (
     callback({ file: null, files: [] });
   }
 };
+
+export const blobToDataUrl = (blob: Blob) => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};

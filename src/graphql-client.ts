@@ -627,7 +627,9 @@ export type MagazineItemInput = {
   articleUrl: Scalars['String']['input'];
   category: Scalars['String']['input'];
   description: Scalars['String']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+  thumbnailBase64?: InputMaybe<Scalars['String']['input']>;
+  thumbnailMimeType?: InputMaybe<Scalars['String']['input']>;
   thumbnailUrl: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
@@ -1514,6 +1516,18 @@ export type GetJobsStatisticsQueryVariables = Exact<{
 
 export type GetJobsStatisticsQuery = { __typename?: 'Query', getJobsStatistics: { __typename?: 'JobsStatisticsResultType', totalCount: number, newPostedCount: number, activeCount: number, closedCount: number } };
 
+export type UpdateMagazineMutationVariables = Exact<{
+  input: UpdateMagazinesInput;
+}>;
+
+
+export type UpdateMagazineMutation = { __typename?: 'Mutation', updateMagazines: Array<{ __typename?: 'MagazineType', id: number, title: string, description: string, category: string, thumbnailUrl: string, articleUrl: string }> };
+
+export type GetMagazineQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMagazineQuery = { __typename?: 'Query', magazines: Array<{ __typename?: 'MagazineType', id: number, title: string, description: string, category: string, thumbnailUrl: string, articleUrl: string }> };
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -1730,6 +1744,88 @@ export type GetJobsStatisticsQueryHookResult = ReturnType<typeof useGetJobsStati
 export type GetJobsStatisticsLazyQueryHookResult = ReturnType<typeof useGetJobsStatisticsLazyQuery>;
 export type GetJobsStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetJobsStatisticsSuspenseQuery>;
 export type GetJobsStatisticsQueryResult = Apollo.QueryResult<GetJobsStatisticsQuery, GetJobsStatisticsQueryVariables>;
+export const UpdateMagazineDocument = gql`
+    mutation UpdateMagazine($input: UpdateMagazinesInput!) {
+  updateMagazines(input: $input) {
+    id
+    title
+    description
+    category
+    thumbnailUrl
+    articleUrl
+  }
+}
+    `;
+export type UpdateMagazineMutationFn = Apollo.MutationFunction<UpdateMagazineMutation, UpdateMagazineMutationVariables>;
+
+/**
+ * __useUpdateMagazineMutation__
+ *
+ * To run a mutation, you first call `useUpdateMagazineMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMagazineMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMagazineMutation, { data, loading, error }] = useUpdateMagazineMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMagazineMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMagazineMutation, UpdateMagazineMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMagazineMutation, UpdateMagazineMutationVariables>(UpdateMagazineDocument, options);
+      }
+export type UpdateMagazineMutationHookResult = ReturnType<typeof useUpdateMagazineMutation>;
+export type UpdateMagazineMutationResult = Apollo.MutationResult<UpdateMagazineMutation>;
+export type UpdateMagazineMutationOptions = Apollo.BaseMutationOptions<UpdateMagazineMutation, UpdateMagazineMutationVariables>;
+export const GetMagazineDocument = gql`
+    query GetMagazine {
+  magazines {
+    id
+    title
+    description
+    category
+    thumbnailUrl
+    articleUrl
+  }
+}
+    `;
+
+/**
+ * __useGetMagazineQuery__
+ *
+ * To run a query within a React component, call `useGetMagazineQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMagazineQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMagazineQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMagazineQuery(baseOptions?: Apollo.QueryHookOptions<GetMagazineQuery, GetMagazineQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMagazineQuery, GetMagazineQueryVariables>(GetMagazineDocument, options);
+      }
+export function useGetMagazineLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMagazineQuery, GetMagazineQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMagazineQuery, GetMagazineQueryVariables>(GetMagazineDocument, options);
+        }
+export function useGetMagazineSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMagazineQuery, GetMagazineQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMagazineQuery, GetMagazineQueryVariables>(GetMagazineDocument, options);
+        }
+export type GetMagazineQueryHookResult = ReturnType<typeof useGetMagazineQuery>;
+export type GetMagazineLazyQueryHookResult = ReturnType<typeof useGetMagazineLazyQuery>;
+export type GetMagazineSuspenseQueryHookResult = ReturnType<typeof useGetMagazineSuspenseQuery>;
+export type GetMagazineQueryResult = Apollo.QueryResult<GetMagazineQuery, GetMagazineQueryVariables>;
 export const SearchUsersDocument = gql`
     query SearchUsers($input: SearchUsersInput!) {
   searchUsers(input: $input) {

@@ -1,15 +1,13 @@
 "use client";
 import { useState } from "react";
-import {
-  DefaultValues,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { useMutation, useQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Alert,
   Box,
   Button,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -17,42 +15,191 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { MagazineType } from "@/graphql-client";
 import {
   MagazineEditFormData,
   magazineEditFormSchema,
 } from "@/schemas/magazine/edit";
+import { UPDATE_MAGAZINE } from "@/server/graphql/magazine/mutations";
+import { GET_MAGAZINE } from "@/server/graphql/magazine/query";
+import { blobToDataUrl } from "@/utils/frontend/file";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import File from "@/components/common/form/File";
 
+type EditingMagazineItem = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  articleUrl: string;
+  thumbnailUrl: string;
+  thumbnailBase64: string;
+  thumbnailMimeType: string;
+};
+
 export default function PageBody() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const initForm: DefaultValues<MagazineEditFormData> = {
-    articles: new Array(5).fill(null).map(() => ({
+  // 取得した保存済みサムネイル画像のURL
+  const [thumbnailSrcs, setThumbnailSrcs] = useState<Record<number, string>>(
+    {},
+  );
+  // 入力中のサムネイル画像
+  const [thumbnails, setThumbnails] = useState<
+    Record<number, { dataUrl: string; type: string }>
+  >({});
+
+  // トースト通知の状態
+  const [toast, setToast] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  }>({
+    open: false,
+    message: "",
+    severity: "info",
+  });
+
+  // トースト通知を閉じる
+  const handleCloseToast = () => {
+    setToast({ ...toast, open: false });
+  };
+
+  // トースト通知を表示
+  const showToast = (
+    message: string,
+    severity: "success" | "error" | "info" | "warning",
+  ) => {
+    setToast({
+      open: true,
+      message,
+      severity,
+    });
+  };
+
+  // Magazineデータ更新
+  const [updateArticles, { loading: isUpdating }] = useMutation(
+    UPDATE_MAGAZINE,
+    {
+      onCompleted: () => {
+        // 更新成功時のトースト表示
+        showToast("記事情報が更新されました", "success");
+      },
+      onError: (error) => {
+        console.error("更新中にエラーが発生しました:", error);
+        setError(error.message || "更新中にエラーが発生しました");
+        // エラー時のトースト表示
+        showToast("更新中にエラーが発生しました", "error");
+      },
+    },
+  );
+
+  const initFormArticles: MagazineEditFormData["articles"] = new Array(5)
+    .fill(null)
+    .map((article, i) => ({
+      articleId: i + 1,
       title: "",
       description: "",
       category: "",
       thumbnail: null,
-      url: "",
-    })),
-  };
+      articleUrl: "",
+    }));
   const methods = useForm<MagazineEditFormData>({
     resolver: zodResolver(magazineEditFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: initForm,
+    defaultValues: { articles: initFormArticles },
   });
   const articlesControl = useFieldArray({
     control: methods.control,
     name: "articles",
   });
 
-  const onSubmit = async () => {
-    setIsSubmitting(true);
+  // Magazineデータ取得
+  useQuery(GET_MAGAZINE, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      const fetchedMagazine: Pick<
+        MagazineType,
+        | "id"
+        | "title"
+        | "description"
+        | "category"
+        | "thumbnailUrl"
+        | "articleUrl"
+      >[] = data.magazines;
+      const initThumbnailSrcs: Record<number, string> = {};
+      fetchedMagazine.forEach((article) => {
+        initThumbnailSrcs[article.id] = article.thumbnailUrl;
+      });
+      setThumbnailSrcs(initThumbnailSrcs);
+
+      const articles = fetchedMagazine.map((item) => ({
+        articleId: item.id,
+        title: item.title,
+        description: item.description,
+        category: item.category,
+        thumbnail: null,
+        articleUrl: item.articleUrl,
+      }));
+      initFormArticles.splice(0, articles.length, ...articles);
+      methods.setValue("articles", initFormArticles);
+    },
+  });
+
+  const changeOneOfThumbnail = async (articleId: number, file: File | null) => {
+    const editingThumbnails = { ...thumbnails };
+    if (file) {
+      editingThumbnails[articleId] = {
+        dataUrl: await blobToDataUrl(file),
+        type: file.type,
+      };
+      setThumbnails(editingThumbnails);
+    } else {
+      delete editingThumbnails[articleId];
+      setThumbnails(editingThumbnails);
+    }
+  };
+
+  // フォームデータをGraphQLミューテーションの入力形式に変換する関数
+  const convertFormDataToUpdateInput = async (data: MagazineEditFormData) => {
+    // 記事情報の処理
+    const articlesInput = await Promise.all(
+      data.articles.map(async (article) => {
+        const articleData: EditingMagazineItem = {
+          id: article.articleId,
+          title: article.title,
+          description: article.description,
+          category: article.category,
+          articleUrl: article.articleUrl,
+          thumbnailUrl: thumbnailSrcs[article.articleId] ?? "",
+          thumbnailBase64: "",
+          thumbnailMimeType: "",
+        };
+
+        const thumbnail = thumbnails[article.articleId];
+        if (thumbnail) {
+          // data:image/jpeg;base64, の部分を削除
+          articleData.thumbnailBase64 = thumbnail.dataUrl.split(",")[1];
+          articleData.thumbnailMimeType = thumbnail.type;
+        }
+
+        return articleData;
+      }),
+    );
+
+    // 更新用の入力データを作成
+    return { magazines: articlesInput };
+  };
+
+  const onSubmit = async (data: MagazineEditFormData) => {
     try {
-      // @todo フォームデータをGraphQLミューテーションの入力形式に変換
-      // @todo ジョブ更新ミューテーションを実行
+      // フォームデータをGraphQLミューテーションの入力形式に変換
+      const updateInput = await convertFormDataToUpdateInput(data);
+      // 更新ミューテーションを実行
+      await updateArticles({
+        variables: { input: updateInput },
+      });
 
       setError(null);
     } catch (err) {
@@ -62,8 +209,6 @@ export default function PageBody() {
           ? err.message
           : "Magazine更新中にエラーが発生しました",
       );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -96,6 +241,11 @@ export default function PageBody() {
                   >
                     <TableCell className="p-2 pl-4">{i + 1}</TableCell>
                     <TableCell className="p-2">
+                      <input
+                        type="hidden"
+                        name={`articles.${i}.articleId`}
+                        value={article.articleId}
+                      />
                       <TextField
                         name={`articles.${i}.title`}
                         className="w-72"
@@ -118,18 +268,44 @@ export default function PageBody() {
                       />
                     </TableCell>
                     <TableCell className="p-2">
-                      <File
-                        name={`articles.${i}.thumbnail`}
-                        accept="image/*"
-                        buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
-                      >
-                        ファイルを選択
-                      </File>
+                      <Box>
+                        <File
+                          name={`articles.${i}.thumbnail`}
+                          accept="image/*"
+                          buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
+                          onChangeFiles={({ file }) =>
+                            changeOneOfThumbnail(article.articleId, file)
+                          }
+                        >
+                          ファイルを選択
+                        </File>
+                        {/* 入力画像のプレビュー */}
+                        {thumbnails[article.articleId] && (
+                          <Box className="mt-2 max-w-40">
+                            <img
+                              src={thumbnails[article.articleId].dataUrl}
+                              alt="記事のサムネイル"
+                              className="w-full object-contain"
+                            />
+                          </Box>
+                        )}
+                        {/* 保存済み画像の表示 */}
+                        {!thumbnails[article.articleId] &&
+                          thumbnailSrcs[article.articleId] && (
+                            <Box className="mt-2 max-w-40">
+                              <img
+                                src={thumbnailSrcs[article.articleId]}
+                                alt="記事のサムネイル"
+                                className="w-full object-contain"
+                              />
+                            </Box>
+                          )}
+                      </Box>
                     </TableCell>
                     <TableCell className="p-2 pr-4">
                       <TextField
                         type="url"
-                        name={`articles.${i}.url`}
+                        name={`articles.${i}.articleUrl`}
                         className="w-48"
                         inputClass="valid:border-[var(--myturn-support-middle)]"
                       />
@@ -148,10 +324,26 @@ export default function PageBody() {
             type="submit"
             className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
           >
-            {isSubmitting ? "更新中..." : "更新する"}
+            {isUpdating ? "更新中..." : "更新する"}
           </Button>
         </form>
       </FormProvider>
+
+      {/* トースト通知 */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={6000}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseToast}
+          severity={toast.severity}
+          sx={{ width: "100%" }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
