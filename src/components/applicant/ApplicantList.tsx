@@ -8,9 +8,11 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
 export default function ApplicantList({
   items,
+  isLoading,
   className = "",
 }: {
   items: ApplicantItem[];
+  isLoading: boolean;
   className?: string;
 }) {
   const columns = [
@@ -20,7 +22,7 @@ export default function ApplicantList({
     { property: "jobType", label: "職種" },
     { property: "industry", label: "業界" },
     { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
-    { property: "applyDate", label: "応募日" },
+    { property: "entryDate", label: "応募日" },
     { property: "status", label: "ステータス" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
@@ -30,20 +32,24 @@ export default function ApplicantList({
       <Avatar
         src={item.avatarUrl}
         size={64}
-        name={item.lastName + item.firstName}
+        name={item.user.lastName + item.user.firstName}
         className="-my-1"
       />
     ),
-    name: `${item.lastName} ${item.firstName}`,
-    companyName: item.companyName,
-    jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
-    industry: getSelectItem(industries, item.industry)?.label ?? "",
-    jobTitle: (
-      <Typography className="line-clamp-3 w-72 text-wrap text-left">
-        {item.jobTitle}
+    name: (
+      <Typography className="line-clamp-3 w-28 text-wrap text-left">
+        {item.user.lastName} {item.user.firstName}
       </Typography>
     ),
-    applyDate: item.applyDate?.toLocaleDateString("ja") ?? "—",
+    companyName: item.job.company.name,
+    jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
+    industry: getSelectItem(industries, item.job.industry)?.label ?? "",
+    jobTitle: (
+      <Typography className="line-clamp-3 w-72 text-wrap text-left">
+        {item.job.title}
+      </Typography>
+    ),
+    entryDate: new Date(item.createdAt)?.toLocaleDateString("ja") ?? "—",
     status: applyStatusIndex[item.status]?.label ?? "—",
   }));
 
@@ -54,11 +60,14 @@ export default function ApplicantList({
         rows={rows}
         className="text-nowrap py-2 [word-break:break-word]"
       />
-      {items.length === 0 && (
+      {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
-          <Typography className="font-semibold">
-            企業アカウントはありません
-          </Typography>
+          <Typography className="font-semibold">読み込み中です</Typography>
+        </Container>
+      )}
+      {!isLoading && items.length === 0 && (
+        <Container className="flex flex-col items-center gap-4 py-8">
+          <Typography className="font-semibold">応募者はいません</Typography>
         </Container>
       )}
     </Box>
