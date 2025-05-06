@@ -36,3 +36,17 @@ export const SEARCH_ENTRIES = gql`
     }
   }
 `;
+
+export const GET_ENTRIES_STATISTICS = gql`
+  query GetEntriesStatistics($input: GetEntriesStatisticsInput!) {
+    getEntriesStatistics(input: $input) {
+      totalCount
+      pendingCount
+      reviewingCount
+      interviewCount
+      offeredCount
+      acceptedCount
+      rejectedCount
+    }
+  }
+`;

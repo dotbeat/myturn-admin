@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { periods } from "@/const/date";
 import { useApplicants } from "@/hooks/useApplicants";
+import { useApplicantsStatistics } from "@/hooks/useApplicantsStatistics";
 import {
   applicantFilterFormSchema,
   ApplicantFilterFormData,
@@ -35,14 +36,6 @@ export default function PageBody() {
     periods[0].value,
   );
 
-  const allApplicantCount = 1049; // 合計応募者数
-  const pendingCount = 54; // 新着応募
-  const reviewingCount = 15; // レビュー中
-  const interviewCount = 0; // 面談設定済
-  const offeredCount = 2; // 内定
-  const acceptedCount = 2; // 入社決定
-  const rejectedCount = 915; // 採用見送り
-
   const initialFormData: ApplicantFilterFormData = {
     jobTitle: "",
     companyName: "",
@@ -61,6 +54,17 @@ export default function PageBody() {
 
   const { applicants, totalCount, totalPages, loading, refetchApplicants } =
     useApplicants(initialFormData, page, limit);
+
+  const {
+    allApplicantCount, // 合計応募者数
+    pendingCount, // 新着応募
+    reviewingCount, // レビュー中
+    interviewCount, // 面談設定済
+    offeredCount, // 内定
+    acceptedCount, // 入社決定
+    rejectedCount, // 採用見送り
+    refetchStatistics,
+  } = useApplicantsStatistics("");
 
   const onSubmit = (data: ApplicantFilterFormData) => {
     refetchApplicants(data);
@@ -109,7 +113,10 @@ export default function PageBody() {
           {periods.map((period) => (
             <MenuItem
               key={period.value}
-              onClick={() => setSelectedPeriod(period.value)}
+              onClick={() => {
+                setSelectedPeriod(period.value);
+                refetchStatistics(period.value);
+              }}
             >
               {period.label}
             </MenuItem>
