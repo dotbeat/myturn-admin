@@ -7,8 +7,8 @@ export const applicantFilterFormSchema = z.object({
   jobType: z.string(), // 職種
   industry: z.string(), // 業界
   name: z.string().trim(), // 応募者名
-  applyDateStart: z.string().length(10).nullable(), // 応募日(開始)
-  applyDateEnd: z.string().length(10).nullable(), // 応募日(終了)
+  entryDateStart: z.string().length(10).nullable(), // 応募日(開始)
+  entryDateEnd: z.string().length(10).nullable(), // 応募日(終了)
   status: z.enum(["", ...applyStatuses]), // ステータス
 });
 

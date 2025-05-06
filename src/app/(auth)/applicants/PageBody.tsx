@@ -1,14 +1,22 @@
 "use client";
 import { useState } from "react";
-import { DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, MenuItem, Typography } from "@mui/material";
+import {
+  Box,
+  Link,
+  MenuItem,
+  Pagination,
+  PaginationItem,
+  Typography,
+} from "@mui/material";
 import { periods } from "@/const/date";
+import { useApplicants } from "@/hooks/useApplicants";
 import {
   applicantFilterFormSchema,
   ApplicantFilterFormData,
 } from "@/schemas/applicant/filter";
-import { ApplicantItem } from "@/types/applicant";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -18,11 +26,14 @@ import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
 import ApplicantList from "@/components/applicant/ApplicantList";
 
 export default function PageBody() {
+  // URLパラメータから検索条件を取得
+  const searchParams = useSearchParams();
+  const page = parseInt((searchParams.get("page") as string) || "1", 10);
+  const limit = 30;
+
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
-
-  const applicants: ApplicantItem[] = [];
 
   const allApplicantCount = 1049; // 合計応募者数
   const pendingCount = 54; // 新着応募
@@ -32,23 +43,28 @@ export default function PageBody() {
   const acceptedCount = 2; // 入社決定
   const rejectedCount = 915; // 採用見送り
 
-  const searchResultCount = 38; // 検索結果数
-
-  const initForm: DefaultValues<ApplicantFilterFormData> = {
+  const initialFormData: ApplicantFilterFormData = {
     jobTitle: "",
     companyName: "",
     jobType: "",
     industry: "",
     name: "",
-    applyDateStart: null,
-    applyDateEnd: null,
+    entryDateStart: null,
+    entryDateEnd: null,
     status: "",
   };
   const methods = useForm<ApplicantFilterFormData>({
     resolver: zodResolver(applicantFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
-    defaultValues: initForm,
+    defaultValues: initialFormData,
   });
+
+  const { applicants, totalCount, totalPages, loading, refetchApplicants } =
+    useApplicants(initialFormData, page, limit);
+
+  const onSubmit = (data: ApplicantFilterFormData) => {
+    refetchApplicants(data);
+  };
 
   return (
     <Box className="flex-1 px-8 py-6">
@@ -102,16 +118,36 @@ export default function PageBody() {
       </Box>
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
-          <ApplicantFilterForm />
+          <form
+            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <ApplicantFilterForm isLoading={loading} />
+          </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {searchResultCount} 件
+            検索結果 {totalCount} 件
           </Typography>
           <ApplicantList
             items={applicants}
-            className="overflow-x-auto rounded-lg bg-[var(--background)]"
+            isLoading={loading}
+            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
+          <Box className="flex justify-center">
+            <Pagination
+              count={totalPages}
+              page={page}
+              shape="rounded"
+              renderItem={(item) => (
+                <PaginationItem
+                  component={item.page !== page ? Link : Box}
+                  href={`/applicants${item.page === 1 ? "" : `?page=${item.page}`}`}
+                  {...item}
+                />
+              )}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>
