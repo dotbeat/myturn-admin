@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import { Box } from "@mui/material";
 
@@ -22,6 +23,8 @@ export default function TextFieldMini({
   inputClass?: string;
   onInput?: () => void;
 }) {
+  const beforeInputRef = useRef<HTMLElement>(null);
+
   const {
     register,
     formState: { errors },
@@ -35,8 +38,20 @@ export default function TextFieldMini({
     return errorObj as Partial<FieldError> | null;
   })();
 
+  useEffect(() => {
+    if (type === "number") {
+      const inputElem = beforeInputRef.current
+        ?.nextElementSibling as HTMLInputElement;
+      if (inputElem.value === "0") {
+        inputElem.value = "";
+      }
+    }
+  }, []);
+
   return (
     <Box className={`space-y-1 ${className}`}>
+      {/* inputに直接refを付けるとregisterメソッド戻り値のrefと衝突する */}
+      <Box ref={beforeInputRef} className="hidden" />
       <input
         id={name}
         type={type}
