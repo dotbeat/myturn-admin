@@ -25,52 +25,98 @@ export const userFilterFormSchema = z
     entryCountMin: z.coerce.number().min(0), // 応募階数(最小)
     entryCountMax: z.coerce.number().min(0), // 応募階数(最大)
   })
-  .refine(
-    ({ registerDateStart: start, registerDateEnd: end }) =>
-      start == null || end == null || start <= end,
-    {
-      message: "期間指定が逆です",
-      path: ["registerDateEnd"],
+  .superRefine(({ registerDateStart: start, registerDateEnd: end }, ctx) => {
+    if (start != null && end != null && start > end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["registerDateStart"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["registerDateEnd"],
+      });
+    }
+  })
+  .superRefine(({ leaveDateStart: start, leaveDateEnd: end }, ctx) => {
+    if (start != null && end != null && start > end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["leaveDateStart"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["leaveDateEnd"],
+      });
+    }
+  })
+  .superRefine(
+    ({ availableDaysPerWeekMin: min, availableDaysPerWeekMax: max }, ctx) => {
+      if (max !== 0 && min > max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableDaysPerWeekMin"],
+        });
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableDaysPerWeekMax"],
+        });
+      }
     },
   )
-  .refine(
-    ({ leaveDateStart: start, leaveDateEnd: end }) =>
-      start == null || end == null || start <= end,
-    {
-      message: "期間指定が逆です",
-      path: ["leaveDateEnd"],
+  .superRefine(
+    ({ availableHoursPerWeekMin: min, availableHoursPerWeekMax: max }, ctx) => {
+      if (max !== 0 && min > max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableHoursPerWeekMin"],
+        });
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableHoursPerWeekMax"],
+        });
+      }
     },
   )
-  .refine(
-    ({ availableDaysPerWeekMin: min, availableDaysPerWeekMax: max }) =>
-      max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["availableDaysPerWeekMax"],
+  .superRefine(
+    (
+      { availableDurationMonthsMin: min, availableDurationMonthsMax: max },
+      ctx,
+    ) => {
+      if (max !== 0 && min > max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableDurationMonthsMin"],
+        });
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "範囲指定が逆です",
+          path: ["availableDurationMonthsMax"],
+        });
+      }
     },
   )
-  .refine(
-    ({ availableHoursPerWeekMin: min, availableHoursPerWeekMax: max }) =>
-      max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["availableHoursPerWeekMax"],
-    },
-  )
-  .refine(
-    ({ availableDurationMonthsMin: min, availableDurationMonthsMax: max }) =>
-      max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["availableDurationMonthsMax"],
-    },
-  )
-  .refine(
-    ({ entryCountMin: min, entryCountMax: max }) => max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["entryCountMax"],
-    },
-  );
+  .superRefine(({ entryCountMin: min, entryCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMax"],
+      });
+    }
+  });
 
 export type UserFilterFormData = z.infer<typeof userFilterFormSchema>;

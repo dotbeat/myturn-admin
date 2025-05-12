@@ -12,13 +12,19 @@ export const applicantFilterFormSchema = z
     entryDateEnd: z.string().length(10).nullable(), // 応募日(終了)
     status: z.enum(["", ...applyStatuses]), // ステータス
   })
-  .refine(
-    ({ entryDateStart: start, entryDateEnd: end }) =>
-      start == null || end == null || start <= end,
-    {
-      message: "期間指定が逆です",
-      path: ["entryDateEnd"],
-    },
-  );
+  .superRefine(({ entryDateStart: start, entryDateEnd: end }, ctx) => {
+    if (start != null && end != null && start > end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["entryDateStart"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["entryDateEnd"],
+      });
+    }
+  });
 
 export type ApplicantFilterFormData = z.infer<typeof applicantFilterFormSchema>;

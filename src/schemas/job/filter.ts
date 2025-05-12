@@ -23,47 +23,89 @@ export const jobFilterFormSchema = z
     acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
     acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
   })
-  .refine(
-    ({ openDateStart: start, openDateEnd: end }) =>
-      start == null || end == null || start <= end,
-    {
-      message: "期間指定が逆です",
-      path: ["openDateEnd"],
-    },
-  )
-  .refine(
-    ({ closeDateStart: start, closeDateEnd: end }) =>
-      start == null || end == null || start <= end,
-    {
-      message: "期間指定が逆です",
-      path: ["closeDateEnd"],
-    },
-  )
-  .refine(({ pvCountMin: min, pvCountMax: max }) => max === 0 || min <= max, {
-    message: "範囲指定が逆です",
-    path: ["pvCountMax"],
+  .superRefine(({ openDateStart: start, openDateEnd: end }, ctx) => {
+    if (start != null && end != null && start > end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["openDateStart"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["openDateEnd"],
+      });
+    }
   })
-  .refine(
-    ({ favoriteCountMin: min, favoriteCountMax: max }) =>
-      max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["favoriteCountMax"],
-    },
-  )
-  .refine(
-    ({ entryCountMin: min, entryCountMax: max }) => max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["entryCountMax"],
-    },
-  )
-  .refine(
-    ({ acceptCountMin: min, acceptCountMax: max }) => max === 0 || min <= max,
-    {
-      message: "範囲指定が逆です",
-      path: ["acceptCountMax"],
-    },
-  );
+  .superRefine(({ closeDateStart: start, closeDateEnd: end }, ctx) => {
+    if (start != null && end != null && start > end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["closeDateStart"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "期間指定が逆です",
+        path: ["closeDateEnd"],
+      });
+    }
+  })
+  .superRefine(({ pvCountMin: min, pvCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["pvCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["pvCountMax"],
+      });
+    }
+  })
+  .superRefine(({ favoriteCountMin: min, favoriteCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["favoriteCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["favoriteCountMax"],
+      });
+    }
+  })
+  .superRefine(({ entryCountMin: min, entryCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMax"],
+      });
+    }
+  })
+  .superRefine(({ acceptCountMin: min, acceptCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["acceptCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["acceptCountMax"],
+      });
+    }
+  });
 
 export type JobFilterFormData = z.infer<typeof jobFilterFormSchema>;
