@@ -9,10 +9,9 @@ export function useCompaniesStatistics(initialPeriodKey: PeriodKeys) {
   const [postedCount, setPostedCount] = useState(0); // 掲載社数
   const [acceptedCount, setAcceptedCount] = useState(0); // 採用社数
   const [leavedCount, setLeavedCount] = useState(0); // 退会社数
-  const [loading, setLoading] = useState(true);
 
   // 企業一覧情報を取得
-  useQuery(GET_COMPANIES_STATISTICS, {
+  const { loading } = useQuery(GET_COMPANIES_STATISTICS, {
     variables: {
       input: {
         periodStart: period.start,
@@ -25,16 +24,11 @@ export function useCompaniesStatistics(initialPeriodKey: PeriodKeys) {
       setPostedCount(result.getCompaniesStatistics.postedCount);
       setAcceptedCount(result.getCompaniesStatistics.acceptedCount);
       setLeavedCount(result.getCompaniesStatistics.leavedCount);
-      setLoading(false);
-    },
-    onError() {
-      setLoading(false);
     },
   });
 
   // 再リクエストする
   const refetchStatistics = async (periodKey: PeriodKeys) => {
-    setLoading(true);
     setPeriod(getPeriod(periodKey));
   };
 

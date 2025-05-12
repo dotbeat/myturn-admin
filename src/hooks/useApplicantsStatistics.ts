@@ -12,10 +12,9 @@ export function useApplicantsStatistics(initialPeriodKey: PeriodKeys) {
   const [offeredCount, setOfferedCount] = useState(0); // 内定
   const [acceptedCount, setAcceptedCount] = useState(0); // 入社決定
   const [rejectedCount, setRejectedCount] = useState(0); // 採用見送り
-  const [loading, setLoading] = useState(true);
 
   // 応募者一覧情報を取得
-  useQuery(GET_ENTRIES_STATISTICS, {
+  const { loading } = useQuery(GET_ENTRIES_STATISTICS, {
     variables: {
       input: {
         periodStart: period.start,
@@ -31,16 +30,11 @@ export function useApplicantsStatistics(initialPeriodKey: PeriodKeys) {
       setOfferedCount(result.getEntriesStatistics.offeredCount);
       setAcceptedCount(result.getEntriesStatistics.acceptedCount);
       setRejectedCount(result.getEntriesStatistics.rejectedCount);
-      setLoading(false);
-    },
-    onError() {
-      setLoading(false);
     },
   });
 
   // 再リクエストする
   const refetchStatistics = async (periodKey: PeriodKeys) => {
-    setLoading(true);
     setPeriod(getPeriod(periodKey));
   };
 

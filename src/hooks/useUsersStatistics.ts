@@ -9,10 +9,9 @@ export function useUsersStatistics(initialPeriodKey: PeriodKeys) {
   const [applicantCount, setApplicantCount] = useState(0); // 応募者数
   const [acceptedCount, setAcceptedCount] = useState(0); // 採用者数
   const [leavedCount, setLeavedCount] = useState(0); // 退会者数
-  const [loading, setLoading] = useState(true);
 
   // 求職者一覧情報を取得
-  useQuery(GET_USERS_STATISTICS, {
+  const { loading } = useQuery(GET_USERS_STATISTICS, {
     variables: {
       input: {
         periodStart: period.start,
@@ -25,16 +24,11 @@ export function useUsersStatistics(initialPeriodKey: PeriodKeys) {
       setApplicantCount(result.getUsersStatistics.applicantCount);
       setAcceptedCount(result.getUsersStatistics.acceptedCount);
       setLeavedCount(result.getUsersStatistics.leavedCount);
-      setLoading(false);
-    },
-    onError() {
-      setLoading(false);
     },
   });
 
   // 再リクエストする
   const refetchStatistics = async (periodKey: PeriodKeys) => {
-    setLoading(true);
     setPeriod(getPeriod(periodKey));
   };
 
