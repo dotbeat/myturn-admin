@@ -37,7 +37,10 @@ export default function ApplicantList({
       />
     ),
     name: (
-      <Typography className="line-clamp-3 w-28 text-wrap text-left">
+      <Typography
+        title={`${item.user.lastName} ${item.user.firstName}`}
+        className="line-clamp-3 w-28 text-wrap text-left"
+      >
         {item.user.lastName} {item.user.firstName}
       </Typography>
     ),

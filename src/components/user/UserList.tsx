@@ -46,16 +46,25 @@ export default function UserList({
       />
     ),
     name:
-      item.lastName && item.firstName
-        ? `${item.lastName} ${item.firstName}`
-        : "—",
+      item.lastName && item.firstName ? (
+        <Typography
+          title={`${item.lastName} ${item.firstName}`}
+          className="line-clamp-3 w-28 text-wrap text-left"
+        >
+          {item.lastName} {item.firstName}
+        </Typography>
+      ) : (
+        "—"
+      ),
     prefecture: item.prefecture || "—",
     belong:
       item.university && item.faculty ? (
-        <Box>
-          <Typography>{item.university}</Typography>
-          <Typography>{item.faculty}</Typography>
-        </Box>
+        <Typography
+          title={`${item.university} ${item.faculty}`}
+          className="line-clamp-3 w-44 text-wrap text-left"
+        >
+          {item.university} {item.faculty}
+        </Typography>
       ) : (
         "—"
       ),
@@ -79,7 +88,11 @@ export default function UserList({
 
   return (
     <Box className={className}>
-      <Table columns={columns} rows={rows} className="text-nowrap py-2" />
+      <Table
+        columns={columns}
+        rows={rows}
+        className="text-nowrap py-2 [word-break:break-word]"
+      />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">読み込み中です</Typography>
