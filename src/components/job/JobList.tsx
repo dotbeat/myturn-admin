@@ -3,6 +3,7 @@ import { industries, jobTypes } from "@/const/job";
 import { JobItem } from "@/types/job";
 import { jobOfferStatusIndex } from "@/utils/shared/job";
 import { getSelectItem } from "@/utils/shared/select";
+import { ImageFillIcon } from "@/icons/image/fill";
 import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
 export default function JobList({
@@ -32,11 +33,20 @@ export default function JobList({
     id: item.id,
     jobHeader: (
       <Box className="h-12 w-20 object-cover">
-        <img
-          src={item.jobHeader}
-          alt={`${item.companyName}による求人のヘッダー画像`}
-          className="h-full w-full object-cover"
-        />
+        {item.jobHeader ? (
+          <img
+            src={item.jobHeader}
+            alt={`${item.companyName}による求人のヘッダー画像`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <Box className="flex h-full w-full flex-col items-center justify-center bg-[var(--myturn-background)] p-1">
+            <ImageFillIcon
+              size={44}
+              className="text-[var(--myturn-support-middle)]"
+            />
+          </Box>
+        )}
       </Box>
     ),
     title: (

@@ -9,10 +9,9 @@ export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
   const [newPostedCount, setNewPostedCount] = useState(0); // 新規掲載数
   const [activeCount, setActiveCount] = useState(0); // 募集中求人数
   const [closedCount, setClosedCount] = useState(0); // 掲載終了数
-  const [loading, setLoading] = useState(true);
 
   // 求人一覧情報を取得
-  useQuery(GET_JOBS_STATISTICS, {
+  const { loading } = useQuery(GET_JOBS_STATISTICS, {
     variables: {
       input: {
         periodStart: period.start,
@@ -25,16 +24,11 @@ export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
       setNewPostedCount(result.getJobsStatistics.newPostedCount);
       setActiveCount(result.getJobsStatistics.activeCount);
       setClosedCount(result.getJobsStatistics.closedCount);
-      setLoading(false);
-    },
-    onError() {
-      setLoading(false);
     },
   });
 
   // 再リクエストする
   const refetchStatistics = async (periodKey: PeriodKeys) => {
-    setLoading(true);
     setPeriod(getPeriod(periodKey));
   };
 

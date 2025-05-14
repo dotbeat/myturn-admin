@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import { Box, Typography } from "@mui/material";
 
@@ -18,16 +19,16 @@ export default function TextField({
   name: string;
   label?: string;
   placeholder?: string;
+  autoComplete?: string;
   autoFocus?: boolean;
   required?: boolean;
   disabled?: boolean;
   className?: string;
   inputClass?: string;
   onInput?: () => void;
-} & (
-  | { type?: never; autoComplete?: never; rows: number }
-  | { type?: string; autoComplete?: string; rows?: never }
-)) {
+} & ({ type?: never; rows: number } | { type?: string; rows?: never })) {
+  const beforeInputRef = useRef<HTMLElement>(null);
+
   const {
     register,
     formState: { errors },
@@ -41,6 +42,16 @@ export default function TextField({
     return errorObj as Partial<FieldError> | null;
   })();
 
+  useEffect(() => {
+    if (type === "number") {
+      const inputElem = beforeInputRef.current
+        ?.nextElementSibling as HTMLInputElement;
+      if (inputElem.value === "0") {
+        inputElem.value = "";
+      }
+    }
+  }, []);
+
   return (
     <Box className={`space-y-1 ${className}`}>
       {label && (
@@ -48,6 +59,8 @@ export default function TextField({
           {label}
         </label>
       )}
+      {/* inputに直接refを付けるとregisterメソッド戻り値のrefと衝突する */}
+      <Box ref={beforeInputRef} className="hidden" />
       <Box
         component={rows ? "textarea" : "input"}
         id={name}

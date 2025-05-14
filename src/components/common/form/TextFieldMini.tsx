@@ -1,5 +1,6 @@
+import { useEffect, useRef } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 
 export default function TextFieldMini({
   name,
@@ -22,6 +23,8 @@ export default function TextFieldMini({
   inputClass?: string;
   onInput?: () => void;
 }) {
+  const beforeInputRef = useRef<HTMLElement>(null);
+
   const {
     register,
     formState: { errors },
@@ -35,19 +38,50 @@ export default function TextFieldMini({
     return errorObj as Partial<FieldError> | null;
   })();
 
+  useEffect(() => {
+    if (type === "number") {
+      const inputElem = beforeInputRef.current
+        ?.nextElementSibling as HTMLInputElement;
+      if (inputElem.value === "0") {
+        inputElem.value = "";
+      }
+    }
+  }, []);
+
   return (
-    <Box className={`space-y-1 ${className}`}>
-      <input
-        id={name}
-        type={type}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        autoFocus={autoFocus}
-        disabled={disabled}
-        {...register(name)}
-        className={`w-full rounded-md border px-1 py-1 text-xs shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
-        onInput={onInput}
-      />
-    </Box>
+    <Tooltip
+      title={error?.message ?? ""}
+      arrow
+      placement="top-start"
+      slotProps={{
+        popper: {
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, -8],
+              },
+            },
+          ],
+        },
+        tooltip: { className: "text-sm p-2" },
+      }}
+    >
+      <Box className={`space-y-1 ${className}`}>
+        {/* inputに直接refを付けるとregisterメソッド戻り値のrefと衝突する */}
+        <Box ref={beforeInputRef} className="hidden" />
+        <input
+          id={name}
+          type={type}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          autoFocus={autoFocus}
+          disabled={disabled}
+          {...register(name)}
+          className={`w-full rounded-md border px-1 py-1 text-xs shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
+          onInput={onInput}
+        />
+      </Box>
+    </Tooltip>
   );
 }

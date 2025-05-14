@@ -32,10 +32,18 @@ export default function CompanyList({
         src={item.iconImageUrl}
         size={64}
         alt={`${item.name}のロゴ`}
-        className="-my-1 border border-[var(--myturn-border)]"
+        className="-my-1 mx-auto border border-[var(--myturn-border)]"
+        imageClass="object-contain"
       />
     ),
-    name: item.name,
+    name: (
+      <Typography
+        title={item.name}
+        className="line-clamp-3 w-36 text-wrap text-left"
+      >
+        {item.name}
+      </Typography>
+    ),
     prefecture: item.prefecture || "—",
     industry: getSelectItem(industries, item.industry)?.label ?? "—",
     createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
