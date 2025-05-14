@@ -33,6 +33,7 @@ export default function CompanyList({
         size={64}
         alt={`${item.name}のロゴ`}
         className="-my-1 mx-auto border border-[var(--myturn-border)]"
+        imageClass="object-contain"
       />
     ),
     name: (

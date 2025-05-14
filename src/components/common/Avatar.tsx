@@ -8,6 +8,7 @@ export default function Avatar({
   name,
   alt,
   className = "",
+  imageClass = "object-cover",
 }: {
   src: string;
   size: number;
@@ -15,6 +16,7 @@ export default function Avatar({
   name?: string;
   alt?: string;
   className?: string;
+  imageClass?: string;
 }) {
   if (src) {
     return (
@@ -27,7 +29,7 @@ export default function Avatar({
         sx={{ width: size, height: size }}
         slotProps={{
           img: {
-            className: "w-full h-full object-cover",
+            className: `w-full h-full ${imageClass}`,
             decoding: "async",
           },
         }}
