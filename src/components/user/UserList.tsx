@@ -5,7 +5,7 @@ import {
   availableDaysPerWeeks,
   availableDurationMonths,
   availableHoursPerWeeks,
-  departments,
+  schoolDepartments,
   schoolGrades,
 } from "@/const/user";
 import Avatar from "@/components/common/Avatar";
@@ -68,7 +68,7 @@ export default function UserList({
       ) : (
         "—"
       ),
-    department: getSelectItem(departments, item.department)?.label ?? "—",
+    department: getSelectItem(schoolDepartments, item.department)?.label ?? "—",
     grade: getSelectItem(schoolGrades, item.grade)?.label ?? "—",
     createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
     deletedAt: item.deletedAt

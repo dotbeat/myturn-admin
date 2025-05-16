@@ -5,7 +5,7 @@ import {
   availableDaysPerWeeksAndEmpty,
   availableDurationMonthsAndEmpty,
   availableHoursPerWeeksAndEmpty,
-  departmentsAndEmpty,
+  schoolDepartmentsAndEmpty,
   gendersAndEmpty,
   schoolGradesAndEmpty,
 } from "@/const/user";
@@ -62,7 +62,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
         <FilterItem label="学科系統">
           <SelectMini
             name="department"
-            items={departmentsAndEmpty("")}
+            items={schoolDepartmentsAndEmpty("")}
             className="w-28"
           />
         </FilterItem>
