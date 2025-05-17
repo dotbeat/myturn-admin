@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { UserFilterFormData } from "@/schemas/user/filter";
 import { SEARCH_USERS } from "@/server/graphql/user/queries";
 import { UserItem } from "@/types/user";
+import { isSameObject } from "@/utils/shared/object";
 
 export function useUsers(
   initialInput: UserFilterFormData,
@@ -26,9 +27,11 @@ export function useUsers(
   });
 
   // 再リクエストする
-  const refetchUsers = async (input: UserFilterFormData) => {
-    setUsers([]);
-    setInput(input);
+  const refetchUsers = async (newInput: UserFilterFormData) => {
+    if (!isSameObject(input, newInput)) {
+      setUsers([]);
+      setInput(newInput);
+    }
   };
 
   return {

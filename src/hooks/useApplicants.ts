@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { ApplicantFilterFormData } from "@/schemas/applicant/filter";
 import { SEARCH_ENTRIES } from "@/server/graphql/entry/queries";
 import { ApplicantItem } from "@/types/applicant";
+import { isSameObject } from "@/utils/shared/object";
 
 export function useApplicants(
   initialInput: ApplicantFilterFormData,
@@ -26,9 +27,11 @@ export function useApplicants(
   });
 
   // 再リクエストする
-  const refetchApplicants = async (input: ApplicantFilterFormData) => {
-    setApplicants([]);
-    setInput(input);
+  const refetchApplicants = async (newInput: ApplicantFilterFormData) => {
+    if (!isSameObject(input, newInput)) {
+      setApplicants([]);
+      setInput(newInput);
+    }
   };
 
   return {

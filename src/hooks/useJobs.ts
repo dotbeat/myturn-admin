@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { JobFilterFormData } from "@/schemas/job/filter";
 import { SEARCH_JOB } from "@/server/graphql/job/queries";
 import { JobItem } from "@/types/job";
+import { isSameObject } from "@/utils/shared/object";
 
 export function useJobs(
   initialInput: JobFilterFormData,
@@ -26,9 +27,11 @@ export function useJobs(
   });
 
   // 再リクエストする
-  const refetchJobs = async (input: JobFilterFormData) => {
-    setJobs([]);
-    setInput(input);
+  const refetchJobs = async (newInput: JobFilterFormData) => {
+    if (!isSameObject(input, newInput)) {
+      setJobs([]);
+      setInput(newInput);
+    }
   };
 
   return {

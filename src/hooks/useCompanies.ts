@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { CompanyFilterFormData } from "@/schemas/company/filter";
 import { SEARCH_COMPANY } from "@/server/graphql/company/queries";
 import { CompanyItem } from "@/types/company";
+import { isSameObject } from "@/utils/shared/object";
 
 export function useCompanies(
   initialInput: CompanyFilterFormData,
@@ -26,9 +27,11 @@ export function useCompanies(
   });
 
   // 再リクエストする
-  const refetchCompanies = async (input: CompanyFilterFormData) => {
-    setCompanies([]);
-    setInput(input);
+  const refetchCompanies = async (newInput: CompanyFilterFormData) => {
+    if (!isSameObject(input, newInput)) {
+      setCompanies([]);
+      setInput(newInput);
+    }
   };
 
   return {

@@ -18,7 +18,7 @@ export default function CompanyList({
     { property: "iconImageUrl", label: "ロゴ" },
     { property: "name", label: "企業名" },
     { property: "prefecture", label: "都道府県" },
-    { property: "industry", label: "業種" },
+    { property: "industry", label: "業界" },
     { property: "createdAt", label: "登録日" },
     { property: "deletedAt", label: "退会日" },
     { property: "jobCount", label: "掲載求人" },
