@@ -38,7 +38,12 @@ export const industries: SelectItem[] = [
   "交通/インフラ",
   "サービス",
   "飲食",
-  "旅行",
+  "旅行/レジャー",
+  "アパレル/ファッション",
+  "スポーツ",
+  "ゲーム",
+  "ホテル/ブライダル",
+  "NPO",
 ].map((period) => ({
   value: period,
   label: period,
