@@ -1,4 +1,4 @@
-export type UserItem = {
+type User = {
   id: number;
   avatarUrl: string;
   lastName: string;
@@ -8,10 +8,24 @@ export type UserItem = {
   faculty: string;
   department: string;
   grade: string;
-  createdAt: string;
-  deletedAt: string;
   availableDaysPerWeek: number;
   availableHoursPerWeek: number;
   availableDurationMonths: number;
+};
+
+export type UserItem = User & {
+  createdAt: string;
+  deletedAt: string;
   entryCount: number;
+};
+
+export type UserDetail = User & {
+  gender: string;
+  birthDate: string;
+  graduationYear: number;
+  interestedIndustries: string;
+  interestedJobTypes: string;
+  selfPR: string;
+  futureGoals: string;
+  applicantNote: string;
 };
