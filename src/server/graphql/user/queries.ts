@@ -39,3 +39,31 @@ export const GET_USERS_STATISTICS = gql`
     }
   }
 `;
+
+// ユーザー情報を取得するクエリ
+export const GET_USER = gql`
+  query GetUser($id: Int!) {
+    user(id: $id) {
+      id
+      lastName
+      firstName
+      avatarUrl
+      university
+      faculty
+      department
+      gender
+      birthDate
+      prefecture
+      grade
+      graduationYear
+      availableDaysPerWeek
+      availableHoursPerWeek
+      availableDurationMonths
+      interestedIndustries
+      interestedJobTypes
+      selfPR
+      futureGoals
+      applicantNote
+    }
+  }
+`;

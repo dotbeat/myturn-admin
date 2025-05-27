@@ -53,6 +53,23 @@ export function schoolGradesAndEmpty(emptyLabel: string): SelectItem[] {
   return [{ value: "", label: emptyLabel }, ...schoolGrades];
 }
 
+// 卒業予定年度
+export const schoolGraduationYears: SelectItem<number>[] = [
+  { value: 2025, label: "2025年卒" },
+  { value: 2026, label: "2026年卒" },
+  { value: 2027, label: "2027年卒" },
+  { value: 2028, label: "2028年卒" },
+  { value: 2029, label: "2029年卒" },
+  { value: 2030, label: "2030年卒" },
+  { value: 2031, label: "2031年卒" },
+  { value: 9999, label: "その他" },
+];
+export function schoolGraduationYearsAndEmpty(
+  emptyLabel: string,
+): SelectItem<number>[] {
+  return [{ value: 0, label: emptyLabel }, ...schoolGraduationYears];
+}
+
 // 週の勤務可能日数
 export const availableDaysPerWeeks: SelectItem<number>[] = [
   { value: 1, label: "週1日" },
