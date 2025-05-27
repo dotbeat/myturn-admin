@@ -3,14 +3,8 @@ import { useQuery } from "@apollo/client";
 import { JobFilterFormData } from "@/schemas/job/filter";
 import { SEARCH_JOB } from "@/server/graphql/job/queries";
 import { JobItem } from "@/types/job";
-import { isSameObject } from "@/utils/shared/object";
 
-export function useJobs(
-  initialInput: JobFilterFormData,
-  page: number,
-  limit: number,
-) {
-  const [input, setInput] = useState(initialInput);
+export function useJobs(input: JobFilterFormData, page: number, limit: number) {
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
   const [totalPages, setTotalPages] = useState(0); // 一覧表のページ数
@@ -26,19 +20,10 @@ export function useJobs(
     },
   });
 
-  // 再リクエストする
-  const refetchJobs = async (newInput: JobFilterFormData) => {
-    if (!isSameObject(input, newInput)) {
-      setJobs([]);
-      setInput(newInput);
-    }
-  };
-
   return {
     jobs,
     totalCount,
     totalPages,
     loading,
-    refetchJobs,
   };
 }

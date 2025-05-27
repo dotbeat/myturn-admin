@@ -18,6 +18,11 @@ import {
   UserFilterFormData,
   userFilterFormSchema,
 } from "@/schemas/user/filter";
+import {
+  convertFormDataToUrlParams,
+  ConvertUrlParamEntry,
+} from "@/utils/frontend/form";
+import { isSameObject } from "@/utils/shared/object";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -29,35 +34,49 @@ import UserList from "@/components/user/UserList";
 export default function PageBody() {
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
-  const page = parseInt((searchParams.get("page") as string) || "1", 10);
-  const limit = 30;
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
 
+  const paramsConverter = new ConvertUrlParamEntry(searchParams);
+  const page = paramsConverter.toNumber("page", 1);
+  const limit = paramsConverter.toNumber("limit", 30);
+
   const initialFormData: UserFilterFormData = {
-    name: "",
-    gender: "",
-    prefecture: "",
-    registerDateStart: null,
-    registerDateEnd: null,
-    leaveDateStart: null,
-    leaveDateEnd: null,
-    university: "",
-    faculty: "",
-    department: "",
-    grade: "",
-    availableDaysPerWeekMin: 0,
-    availableDaysPerWeekMax: 0,
-    availableHoursPerWeekMin: 0,
-    availableHoursPerWeekMax: 0,
-    availableDurationMonthsMin: 0,
-    availableDurationMonthsMax: 0,
-    interestedIndustry: "",
-    interestedJobType: "",
-    entryCountMin: 0,
-    entryCountMax: 0,
+    name: paramsConverter.toString("name"),
+    gender: paramsConverter.toString("gender"),
+    prefecture: paramsConverter.toString("prefecture"),
+    registerDateStart: paramsConverter.toDate("registerDateStart"),
+    registerDateEnd: paramsConverter.toDate("registerDateEnd"),
+    leaveDateStart: paramsConverter.toDate("leaveDateStart"),
+    leaveDateEnd: paramsConverter.toDate("leaveDateEnd"),
+    university: paramsConverter.toString("university"),
+    faculty: paramsConverter.toString("faculty"),
+    department: paramsConverter.toString("department"),
+    grade: paramsConverter.toString("grade"),
+    availableDaysPerWeekMin: paramsConverter.toNumber(
+      "availableDaysPerWeekMin",
+    ),
+    availableDaysPerWeekMax: paramsConverter.toNumber(
+      "availableDaysPerWeekMax",
+    ),
+    availableHoursPerWeekMin: paramsConverter.toNumber(
+      "availableHoursPerWeekMin",
+    ),
+    availableHoursPerWeekMax: paramsConverter.toNumber(
+      "availableHoursPerWeekMax",
+    ),
+    availableDurationMonthsMin: paramsConverter.toNumber(
+      "availableDurationMonthsMin",
+    ),
+    availableDurationMonthsMax: paramsConverter.toNumber(
+      "availableDurationMonthsMax",
+    ),
+    interestedIndustry: paramsConverter.toString("interestedIndustry"),
+    interestedJobType: paramsConverter.toString("interestedJobType"),
+    entryCountMin: paramsConverter.toNumber("entryCountMin"),
+    entryCountMax: paramsConverter.toNumber("entryCountMax"),
   };
 
   const methods = useForm<UserFilterFormData>({
@@ -66,7 +85,7 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { users, totalCount, totalPages, loading, refetchUsers } = useUsers(
+  const { users, totalCount, totalPages, loading } = useUsers(
     initialFormData,
     page,
     limit,
@@ -81,7 +100,16 @@ export default function PageBody() {
   } = useUsersStatistics("");
 
   const onSubmit = (data: UserFilterFormData) => {
-    refetchUsers(data);
+    const oldParams = new URLSearchParams(window.location.search);
+    const newParams = convertFormDataToUrlParams(data);
+    if (
+      !isSameObject(
+        Object.fromEntries(oldParams),
+        Object.fromEntries(newParams),
+      )
+    ) {
+      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+    }
   };
 
   return (
@@ -152,8 +180,16 @@ export default function PageBody() {
               renderItem={(item) => (
                 <PaginationItem
                   component={item.page !== page ? Link : Box}
-                  href={`/companies${item.page === 1 ? "" : `?page=${item.page}`}`}
                   {...item}
+                  href={(() => {
+                    const newParams = new URLSearchParams(searchParams);
+                    if (item.page === 1) {
+                      newParams.delete("page");
+                    } else {
+                      newParams.set("page", String(item.page));
+                    }
+                    return `/users${newParams.size ? "?" : ""}${newParams}`;
+                  })()}
                 />
               )}
             />

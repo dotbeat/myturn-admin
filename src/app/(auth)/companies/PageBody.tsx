@@ -18,6 +18,11 @@ import {
   CompanyFilterFormData,
   companyFilterFormSchema,
 } from "@/schemas/company/filter";
+import {
+  convertFormDataToUrlParams,
+  ConvertUrlParamEntry,
+} from "@/utils/frontend/form";
+import { isSameObject } from "@/utils/shared/object";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -29,25 +34,27 @@ import CompanyList from "@/components/company/CompanyList";
 export default function PageBody() {
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
-  const page = parseInt((searchParams.get("page") as string) || "1", 10);
-  const limit = 30;
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
 
+  const paramsConverter = new ConvertUrlParamEntry(searchParams);
+  const page = paramsConverter.toNumber("page", 1);
+  const limit = paramsConverter.toNumber("limit", 30);
+
   const initialFormData: CompanyFilterFormData = {
-    name: "",
-    prefecture: "",
-    registerDateStart: null,
-    registerDateEnd: null,
-    leaveDateStart: null,
-    leaveDateEnd: null,
-    industry: "",
-    jobCountMin: 0,
-    jobCountMax: 0,
-    acceptCountMin: 0,
-    acceptCountMax: 0,
+    name: paramsConverter.toString("name"),
+    prefecture: paramsConverter.toString("prefecture"),
+    registerDateStart: paramsConverter.toDate("registerDateStart"),
+    registerDateEnd: paramsConverter.toDate("registerDateEnd"),
+    leaveDateStart: paramsConverter.toDate("leaveDateStart"),
+    leaveDateEnd: paramsConverter.toDate("leaveDateEnd"),
+    industry: paramsConverter.toString("industry"),
+    jobCountMin: paramsConverter.toNumber("jobCountMin"),
+    jobCountMax: paramsConverter.toNumber("jobCountMax"),
+    acceptCountMin: paramsConverter.toNumber("acceptCountMin"),
+    acceptCountMax: paramsConverter.toNumber("acceptCountMax"),
   };
   const methods = useForm<CompanyFilterFormData>({
     resolver: zodResolver(companyFilterFormSchema),
@@ -55,8 +62,11 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { companies, totalCount, totalPages, loading, refetchCompanies } =
-    useCompanies(initialFormData, page, limit);
+  const { companies, totalCount, totalPages, loading } = useCompanies(
+    initialFormData,
+    page,
+    limit,
+  );
 
   const {
     allCompanyCount, // 合計登録者数
@@ -67,7 +77,16 @@ export default function PageBody() {
   } = useCompaniesStatistics("");
 
   const onSubmit = (data: CompanyFilterFormData) => {
-    refetchCompanies(data);
+    const oldParams = new URLSearchParams(window.location.search);
+    const newParams = convertFormDataToUrlParams(data);
+    if (
+      !isSameObject(
+        Object.fromEntries(oldParams),
+        Object.fromEntries(newParams),
+      )
+    ) {
+      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+    }
   };
 
   return (
@@ -138,8 +157,16 @@ export default function PageBody() {
               renderItem={(item) => (
                 <PaginationItem
                   component={item.page !== page ? Link : Box}
-                  href={`/companies${item.page === 1 ? "" : `?page=${item.page}`}`}
                   {...item}
+                  href={(() => {
+                    const newParams = new URLSearchParams(searchParams);
+                    if (item.page === 1) {
+                      newParams.delete("page");
+                    } else {
+                      newParams.set("page", String(item.page));
+                    }
+                    return `/companies${newParams.size ? "?" : ""}${newParams}`;
+                  })()}
                 />
               )}
             />
