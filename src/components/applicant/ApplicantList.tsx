@@ -40,7 +40,7 @@ export default function ApplicantList({
     name: (
       <Typography className="line-clamp-3 w-28 text-wrap text-left">
         <Link
-          href={`/users/${item.id}`}
+          href={`/users/${item.user.id}`}
           title={`${item.user.lastName} ${item.user.firstName}`}
           className="underline"
         >
