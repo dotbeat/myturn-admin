@@ -24,13 +24,15 @@ export const SEARCH_COMPANY_INVOICE = gql`
   }
 `;
 
-export const GET_COMPANIES_STATISTICS = gql`
-  query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
-    getCompaniesStatistics(input: $input) {
-      totalCount
-      postedCount
+export const GET_COMPANY_INVOICE_STATISTICS = gql`
+  query GetCompanyInvoicesStatistics(
+    $input: GetCompanyInvoicesStatisticsInput!
+  ) {
+    getCompanyInvoicesStatistics(input: $input) {
+      totalAmount
       acceptedCount
-      leavedCount
+      generalCount
+      technicalCount
     }
   }
 `;

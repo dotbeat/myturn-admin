@@ -82,6 +82,14 @@ export type CompanyInvoicesResultType = {
   totalPages: Scalars['Int']['output'];
 };
 
+export type CompanyInvoicesStatisticsResultType = {
+  __typename?: 'CompanyInvoicesStatisticsResultType';
+  acceptedCount: Scalars['Int']['output'];
+  generalCount: Scalars['Int']['output'];
+  technicalCount: Scalars['Int']['output'];
+  totalAmount: Scalars['Int']['output'];
+};
+
 export type CompanyJobsWithSimpleEntriesType = {
   __typename?: 'CompanyJobsWithSimpleEntriesType';
   companyId: Scalars['Int']['output'];
@@ -446,6 +454,11 @@ export type GetCompanyInvoicesInput = {
   paymentLimitDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
   paymentLimitDateStart?: InputMaybe<Scalars['DateTime']['input']>;
   service?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetCompanyInvoicesStatisticsInput = {
+  periodEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  periodStart?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type GetCompanyUnreadMessagesInput = {
@@ -1043,6 +1056,7 @@ export type Query = {
   getCompaniesStatistics: CompaniesStatisticsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
   getCompanyInvoices: CompanyInvoicesResultType;
+  getCompanyInvoicesStatistics: CompanyInvoicesStatisticsResultType;
   getCompanyJobsWithEntries: CompanyJobsWithSimpleEntriesType;
   getCompanyUnreadCount: CompanyUnreadCount;
   getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
@@ -1100,6 +1114,11 @@ export type QueryGetCompaniesStatisticsArgs = {
 
 export type QueryGetCompanyInvoicesArgs = {
   input: GetCompanyInvoicesInput;
+};
+
+
+export type QueryGetCompanyInvoicesStatisticsArgs = {
+  input: GetCompanyInvoicesStatisticsInput;
 };
 
 
@@ -1701,6 +1720,13 @@ export type GetCompanyInvoicesQueryVariables = Exact<{
 
 export type GetCompanyInvoicesQuery = { __typename?: 'Query', getCompanyInvoices: { __typename?: 'CompanyInvoicesResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyInvoiceType', id: number, companyName: string, entryId: number, userId: number, applicantName: string, acceptDate: any, paymentLimitDate: any, service: string, amount: number }> } };
 
+export type GetCompanyInvoicesStatisticsQueryVariables = Exact<{
+  input: GetCompanyInvoicesStatisticsInput;
+}>;
+
+
+export type GetCompanyInvoicesStatisticsQuery = { __typename?: 'Query', getCompanyInvoicesStatistics: { __typename?: 'CompanyInvoicesStatisticsResultType', totalAmount: number, acceptedCount: number, generalCount: number, technicalCount: number } };
+
 export type SearchJobsWithStatsQueryVariables = Exact<{
   input: SearchJobsWithStatsInput;
 }>;
@@ -2018,6 +2044,49 @@ export type GetCompanyInvoicesQueryHookResult = ReturnType<typeof useGetCompanyI
 export type GetCompanyInvoicesLazyQueryHookResult = ReturnType<typeof useGetCompanyInvoicesLazyQuery>;
 export type GetCompanyInvoicesSuspenseQueryHookResult = ReturnType<typeof useGetCompanyInvoicesSuspenseQuery>;
 export type GetCompanyInvoicesQueryResult = Apollo.QueryResult<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>;
+export const GetCompanyInvoicesStatisticsDocument = gql`
+    query GetCompanyInvoicesStatistics($input: GetCompanyInvoicesStatisticsInput!) {
+  getCompanyInvoicesStatistics(input: $input) {
+    totalAmount
+    acceptedCount
+    generalCount
+    technicalCount
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyInvoicesStatisticsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyInvoicesStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyInvoicesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyInvoicesStatisticsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyInvoicesStatisticsQuery(baseOptions: Apollo.QueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables> & ({ variables: GetCompanyInvoicesStatisticsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+      }
+export function useGetCompanyInvoicesStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+        }
+export function useGetCompanyInvoicesStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+        }
+export type GetCompanyInvoicesStatisticsQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsQuery>;
+export type GetCompanyInvoicesStatisticsLazyQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsLazyQuery>;
+export type GetCompanyInvoicesStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsSuspenseQuery>;
+export type GetCompanyInvoicesStatisticsQueryResult = Apollo.QueryResult<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>;
 export const SearchJobsWithStatsDocument = gql`
     query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
   searchJobsWithStats(input: $input) {
