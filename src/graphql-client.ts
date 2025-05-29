@@ -799,7 +799,7 @@ export type Mutation = {
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
-  createCompanyInvoice: CompanyInvoiceType;
+  createCompanyInvoices: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
   createUser: UserType;
@@ -853,8 +853,8 @@ export type MutationCreateCompanyArgs = {
 };
 
 
-export type MutationCreateCompanyInvoiceArgs = {
-  entryId: Scalars['Int']['input'];
+export type MutationCreateCompanyInvoicesArgs = {
+  entryIds: Array<Scalars['Int']['input']>;
 };
 
 
