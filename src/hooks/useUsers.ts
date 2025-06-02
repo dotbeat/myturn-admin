@@ -5,11 +5,10 @@ import { SEARCH_USERS } from "@/server/graphql/user/queries";
 import { UserItem } from "@/types/user";
 
 export function useUsers(
-  initialInput: UserFilterFormData,
+  input: UserFilterFormData,
   page: number,
   limit: number,
 ) {
-  const [input, setInput] = useState<UserFilterFormData>(initialInput);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
   const [totalPages, setTotalPages] = useState(0); // 一覧表のページ数
@@ -25,17 +24,10 @@ export function useUsers(
     },
   });
 
-  // 再リクエストする
-  const refetchUsers = async (input: UserFilterFormData) => {
-    setUsers([]);
-    setInput(input);
-  };
-
   return {
     users,
     totalCount,
     totalPages,
     loading,
-    refetchUsers,
   };
 }

@@ -15,6 +15,12 @@ import { periods } from "@/const/date";
 import { useJobs } from "@/hooks/useJobs";
 import { useJobsStatistics } from "@/hooks/useJobsStatistics";
 import { JobFilterFormData, jobFilterFormSchema } from "@/schemas/job/filter";
+import { JobStatus } from "@/types/job";
+import {
+  convertFormDataToUrlParams,
+  ConvertUrlParamEntry,
+} from "@/utils/frontend/form";
+import { isSameObject } from "@/utils/shared/object";
 import { getSelectItem } from "@/utils/shared/select";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
@@ -26,32 +32,34 @@ import JobList from "@/components/job/JobList";
 export default function PageBody() {
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
-  const page = parseInt((searchParams.get("page") as string) || "1", 10);
-  const limit = 30;
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
 
+  const paramsConverter = new ConvertUrlParamEntry(searchParams);
+  const page = paramsConverter.toNumber("page", 1);
+  const limit = paramsConverter.toNumber("limit", 30);
+
   const initialFormData: JobFilterFormData = {
-    title: "",
-    companyName: "",
-    prefecture: "",
-    status: "",
-    openDateStart: null,
-    openDateEnd: null,
-    closeDateStart: null,
-    closeDateEnd: null,
-    jobType: "",
-    industry: "",
-    pvCountMin: 0,
-    pvCountMax: 0,
-    favoriteCountMin: 0,
-    favoriteCountMax: 0,
-    entryCountMin: 0,
-    entryCountMax: 0,
-    acceptCountMin: 0,
-    acceptCountMax: 0,
+    title: paramsConverter.toString("title"),
+    companyName: paramsConverter.toString("companyName"),
+    prefecture: paramsConverter.toString("prefecture"),
+    status: paramsConverter.toString("status") as JobStatus | "",
+    openDateStart: paramsConverter.toDate("openDateStart"),
+    openDateEnd: paramsConverter.toDate("openDateEnd"),
+    closeDateStart: paramsConverter.toDate("closeDateStart"),
+    closeDateEnd: paramsConverter.toDate("closeDateEnd"),
+    jobType: paramsConverter.toString("jobType"),
+    industry: paramsConverter.toString("industry"),
+    pvCountMin: paramsConverter.toNumber("pvCountMin"),
+    pvCountMax: paramsConverter.toNumber("pvCountMax"),
+    favoriteCountMin: paramsConverter.toNumber("favoriteCountMin"),
+    favoriteCountMax: paramsConverter.toNumber("favoriteCountMax"),
+    entryCountMin: paramsConverter.toNumber("entryCountMin"),
+    entryCountMax: paramsConverter.toNumber("entryCountMax"),
+    acceptCountMin: paramsConverter.toNumber("acceptCountMin"),
+    acceptCountMax: paramsConverter.toNumber("acceptCountMax"),
   };
   const methods = useForm<JobFilterFormData>({
     resolver: zodResolver(jobFilterFormSchema),
@@ -59,7 +67,7 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { jobs, totalCount, totalPages, loading, refetchJobs } = useJobs(
+  const { jobs, totalCount, totalPages, loading } = useJobs(
     initialFormData,
     page,
     limit,
@@ -74,7 +82,16 @@ export default function PageBody() {
   } = useJobsStatistics("");
 
   const onSubmit = (data: JobFilterFormData) => {
-    refetchJobs(data);
+    const oldParams = new URLSearchParams(window.location.search);
+    const newParams = convertFormDataToUrlParams(data);
+    if (
+      !isSameObject(
+        Object.fromEntries(oldParams),
+        Object.fromEntries(newParams),
+      )
+    ) {
+      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+    }
   };
 
   return (
@@ -145,8 +162,16 @@ export default function PageBody() {
               renderItem={(item) => (
                 <PaginationItem
                   component={item.page !== page ? Link : Box}
-                  href={`/jobs${item.page === 1 ? "" : `?page=${item.page}`}`}
                   {...item}
+                  href={(() => {
+                    const newParams = new URLSearchParams(searchParams);
+                    if (item.page === 1) {
+                      newParams.delete("page");
+                    } else {
+                      newParams.set("page", String(item.page));
+                    }
+                    return `/jobs${newParams.size ? "?" : ""}${newParams}`;
+                  })()}
                 />
               )}
             />

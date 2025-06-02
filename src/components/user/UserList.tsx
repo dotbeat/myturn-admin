@@ -1,11 +1,11 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Link, Typography } from "@mui/material";
 import { UserItem } from "@/types/user";
 import { getSelectItem } from "@/utils/shared/select";
 import {
   availableDaysPerWeeks,
   availableDurationMonths,
   availableHoursPerWeeks,
-  departments,
+  schoolDepartments,
   schoolGrades,
 } from "@/const/user";
 import Avatar from "@/components/common/Avatar";
@@ -41,17 +41,21 @@ export default function UserList({
       <Avatar
         src={item.avatarUrl}
         size={64}
+        href={`/users/${item.id}`}
         name={item.lastName + item.firstName}
         className="-my-1 border border-[var(--myturn-border)]"
       />
     ),
     name:
       item.lastName && item.firstName ? (
-        <Typography
-          title={`${item.lastName} ${item.firstName}`}
-          className="line-clamp-3 w-28 text-wrap text-left"
-        >
-          {item.lastName} {item.firstName}
+        <Typography className="line-clamp-3 w-28 text-wrap text-left">
+          <Link
+            href={`/users/${item.id}`}
+            title={`${item.lastName} ${item.firstName}`}
+            className="underline"
+          >
+            {item.lastName} {item.firstName}
+          </Link>
         </Typography>
       ) : (
         "—"
@@ -68,7 +72,7 @@ export default function UserList({
       ) : (
         "—"
       ),
-    department: getSelectItem(departments, item.department)?.label ?? "—",
+    department: getSelectItem(schoolDepartments, item.department)?.label ?? "—",
     grade: getSelectItem(schoolGrades, item.grade)?.label ?? "—",
     createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
     deletedAt: item.deletedAt

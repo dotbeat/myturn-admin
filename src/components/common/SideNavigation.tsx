@@ -35,6 +35,9 @@ export default function SideNavigation({
           <SideNavigationItem href="/applicants" label="応募者" />
         </ListItem>
         <ListItem className="p-0">
+          <SideNavigationItem href="/invoices" label="請求" />
+        </ListItem>
+        <ListItem className="p-0">
           <SideNavigationItem href="/magazine" label="Magazine" />
         </ListItem>
       </List>

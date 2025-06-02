@@ -38,6 +38,8 @@ export default function Avatar({
   } else {
     return (
       <Box
+        component={href ? "a" : "div"}
+        href={href}
         className={`flex items-center justify-center rounded-full bg-[var(--myturn-support-middle)] ${className}`}
         sx={{ width: size, height: size }}
       >

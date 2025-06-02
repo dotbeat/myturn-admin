@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Link, Typography } from "@mui/material";
 import { industries, jobTypes } from "@/const/job";
 import { ApplicantItem } from "@/types/applicant";
 import { applyStatusIndex } from "@/utils/shared/applicant";
@@ -30,18 +30,22 @@ export default function ApplicantList({
     id: item.id,
     avatarUrl: (
       <Avatar
-        src={item.avatarUrl}
+        src={item.user.avatarUrl}
         size={64}
+        href={`/users/${item.user.id}`}
         name={item.user.lastName + item.user.firstName}
         className="-my-1"
       />
     ),
     name: (
-      <Typography
-        title={`${item.user.lastName} ${item.user.firstName}`}
-        className="line-clamp-3 w-28 text-wrap text-left"
-      >
-        {item.user.lastName} {item.user.firstName}
+      <Typography className="line-clamp-3 w-28 text-wrap text-left">
+        <Link
+          href={`/users/${item.user.id}`}
+          title={`${item.user.lastName} ${item.user.firstName}`}
+          className="underline"
+        >
+          {item.user.lastName} {item.user.firstName}
+        </Link>
       </Typography>
     ),
     companyName: item.job.company.name,

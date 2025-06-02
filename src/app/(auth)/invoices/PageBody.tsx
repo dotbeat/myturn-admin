@@ -12,13 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import { periods } from "@/const/date";
-import { useApplicants } from "@/hooks/useApplicants";
-import { useApplicantsStatistics } from "@/hooks/useApplicantsStatistics";
+import { useInvoices } from "@/hooks/useInvoices";
+import { useInvoicesStatistics } from "@/hooks/useInvoicesStatistics";
 import {
-  applicantFilterFormSchema,
-  ApplicantFilterFormData,
-} from "@/schemas/applicant/filter";
-import { ApplyStatus } from "@/types/applicant";
+  InvoiceFilterFormData,
+  invoiceFilterFormSchema,
+} from "@/schemas/invoice/filter";
 import {
   convertFormDataToUrlParams,
   ConvertUrlParamEntry,
@@ -29,8 +28,8 @@ import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
 import IndicateItem from "@/components/common/IndicateItem";
 import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
-import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
-import ApplicantList from "@/components/applicant/ApplicantList";
+import InvoiceFilterForm from "@/components/invoice/InvoiceFilterForm";
+import InvoiceList from "@/components/invoice/InvoiceList";
 
 export default function PageBody() {
   // URLパラメータから検索条件を取得
@@ -44,40 +43,36 @@ export default function PageBody() {
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
 
-  const initialFormData: ApplicantFilterFormData = {
-    jobTitle: paramsConverter.toString("jobTitle"),
+  const initialFormData: InvoiceFilterFormData = {
+    applicantName: paramsConverter.toString("applicantName"),
     companyName: paramsConverter.toString("companyName"),
-    jobType: paramsConverter.toString("jobType"),
-    industry: paramsConverter.toString("industry"),
-    name: paramsConverter.toString("name"),
-    entryDateStart: paramsConverter.toDate("entryDateStart"),
-    entryDateEnd: paramsConverter.toDate("entryDateEnd"),
-    status: paramsConverter.toString("status") as ApplyStatus | "",
+    acceptDateStart: paramsConverter.toDate("acceptDateStart"),
+    acceptDateEnd: paramsConverter.toDate("acceptDateEnd"),
+    paymentLimitDateStart: paramsConverter.toDate("paymentLimitDateStart"),
+    paymentLimitDateEnd: paramsConverter.toDate("paymentLimitDateEnd"),
+    service: paramsConverter.toString("service"),
   };
-  const methods = useForm<ApplicantFilterFormData>({
-    resolver: zodResolver(applicantFilterFormSchema),
+  const methods = useForm<InvoiceFilterFormData>({
+    resolver: zodResolver(invoiceFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
     defaultValues: initialFormData,
   });
 
-  const { applicants, totalCount, totalPages, loading } = useApplicants(
+  const { invoices, totalCount, totalPages, loading } = useInvoices(
     initialFormData,
     page,
     limit,
   );
 
   const {
-    allApplicantCount, // 合計応募者数
-    pendingCount, // 新着応募
-    reviewingCount, // レビュー中
-    interviewCount, // 面談設定済
-    offeredCount, // 内定
-    acceptedCount, // 入社決定
-    rejectedCount, // 採用見送り
+    totalAmount, // 合計売上
+    acceptedCount, // 入社人数
+    generalCount, // 総合職
+    technicalCount, // 技術職
     refetchStatistics,
-  } = useApplicantsStatistics("");
+  } = useInvoicesStatistics("");
 
-  const onSubmit = (data: ApplicantFilterFormData) => {
+  const onSubmit = (data: InvoiceFilterFormData) => {
     const oldParams = new URLSearchParams(window.location.search);
     const newParams = convertFormDataToUrlParams(data);
     if (
@@ -92,31 +87,12 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">応募者管理</PageTitle>
+      <PageTitle className="mb-8">請求ページ</PageTitle>
       <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
-        <IndicateItem
-          label="合計応募数"
-          count={allApplicantCount}
-          className="py-4"
-        />
-        <IndicateItem label="新着応募" count={pendingCount} className="py-4" />
-        <IndicateItem
-          label="レビュー中"
-          count={reviewingCount}
-          className="py-4"
-        />
-        <IndicateItem
-          label="面談設定済"
-          count={interviewCount}
-          className="py-4"
-        />
-        <IndicateItem label="内定" count={offeredCount} className="py-4" />
-        <IndicateItem label="入社決定" count={acceptedCount} className="py-4" />
-        <IndicateItem
-          label="採用見送り"
-          count={rejectedCount}
-          className="py-4"
-        />
+        <IndicateItem label="合計売上" count={totalAmount} className="py-4" />
+        <IndicateItem label="入社人数" count={acceptedCount} className="py-4" />
+        <IndicateItem label="総合職" count={generalCount} className="py-4" />
+        <IndicateItem label="技術職" count={technicalCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
@@ -134,8 +110,8 @@ export default function PageBody() {
             <MenuItem
               key={period.value}
               onClick={() => {
-                setSelectedPeriod(period.value);
                 refetchStatistics(period.value);
+                setSelectedPeriod(period.value);
               }}
             >
               {period.label}
@@ -149,15 +125,15 @@ export default function PageBody() {
             className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
-            <ApplicantFilterForm isLoading={loading} />
+            <InvoiceFilterForm isLoading={loading} />
           </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
           <Typography className="mb-2 px-4 text-lg font-semibold">
             検索結果 {totalCount} 件
           </Typography>
-          <ApplicantList
-            items={applicants}
+          <InvoiceList
+            items={invoices}
             isLoading={loading}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
@@ -177,7 +153,7 @@ export default function PageBody() {
                     } else {
                       newParams.set("page", String(item.page));
                     }
-                    return `/applicants${newParams.size ? "?" : ""}${newParams}`;
+                    return `/invoices${newParams.size ? "?" : ""}${newParams}`;
                   })()}
                 />
               )}

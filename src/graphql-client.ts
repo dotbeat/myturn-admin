@@ -55,6 +55,41 @@ export type CompanyInfo = {
   name: Scalars['String']['output'];
 };
 
+export type CompanyInvoiceType = {
+  __typename?: 'CompanyInvoiceType';
+  acceptDate: Scalars['DateTime']['output'];
+  amount: Scalars['Int']['output'];
+  applicantName: Scalars['String']['output'];
+  companyId: Scalars['Int']['output'];
+  companyName: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  entryId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  paymentLimitDate: Scalars['DateTime']['output'];
+  service: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['Int']['output'];
+};
+
+export type CompanyInvoicesResultType = {
+  __typename?: 'CompanyInvoicesResultType';
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  items: Array<CompanyInvoiceType>;
+  limit: Scalars['Int']['output'];
+  page: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type CompanyInvoicesStatisticsResultType = {
+  __typename?: 'CompanyInvoicesStatisticsResultType';
+  acceptedCount: Scalars['Int']['output'];
+  generalCount: Scalars['Int']['output'];
+  technicalCount: Scalars['Int']['output'];
+  totalAmount: Scalars['Int']['output'];
+};
+
 export type CompanyJobsWithSimpleEntriesType = {
   __typename?: 'CompanyJobsWithSimpleEntriesType';
   companyId: Scalars['Int']['output'];
@@ -279,6 +314,15 @@ export type EntryCheck = {
   hasApplied: Scalars['Boolean']['output'];
 };
 
+export type EntryNotification = {
+  __typename?: 'EntryNotification';
+  companyIconUrl?: Maybe<Scalars['String']['output']>;
+  companyId: Scalars['Int']['output'];
+  entry: EntrySubscriptionType;
+  jobTitle: Scalars['String']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+};
+
 export type EntrySearchResultType = {
   __typename?: 'EntrySearchResultType';
   hasNextPage: Scalars['Boolean']['output'];
@@ -288,6 +332,18 @@ export type EntrySearchResultType = {
   page: Scalars['Int']['output'];
   totalCount: Scalars['Int']['output'];
   totalPages: Scalars['Int']['output'];
+};
+
+export type EntrySubscriptionType = {
+  __typename?: 'EntrySubscriptionType';
+  applicantNote?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  isChecked: Scalars['Boolean']['output'];
+  jobId: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
+  userId: Scalars['Int']['output'];
 };
 
 export type EntryType = {
@@ -387,6 +443,24 @@ export type GetCompaniesStatisticsInput = {
   periodStart?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type GetCompanyInvoicesInput = {
+  acceptDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  acceptDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  applicantName?: InputMaybe<Scalars['String']['input']>;
+  companyId?: InputMaybe<Scalars['Int']['input']>;
+  companyName?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  paymentLimitDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentLimitDateStart?: InputMaybe<Scalars['DateTime']['input']>;
+  service?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetCompanyInvoicesStatisticsInput = {
+  periodEnd?: InputMaybe<Scalars['DateTime']['input']>;
+  periodStart?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type GetCompanyUnreadMessagesInput = {
   companyId: Scalars['Int']['input'];
 };
@@ -453,6 +527,7 @@ export type JobSearchResultType = {
   __typename?: 'JobSearchResultType';
   hasNextPage: Scalars['Boolean']['output'];
   hasPreviousPage: Scalars['Boolean']['output'];
+  isSearchResult: Scalars['Boolean']['output'];
   items: Array<JobWithCompanyType>;
   limit: Scalars['Int']['output'];
   page: Scalars['Int']['output'];
@@ -700,6 +775,7 @@ export type Message = {
 
 export type MessageNotification = {
   __typename?: 'MessageNotification';
+  companyIconUrl?: Maybe<Scalars['String']['output']>;
   entryId: Scalars['Int']['output'];
   message: MessageSubscriptionType;
 };
@@ -723,6 +799,7 @@ export type Mutation = {
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
+  createCompanyInvoices: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
   createUser: UserType;
@@ -740,6 +817,7 @@ export type Mutation = {
   requestPasswordReset: RequestPasswordResetResponse;
   resetCompanyPassword: ResetCompanyPasswordResponse;
   resetPassword: ResetPasswordResponse;
+  saveDraftJob: JobType;
   sendCompanyMessage: Message;
   sendMessage: Message;
   updateCompany: CompanyType;
@@ -772,6 +850,11 @@ export type MutationCompanyLoginArgs = {
 
 export type MutationCreateCompanyArgs = {
   input: CreateCompanyInput;
+};
+
+
+export type MutationCreateCompanyInvoicesArgs = {
+  entryIds: Array<Scalars['Int']['input']>;
 };
 
 
@@ -842,6 +925,11 @@ export type MutationResetCompanyPasswordArgs = {
 
 export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
+};
+
+
+export type MutationSaveDraftJobArgs = {
+  input: SaveDraftJobInput;
 };
 
 
@@ -967,6 +1055,8 @@ export type Query = {
   getCompanies: CompanySearchResultType;
   getCompaniesStatistics: CompaniesStatisticsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
+  getCompanyInvoices: CompanyInvoicesResultType;
+  getCompanyInvoicesStatistics: CompanyInvoicesStatisticsResultType;
   getCompanyJobsWithEntries: CompanyJobsWithSimpleEntriesType;
   getCompanyUnreadCount: CompanyUnreadCount;
   getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
@@ -1019,6 +1109,16 @@ export type QueryGetCompaniesArgs = {
 
 export type QueryGetCompaniesStatisticsArgs = {
   input: GetCompaniesStatisticsInput;
+};
+
+
+export type QueryGetCompanyInvoicesArgs = {
+  input: GetCompanyInvoicesInput;
+};
+
+
+export type QueryGetCompanyInvoicesStatisticsArgs = {
+  input: GetCompanyInvoicesStatisticsInput;
 };
 
 
@@ -1168,6 +1268,45 @@ export type ResetPasswordResponse = {
   message: Scalars['String']['output'];
 };
 
+export type SaveDraftJobInput = {
+  access?: InputMaybe<Scalars['String']['input']>;
+  acquirableSkills?: InputMaybe<Array<Scalars['String']['input']>>;
+  applicationProcess?: InputMaybe<Scalars['String']['input']>;
+  businessContent?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  companyAtmosphere?: InputMaybe<Scalars['String']['input']>;
+  companyId: Scalars['Int']['input'];
+  detailAddress?: InputMaybe<Scalars['String']['input']>;
+  experienceGained?: InputMaybe<Scalars['String']['input']>;
+  features?: InputMaybe<Array<Scalars['String']['input']>>;
+  goal?: InputMaybe<Scalars['String']['input']>;
+  headerImageBase64?: InputMaybe<Scalars['String']['input']>;
+  headerImageMimeType?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  industry?: InputMaybe<Scalars['String']['input']>;
+  internJobDescription?: InputMaybe<Scalars['String']['input']>;
+  jobHeader?: InputMaybe<Scalars['String']['input']>;
+  jobType?: InputMaybe<Scalars['String']['input']>;
+  members?: InputMaybe<Array<CreateMemberInput>>;
+  minWorkingDaysPerWeek?: InputMaybe<Scalars['Int']['input']>;
+  minWorkingHoursPerWeek?: InputMaybe<Scalars['Int']['input']>;
+  period?: InputMaybe<Scalars['String']['input']>;
+  postalCode?: InputMaybe<Scalars['String']['input']>;
+  prefecture?: InputMaybe<Scalars['String']['input']>;
+  preferences?: InputMaybe<Array<Scalars['String']['input']>>;
+  programmingLanguages?: InputMaybe<Array<Scalars['String']['input']>>;
+  requirements?: InputMaybe<Scalars['String']['input']>;
+  salary?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  streetAddress?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  transportationFeeAmount?: InputMaybe<Scalars['String']['input']>;
+  usefulSkills?: InputMaybe<Array<Scalars['String']['input']>>;
+  workConditions?: InputMaybe<Array<Scalars['String']['input']>>;
+  workingHoursEnd?: InputMaybe<Scalars['String']['input']>;
+  workingHoursStart?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type SearchEntriesInput = {
   companyName?: InputMaybe<Scalars['String']['input']>;
   entryDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1260,7 +1399,13 @@ export type StaleEntriesType = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  entryAdded: EntryNotification;
   messageAdded: MessageNotification;
+};
+
+
+export type SubscriptionEntryAddedArgs = {
+  companyId: Scalars['Int']['input'];
 };
 
 
@@ -1568,6 +1713,20 @@ export type GetEntriesStatisticsQueryVariables = Exact<{
 
 export type GetEntriesStatisticsQuery = { __typename?: 'Query', getEntriesStatistics: { __typename?: 'EntriesStatisticsResultType', totalCount: number, pendingCount: number, reviewingCount: number, interviewCount: number, offeredCount: number, acceptedCount: number, rejectedCount: number } };
 
+export type GetCompanyInvoicesQueryVariables = Exact<{
+  input: GetCompanyInvoicesInput;
+}>;
+
+
+export type GetCompanyInvoicesQuery = { __typename?: 'Query', getCompanyInvoices: { __typename?: 'CompanyInvoicesResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyInvoiceType', id: number, companyName: string, entryId: number, userId: number, applicantName: string, acceptDate: any, paymentLimitDate: any, service: string, amount: number }> } };
+
+export type GetCompanyInvoicesStatisticsQueryVariables = Exact<{
+  input: GetCompanyInvoicesStatisticsInput;
+}>;
+
+
+export type GetCompanyInvoicesStatisticsQuery = { __typename?: 'Query', getCompanyInvoicesStatistics: { __typename?: 'CompanyInvoicesStatisticsResultType', totalAmount: number, acceptedCount: number, generalCount: number, technicalCount: number } };
+
 export type SearchJobsWithStatsQueryVariables = Exact<{
   input: SearchJobsWithStatsInput;
 }>;
@@ -1607,6 +1766,13 @@ export type GetUsersStatisticsQueryVariables = Exact<{
 
 
 export type GetUsersStatisticsQuery = { __typename?: 'Query', getUsersStatistics: { __typename?: 'UsersStatisticsResultType', totalCount: number, applicantCount: number, acceptedCount: number, leavedCount: number } };
+
+export type GetUserQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'UserType', id: number, lastName?: string | null, firstName?: string | null, avatarUrl?: string | null, university?: string | null, faculty?: string | null, department?: string | null, gender?: string | null, birthDate?: any | null, prefecture?: string | null, grade?: string | null, graduationYear?: number | null, availableDaysPerWeek?: number | null, availableHoursPerWeek?: number | null, availableDurationMonths?: number | null, interestedIndustries: Array<string>, interestedJobTypes: Array<string>, selfPR?: string | null, futureGoals?: string | null, applicantNote?: string | null } | null };
 
 
 export const GetCompaniesDocument = gql`
@@ -1822,6 +1988,105 @@ export type GetEntriesStatisticsQueryHookResult = ReturnType<typeof useGetEntrie
 export type GetEntriesStatisticsLazyQueryHookResult = ReturnType<typeof useGetEntriesStatisticsLazyQuery>;
 export type GetEntriesStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetEntriesStatisticsSuspenseQuery>;
 export type GetEntriesStatisticsQueryResult = Apollo.QueryResult<GetEntriesStatisticsQuery, GetEntriesStatisticsQueryVariables>;
+export const GetCompanyInvoicesDocument = gql`
+    query GetCompanyInvoices($input: GetCompanyInvoicesInput!) {
+  getCompanyInvoices(input: $input) {
+    items {
+      id
+      companyName
+      entryId
+      userId
+      applicantName
+      acceptDate
+      paymentLimitDate
+      service
+      amount
+    }
+    limit
+    page
+    totalCount
+    totalPages
+    hasNextPage
+    hasPreviousPage
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyInvoicesQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyInvoicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyInvoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyInvoicesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyInvoicesQuery(baseOptions: Apollo.QueryHookOptions<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables> & ({ variables: GetCompanyInvoicesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>(GetCompanyInvoicesDocument, options);
+      }
+export function useGetCompanyInvoicesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>(GetCompanyInvoicesDocument, options);
+        }
+export function useGetCompanyInvoicesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>(GetCompanyInvoicesDocument, options);
+        }
+export type GetCompanyInvoicesQueryHookResult = ReturnType<typeof useGetCompanyInvoicesQuery>;
+export type GetCompanyInvoicesLazyQueryHookResult = ReturnType<typeof useGetCompanyInvoicesLazyQuery>;
+export type GetCompanyInvoicesSuspenseQueryHookResult = ReturnType<typeof useGetCompanyInvoicesSuspenseQuery>;
+export type GetCompanyInvoicesQueryResult = Apollo.QueryResult<GetCompanyInvoicesQuery, GetCompanyInvoicesQueryVariables>;
+export const GetCompanyInvoicesStatisticsDocument = gql`
+    query GetCompanyInvoicesStatistics($input: GetCompanyInvoicesStatisticsInput!) {
+  getCompanyInvoicesStatistics(input: $input) {
+    totalAmount
+    acceptedCount
+    generalCount
+    technicalCount
+  }
+}
+    `;
+
+/**
+ * __useGetCompanyInvoicesStatisticsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyInvoicesStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyInvoicesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyInvoicesStatisticsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyInvoicesStatisticsQuery(baseOptions: Apollo.QueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables> & ({ variables: GetCompanyInvoicesStatisticsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+      }
+export function useGetCompanyInvoicesStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+        }
+export function useGetCompanyInvoicesStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>(GetCompanyInvoicesStatisticsDocument, options);
+        }
+export type GetCompanyInvoicesStatisticsQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsQuery>;
+export type GetCompanyInvoicesStatisticsLazyQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsLazyQuery>;
+export type GetCompanyInvoicesStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetCompanyInvoicesStatisticsSuspenseQuery>;
+export type GetCompanyInvoicesStatisticsQueryResult = Apollo.QueryResult<GetCompanyInvoicesStatisticsQuery, GetCompanyInvoicesStatisticsQueryVariables>;
 export const SearchJobsWithStatsDocument = gql`
     query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
   searchJobsWithStats(input: $input) {
@@ -2111,3 +2376,62 @@ export type GetUsersStatisticsQueryHookResult = ReturnType<typeof useGetUsersSta
 export type GetUsersStatisticsLazyQueryHookResult = ReturnType<typeof useGetUsersStatisticsLazyQuery>;
 export type GetUsersStatisticsSuspenseQueryHookResult = ReturnType<typeof useGetUsersStatisticsSuspenseQuery>;
 export type GetUsersStatisticsQueryResult = Apollo.QueryResult<GetUsersStatisticsQuery, GetUsersStatisticsQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($id: Int!) {
+  user(id: $id) {
+    id
+    lastName
+    firstName
+    avatarUrl
+    university
+    faculty
+    department
+    gender
+    birthDate
+    prefecture
+    grade
+    graduationYear
+    availableDaysPerWeek
+    availableHoursPerWeek
+    availableDurationMonths
+    interestedIndustries
+    interestedJobTypes
+    selfPR
+    futureGoals
+    applicantNote
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export function useGetUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;

@@ -8,10 +8,11 @@ export type ApplyStatus =
 
 export type ApplicantItem = {
   id: number;
-  avatarUrl: string;
   user: {
+    id: number;
     lastName: string;
     firstName: string;
+    avatarUrl: string;
   };
   job: {
     title: string;
