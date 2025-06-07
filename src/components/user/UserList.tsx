@@ -59,7 +59,7 @@ export default function UserList({
           {item.deletedAt && <Typography>(退会済)</Typography>}
         </Box>
       ) : (
-        "—"
+        <Typography>{item.deletedAt ? "(退会済ユーザー)" : "—"}</Typography>
       ),
     prefecture: item.prefecture || "—",
     belong:

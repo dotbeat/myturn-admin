@@ -36,13 +36,15 @@ export default function CompanyList({
         imageClass="object-contain"
       />
     ),
-    name: (
+    name: item.name ? (
       <Box className="w-36 text-left">
         <Typography title={item.name} className="line-clamp-3 text-wrap">
           {item.name}
         </Typography>
         {item.deletedAt && <Typography>(退会済)</Typography>}
       </Box>
+    ) : (
+      <Typography>{item.deletedAt ? "(退会済企業)" : "—"}</Typography>
     ),
     prefecture: item.prefecture || "—",
     industry: getSelectItem(industries, item.industry)?.label ?? "—",
