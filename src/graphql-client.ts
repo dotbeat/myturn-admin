@@ -1648,6 +1648,7 @@ export type UserWithEntryCountType = {
   avatarUrl: Scalars['String']['output'];
   birthDate?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   department: Scalars['String']['output'];
   email: Scalars['String']['output'];
   entryCount: Scalars['Int']['output'];
@@ -1765,7 +1766,7 @@ export type SearchUsersQueryVariables = Exact<{
 }>;
 
 
-export type SearchUsersQuery = { __typename?: 'Query', searchUsers: { __typename?: 'UserSearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'UserWithEntryCountType', id: number, avatarUrl: string, lastName: string, firstName: string, prefecture: string, university: string, faculty: string, department: string, grade: string, availableDaysPerWeek: number, availableHoursPerWeek: number, availableDurationMonths: number, entryCount: number, createdAt: any }> } };
+export type SearchUsersQuery = { __typename?: 'Query', searchUsers: { __typename?: 'UserSearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'UserWithEntryCountType', id: number, avatarUrl: string, lastName: string, firstName: string, prefecture: string, university: string, faculty: string, department: string, grade: string, availableDaysPerWeek: number, availableHoursPerWeek: number, availableDurationMonths: number, entryCount: number, createdAt: any, deletedAt?: any | null }> } };
 
 export type GetUsersStatisticsQueryVariables = Exact<{
   input: GetUsersStatisticsInput;
@@ -2298,6 +2299,7 @@ export const SearchUsersDocument = gql`
       availableDurationMonths
       entryCount
       createdAt
+      deletedAt
     }
     limit
     page
