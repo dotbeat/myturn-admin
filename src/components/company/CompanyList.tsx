@@ -37,12 +37,12 @@ export default function CompanyList({
       />
     ),
     name: (
-      <Typography
-        title={item.name}
-        className="line-clamp-3 w-36 text-wrap text-left"
-      >
-        {item.name}
-      </Typography>
+      <Box className="w-36 text-left">
+        <Typography title={item.name} className="line-clamp-3 text-wrap">
+          {item.name}
+        </Typography>
+        {item.deletedAt && <Typography>(退会済)</Typography>}
+      </Box>
     ),
     prefecture: item.prefecture || "—",
     industry: getSelectItem(industries, item.industry)?.label ?? "—",
