@@ -153,6 +153,7 @@ export type CompanyType = {
   city?: Maybe<Scalars['String']['output']>;
   companyUrl: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   detailAddress?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   employeeCount?: Maybe<Scalars['Int']['output']>;
@@ -360,6 +361,7 @@ export type EntryWithDetailsType = {
   __typename?: 'EntryWithDetailsType';
   applicantNote?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['Int']['output'];
   isChecked: Scalars['Boolean']['output'];
   job: JobWithCompanyType;
@@ -382,6 +384,7 @@ export type EntryWithLastMessage = {
   company: CompanyInfo;
   companyUnreadCount: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   entryId: Scalars['Int']['output'];
   job: JobInfo;
   jobId: Scalars['Int']['output'];
@@ -425,6 +428,7 @@ export type FavoriteType = {
 export type GetCompaniesInput = {
   acceptCountMax?: InputMaybe<Scalars['Int']['input']>;
   acceptCountMin?: InputMaybe<Scalars['Int']['input']>;
+  includeDeleted?: InputMaybe<Scalars['Boolean']['input']>;
   industry?: InputMaybe<Scalars['String']['input']>;
   jobCountMax?: InputMaybe<Scalars['Int']['input']>;
   jobCountMin?: InputMaybe<Scalars['Int']['input']>;
@@ -1050,6 +1054,7 @@ export type Query = {
   checkUserJobEntry: EntryCheck;
   companies: Array<CompanyType>;
   company?: Maybe<CompanyWithJobsType>;
+  companyIds: Array<Scalars['Int']['output']>;
   companyMe: CompanyType;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getCompanies: CompanySearchResultType;
@@ -1075,6 +1080,7 @@ export type Query = {
   getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars['Boolean']['output'];
   job?: Maybe<JobWithCompanyType>;
+  jobIds: Array<Scalars['Int']['output']>;
   jobs: Array<JobWithCompanyType>;
   jobsByCompanyId: Array<JobWithCompanyType>;
   jobsByCompanyIdWithStats: Array<JobWithStatsType>;
@@ -1612,6 +1618,7 @@ export type UserType = {
   avatarUrl?: Maybe<Scalars['String']['output']>;
   birthDate?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   department?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   faculty?: Maybe<Scalars['String']['output']>;
@@ -1690,7 +1697,7 @@ export type GetCompaniesQueryVariables = Exact<{
 }>;
 
 
-export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, jobCount?: number | null, acceptCount?: number | null }> } };
+export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, deletedAt?: any | null, jobCount?: number | null, acceptCount?: number | null }> } };
 
 export type GetCompaniesStatisticsQueryVariables = Exact<{
   input: GetCompaniesStatisticsInput;
@@ -1785,6 +1792,7 @@ export const GetCompaniesDocument = gql`
       iconImageUrl
       prefecture
       createdAt
+      deletedAt
       jobCount
       acceptCount
     }
