@@ -37,17 +37,23 @@ export default function ApplicantList({
         className="-my-1"
       />
     ),
-    name: (
-      <Typography className="line-clamp-3 w-28 text-wrap text-left">
-        <Link
-          href={`/users/${item.user.id}`}
-          title={`${item.user.lastName} ${item.user.firstName}`}
-          className="underline"
-        >
-          {item.user.lastName} {item.user.firstName}
-        </Link>
-      </Typography>
-    ),
+    name:
+      item.user.lastName && item.user.firstName ? (
+        <Box className="w-28 text-left">
+          <Link
+            href={`/users/${item.user.id}`}
+            title={`${item.user.lastName} ${item.user.firstName}`}
+            className="line-clamp-2 text-wrap underline"
+          >
+            {item.user.lastName} {item.user.firstName}
+          </Link>
+          {item.user.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography>
+          {item.user.deletedAt ? "(退会済ユーザー)" : "—"}
+        </Typography>
+      ),
     companyName: item.job.company.name,
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",

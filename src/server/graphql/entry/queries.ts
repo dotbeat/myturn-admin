@@ -25,6 +25,7 @@ export const SEARCH_ENTRIES = gql`
           firstName
           lastName
           avatarUrl
+          deletedAt
         }
       }
       limit
