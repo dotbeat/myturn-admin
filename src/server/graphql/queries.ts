@@ -24,3 +24,26 @@ export async function serverQuery<
     throw error;
   }
 }
+
+/**
+ * サーバーサイドでGraphQLミューテーションを実行するためのユーティリティ関数
+ * @param mutation GraphQLミューテーション
+ * @param variables ミューテーション変数
+ * @returns ミューテーション結果
+ */
+export async function serverMutation<
+  T = any,
+  V extends OperationVariables = OperationVariables,
+>(mutation: DocumentNode, variables?: V): Promise<T> {
+  try {
+    const client = await createApolloClient();
+    const { data } = await client.mutate({
+      mutation,
+      variables,
+    });
+    return data as T;
+  } catch (error) {
+    console.error("Server GraphQL mutation error:", error);
+    throw error;
+  }
+}
