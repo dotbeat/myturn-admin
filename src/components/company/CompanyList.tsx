@@ -37,7 +37,7 @@ export default function CompanyList({
       />
     ),
     name: item.name ? (
-      <Box className="w-36 text-left">
+      <Box className="w-48 text-left">
         <Typography title={item.name} className="line-clamp-3 text-wrap">
           {item.name}
         </Typography>

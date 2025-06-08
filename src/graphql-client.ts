@@ -1035,6 +1035,7 @@ export type Notification = {
   companyId?: Maybe<Scalars['Int']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  entryDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   entryId?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   isRead: Scalars['Boolean']['output'];
@@ -1712,7 +1713,7 @@ export type SearchEntriesQueryVariables = Exact<{
 }>;
 
 
-export type SearchEntriesQuery = { __typename?: 'Query', searchEntries: { __typename?: 'EntrySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'EntryWithDetailsType', id: number, jobId: number, userId: number, createdAt: any, updatedAt: any, status: string, job: { __typename?: 'JobWithCompanyType', id: number, title: string, jobType: string, industry: string, company: { __typename?: 'CompanyType', id: number, name: string } }, user: { __typename?: 'UserType', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null, deletedAt?: any | null } }> } };
+export type SearchEntriesQuery = { __typename?: 'Query', searchEntries: { __typename?: 'EntrySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'EntryWithDetailsType', id: number, jobId: number, userId: number, createdAt: any, updatedAt: any, status: string, job: { __typename?: 'JobWithCompanyType', id: number, title: string, jobType: string, industry: string, company: { __typename?: 'CompanyType', id: number, name: string, deletedAt?: any | null } }, user: { __typename?: 'UserType', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null, deletedAt?: any | null } }> } };
 
 export type GetEntriesStatisticsQueryVariables = Exact<{
   input: GetEntriesStatisticsInput;
@@ -1900,6 +1901,7 @@ export const SearchEntriesDocument = gql`
         company {
           id
           name
+          deletedAt
         }
       }
       user {

@@ -54,7 +54,21 @@ export default function ApplicantList({
           {item.user.deletedAt ? "(退会済ユーザー)" : "—"}
         </Typography>
       ),
-    companyName: item.job.company.name,
+    companyName: item.job.company.name ? (
+      <Box className="w-48 text-left">
+        <Typography
+          title={item.job.company.name}
+          className="line-clamp-3 text-wrap"
+        >
+          {item.job.company.name}
+        </Typography>
+        {item.job.company.deletedAt && <Typography>(退会済)</Typography>}
+      </Box>
+    ) : (
+      <Typography>
+        {item.job.company.deletedAt ? "(退会済企業)" : "—"}
+      </Typography>
+    ),
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",
     jobTitle: (

@@ -21,6 +21,7 @@ export type ApplicantItem = {
     industry: string;
     company: {
       name: string;
+      deletedAt: Date | null;
     };
   };
   createdAt: string;

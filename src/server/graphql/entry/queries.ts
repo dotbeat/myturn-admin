@@ -18,6 +18,7 @@ export const SEARCH_ENTRIES = gql`
           company {
             id
             name
+            deletedAt
           }
         }
         user {
