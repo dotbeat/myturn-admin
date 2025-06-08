@@ -26,6 +26,9 @@ export default function ApplicantList({
     { property: "status", label: "ステータス" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
+  const before3years = new Date();
+  before3years.setFullYear(before3years.getFullYear() - 3);
+
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     avatarUrl: (
@@ -54,21 +57,23 @@ export default function ApplicantList({
           {item.user.deletedAt ? "(退会済ユーザー)" : "—"}
         </Typography>
       ),
-    companyName: item.job.company.name ? (
-      <Box className="w-48 text-left">
-        <Typography
-          title={item.job.company.name}
-          className="line-clamp-3 text-wrap"
-        >
-          {item.job.company.name}
+    companyName:
+      !item.job.company.deletedAt ||
+      new Date(item.job.company.deletedAt) > before3years ? (
+        <Box className="w-48 text-left">
+          <Typography
+            title={item.job.company.name}
+            className="line-clamp-3 text-wrap"
+          >
+            {item.job.company.name}
+          </Typography>
+          {item.job.company.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography className="text-left">
+          {item.job.company.deletedAt ? "(退会済企業)" : "—"}
         </Typography>
-        {item.job.company.deletedAt && <Typography>(退会済)</Typography>}
-      </Box>
-    ) : (
-      <Typography>
-        {item.job.company.deletedAt ? "(退会済企業)" : "—"}
-      </Typography>
-    ),
+      ),
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",
     jobTitle: (
