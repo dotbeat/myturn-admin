@@ -48,17 +48,18 @@ export default function UserList({
     ),
     name:
       item.lastName && item.firstName ? (
-        <Typography className="line-clamp-3 w-28 text-wrap text-left">
+        <Box className="w-28 text-left">
           <Link
             href={`/users/${item.id}`}
             title={`${item.lastName} ${item.firstName}`}
-            className="underline"
+            className="line-clamp-2 text-wrap underline"
           >
             {item.lastName} {item.firstName}
           </Link>
-        </Typography>
+          {item.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
       ) : (
-        "—"
+        <Typography>{item.deletedAt ? "(退会済ユーザー)" : "—"}</Typography>
       ),
     prefecture: item.prefecture || "—",
     belong:

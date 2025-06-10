@@ -18,6 +18,7 @@ export const SEARCH_USERS = gql`
         availableDurationMonths
         entryCount
         createdAt
+        deletedAt
       }
       limit
       page

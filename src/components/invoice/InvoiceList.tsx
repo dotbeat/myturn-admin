@@ -29,12 +29,16 @@ export default function InvoiceList({
     content: (
       <Typography className="line-clamp-3 w-[12.5rem] text-wrap text-left">
         採用成果報酬：
-        <Link
-          href={`/users/${item.userId}`}
-          className="text-[var(--myturn-main)] underline"
-        >
-          {item.applicantName}
-        </Link>
+        {item.applicantName ? (
+          <Link
+            href={`/users/${item.userId}`}
+            className="text-[var(--myturn-main)] underline"
+          >
+            {item.applicantName}
+          </Link>
+        ) : (
+          "(退会済ユーザー)"
+        )}
       </Typography>
     ),
     service: (

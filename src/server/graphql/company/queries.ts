@@ -10,6 +10,7 @@ export const SEARCH_COMPANY = gql`
         iconImageUrl
         prefecture
         createdAt
+        deletedAt
         jobCount
         acceptCount
       }
