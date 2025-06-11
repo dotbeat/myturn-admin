@@ -59,6 +59,7 @@ export type CompanyInvoiceType = {
   __typename?: 'CompanyInvoiceType';
   acceptDate: Scalars['DateTime']['output'];
   amount: Scalars['Int']['output'];
+  applicantDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   applicantName: Scalars['String']['output'];
   companyId: Scalars['Int']['output'];
   companyName: Scalars['String']['output'];
@@ -603,6 +604,7 @@ export type JobWithCompanyType = {
   companyAbout?: Maybe<Scalars['String']['output']>;
   companyAtmosphere: Scalars['String']['output'];
   companyBusinessContent?: Maybe<Scalars['String']['output']>;
+  companyDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   companyEmail: Scalars['String']['output'];
   companyHeaderImageUrl?: Maybe<Scalars['String']['output']>;
   companyIconImageUrl?: Maybe<Scalars['String']['output']>;
@@ -662,6 +664,7 @@ export type JobWithStatsType = {
   companyAbout?: Maybe<Scalars['String']['output']>;
   companyAtmosphere: Scalars['String']['output'];
   companyBusinessContent?: Maybe<Scalars['String']['output']>;
+  companyDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   companyEmail: Scalars['String']['output'];
   companyHeaderImageUrl?: Maybe<Scalars['String']['output']>;
   companyIconImageUrl?: Maybe<Scalars['String']['output']>;
@@ -800,6 +803,7 @@ export type MessageSubscriptionType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFavorite: FavoriteType;
+  batchDaily: Scalars['Boolean']['output'];
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
@@ -1586,6 +1590,7 @@ export type UserEntriesType = {
 export type UserInfo = {
   __typename?: 'UserInfo';
   avatarUrl?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   faculty?: Maybe<Scalars['String']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
@@ -1694,6 +1699,11 @@ export type VerifyPasswordResetTokenResponse = {
   isValid: Scalars['Boolean']['output'];
 };
 
+export type BatchDailyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BatchDailyMutation = { __typename?: 'Mutation', batchDaily: boolean };
+
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
@@ -1741,7 +1751,7 @@ export type SearchJobsWithStatsQueryVariables = Exact<{
 }>;
 
 
-export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, companyName: string, favoriteCount: number, entryCount: number, acceptCount: number }> } };
+export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, deletedAt?: any | null, companyName: string, companyDeletedAt?: any | null, favoriteCount: number, entryCount: number, acceptCount: number }> } };
 
 export type GetJobsStatisticsQueryVariables = Exact<{
   input: GetJobsStatisticsInput;
@@ -1784,6 +1794,36 @@ export type GetUserQueryVariables = Exact<{
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'UserType', id: number, lastName?: string | null, firstName?: string | null, avatarUrl?: string | null, university?: string | null, faculty?: string | null, department?: string | null, gender?: string | null, birthDate?: any | null, prefecture?: string | null, grade?: string | null, graduationYear?: number | null, availableDaysPerWeek?: number | null, availableHoursPerWeek?: number | null, availableDurationMonths?: number | null, interestedIndustries: Array<string>, interestedJobTypes: Array<string>, selfPR?: string | null, futureGoals?: string | null, applicantNote?: string | null } | null };
 
 
+export const BatchDailyDocument = gql`
+    mutation BatchDaily {
+  batchDaily
+}
+    `;
+export type BatchDailyMutationFn = Apollo.MutationFunction<BatchDailyMutation, BatchDailyMutationVariables>;
+
+/**
+ * __useBatchDailyMutation__
+ *
+ * To run a mutation, you first call `useBatchDailyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBatchDailyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [batchDailyMutation, { data, loading, error }] = useBatchDailyMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBatchDailyMutation(baseOptions?: Apollo.MutationHookOptions<BatchDailyMutation, BatchDailyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BatchDailyMutation, BatchDailyMutationVariables>(BatchDailyDocument, options);
+      }
+export type BatchDailyMutationHookResult = ReturnType<typeof useBatchDailyMutation>;
+export type BatchDailyMutationResult = Apollo.MutationResult<BatchDailyMutation>;
+export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<BatchDailyMutation, BatchDailyMutationVariables>;
 export const GetCompaniesDocument = gql`
     query getCompanies($input: GetCompaniesInput!) {
   getCompanies(input: $input) {
@@ -2112,7 +2152,9 @@ export const SearchJobsWithStatsDocument = gql`
       jobType
       industry
       updatedAt
+      deletedAt
       companyName
+      companyDeletedAt
       favoriteCount
       entryCount
       acceptCount

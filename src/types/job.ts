@@ -5,9 +5,11 @@ export type JobItem = {
   jobHeader: string;
   title: string;
   companyName: string;
+  companyDeletedAt: Date | null;
   jobType: string;
   industry: string;
-  updatedAt: string;
+  updatedAt: Date;
+  deletedAt: Date | null;
   status: JobStatus;
   pv: number;
   favoriteCount: number;
