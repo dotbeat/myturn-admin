@@ -48,9 +48,7 @@ export default function CompanyList({
           {item.deletedAt && <Typography>(退会済)</Typography>}
         </Box>
       ) : (
-        <Typography className="text-left">
-          {item.deletedAt ? "(退会済企業)" : "—"}
-        </Typography>
+        <Typography className="text-left">(退会済企業)</Typography>
       ),
     prefecture: item.prefecture || "—",
     industry: getSelectItem(industries, item.industry)?.label ?? "—",

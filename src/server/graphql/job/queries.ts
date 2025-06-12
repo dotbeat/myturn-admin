@@ -13,7 +13,9 @@ export const SEARCH_JOB = gql`
         jobType
         industry
         updatedAt
+        deletedAt
         companyName
+        companyDeletedAt
         favoriteCount
         entryCount
         acceptCount

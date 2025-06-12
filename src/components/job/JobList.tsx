@@ -29,6 +29,9 @@ export default function JobList({
     { property: "acceptCount", label: "採用" },
   ] as const satisfies TableColumn<(keyof JobItem)[number]>[];
 
+  const before3years = new Date();
+  before3years.setFullYear(before3years.getFullYear() - 3);
+
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     jobHeader: (
@@ -57,14 +60,21 @@ export default function JobList({
         {item.title}
       </Typography>
     ),
-    companyName: (
-      <Typography
-        title={item.companyName}
-        className="line-clamp-3 w-36 text-wrap text-left"
-      >
-        {item.companyName}
-      </Typography>
-    ),
+    companyName:
+      !item.companyDeletedAt ||
+      new Date(item.companyDeletedAt) > before3years ? (
+        <Box className="w-48 text-left">
+          <Typography
+            title={item.companyName}
+            className="line-clamp-3 text-wrap"
+          >
+            {item.companyName}
+          </Typography>
+          {item.companyDeletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography className="text-left">(退会済企業)</Typography>
+      ),
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
     openDate:
