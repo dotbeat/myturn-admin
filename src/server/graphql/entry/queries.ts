@@ -18,6 +18,7 @@ export const SEARCH_ENTRIES = gql`
           company {
             id
             name
+            deletedAt
           }
         }
         user {
@@ -25,6 +26,7 @@ export const SEARCH_ENTRIES = gql`
           firstName
           lastName
           avatarUrl
+          deletedAt
         }
       }
       limit

@@ -13,6 +13,7 @@ export type ApplicantItem = {
     lastName: string;
     firstName: string;
     avatarUrl: string;
+    deletedAt: Date | null;
   };
   job: {
     title: string;
@@ -20,6 +21,7 @@ export type ApplicantItem = {
     industry: string;
     company: {
       name: string;
+      deletedAt: Date | null;
     };
   };
   createdAt: string;

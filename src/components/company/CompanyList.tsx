@@ -25,6 +25,9 @@ export default function CompanyList({
     { property: "acceptCount", label: "累計採用" },
   ] as const satisfies TableColumn<(keyof CompanyItem)[number]>[];
 
+  const before3years = new Date();
+  before3years.setFullYear(before3years.getFullYear() - 3);
+
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     iconImageUrl: (
@@ -36,14 +39,17 @@ export default function CompanyList({
         imageClass="object-contain"
       />
     ),
-    name: (
-      <Typography
-        title={item.name}
-        className="line-clamp-3 w-36 text-wrap text-left"
-      >
-        {item.name}
-      </Typography>
-    ),
+    name:
+      !item.deletedAt || new Date(item.deletedAt) > before3years ? (
+        <Box className="w-48 text-left">
+          <Typography title={item.name} className="line-clamp-3 text-wrap">
+            {item.name}
+          </Typography>
+          {item.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography className="text-left">(退会済企業)</Typography>
+      ),
     prefecture: item.prefecture || "—",
     industry: getSelectItem(industries, item.industry)?.label ?? "—",
     createdAt: new Date(item.createdAt).toLocaleDateString("ja"),

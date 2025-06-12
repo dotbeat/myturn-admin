@@ -15,7 +15,7 @@ export function useCompanies(
 
   // 求職者一覧情報を取得
   const { loading } = useQuery(SEARCH_COMPANY, {
-    variables: { input: { ...input, page, limit } },
+    variables: { input: { ...input, includeDeleted: true, page, limit } },
     fetchPolicy: "no-cache",
     onCompleted(result) {
       setTotalCount(result.getCompanies.totalCount);

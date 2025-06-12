@@ -26,6 +26,9 @@ export default function ApplicantList({
     { property: "status", label: "ステータス" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
+  const before3years = new Date();
+  before3years.setFullYear(before3years.getFullYear() - 3);
+
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     avatarUrl: (
@@ -37,18 +40,40 @@ export default function ApplicantList({
         className="-my-1"
       />
     ),
-    name: (
-      <Typography className="line-clamp-3 w-28 text-wrap text-left">
-        <Link
-          href={`/users/${item.user.id}`}
-          title={`${item.user.lastName} ${item.user.firstName}`}
-          className="underline"
-        >
-          {item.user.lastName} {item.user.firstName}
-        </Link>
-      </Typography>
-    ),
-    companyName: item.job.company.name,
+    name:
+      item.user.lastName && item.user.firstName ? (
+        <Box className="w-28 text-left">
+          <Link
+            href={`/users/${item.user.id}`}
+            title={`${item.user.lastName} ${item.user.firstName}`}
+            className="line-clamp-2 text-wrap underline"
+          >
+            {item.user.lastName} {item.user.firstName}
+          </Link>
+          {item.user.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography>
+          {item.user.deletedAt ? "(退会済ユーザー)" : "—"}
+        </Typography>
+      ),
+    companyName:
+      !item.job.company.deletedAt ||
+      new Date(item.job.company.deletedAt) > before3years ? (
+        <Box className="w-48 text-left">
+          <Typography
+            title={item.job.company.name}
+            className="line-clamp-3 text-wrap"
+          >
+            {item.job.company.name}
+          </Typography>
+          {item.job.company.deletedAt && <Typography>(退会済)</Typography>}
+        </Box>
+      ) : (
+        <Typography className="text-left">
+          {item.job.company.deletedAt ? "(退会済企業)" : "—"}
+        </Typography>
+      ),
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",
     jobTitle: (

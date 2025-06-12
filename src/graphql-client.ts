@@ -59,6 +59,7 @@ export type CompanyInvoiceType = {
   __typename?: 'CompanyInvoiceType';
   acceptDate: Scalars['DateTime']['output'];
   amount: Scalars['Int']['output'];
+  applicantDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   applicantName: Scalars['String']['output'];
   companyId: Scalars['Int']['output'];
   companyName: Scalars['String']['output'];
@@ -153,6 +154,7 @@ export type CompanyType = {
   city?: Maybe<Scalars['String']['output']>;
   companyUrl: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   detailAddress?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   employeeCount?: Maybe<Scalars['Int']['output']>;
@@ -360,6 +362,7 @@ export type EntryWithDetailsType = {
   __typename?: 'EntryWithDetailsType';
   applicantNote?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['Int']['output'];
   isChecked: Scalars['Boolean']['output'];
   job: JobWithCompanyType;
@@ -382,6 +385,7 @@ export type EntryWithLastMessage = {
   company: CompanyInfo;
   companyUnreadCount: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   entryId: Scalars['Int']['output'];
   job: JobInfo;
   jobId: Scalars['Int']['output'];
@@ -425,6 +429,7 @@ export type FavoriteType = {
 export type GetCompaniesInput = {
   acceptCountMax?: InputMaybe<Scalars['Int']['input']>;
   acceptCountMin?: InputMaybe<Scalars['Int']['input']>;
+  includeDeleted?: InputMaybe<Scalars['Boolean']['input']>;
   industry?: InputMaybe<Scalars['String']['input']>;
   jobCountMax?: InputMaybe<Scalars['Int']['input']>;
   jobCountMin?: InputMaybe<Scalars['Int']['input']>;
@@ -599,6 +604,7 @@ export type JobWithCompanyType = {
   companyAbout?: Maybe<Scalars['String']['output']>;
   companyAtmosphere: Scalars['String']['output'];
   companyBusinessContent?: Maybe<Scalars['String']['output']>;
+  companyDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   companyEmail: Scalars['String']['output'];
   companyHeaderImageUrl?: Maybe<Scalars['String']['output']>;
   companyIconImageUrl?: Maybe<Scalars['String']['output']>;
@@ -658,6 +664,7 @@ export type JobWithStatsType = {
   companyAbout?: Maybe<Scalars['String']['output']>;
   companyAtmosphere: Scalars['String']['output'];
   companyBusinessContent?: Maybe<Scalars['String']['output']>;
+  companyDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   companyEmail: Scalars['String']['output'];
   companyHeaderImageUrl?: Maybe<Scalars['String']['output']>;
   companyIconImageUrl?: Maybe<Scalars['String']['output']>;
@@ -796,6 +803,7 @@ export type MessageSubscriptionType = {
 export type Mutation = {
   __typename?: 'Mutation';
   addFavorite: FavoriteType;
+  batchDaily: Scalars['Boolean']['output'];
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
@@ -1031,6 +1039,7 @@ export type Notification = {
   companyId?: Maybe<Scalars['Int']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  entryDeletedAt?: Maybe<Scalars['DateTime']['output']>;
   entryId?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   isRead: Scalars['Boolean']['output'];
@@ -1050,6 +1059,7 @@ export type Query = {
   checkUserJobEntry: EntryCheck;
   companies: Array<CompanyType>;
   company?: Maybe<CompanyWithJobsType>;
+  companyIds: Array<Scalars['Int']['output']>;
   companyMe: CompanyType;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getCompanies: CompanySearchResultType;
@@ -1075,6 +1085,7 @@ export type Query = {
   getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars['Boolean']['output'];
   job?: Maybe<JobWithCompanyType>;
+  jobIds: Array<Scalars['Int']['output']>;
   jobs: Array<JobWithCompanyType>;
   jobsByCompanyId: Array<JobWithCompanyType>;
   jobsByCompanyIdWithStats: Array<JobWithStatsType>;
@@ -1579,6 +1590,7 @@ export type UserEntriesType = {
 export type UserInfo = {
   __typename?: 'UserInfo';
   avatarUrl?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   faculty?: Maybe<Scalars['String']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
@@ -1612,6 +1624,7 @@ export type UserType = {
   avatarUrl?: Maybe<Scalars['String']['output']>;
   birthDate?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   department?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   faculty?: Maybe<Scalars['String']['output']>;
@@ -1641,6 +1654,7 @@ export type UserWithEntryCountType = {
   avatarUrl: Scalars['String']['output'];
   birthDate?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
   department: Scalars['String']['output'];
   email: Scalars['String']['output'];
   entryCount: Scalars['Int']['output'];
@@ -1685,12 +1699,17 @@ export type VerifyPasswordResetTokenResponse = {
   isValid: Scalars['Boolean']['output'];
 };
 
+export type BatchDailyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BatchDailyMutation = { __typename?: 'Mutation', batchDaily: boolean };
+
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
 
 
-export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, jobCount?: number | null, acceptCount?: number | null }> } };
+export type GetCompaniesQuery = { __typename?: 'Query', getCompanies: { __typename?: 'CompanySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'CompanyType', id: number, name: string, industry?: string | null, iconImageUrl?: string | null, prefecture?: string | null, createdAt: any, deletedAt?: any | null, jobCount?: number | null, acceptCount?: number | null }> } };
 
 export type GetCompaniesStatisticsQueryVariables = Exact<{
   input: GetCompaniesStatisticsInput;
@@ -1704,7 +1723,7 @@ export type SearchEntriesQueryVariables = Exact<{
 }>;
 
 
-export type SearchEntriesQuery = { __typename?: 'Query', searchEntries: { __typename?: 'EntrySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'EntryWithDetailsType', id: number, jobId: number, userId: number, createdAt: any, updatedAt: any, status: string, job: { __typename?: 'JobWithCompanyType', id: number, title: string, jobType: string, industry: string, company: { __typename?: 'CompanyType', id: number, name: string } }, user: { __typename?: 'UserType', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null } }> } };
+export type SearchEntriesQuery = { __typename?: 'Query', searchEntries: { __typename?: 'EntrySearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'EntryWithDetailsType', id: number, jobId: number, userId: number, createdAt: any, updatedAt: any, status: string, job: { __typename?: 'JobWithCompanyType', id: number, title: string, jobType: string, industry: string, company: { __typename?: 'CompanyType', id: number, name: string, deletedAt?: any | null } }, user: { __typename?: 'UserType', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null, deletedAt?: any | null } }> } };
 
 export type GetEntriesStatisticsQueryVariables = Exact<{
   input: GetEntriesStatisticsInput;
@@ -1732,7 +1751,7 @@ export type SearchJobsWithStatsQueryVariables = Exact<{
 }>;
 
 
-export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, companyName: string, favoriteCount: number, entryCount: number, acceptCount: number }> } };
+export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, deletedAt?: any | null, companyName: string, companyDeletedAt?: any | null, favoriteCount: number, entryCount: number, acceptCount: number }> } };
 
 export type GetJobsStatisticsQueryVariables = Exact<{
   input: GetJobsStatisticsInput;
@@ -1758,7 +1777,7 @@ export type SearchUsersQueryVariables = Exact<{
 }>;
 
 
-export type SearchUsersQuery = { __typename?: 'Query', searchUsers: { __typename?: 'UserSearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'UserWithEntryCountType', id: number, avatarUrl: string, lastName: string, firstName: string, prefecture: string, university: string, faculty: string, department: string, grade: string, availableDaysPerWeek: number, availableHoursPerWeek: number, availableDurationMonths: number, entryCount: number, createdAt: any }> } };
+export type SearchUsersQuery = { __typename?: 'Query', searchUsers: { __typename?: 'UserSearchResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'UserWithEntryCountType', id: number, avatarUrl: string, lastName: string, firstName: string, prefecture: string, university: string, faculty: string, department: string, grade: string, availableDaysPerWeek: number, availableHoursPerWeek: number, availableDurationMonths: number, entryCount: number, createdAt: any, deletedAt?: any | null }> } };
 
 export type GetUsersStatisticsQueryVariables = Exact<{
   input: GetUsersStatisticsInput;
@@ -1775,6 +1794,36 @@ export type GetUserQueryVariables = Exact<{
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'UserType', id: number, lastName?: string | null, firstName?: string | null, avatarUrl?: string | null, university?: string | null, faculty?: string | null, department?: string | null, gender?: string | null, birthDate?: any | null, prefecture?: string | null, grade?: string | null, graduationYear?: number | null, availableDaysPerWeek?: number | null, availableHoursPerWeek?: number | null, availableDurationMonths?: number | null, interestedIndustries: Array<string>, interestedJobTypes: Array<string>, selfPR?: string | null, futureGoals?: string | null, applicantNote?: string | null } | null };
 
 
+export const BatchDailyDocument = gql`
+    mutation BatchDaily {
+  batchDaily
+}
+    `;
+export type BatchDailyMutationFn = Apollo.MutationFunction<BatchDailyMutation, BatchDailyMutationVariables>;
+
+/**
+ * __useBatchDailyMutation__
+ *
+ * To run a mutation, you first call `useBatchDailyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBatchDailyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [batchDailyMutation, { data, loading, error }] = useBatchDailyMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBatchDailyMutation(baseOptions?: Apollo.MutationHookOptions<BatchDailyMutation, BatchDailyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BatchDailyMutation, BatchDailyMutationVariables>(BatchDailyDocument, options);
+      }
+export type BatchDailyMutationHookResult = ReturnType<typeof useBatchDailyMutation>;
+export type BatchDailyMutationResult = Apollo.MutationResult<BatchDailyMutation>;
+export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<BatchDailyMutation, BatchDailyMutationVariables>;
 export const GetCompaniesDocument = gql`
     query getCompanies($input: GetCompaniesInput!) {
   getCompanies(input: $input) {
@@ -1785,6 +1834,7 @@ export const GetCompaniesDocument = gql`
       iconImageUrl
       prefecture
       createdAt
+      deletedAt
       jobCount
       acceptCount
     }
@@ -1891,6 +1941,7 @@ export const SearchEntriesDocument = gql`
         company {
           id
           name
+          deletedAt
         }
       }
       user {
@@ -1898,6 +1949,7 @@ export const SearchEntriesDocument = gql`
         firstName
         lastName
         avatarUrl
+        deletedAt
       }
     }
     limit
@@ -2100,7 +2152,9 @@ export const SearchJobsWithStatsDocument = gql`
       jobType
       industry
       updatedAt
+      deletedAt
       companyName
+      companyDeletedAt
       favoriteCount
       entryCount
       acceptCount
@@ -2290,6 +2344,7 @@ export const SearchUsersDocument = gql`
       availableDurationMonths
       entryCount
       createdAt
+      deletedAt
     }
     limit
     page
