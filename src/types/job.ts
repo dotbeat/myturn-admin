@@ -8,7 +8,7 @@ export type JobItem = {
   companyDeletedAt: Date | null;
   jobType: string;
   industry: string;
-  updatedAt: Date;
+  openedAt: Date | null;
   deletedAt: Date | null;
   status: JobStatus;
   pv: number;

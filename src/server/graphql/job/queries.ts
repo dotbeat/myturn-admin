@@ -7,12 +7,12 @@ export const SEARCH_JOB = gql`
         id
         title
         status
+        openedAt
         pv
         jobHeader
         prefecture
         jobType
         industry
-        updatedAt
         deletedAt
         companyName
         companyDeletedAt

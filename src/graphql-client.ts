@@ -288,6 +288,45 @@ export type CreateUserInput = {
   university?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type DuplicateJobInput = {
+  access: Scalars['String']['input'];
+  acquirableSkills: Array<Scalars['String']['input']>;
+  applicationProcess?: InputMaybe<Scalars['String']['input']>;
+  businessContent: Scalars['String']['input'];
+  city: Scalars['String']['input'];
+  companyAtmosphere: Scalars['String']['input'];
+  companyId: Scalars['Int']['input'];
+  detailAddress?: InputMaybe<Scalars['String']['input']>;
+  experienceGained: Scalars['String']['input'];
+  features: Array<Scalars['String']['input']>;
+  goal: Scalars['String']['input'];
+  headerImageBase64?: InputMaybe<Scalars['String']['input']>;
+  headerImageMimeType?: InputMaybe<Scalars['String']['input']>;
+  industry: Scalars['String']['input'];
+  internJobDescription: Scalars['String']['input'];
+  jobHeader: Scalars['String']['input'];
+  jobType: Scalars['String']['input'];
+  members?: InputMaybe<Array<CreateMemberInput>>;
+  minWorkingDaysPerWeek: Scalars['Int']['input'];
+  minWorkingHoursPerWeek: Scalars['Int']['input'];
+  period: Scalars['String']['input'];
+  postalCode: Scalars['String']['input'];
+  prefecture: Scalars['String']['input'];
+  preferences: Array<Scalars['String']['input']>;
+  programmingLanguages: Array<Scalars['String']['input']>;
+  requirements?: InputMaybe<Scalars['String']['input']>;
+  salary: Scalars['String']['input'];
+  sourceJobId: Scalars['Int']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+  streetAddress: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+  transportationFeeAmount: Scalars['String']['input'];
+  usefulSkills: Array<Scalars['String']['input']>;
+  workConditions: Array<Scalars['String']['input']>;
+  workingHoursEnd: Scalars['String']['input'];
+  workingHoursStart: Scalars['String']['input'];
+};
+
 export type EntriesStatisticsResultType = {
   __typename?: 'EntriesStatisticsResultType';
   acceptedCount: Scalars['Int']['output'];
@@ -574,6 +613,7 @@ export type JobType = {
   jobType: Scalars['String']['output'];
   minWorkingDaysPerWeek: Scalars['Int']['output'];
   minWorkingHoursPerWeek: Scalars['Int']['output'];
+  openedAt?: Maybe<Scalars['DateTime']['output']>;
   period: Scalars['String']['output'];
   postalCode: Scalars['String']['output'];
   prefecture: Scalars['String']['output'];
@@ -627,6 +667,7 @@ export type JobWithCompanyType = {
   members: Array<JobMemberType>;
   minWorkingDaysPerWeek: Scalars['Int']['output'];
   minWorkingHoursPerWeek: Scalars['Int']['output'];
+  openedAt?: Maybe<Scalars['DateTime']['output']>;
   period: Scalars['String']['output'];
   postalCode: Scalars['String']['output'];
   prefecture: Scalars['String']['output'];
@@ -689,6 +730,7 @@ export type JobWithStatsType = {
   members: Array<JobMemberType>;
   minWorkingDaysPerWeek: Scalars['Int']['output'];
   minWorkingHoursPerWeek: Scalars['Int']['output'];
+  openedAt?: Maybe<Scalars['DateTime']['output']>;
   period: Scalars['String']['output'];
   postalCode: Scalars['String']['output'];
   prefecture: Scalars['String']['output'];
@@ -814,6 +856,7 @@ export type Mutation = {
   deleteCompany: Scalars['Boolean']['output'];
   deleteJob: JobType;
   deleteUserAccount: Scalars['Boolean']['output'];
+  duplicateJob: JobType;
   login: LoginResponse;
   logout: LogoutResponse;
   markAllNotificationsAsRead: Scalars['Boolean']['output'];
@@ -888,6 +931,11 @@ export type MutationDeleteJobArgs = {
 
 export type MutationDeleteUserAccountArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationDuplicateJobArgs = {
+  input: DuplicateJobInput;
 };
 
 
@@ -1751,7 +1799,7 @@ export type SearchJobsWithStatsQueryVariables = Exact<{
 }>;
 
 
-export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, updatedAt: any, deletedAt?: any | null, companyName: string, companyDeletedAt?: any | null, favoriteCount: number, entryCount: number, acceptCount: number }> } };
+export type SearchJobsWithStatsQuery = { __typename?: 'Query', searchJobsWithStats: { __typename?: 'JobSearchWithStatsResultType', limit: number, page: number, totalCount: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'JobWithStatsType', id: number, title: string, status: string, openedAt?: any | null, pv: number, jobHeader: string, prefecture: string, jobType: string, industry: string, deletedAt?: any | null, companyName: string, companyDeletedAt?: any | null, favoriteCount: number, entryCount: number, acceptCount: number }> } };
 
 export type GetJobsStatisticsQueryVariables = Exact<{
   input: GetJobsStatisticsInput;
@@ -2146,12 +2194,12 @@ export const SearchJobsWithStatsDocument = gql`
       id
       title
       status
+      openedAt
       pv
       jobHeader
       prefecture
       jobType
       industry
-      updatedAt
       deletedAt
       companyName
       companyDeletedAt
