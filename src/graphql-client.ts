@@ -1975,7 +1975,7 @@ export type UpdateHotJobsMutationVariables = Exact<{
 
 export type UpdateHotJobsMutation = {
   __typename?: "Mutation";
-  updateHotJobs: { __typename?: "HotJobType"; jobId: number };
+  updateHotJobs: { __typename: "HotJobType" };
 };
 
 export type GetCompanyInvoicesQueryVariables = Exact<{
@@ -2626,7 +2626,7 @@ export type GetEntriesStatisticsQueryResult = Apollo.QueryResult<
 export const UpdateHotJobsDocument = gql`
   mutation UpdateHotJobs($input: UpdateHotJobsInput!) {
     updateHotJobs(input: $input) {
-      jobId
+      __typename
     }
   }
 `;

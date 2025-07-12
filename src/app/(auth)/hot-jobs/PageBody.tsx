@@ -119,7 +119,6 @@ export default function PageBody() {
     try {
       // フォームデータをGraphQLミューテーションの入力形式に変換
       const updateInput = await convertFormDataToUpdateInput(data);
-      console.log("updateInput", updateInput);
       // 更新ミューテーションを実行
       await updateHotJobs({
         variables: { input: updateInput },
