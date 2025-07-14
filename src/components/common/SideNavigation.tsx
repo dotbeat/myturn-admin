@@ -40,6 +40,9 @@ export default function SideNavigation({
         <ListItem className="p-0">
           <SideNavigationItem href="/magazine" label="Magazine" />
         </ListItem>
+        <ListItem className="p-0">
+          <SideNavigationItem href="/hot-jobs" label="人気求人" />
+        </ListItem>
       </List>
     </Box>
   );

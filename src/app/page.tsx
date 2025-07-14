@@ -29,6 +29,9 @@ export default function Page() {
         <Link href="/magazine" className="underline">
           Magazine
         </Link>
+        <Link href="/hot-jobs" className="underline">
+          人気求人
+        </Link>
       </Stack>
     </Box>
   );
