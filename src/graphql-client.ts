@@ -555,6 +555,11 @@ export type GetEntryByIdInput = {
   id: Scalars["Int"]["input"];
 };
 
+export type GetInterviewReminderEntriesInput = {
+  /** リマインドタイプ (previous_day: 前日, same_day: 当日) */
+  reminderType: Scalars["String"]["input"];
+};
+
 export type GetJobsStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -577,9 +582,19 @@ export type GetReviewingEntriesInput = {
   companyId: Scalars["Int"]["input"];
 };
 
+export type GetStaleEntriesForAutoRejectInput = {
+  /** 最終更新からの経過日数 */
+  daysSinceUpdate?: Scalars["Int"]["input"];
+};
+
 export type GetStaleEntriesInput = {
   companyId: Scalars["Int"]["input"];
   status: Scalars["String"]["input"];
+};
+
+export type GetStartDateReminderEntriesInput = {
+  /** リマインダーのタイプ (BEFORE: 前日, AFTER: 翌日) */
+  reminderType: Scalars["String"]["input"];
 };
 
 export type GetUserEntriesInput = {
@@ -605,6 +620,22 @@ export type HotJobType = {
   id: Scalars["Int"]["output"];
   jobId: Scalars["Int"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type InterviewReminderEntriesType = {
+  __typename?: "InterviewReminderEntriesType";
+  /** 面談リマインド対象のエントリー一覧 */
+  entries: Array<InterviewReminderEntryItem>;
+};
+
+export type InterviewReminderEntryItem = {
+  __typename?: "InterviewReminderEntryItem";
+  /** エントリー情報 */
+  entry: Entry;
+  /** 求人情報（企業情報含む） */
+  job: JobWithCompanyType;
+  /** ユーザー情報 */
+  user: UserType;
 };
 
 export type JobInfo = {
@@ -1199,6 +1230,7 @@ export type Query = {
   getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
   getEntriesStatistics: EntriesStatisticsResultType;
   getEntryById: EntryWithDetailsType;
+  getInterviewReminderEntries: InterviewReminderEntriesType;
   getJobsByHotList: Array<JobWithCompanyType>;
   getJobsStatistics: JobsStatisticsResultType;
   getMessages: Array<Message>;
@@ -1206,6 +1238,8 @@ export type Query = {
   getPendingEntries: PendingEntriesType;
   getReviewingEntries: ReviewingEntriesType;
   getStaleEntries: StaleEntriesType;
+  getStaleEntriesForAutoReject: StaleEntriesForAutoRejectType;
+  getStartDateReminderEntries: StartDateReminderEntriesType;
   getUncheckedEntriesCount: UncheckedEntriesCountType;
   getUnreadNotificationCount: NotificationCount;
   getUserEntries: UserEntriesType;
@@ -1271,6 +1305,10 @@ export type QueryGetEntryByIdArgs = {
   input: GetEntryByIdInput;
 };
 
+export type QueryGetInterviewReminderEntriesArgs = {
+  input: GetInterviewReminderEntriesInput;
+};
+
 export type QueryGetJobsStatisticsArgs = {
   input: GetJobsStatisticsInput;
 };
@@ -1293,6 +1331,14 @@ export type QueryGetReviewingEntriesArgs = {
 
 export type QueryGetStaleEntriesArgs = {
   input: GetStaleEntriesInput;
+};
+
+export type QueryGetStaleEntriesForAutoRejectArgs = {
+  input: GetStaleEntriesForAutoRejectInput;
+};
+
+export type QueryGetStartDateReminderEntriesArgs = {
+  input: GetStartDateReminderEntriesInput;
 };
 
 export type QueryGetUserEntriesArgs = {
@@ -1531,9 +1577,71 @@ export type SimpleJobWithEntriesType = {
   job: JobType;
 };
 
+export type StaleEntriesForAutoRejectType = {
+  __typename?: "StaleEntriesForAutoRejectType";
+  entries: Array<StaleEntryForAutoRejectType>;
+};
+
 export type StaleEntriesType = {
   __typename?: "StaleEntriesType";
   entries: Array<EntryWithUserAndJob>;
+};
+
+export type StaleEntryForAutoRejectType = {
+  __typename?: "StaleEntryForAutoRejectType";
+  id: Scalars["Int"]["output"];
+  jobId: Scalars["Int"]["output"];
+  status: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
+export type StartDateReminderCompanyType = {
+  __typename?: "StartDateReminderCompanyType";
+  email: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+  notificationEmails: Array<Scalars["String"]["output"]>;
+};
+
+export type StartDateReminderEntriesType = {
+  __typename?: "StartDateReminderEntriesType";
+  /** 入社予定日リマインダー対象のエントリー一覧 */
+  entries: Array<StartDateReminderEntryWithDetailsType>;
+};
+
+export type StartDateReminderEntryType = {
+  __typename?: "StartDateReminderEntryType";
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  jobId: Scalars["Int"]["output"];
+  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
+  status: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
+export type StartDateReminderEntryWithDetailsType = {
+  __typename?: "StartDateReminderEntryWithDetailsType";
+  company: StartDateReminderCompanyType;
+  entry: StartDateReminderEntryType;
+  job: StartDateReminderJobType;
+  user: StartDateReminderUserType;
+};
+
+export type StartDateReminderJobType = {
+  __typename?: "StartDateReminderJobType";
+  companyId: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  title: Scalars["String"]["output"];
+};
+
+export type StartDateReminderUserType = {
+  __typename?: "StartDateReminderUserType";
+  email: Scalars["String"]["output"];
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type Subscription = {
