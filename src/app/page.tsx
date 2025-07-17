@@ -23,6 +23,9 @@ export default function Page() {
         <Link href="/applicants" className="underline">
           応募者
         </Link>
+        <Link href="/messages" className="underline">
+          メッセージ
+        </Link>
         <Link href="/invoices" className="underline">
           請求
         </Link>
