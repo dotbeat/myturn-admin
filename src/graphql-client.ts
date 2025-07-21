@@ -35,6 +35,57 @@ export type AddFavoriteInput = {
   jobId: Scalars["Int"]["input"];
 };
 
+export type AdminMessage = {
+  __typename?: "AdminMessage";
+  company?: Maybe<AdminMessageCompany>;
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  entryId: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  isRead: Scalars["Boolean"]["output"];
+  job: AdminMessageJob;
+  type: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  user?: Maybe<AdminMessageUser>;
+};
+
+export type AdminMessageCompany = {
+  __typename?: "AdminMessageCompany";
+  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type AdminMessageJob = {
+  __typename?: "AdminMessageJob";
+  id: Scalars["Int"]["output"];
+  industry: Scalars["String"]["output"];
+  jobHeader: Scalars["String"]["output"];
+  jobType: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
+};
+
+export type AdminMessageUser = {
+  __typename?: "AdminMessageUser";
+  avatarUrl?: Maybe<Scalars["String"]["output"]>;
+  faculty?: Maybe<Scalars["String"]["output"]>;
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  university?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type AdminMessagesResult = {
+  __typename?: "AdminMessagesResult";
+  hasNextPage: Scalars["Boolean"]["output"];
+  hasPreviousPage: Scalars["Boolean"]["output"];
+  items: Array<AdminMessage>;
+  limit: Scalars["Int"]["output"];
+  page: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  totalPages: Scalars["Int"]["output"];
+};
+
 export type ApplicantInfo = {
   __typename?: "ApplicantInfo";
   avatarUrl?: Maybe<Scalars["String"]["output"]>;
@@ -374,6 +425,7 @@ export type Entry = {
   interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   isChecked: Scalars["Boolean"]["output"];
   isJobOfferAccepted?: Maybe<Scalars["Boolean"]["output"]>;
+  isScouted: Scalars["Boolean"]["output"];
   jobId: Scalars["Int"]["output"];
   jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -424,6 +476,8 @@ export type EntryType = {
   __typename?: "EntryType";
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
+  isChecked: Scalars["Boolean"]["output"];
+  isScouted: Scalars["Boolean"]["output"];
   jobId: Scalars["Int"]["output"];
   status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
@@ -439,6 +493,7 @@ export type EntryWithDetailsType = {
   interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   isChecked: Scalars["Boolean"]["output"];
   isJobOfferAccepted?: Maybe<Scalars["Boolean"]["output"]>;
+  isScouted: Scalars["Boolean"]["output"];
   job: JobWithCompanyType;
   jobId: Scalars["Int"]["output"];
   jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -500,6 +555,15 @@ export type FavoriteType = {
   job?: Maybe<JobWithCompanyType>;
   jobId: Scalars["Int"]["output"];
   userId: Scalars["Int"]["output"];
+};
+
+export type GetAdminMessagesInput = {
+  companyId?: InputMaybe<Scalars["Int"]["input"]>;
+  jobId?: InputMaybe<Scalars["Int"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+  search?: InputMaybe<Scalars["String"]["input"]>;
+  userId?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type GetCompaniesInput = {
@@ -578,6 +642,11 @@ export type GetRecentJobsInput = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type GetRecommendJobsByUserIdInput = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  userId: Scalars["Int"]["input"];
+};
+
 export type GetReviewingEntriesInput = {
   companyId: Scalars["Int"]["input"];
 };
@@ -598,10 +667,6 @@ export type GetStartDateReminderEntriesInput = {
 };
 
 export type GetUserEntriesInput = {
-  userId: Scalars["Int"]["input"];
-};
-
-export type GetUserStatusInput = {
   userId: Scalars["Int"]["input"];
 };
 
@@ -1219,6 +1284,7 @@ export type Query = {
   company?: Maybe<CompanyWithJobsType>;
   companyIds: Array<Scalars["Int"]["output"]>;
   companyMe: CompanyType;
+  getAdminMessages: AdminMessagesResult;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getCompanies: CompanySearchResultType;
   getCompaniesStatistics: CompaniesStatisticsResultType;
@@ -1236,6 +1302,7 @@ export type Query = {
   getMessages: Array<Message>;
   getNewEntriesWithoutMessages: NewEntriesWithoutMessagesType;
   getPendingEntries: PendingEntriesType;
+  getRecommendJobsByUserId: Array<JobWithCompanyType>;
   getReviewingEntries: ReviewingEntriesType;
   getStaleEntries: StaleEntriesType;
   getStaleEntriesForAutoReject: StaleEntriesForAutoRejectType;
@@ -1247,7 +1314,6 @@ export type Query = {
   getUserMessages: Array<EntryWithLastMessage>;
   getUserNotifications: Array<Notification>;
   getUserStatistics: UserStatisticsResultType;
-  getUserStatus: UserStatusType;
   getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars["Boolean"]["output"];
   job?: Maybe<JobWithCompanyType>;
@@ -1275,6 +1341,10 @@ export type QueryCheckUserJobEntryArgs = {
 
 export type QueryCompanyArgs = {
   id: Scalars["Int"]["input"];
+};
+
+export type QueryGetAdminMessagesArgs = {
+  input: GetAdminMessagesInput;
 };
 
 export type QueryGetCompaniesArgs = {
@@ -1325,6 +1395,10 @@ export type QueryGetPendingEntriesArgs = {
   input: GetPendingEntriesInput;
 };
 
+export type QueryGetRecommendJobsByUserIdArgs = {
+  input: GetRecommendJobsByUserIdInput;
+};
+
 export type QueryGetReviewingEntriesArgs = {
   input: GetReviewingEntriesInput;
 };
@@ -1347,10 +1421,6 @@ export type QueryGetUserEntriesArgs = {
 
 export type QueryGetUserStatisticsArgs = {
   id: Scalars["Int"]["input"];
-};
-
-export type QueryGetUserStatusArgs = {
-  input: GetUserStatusInput;
 };
 
 export type QueryGetUsersStatisticsArgs = {
@@ -1548,6 +1618,8 @@ export type SearchUsersInput = {
   grade?: InputMaybe<Scalars["String"]["input"]>;
   interestedIndustry?: InputMaybe<Scalars["String"]["input"]>;
   interestedJobType?: InputMaybe<Scalars["String"]["input"]>;
+  /** スカウト情報を含めるか */
+  isIncludeScout?: InputMaybe<Scalars["Boolean"]["input"]>;
   leaveDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   leaveDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -1556,6 +1628,7 @@ export type SearchUsersInput = {
   prefecture?: InputMaybe<Scalars["String"]["input"]>;
   registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   registerDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  scoutedCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
   university?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -1858,7 +1931,7 @@ export type UserSearchResultType = {
   __typename?: "UserSearchResultType";
   hasNextPage: Scalars["Boolean"]["output"];
   hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<UserWithEntryCountType>;
+  items: Array<UserWithCountType>;
   limit: Scalars["Int"]["output"];
   page: Scalars["Int"]["output"];
   totalCount: Scalars["Int"]["output"];
@@ -1871,15 +1944,8 @@ export type UserStatisticsResultType = {
   profileFillRate: Scalars["Int"]["output"];
 };
 
-export type UserStatusType = {
-  __typename?: "UserStatusType";
-  status: Scalars["String"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
 export type UserType = {
   __typename?: "UserType";
-  applicantNote?: Maybe<Scalars["String"]["output"]>;
   availableDaysPerWeek?: Maybe<Scalars["Int"]["output"]>;
   availableDurationMonths?: Maybe<Scalars["Int"]["output"]>;
   availableHoursPerWeek?: Maybe<Scalars["Int"]["output"]>;
@@ -1898,6 +1964,7 @@ export type UserType = {
   id: Scalars["Int"]["output"];
   interestedIndustries: Array<Scalars["String"]["output"]>;
   interestedJobTypes: Array<Scalars["String"]["output"]>;
+  lastLoggedInAt: Scalars["DateTime"]["output"];
   lastName?: Maybe<Scalars["String"]["output"]>;
   magazineNotification: Scalars["Boolean"]["output"];
   messageNotification: Scalars["Boolean"]["output"];
@@ -1908,8 +1975,8 @@ export type UserType = {
   updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type UserWithEntryCountType = {
-  __typename?: "UserWithEntryCountType";
+export type UserWithCountType = {
+  __typename?: "UserWithCountType";
   availableDaysPerWeek: Scalars["Int"]["output"];
   availableDurationMonths: Scalars["Int"]["output"];
   availableHoursPerWeek: Scalars["Int"]["output"];
@@ -1928,9 +1995,11 @@ export type UserWithEntryCountType = {
   id: Scalars["Int"]["output"];
   interestedIndustries: Array<Scalars["String"]["output"]>;
   interestedJobTypes: Array<Scalars["String"]["output"]>;
+  lastLoggedInAt: Scalars["DateTime"]["output"];
   lastName: Scalars["String"]["output"];
   phoneNumber: Scalars["String"]["output"];
   prefecture: Scalars["String"]["output"];
+  scoutCount: Scalars["Int"]["output"];
   university: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -2219,6 +2288,56 @@ export type GetMagazineQuery = {
   }>;
 };
 
+export type GetAdminMessagesQueryVariables = Exact<{
+  input: GetAdminMessagesInput;
+}>;
+
+export type GetAdminMessagesQuery = {
+  __typename?: "Query";
+  getAdminMessages: {
+    __typename?: "AdminMessagesResult";
+    totalCount: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    items: Array<{
+      __typename?: "AdminMessage";
+      id: number;
+      content: string;
+      type: string;
+      isRead: boolean;
+      createdAt: any;
+      updatedAt: any;
+      entryId: number;
+      user?: {
+        __typename?: "AdminMessageUser";
+        id: number;
+        firstName?: string | null;
+        lastName?: string | null;
+        avatarUrl?: string | null;
+        university?: string | null;
+        faculty?: string | null;
+      } | null;
+      company?: {
+        __typename?: "AdminMessageCompany";
+        id: number;
+        name: string;
+        iconImageUrl?: string | null;
+      } | null;
+      job: {
+        __typename?: "AdminMessageJob";
+        id: number;
+        title: string;
+        jobHeader: string;
+        industry: string;
+        jobType: string;
+      };
+    }>;
+  };
+};
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -2234,7 +2353,7 @@ export type SearchUsersQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "UserWithEntryCountType";
+      __typename?: "UserWithCountType";
       id: number;
       avatarUrl: string;
       lastName: string;
@@ -2296,7 +2415,6 @@ export type GetUserQuery = {
     interestedJobTypes: Array<string>;
     selfPR?: string | null;
     futureGoals?: string | null;
-    applicantNote?: string | null;
   } | null;
 };
 
@@ -3370,6 +3488,122 @@ export type GetMagazineQueryResult = Apollo.QueryResult<
   GetMagazineQuery,
   GetMagazineQueryVariables
 >;
+export const GetAdminMessagesDocument = gql`
+  query GetAdminMessages($input: GetAdminMessagesInput!) {
+    getAdminMessages(input: $input) {
+      items {
+        id
+        content
+        type
+        isRead
+        createdAt
+        updatedAt
+        entryId
+        user {
+          id
+          firstName
+          lastName
+          avatarUrl
+          university
+          faculty
+        }
+        company {
+          id
+          name
+          iconImageUrl
+        }
+        job {
+          id
+          title
+          jobHeader
+          industry
+          jobType
+        }
+      }
+      totalCount
+      page
+      limit
+      totalPages
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+`;
+
+/**
+ * __useGetAdminMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetAdminMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminMessagesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetAdminMessagesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAdminMessagesQuery,
+    GetAdminMessagesQueryVariables
+  > &
+    (
+      | { variables: GetAdminMessagesQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAdminMessagesQuery, GetAdminMessagesQueryVariables>(
+    GetAdminMessagesDocument,
+    options,
+  );
+}
+export function useGetAdminMessagesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAdminMessagesQuery,
+    GetAdminMessagesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAdminMessagesQuery,
+    GetAdminMessagesQueryVariables
+  >(GetAdminMessagesDocument, options);
+}
+export function useGetAdminMessagesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminMessagesQuery,
+        GetAdminMessagesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAdminMessagesQuery,
+    GetAdminMessagesQueryVariables
+  >(GetAdminMessagesDocument, options);
+}
+export type GetAdminMessagesQueryHookResult = ReturnType<
+  typeof useGetAdminMessagesQuery
+>;
+export type GetAdminMessagesLazyQueryHookResult = ReturnType<
+  typeof useGetAdminMessagesLazyQuery
+>;
+export type GetAdminMessagesSuspenseQueryHookResult = ReturnType<
+  typeof useGetAdminMessagesSuspenseQuery
+>;
+export type GetAdminMessagesQueryResult = Apollo.QueryResult<
+  GetAdminMessagesQuery,
+  GetAdminMessagesQueryVariables
+>;
 export const SearchUsersDocument = gql`
   query SearchUsers($input: SearchUsersInput!) {
     searchUsers(input: $input) {
@@ -3579,7 +3813,6 @@ export const GetUserDocument = gql`
       interestedJobTypes
       selfPR
       futureGoals
-      applicantNote
     }
   }
 `;

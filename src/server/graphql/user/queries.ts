@@ -64,7 +64,6 @@ export const GET_USER = gql`
       interestedJobTypes
       selfPR
       futureGoals
-      applicantNote
     }
   }
 `;
