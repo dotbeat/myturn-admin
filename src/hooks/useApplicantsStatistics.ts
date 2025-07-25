@@ -9,6 +9,7 @@ export function useApplicantsStatistics(initialPeriodKey: PeriodKeys) {
   const [pendingCount, setPendingCount] = useState(0); // 新着応募
   const [reviewingCount, setReviewingCount] = useState(0); // レビュー中
   const [interviewCount, setInterviewCount] = useState(0); // 面談設定済
+  const [secondInterviewScheduledCount, setSecondInterviewScheduledCount] = useState(0); // 二次面談設定済み
   const [offeredCount, setOfferedCount] = useState(0); // 内定
   const [acceptedCount, setAcceptedCount] = useState(0); // 入社決定
   const [rejectedCount, setRejectedCount] = useState(0); // 採用見送り
@@ -27,6 +28,7 @@ export function useApplicantsStatistics(initialPeriodKey: PeriodKeys) {
       setPendingCount(result.getEntriesStatistics.pendingCount);
       setReviewingCount(result.getEntriesStatistics.reviewingCount);
       setInterviewCount(result.getEntriesStatistics.interviewCount);
+      setSecondInterviewScheduledCount(result.getEntriesStatistics.secondInterviewScheduledCount || 0);
       setOfferedCount(result.getEntriesStatistics.offeredCount);
       setAcceptedCount(result.getEntriesStatistics.acceptedCount);
       setRejectedCount(result.getEntriesStatistics.rejectedCount);
@@ -43,6 +45,7 @@ export function useApplicantsStatistics(initialPeriodKey: PeriodKeys) {
     pendingCount,
     reviewingCount,
     interviewCount,
+    secondInterviewScheduledCount,
     offeredCount,
     acceptedCount,
     rejectedCount,
