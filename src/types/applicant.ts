@@ -2,6 +2,7 @@ export type ApplyStatus =
   | "PENDING"
   | "REVIEWING"
   | "INTERVIEW"
+  | "SECOND_INTERVIEW_SCHEDULED"
   | "OFFERED"
   | "ACCEPTED"
   | "REJECTED";

@@ -46,6 +46,7 @@ export const GET_ENTRIES_STATISTICS = gql`
       pendingCount
       reviewingCount
       interviewCount
+      secondInterviewScheduledCount
       offeredCount
       acceptedCount
       rejectedCount

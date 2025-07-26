@@ -71,6 +71,7 @@ export default function PageBody() {
     pendingCount, // 新着応募
     reviewingCount, // レビュー中
     interviewCount, // 面談設定済
+    secondInterviewScheduledCount, // 二次面談設定済み
     offeredCount, // 内定
     acceptedCount, // 入社決定
     rejectedCount, // 採用見送り
@@ -108,6 +109,11 @@ export default function PageBody() {
         <IndicateItem
           label="面談設定済"
           count={interviewCount}
+          className="py-4"
+        />
+        <IndicateItem
+          label="二次面談設定済み"
+          count={secondInterviewScheduledCount}
           className="py-4"
         />
         <IndicateItem label="内定" count={offeredCount} className="py-4" />

@@ -222,17 +222,13 @@ export default function MessagesPage() {
                       <strong>求人:</strong> {group.job.title}
                     </div>
 
-                    {group.user && (
-                      <div className="text-sm text-gray-600 mb-1">
-                        <strong>応募者:</strong> {group.user.lastName} {group.user.firstName}
-                      </div>
-                    )}
+                    <div className="text-sm text-gray-600 mb-1">
+                      <strong>応募者:</strong> {group.user ? `${group.user.lastName} ${group.user.firstName}` : '-'}
+                    </div>
 
-                    {group.company && (
-                      <div className="text-sm text-gray-600">
-                        <strong>企業:</strong> {group.company.name}
-                      </div>
-                    )}
+                    <div className="text-sm text-gray-600">
+                      <strong>企業:</strong> {group.company?.name || '-'}
+                    </div>
                   </div>
                 </div>
 
