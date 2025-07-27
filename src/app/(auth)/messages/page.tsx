@@ -60,6 +60,14 @@ export default function MessagesPage() {
           latestMessageAt: message.createdAt,
           unreadCount: 0,
         };
+      } else {
+        // ユーザーとカンパニーの情報を更新（両方の情報を保持）
+        if (message.user && !groups[entryId].user) {
+          groups[entryId].user = message.user;
+        }
+        if (message.company && !groups[entryId].company) {
+          groups[entryId].company = message.company;
+        }
       }
 
       groups[entryId].messages.push(message);
@@ -243,18 +251,16 @@ export default function MessagesPage() {
                       <strong>求人:</strong> {group.job.title}
                     </div>
 
-                    {group.user && (
-                      <div className="mb-1 text-sm text-gray-600">
-                        <strong>応募者:</strong> {group.user.lastName}{" "}
-                        {group.user.firstName}
-                      </div>
-                    )}
+                    <div className="mb-1 text-sm text-gray-600">
+                      <strong>応募者:</strong>{" "}
+                      {group.user
+                        ? `${group.user.lastName} ${group.user.firstName}`
+                        : "-"}
+                    </div>
 
-                    {group.company && (
-                      <div className="text-sm text-gray-600">
-                        <strong>企業:</strong> {group.company.name}
-                      </div>
-                    )}
+                    <div className="text-sm text-gray-600">
+                      <strong>企業:</strong> {group.company?.name || "-"}
+                    </div>
                   </div>
                 </div>
 
