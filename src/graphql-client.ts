@@ -518,11 +518,11 @@ export type EntryWithLastMessage = {
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
   entryId: Scalars["Int"]["output"];
+  isScouted: Scalars["Boolean"]["output"];
   job: JobInfo;
   jobId: Scalars["Int"]["output"];
   lastMessage: Scalars["String"]["output"];
   lastMessageAt: Scalars["DateTime"]["output"];
-  messageType: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   user?: Maybe<UserInfo>;
   userId: Scalars["Int"]["output"];
@@ -700,6 +700,19 @@ export type InterviewReminderEntryItem = {
   /** 求人情報（企業情報含む） */
   job: JobWithCompanyType;
   /** ユーザー情報 */
+  user: UserType;
+};
+
+export type InterviewStatusReminderEntriesType = {
+  __typename?: "InterviewStatusReminderEntriesType";
+  entries: Array<InterviewStatusReminderEntry>;
+};
+
+export type InterviewStatusReminderEntry = {
+  __typename?: "InterviewStatusReminderEntry";
+  company: CompanyType;
+  entry: Entry;
+  job: JobWithCompanyType;
   user: UserType;
 };
 
@@ -1297,6 +1310,7 @@ export type Query = {
   getEntriesStatistics: EntriesStatisticsResultType;
   getEntryById: EntryWithDetailsType;
   getInterviewReminderEntries: InterviewReminderEntriesType;
+  getInterviewStatusReminderEntries: InterviewStatusReminderEntriesType;
   getJobsByHotList: Array<JobWithCompanyType>;
   getJobsStatistics: JobsStatisticsResultType;
   getMessages: Array<Message>;
@@ -1567,6 +1581,7 @@ export type SearchEntriesInput = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
+  scoutedUserId?: InputMaybe<Scalars["Int"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -1610,24 +1625,33 @@ export type SearchUsersInput = {
   availableDurationMonthsMin?: InputMaybe<Scalars["Int"]["input"]>;
   availableHoursPerWeekMax?: InputMaybe<Scalars["Int"]["input"]>;
   availableHoursPerWeekMin?: InputMaybe<Scalars["Int"]["input"]>;
-  department?: InputMaybe<Scalars["String"]["input"]>;
+  departments?: InputMaybe<Array<Scalars["String"]["input"]>>;
   entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
   entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   faculty?: InputMaybe<Scalars["String"]["input"]>;
   gender?: InputMaybe<Scalars["String"]["input"]>;
-  grade?: InputMaybe<Scalars["String"]["input"]>;
-  interestedIndustry?: InputMaybe<Scalars["String"]["input"]>;
-  interestedJobType?: InputMaybe<Scalars["String"]["input"]>;
+  grades?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  interestedIndustries?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  interestedJobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  isAccepted?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** スカウト情報を含めるか */
   isIncludeScout?: InputMaybe<Scalars["Boolean"]["input"]>;
+  /** 自社がスカウトした求職者のみを表示するか */
+  isOnlyScoutedByMe?: InputMaybe<Scalars["Boolean"]["input"]>;
+  lastLogInDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  lastLogInDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   leaveDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   leaveDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
+  prefectures?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** 名前など直接特定できる個人情報を除いたキーワード検索 */
+  privacyKeyword?: InputMaybe<Scalars["String"]["input"]>;
   registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   registerDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  scoutCountMax?: InputMaybe<Scalars["Int"]["input"]>;
+  scoutCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   scoutedCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
   university?: InputMaybe<Scalars["String"]["input"]>;
 };
@@ -1995,6 +2019,7 @@ export type UserWithCountType = {
   id: Scalars["Int"]["output"];
   interestedIndustries: Array<Scalars["String"]["output"]>;
   interestedJobTypes: Array<Scalars["String"]["output"]>;
+  isScoutByMe: Scalars["Boolean"]["output"];
   lastLoggedInAt: Scalars["DateTime"]["output"];
   lastName: Scalars["String"]["output"];
   phoneNumber: Scalars["String"]["output"];
