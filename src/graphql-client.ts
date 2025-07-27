@@ -414,6 +414,7 @@ export type EntriesStatisticsResultType = {
   pendingCount: Scalars["Int"]["output"];
   rejectedCount: Scalars["Int"]["output"];
   reviewingCount: Scalars["Int"]["output"];
+  secondInterviewScheduledCount: Scalars["Int"]["output"];
   totalCount: Scalars["Int"]["output"];
 };
 
@@ -673,6 +674,11 @@ export type GetUserEntriesInput = {
 export type GetUsersStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type GetUsersWithIncompleteProfileInput = {
+  /** Number of days since user creation */
+  daysSinceCreation: Scalars["Int"]["input"];
 };
 
 export type HotJobItemInput = {
@@ -1347,6 +1353,7 @@ export type Query = {
   userByEmail?: Maybe<UserType>;
   userFavorites: Array<FavoriteType>;
   users: Array<UserType>;
+  usersWithIncompleteProfile: Array<UserType>;
 };
 
 export type QueryCheckUserJobEntryArgs = {
@@ -1483,6 +1490,10 @@ export type QueryUserArgs = {
 
 export type QueryUserByEmailArgs = {
   email: Scalars["String"]["input"];
+};
+
+export type QueryUsersWithIncompleteProfileArgs = {
+  input: GetUsersWithIncompleteProfileInput;
 };
 
 export type RemoveFavoriteInput = {
@@ -2165,6 +2176,7 @@ export type GetEntriesStatisticsQuery = {
     pendingCount: number;
     reviewingCount: number;
     interviewCount: number;
+    secondInterviewScheduledCount: number;
     offeredCount: number;
     acceptedCount: number;
     rejectedCount: number;
@@ -2793,6 +2805,7 @@ export const GetEntriesStatisticsDocument = gql`
       pendingCount
       reviewingCount
       interviewCount
+      secondInterviewScheduledCount
       offeredCount
       acceptedCount
       rejectedCount
