@@ -60,6 +60,14 @@ export default function MessagesPage() {
           latestMessageAt: message.createdAt,
           unreadCount: 0,
         };
+      } else {
+        // ユーザーとカンパニーの情報を更新（両方の情報を保持）
+        if (message.user && !groups[entryId].user) {
+          groups[entryId].user = message.user;
+        }
+        if (message.company && !groups[entryId].company) {
+          groups[entryId].company = message.company;
+        }
       }
 
       groups[entryId].messages.push(message);
