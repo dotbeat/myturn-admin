@@ -27,5 +27,4 @@ export type UserDetail = User & {
   interestedJobTypes: string;
   selfPR: string;
   futureGoals: string;
-  applicantNote: string;
 };
