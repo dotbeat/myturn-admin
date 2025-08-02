@@ -117,6 +117,12 @@ export default async function Page({
           <UserProfileItem headline="都道府県">
             <Typography className="text-lg">{user.prefecture}</Typography>
           </UserProfileItem>
+          <UserProfileItem headline="メールアドレス">
+            <Typography className="text-lg">{user.email}</Typography>
+          </UserProfileItem>
+          <UserProfileItem headline="電話番号">
+            <Typography className="text-lg">{user.phoneNumber}</Typography>
+          </UserProfileItem>
         </UserProfileGroup>
         <UserProfileGroup heading="在籍学校" className="mb-8">
           <UserProfileItem headline="学校">

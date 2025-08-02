@@ -55,6 +55,8 @@ export const GET_USER = gql`
       gender
       birthDate
       prefecture
+      email
+      phoneNumber
       grade
       graduationYear
       availableDaysPerWeek
