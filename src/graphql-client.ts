@@ -2443,6 +2443,8 @@ export type GetUserQuery = {
     gender?: string | null;
     birthDate?: any | null;
     prefecture?: string | null;
+    email: string;
+    phoneNumber?: string | null;
     grade?: string | null;
     graduationYear?: number | null;
     availableDaysPerWeek?: number | null;
@@ -3842,6 +3844,8 @@ export const GetUserDocument = gql`
       gender
       birthDate
       prefecture
+      email
+      phoneNumber
       grade
       graduationYear
       availableDaysPerWeek
