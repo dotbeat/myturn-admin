@@ -22,6 +22,8 @@ export type UserItem = User & {
 export type UserDetail = User & {
   gender: string;
   birthDate: string;
+  email: string;
+  phoneNumber: string;
   graduationYear: number;
   interestedIndustries: string;
   interestedJobTypes: string;
