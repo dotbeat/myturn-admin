@@ -55,6 +55,8 @@ export const GET_USER = gql`
       gender
       birthDate
       prefecture
+      email
+      phoneNumber
       grade
       graduationYear
       availableDaysPerWeek
@@ -64,7 +66,6 @@ export const GET_USER = gql`
       interestedJobTypes
       selfPR
       futureGoals
-      applicantNote
     }
   }
 `;
