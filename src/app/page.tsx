@@ -20,6 +20,9 @@ export default function Page() {
         <Link href="/jobs" className="underline">
           求人
         </Link>
+        <Link href="/scouts" className="underline">
+          スカウト管理
+        </Link>
         <Link href="/applicants" className="underline">
           応募者
         </Link>
