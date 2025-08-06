@@ -9,7 +9,6 @@ import {
   Skeleton,
   Link,
   Avatar,
-  Box,
 } from "@mui/material";
 import { format } from "date-fns";
 
