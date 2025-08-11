@@ -54,8 +54,8 @@ export default function MessagesPage() {
         groups[entryId] = {
           entryId,
           messages: [],
-          user: message.user,
-          company: message.company,
+          user: message.entryUser,
+          company: message.job.company,
           job: message.job,
           latestMessageAt: message.createdAt,
           unreadCount: 0,

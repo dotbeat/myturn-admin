@@ -24,12 +24,25 @@ export const GET_ADMIN_MESSAGES = gql`
           name
           iconImageUrl
         }
+        entryUser {
+          id
+          firstName
+          lastName
+          avatarUrl
+          university
+          faculty
+        }
         job {
           id
           title
           jobHeader
           industry
           jobType
+          company {
+            id
+            name
+            iconImageUrl
+          }
         }
       }
       totalCount
