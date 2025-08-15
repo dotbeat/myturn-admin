@@ -58,14 +58,30 @@ export default function ScoutList({ items, isLoading, className }: Props) {
           <TableBody>
             {[...Array(5)].map((_, index) => (
               <TableRow key={index}>
-                <TableCell><Skeleton variant="circular" width={40} height={40} /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
-                <TableCell><Skeleton /></TableCell>
+                <TableCell>
+                  <Skeleton variant="circular" width={40} height={40} />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -91,14 +107,13 @@ export default function ScoutList({ items, isLoading, className }: Props) {
         </TableHead>
         <TableBody>
           {items.map((item) => {
-            const statusInfo = statusConfig[item.status as keyof typeof statusConfig] || statusConfig.PENDING;
+            const statusInfo =
+              statusConfig[item.status as keyof typeof statusConfig] ||
+              statusConfig.PENDING;
             return (
               <TableRow key={item.id}>
                 <TableCell>
-                  <Avatar
-                    src={item.userAvatar}
-                    sx={{ width: 40, height: 40 }}
-                  >
+                  <Avatar src={item.userAvatar} sx={{ width: 40, height: 40 }}>
                     {item.userName?.charAt(0)}
                   </Avatar>
                 </TableCell>
@@ -115,7 +130,9 @@ export default function ScoutList({ items, isLoading, className }: Props) {
                 <TableCell>{item.industry || "-"}</TableCell>
                 <TableCell>{item.jobType || "-"}</TableCell>
                 <TableCell>{item.jobTitle}</TableCell>
-                <TableCell>{format(new Date(item.createdAt), "yyyy/MM/dd")}</TableCell>
+                <TableCell>
+                  {format(new Date(item.createdAt), "yyyy/MM/dd")}
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={statusInfo.label}

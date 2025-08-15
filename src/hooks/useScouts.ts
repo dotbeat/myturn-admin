@@ -45,7 +45,7 @@ const GET_SCOUTS = gql`
 export function useScouts(
   filter: ScoutFilterFormData,
   page: number,
-  limit: number
+  limit: number,
 ) {
   const { data, loading, error, refetch } = useQuery(GET_SCOUTS, {
     variables: {
@@ -62,20 +62,21 @@ export function useScouts(
     },
   });
 
-  const scouts = data?.scoutsForAdmin?.scouts?.map((scout: any) => ({
-    id: scout.id,
-    userId: scout.user?.id || scout.userId,
-    userName: scout.user?.name || "不明",
-    userAvatar: scout.user?.avatarUrl,
-    companyId: scout.company?.id || scout.companyId,
-    companyName: scout.company?.name || "不明",
-    jobId: scout.job?.id || scout.jobId,
-    jobTitle: scout.job?.title || "不明",
-    industry: scout.company?.industry,
-    jobType: scout.job?.jobType,
-    status: scout.status,
-    createdAt: scout.createdAt,
-  })) || [];
+  const scouts =
+    data?.scoutsForAdmin?.scouts?.map((scout: any) => ({
+      id: scout.id,
+      userId: scout.user?.id || scout.userId,
+      userName: scout.user?.name || "不明",
+      userAvatar: scout.user?.avatarUrl,
+      companyId: scout.company?.id || scout.companyId,
+      companyName: scout.company?.name || "不明",
+      jobId: scout.job?.id || scout.jobId,
+      jobTitle: scout.job?.title || "不明",
+      industry: scout.company?.industry,
+      jobType: scout.job?.jobType,
+      status: scout.status,
+      createdAt: scout.createdAt,
+    })) || [];
 
   return {
     scouts,
