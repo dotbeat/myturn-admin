@@ -23,6 +23,9 @@ export default function CompanyList({
     { property: "deletedAt", label: "退会日" },
     { property: "jobCount", label: "掲載求人" },
     { property: "acceptCount", label: "累計採用" },
+    { property: "interviewRate", label: "面談率" },
+    { property: "offerRate", label: "内定率" },
+    { property: "acceptRate", label: "入社決定率" },
   ] as const satisfies TableColumn<(keyof CompanyItem)[number]>[];
 
   const before3years = new Date();
@@ -58,6 +61,9 @@ export default function CompanyList({
       : "—",
     jobCount: item.jobCount,
     acceptCount: item.acceptCount,
+    interviewRate: `${item.entryCount ? (item.interviewCount / item.entryCount) * 100 : 0}%`,
+    offerRate: `${item.entryCount ? (item.offerCount / item.entryCount) * 100 : 0}%`,
+    acceptRate: `${item.entryCount ? (item.acceptCount / item.entryCount) * 100 : 0}%`,
   }));
 
   return (

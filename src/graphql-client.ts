@@ -31,6 +31,10 @@ export type Scalars = {
   DateTime: { input: any; output: any };
 };
 
+export type AcceptScoutInput = {
+  scoutId: Scalars["Int"]["input"];
+};
+
 export type AddFavoriteInput = {
   jobId: Scalars["Int"]["input"];
 };
@@ -41,6 +45,7 @@ export type AdminMessage = {
   content: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   entryId: Scalars["Int"]["output"];
+  entryUser: AdminMessageUser;
   id: Scalars["Int"]["output"];
   isRead: Scalars["Boolean"]["output"];
   job: AdminMessageJob;
@@ -58,6 +63,7 @@ export type AdminMessageCompany = {
 
 export type AdminMessageJob = {
   __typename?: "AdminMessageJob";
+  company: AdminMessageCompany;
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -120,6 +126,7 @@ export type CompanyInfo = {
   __typename?: "CompanyInfo";
   iconImageUrl?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["Int"]["output"];
+  isOfficial: Scalars["Boolean"]["output"];
   name: Scalars["String"]["output"];
 };
 
@@ -226,17 +233,21 @@ export type CompanyType = {
   detailAddress?: Maybe<Scalars["String"]["output"]>;
   email: Scalars["String"]["output"];
   employeeCount?: Maybe<Scalars["Int"]["output"]>;
+  entryCount?: Maybe<Scalars["Int"]["output"]>;
   headerImageUrl?: Maybe<Scalars["String"]["output"]>;
   iconImageUrl?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["Int"]["output"];
   industry?: Maybe<Scalars["String"]["output"]>;
   initialMessage?: Maybe<Scalars["String"]["output"]>;
+  interviewCount?: Maybe<Scalars["Int"]["output"]>;
   isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  isOfficial: Scalars["Boolean"]["output"];
   jobCount?: Maybe<Scalars["Int"]["output"]>;
   jobType?: Maybe<Scalars["String"]["output"]>;
   members?: Maybe<Array<CompanyMemberType>>;
   name: Scalars["String"]["output"];
   notificationEmails?: Maybe<Array<Scalars["String"]["output"]>>;
+  offerCount?: Maybe<Scalars["Int"]["output"]>;
   phoneNumber: Scalars["String"]["output"];
   postalCode?: Maybe<Scalars["String"]["output"]>;
   prefecture?: Maybe<Scalars["String"]["output"]>;
@@ -342,7 +353,19 @@ export type CreateMemberInput = {
 
 export type CreateMessageTemplateInput = {
   content: Scalars["String"]["input"];
+  isScoutTemplate?: InputMaybe<Scalars["Boolean"]["input"]>;
   title: Scalars["String"]["input"];
+};
+
+export type CreateScoutInput = {
+  content: Scalars["String"]["input"];
+  jobId?: InputMaybe<Scalars["Int"]["input"]>;
+  title: Scalars["String"]["input"];
+  userId: Scalars["Int"]["input"];
+};
+
+export type CreateScoutsInput = {
+  scouts: Array<CreateScoutInput>;
 };
 
 export type CreateUserInput = {
@@ -515,6 +538,7 @@ export type EntryWithDetailsType = {
   jobId: Scalars["Int"]["output"];
   jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   messages: Array<Message>;
+  scout?: Maybe<Scout>;
   secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
@@ -846,6 +870,8 @@ export type JobWithCompanyType = {
   companyId: Scalars["Int"]["output"];
   companyName: Scalars["String"]["output"];
   companyPhoneNumber: Scalars["String"]["output"];
+  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
+  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
   companyUrl: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -911,6 +937,8 @@ export type JobWithStatsType = {
   companyId: Scalars["Int"]["output"];
   companyName: Scalars["String"]["output"];
   companyPhoneNumber: Scalars["String"]["output"];
+  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
+  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
   companyUrl: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -1052,12 +1080,15 @@ export type MessageTemplateType = {
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
   id: Scalars["Int"]["output"];
+  isScoutTemplate?: Maybe<Scalars["Boolean"]["output"]>;
   title: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type Mutation = {
   __typename?: "Mutation";
+  /** スカウトを承諾 */
+  acceptScout: Scout;
   addFavorite: FavoriteType;
   autoUpdateEntryStatus: Entry;
   batchDaily: Scalars["Boolean"]["output"];
@@ -1068,6 +1099,8 @@ export type Mutation = {
   createEntry: Entry;
   createJob: JobType;
   createMessageTemplate: MessageTemplateType;
+  /** スカウトを一括作成 */
+  createScouts: Array<Scout>;
   createUser: UserType;
   deleteCompany: Scalars["Boolean"]["output"];
   deleteJob: JobType;
@@ -1110,6 +1143,10 @@ export type Mutation = {
   verifyPasswordResetToken: VerifyPasswordResetTokenResponse;
 };
 
+export type MutationAcceptScoutArgs = {
+  input: AcceptScoutInput;
+};
+
 export type MutationAddFavoriteArgs = {
   input: AddFavoriteInput;
 };
@@ -1140,6 +1177,10 @@ export type MutationCreateJobArgs = {
 
 export type MutationCreateMessageTemplateArgs = {
   input: CreateMessageTemplateInput;
+};
+
+export type MutationCreateScoutsArgs = {
+  input: CreateScoutsInput;
 };
 
 export type MutationCreateUserArgs = {
@@ -1372,7 +1413,13 @@ export type Query = {
   magazines: Array<MagazineType>;
   me: UserType;
   messageTemplates: Array<MessageTemplateType>;
+  /** 受信したスカウト一覧 */
+  receivedScouts: Array<Scout>;
   recentJobs: Array<JobWithCompanyType>;
+  /** 管理者用スカウト一覧 */
+  scoutsForAdmin: ScoutsForAdminResultType;
+  /** スカウト統計情報 */
+  scoutsStatistics: ScoutsStatisticsType;
   searchEntries: EntrySearchResultType;
   searchJobs: JobSearchResultType;
   searchJobsWithStats: JobSearchWithStatsResultType;
@@ -1496,6 +1543,16 @@ export type QueryRecentJobsArgs = {
   input?: InputMaybe<GetRecentJobsInput>;
 };
 
+export type QueryScoutsForAdminArgs = {
+  filter?: InputMaybe<ScoutFilterInput>;
+  limit?: InputMaybe<Scalars["Float"]["input"]>;
+  page?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type QueryScoutsStatisticsArgs = {
+  period?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type QuerySearchEntriesArgs = {
   input: SearchEntriesInput;
 };
@@ -1616,6 +1673,94 @@ export type SaveDraftJobInput = {
   workConditions?: InputMaybe<Array<Scalars["String"]["input"]>>;
   workingHoursEnd?: InputMaybe<Scalars["String"]["input"]>;
   workingHoursStart?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type Scout = {
+  __typename?: "Scout";
+  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  companyId: Scalars["Int"]["output"];
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  jobId?: Maybe<Scalars["Int"]["output"]>;
+  status: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
+export type ScoutCompanyType = {
+  __typename?: "ScoutCompanyType";
+  id: Scalars["Int"]["output"];
+  industry?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
+};
+
+export type ScoutFilterInput = {
+  companyName?: InputMaybe<Scalars["String"]["input"]>;
+  industry?: InputMaybe<Scalars["String"]["input"]>;
+  jobTitle?: InputMaybe<Scalars["String"]["input"]>;
+  scoutDateEnd?: InputMaybe<Scalars["String"]["input"]>;
+  scoutDateStart?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type ScoutForAdminType = {
+  __typename?: "ScoutForAdminType";
+  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  company?: Maybe<ScoutCompanyType>;
+  companyId: Scalars["Int"]["output"];
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  job?: Maybe<ScoutJobType>;
+  jobId?: Maybe<Scalars["Int"]["output"]>;
+  status: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  user?: Maybe<ScoutUserType>;
+  userId: Scalars["Int"]["output"];
+};
+
+export type ScoutJobType = {
+  __typename?: "ScoutJobType";
+  id: Scalars["Int"]["output"];
+  jobType?: Maybe<Scalars["String"]["output"]>;
+  title: Scalars["String"]["output"];
+};
+
+export type ScoutNotification = {
+  __typename?: "ScoutNotification";
+  companyIconUrl?: Maybe<Scalars["String"]["output"]>;
+  companyId: Scalars["Int"]["output"];
+  companyName: Scalars["String"]["output"];
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  jobId?: Maybe<Scalars["Int"]["output"]>;
+  jobTitle?: Maybe<Scalars["String"]["output"]>;
+  title: Scalars["String"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
+export type ScoutUserType = {
+  __typename?: "ScoutUserType";
+  avatarUrl?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type ScoutsForAdminResultType = {
+  __typename?: "ScoutsForAdminResultType";
+  scouts: Array<ScoutForAdminType>;
+  totalCount: Scalars["Int"]["output"];
+  totalPages: Scalars["Int"]["output"];
+};
+
+export type ScoutsStatisticsType = {
+  __typename?: "ScoutsStatisticsType";
+  acceptedCount: Scalars["Int"]["output"];
+  totalScoutCount: Scalars["Int"]["output"];
 };
 
 export type SearchEntriesInput = {
@@ -1792,6 +1937,7 @@ export type Subscription = {
   __typename?: "Subscription";
   entryAdded: EntryNotification;
   messageAdded: MessageNotification;
+  scoutSent: ScoutNotification;
 };
 
 export type SubscriptionEntryAddedArgs = {
@@ -1800,6 +1946,10 @@ export type SubscriptionEntryAddedArgs = {
 
 export type SubscriptionMessageAddedArgs = {
   entryId: Scalars["Int"]["input"];
+};
+
+export type SubscriptionScoutSentArgs = {
+  userId: Scalars["Int"]["input"];
 };
 
 export type UncheckedEntriesCountType = {
@@ -1835,6 +1985,7 @@ export type UpdateCompanyInput = {
   industry?: InputMaybe<Scalars["String"]["input"]>;
   initialMessage?: InputMaybe<Scalars["String"]["input"]>;
   isInitialMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  isOfficial?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobType?: InputMaybe<Scalars["String"]["input"]>;
   members?: InputMaybe<Array<CompanyMemberInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
@@ -1943,6 +2094,7 @@ export type UpdateMagazinesInput = {
 export type UpdateMessageTemplateInput = {
   content: Scalars["String"]["input"];
   id: Scalars["Int"]["input"];
+  isScoutTemplate?: InputMaybe<Scalars["Boolean"]["input"]>;
   title: Scalars["String"]["input"];
 };
 
@@ -2110,6 +2262,65 @@ export type VerifyPasswordResetTokenResponse = {
   isValid: Scalars["Boolean"]["output"];
 };
 
+export type GetScoutsForAdminQueryVariables = Exact<{
+  filter?: InputMaybe<ScoutFilterInput>;
+  page?: InputMaybe<Scalars["Float"]["input"]>;
+  limit?: InputMaybe<Scalars["Float"]["input"]>;
+}>;
+
+export type GetScoutsForAdminQuery = {
+  __typename?: "Query";
+  scoutsForAdmin: {
+    __typename?: "ScoutsForAdminResultType";
+    totalCount: number;
+    totalPages: number;
+    scouts: Array<{
+      __typename?: "ScoutForAdminType";
+      id: number;
+      userId: number;
+      companyId: number;
+      jobId?: number | null;
+      title: string;
+      content: string;
+      status: string;
+      acceptedAt?: any | null;
+      createdAt: any;
+      updatedAt: any;
+      user?: {
+        __typename?: "ScoutUserType";
+        id: number;
+        name: string;
+        avatarUrl?: string | null;
+      } | null;
+      company?: {
+        __typename?: "ScoutCompanyType";
+        id: number;
+        name: string;
+        industry?: string | null;
+      } | null;
+      job?: {
+        __typename?: "ScoutJobType";
+        id: number;
+        title: string;
+        jobType?: string | null;
+      } | null;
+    }>;
+  };
+};
+
+export type GetScoutsStatisticsQueryVariables = Exact<{
+  period?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type GetScoutsStatisticsQuery = {
+  __typename?: "Query";
+  scoutsStatistics: {
+    __typename?: "ScoutsStatisticsType";
+    totalScoutCount: number;
+    acceptedCount: number;
+  };
+};
+
 export type BatchDailyMutationVariables = Exact<{ [key: string]: never }>;
 
 export type BatchDailyMutation = {
@@ -2141,6 +2352,9 @@ export type GetCompaniesQuery = {
       createdAt: any;
       deletedAt?: any | null;
       jobCount?: number | null;
+      entryCount?: number | null;
+      interviewCount?: number | null;
+      offerCount?: number | null;
       acceptCount?: number | null;
     }>;
   };
@@ -2407,6 +2621,15 @@ export type GetAdminMessagesQuery = {
         name: string;
         iconImageUrl?: string | null;
       } | null;
+      entryUser: {
+        __typename?: "AdminMessageUser";
+        id: number;
+        firstName?: string | null;
+        lastName?: string | null;
+        avatarUrl?: string | null;
+        university?: string | null;
+        faculty?: string | null;
+      };
       job: {
         __typename?: "AdminMessageJob";
         id: number;
@@ -2414,6 +2637,12 @@ export type GetAdminMessagesQuery = {
         jobHeader: string;
         industry: string;
         jobType: string;
+        company: {
+          __typename?: "AdminMessageCompany";
+          id: number;
+          name: string;
+          iconImageUrl?: string | null;
+        };
       };
     }>;
   };
@@ -2501,6 +2730,197 @@ export type GetUserQuery = {
   } | null;
 };
 
+export const GetScoutsForAdminDocument = gql`
+  query GetScoutsForAdmin(
+    $filter: ScoutFilterInput
+    $page: Float
+    $limit: Float
+  ) {
+    scoutsForAdmin(filter: $filter, page: $page, limit: $limit) {
+      scouts {
+        id
+        userId
+        user {
+          id
+          name
+          avatarUrl
+        }
+        companyId
+        company {
+          id
+          name
+          industry
+        }
+        jobId
+        job {
+          id
+          title
+          jobType
+        }
+        title
+        content
+        status
+        acceptedAt
+        createdAt
+        updatedAt
+      }
+      totalCount
+      totalPages
+    }
+  }
+`;
+
+/**
+ * __useGetScoutsForAdminQuery__
+ *
+ * To run a query within a React component, call `useGetScoutsForAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetScoutsForAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetScoutsForAdminQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetScoutsForAdminQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetScoutsForAdminQuery,
+    GetScoutsForAdminQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetScoutsForAdminQuery,
+    GetScoutsForAdminQueryVariables
+  >(GetScoutsForAdminDocument, options);
+}
+export function useGetScoutsForAdminLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetScoutsForAdminQuery,
+    GetScoutsForAdminQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetScoutsForAdminQuery,
+    GetScoutsForAdminQueryVariables
+  >(GetScoutsForAdminDocument, options);
+}
+export function useGetScoutsForAdminSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetScoutsForAdminQuery,
+        GetScoutsForAdminQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetScoutsForAdminQuery,
+    GetScoutsForAdminQueryVariables
+  >(GetScoutsForAdminDocument, options);
+}
+export type GetScoutsForAdminQueryHookResult = ReturnType<
+  typeof useGetScoutsForAdminQuery
+>;
+export type GetScoutsForAdminLazyQueryHookResult = ReturnType<
+  typeof useGetScoutsForAdminLazyQuery
+>;
+export type GetScoutsForAdminSuspenseQueryHookResult = ReturnType<
+  typeof useGetScoutsForAdminSuspenseQuery
+>;
+export type GetScoutsForAdminQueryResult = Apollo.QueryResult<
+  GetScoutsForAdminQuery,
+  GetScoutsForAdminQueryVariables
+>;
+export const GetScoutsStatisticsDocument = gql`
+  query GetScoutsStatistics($period: String) {
+    scoutsStatistics(period: $period) {
+      totalScoutCount
+      acceptedCount
+    }
+  }
+`;
+
+/**
+ * __useGetScoutsStatisticsQuery__
+ *
+ * To run a query within a React component, call `useGetScoutsStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetScoutsStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetScoutsStatisticsQuery({
+ *   variables: {
+ *      period: // value for 'period'
+ *   },
+ * });
+ */
+export function useGetScoutsStatisticsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetScoutsStatisticsQuery,
+    GetScoutsStatisticsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetScoutsStatisticsQuery,
+    GetScoutsStatisticsQueryVariables
+  >(GetScoutsStatisticsDocument, options);
+}
+export function useGetScoutsStatisticsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetScoutsStatisticsQuery,
+    GetScoutsStatisticsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetScoutsStatisticsQuery,
+    GetScoutsStatisticsQueryVariables
+  >(GetScoutsStatisticsDocument, options);
+}
+export function useGetScoutsStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetScoutsStatisticsQuery,
+        GetScoutsStatisticsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetScoutsStatisticsQuery,
+    GetScoutsStatisticsQueryVariables
+  >(GetScoutsStatisticsDocument, options);
+}
+export type GetScoutsStatisticsQueryHookResult = ReturnType<
+  typeof useGetScoutsStatisticsQuery
+>;
+export type GetScoutsStatisticsLazyQueryHookResult = ReturnType<
+  typeof useGetScoutsStatisticsLazyQuery
+>;
+export type GetScoutsStatisticsSuspenseQueryHookResult = ReturnType<
+  typeof useGetScoutsStatisticsSuspenseQuery
+>;
+export type GetScoutsStatisticsQueryResult = Apollo.QueryResult<
+  GetScoutsStatisticsQuery,
+  GetScoutsStatisticsQueryVariables
+>;
 export const BatchDailyDocument = gql`
   mutation BatchDaily {
     batchDaily
@@ -2560,6 +2980,9 @@ export const GetCompaniesDocument = gql`
         createdAt
         deletedAt
         jobCount
+        entryCount
+        interviewCount
+        offerCount
         acceptCount
       }
       limit
@@ -3596,12 +4019,25 @@ export const GetAdminMessagesDocument = gql`
           name
           iconImageUrl
         }
+        entryUser {
+          id
+          firstName
+          lastName
+          avatarUrl
+          university
+          faculty
+        }
         job {
           id
           title
           jobHeader
           industry
           jobType
+          company {
+            id
+            name
+            iconImageUrl
+          }
         }
       }
       totalCount
