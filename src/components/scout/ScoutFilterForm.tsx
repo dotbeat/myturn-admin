@@ -42,11 +42,7 @@ export default function ScoutFilterForm({ isLoading }: Props) {
         />
       </FilterItem>
       <FilterItem label="ステータス">
-        <SelectMini
-          name="status"
-          items={scoutStatuses}
-          className="w-24"
-        />
+        <SelectMini name="status" items={scoutStatuses} className="w-24" />
       </FilterItem>
       <Button
         type="submit"

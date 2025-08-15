@@ -63,11 +63,8 @@ export default function PageBody() {
     limit,
   );
 
-  const {
-    totalScoutCount,
-    acceptedCount,
-    refetchStatistics,
-  } = useScoutsStatistics(selectedPeriod);
+  const { totalScoutCount, acceptedCount, refetchStatistics } =
+    useScoutsStatistics(selectedPeriod);
 
   const onSubmit = (data: ScoutFilterFormData) => {
     const oldParams = new URLSearchParams(window.location.search);
@@ -91,11 +88,7 @@ export default function PageBody() {
           count={totalScoutCount}
           className="py-4"
         />
-        <IndicateItem
-          label="承認数"
-          count={acceptedCount}
-          className="py-4"
-        />
+        <IndicateItem label="承認数" count={acceptedCount} className="py-4" />
         <PopUp
           id="period-filter"
           className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
