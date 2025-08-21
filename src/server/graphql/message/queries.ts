@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_ADMIN_MESSAGES = gql`
   query GetAdminMessages($input: GetAdminMessagesInput!) {
@@ -24,12 +24,25 @@ export const GET_ADMIN_MESSAGES = gql`
           name
           iconImageUrl
         }
+        entryUser {
+          id
+          firstName
+          lastName
+          avatarUrl
+          university
+          faculty
+        }
         job {
           id
           title
           jobHeader
           industry
           jobType
+          company {
+            id
+            name
+            iconImageUrl
+          }
         }
       }
       totalCount

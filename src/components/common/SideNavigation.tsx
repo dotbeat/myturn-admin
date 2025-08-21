@@ -32,6 +32,9 @@ export default function SideNavigation({
           <SideNavigationItem href="/jobs" label="求人" />
         </ListItem>
         <ListItem className="p-0">
+          <SideNavigationItem href="/scouts" label="スカウト管理" />
+        </ListItem>
+        <ListItem className="p-0">
           <SideNavigationItem href="/applicants" label="応募者" />
         </ListItem>
         <ListItem className="p-0">

@@ -19,6 +19,7 @@ export interface AdminMessageJob {
   jobHeader: string;
   industry: string;
   jobType: string;
+  company: AdminMessageCompany;
 }
 
 export interface AdminMessage {
@@ -31,6 +32,7 @@ export interface AdminMessage {
   entryId: number;
   user?: AdminMessageUser;
   company?: AdminMessageCompany;
+  entryUser: AdminMessageUser;
   job: AdminMessageJob;
 }
 
