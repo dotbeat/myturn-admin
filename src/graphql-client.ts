@@ -233,11 +233,13 @@ export type CompanyType = {
   detailAddress?: Maybe<Scalars["String"]["output"]>;
   email: Scalars["String"]["output"];
   employeeCount?: Maybe<Scalars["Int"]["output"]>;
+  entryCount?: Maybe<Scalars["Int"]["output"]>;
   headerImageUrl?: Maybe<Scalars["String"]["output"]>;
   iconImageUrl?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["Int"]["output"];
   industry?: Maybe<Scalars["String"]["output"]>;
   initialMessage?: Maybe<Scalars["String"]["output"]>;
+  interviewCount?: Maybe<Scalars["Int"]["output"]>;
   isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isOfficial: Scalars["Boolean"]["output"];
   jobCount?: Maybe<Scalars["Int"]["output"]>;
@@ -245,6 +247,7 @@ export type CompanyType = {
   members?: Maybe<Array<CompanyMemberType>>;
   name: Scalars["String"]["output"];
   notificationEmails?: Maybe<Array<Scalars["String"]["output"]>>;
+  offerCount?: Maybe<Scalars["Int"]["output"]>;
   phoneNumber: Scalars["String"]["output"];
   postalCode?: Maybe<Scalars["String"]["output"]>;
   prefecture?: Maybe<Scalars["String"]["output"]>;
@@ -708,6 +711,10 @@ export type GetUserEntriesInput = {
   userId: Scalars["Int"]["input"];
 };
 
+export type GetUserUnreadMessagesInput = {
+  userId: Scalars["Int"]["input"];
+};
+
 export type GetUsersStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -867,6 +874,8 @@ export type JobWithCompanyType = {
   companyId: Scalars["Int"]["output"];
   companyName: Scalars["String"]["output"];
   companyPhoneNumber: Scalars["String"]["output"];
+  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
+  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
   companyUrl: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -932,6 +941,8 @@ export type JobWithStatsType = {
   companyId: Scalars["Int"]["output"];
   companyName: Scalars["String"]["output"];
   companyPhoneNumber: Scalars["String"]["output"];
+  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
+  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
   companyUrl: Scalars["String"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
@@ -1369,6 +1380,7 @@ export type Query = {
   companyScoutTicket: ScoutTicketType;
   getAdminMessages: AdminMessagesResult;
   getAllCompanyIds: Array<CompanyIdInfoType>;
+  getAllUserIds: Array<UserType>;
   getCompanies: CompanySearchResultType;
   getCompaniesStatistics: CompaniesStatisticsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
@@ -1398,6 +1410,7 @@ export type Query = {
   getUserMessages: Array<EntryWithLastMessage>;
   getUserNotifications: Array<Notification>;
   getUserStatistics: UserStatisticsResultType;
+  getUserUnreadMessages: Array<UserUnreadMessages>;
   getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars["Boolean"]["output"];
   job?: Maybe<JobWithCompanyType>;
@@ -1512,6 +1525,10 @@ export type QueryGetUserEntriesArgs = {
 
 export type QueryGetUserStatisticsArgs = {
   id: Scalars["Int"]["input"];
+};
+
+export type QueryGetUserUnreadMessagesArgs = {
+  input: GetUserUnreadMessagesInput;
 };
 
 export type QueryGetUsersStatisticsArgs = {
@@ -1964,6 +1981,15 @@ export type UncheckedEntriesCountType = {
   count: Scalars["Int"]["output"];
 };
 
+export type UnreadMessage = {
+  __typename?: "UnreadMessage";
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  entryId: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  isRead: Scalars["Boolean"]["output"];
+};
+
 export type UnreadMessageInfo = {
   __typename?: "UnreadMessageInfo";
   content: Scalars["String"]["output"];
@@ -2213,6 +2239,23 @@ export type UserType = {
   updatedAt: Scalars["DateTime"]["output"];
 };
 
+export type UserUnreadCompany = {
+  __typename?: "UserUnreadCompany";
+  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type UserUnreadMessages = {
+  __typename?: "UserUnreadMessages";
+  company: UserUnreadCompany;
+  entryId: Scalars["Int"]["output"];
+  jobId: Scalars["Int"]["output"];
+  jobTitle: Scalars["String"]["output"];
+  unreadCount: Scalars["Int"]["output"];
+  unreadMessages: Array<UnreadMessage>;
+};
+
 export type UserWithCountType = {
   __typename?: "UserWithCountType";
   availableDaysPerWeek: Scalars["Int"]["output"];
@@ -2359,6 +2402,9 @@ export type GetCompaniesQuery = {
       createdAt: any;
       deletedAt?: any | null;
       jobCount?: number | null;
+      entryCount?: number | null;
+      interviewCount?: number | null;
+      offerCount?: number | null;
       acceptCount?: number | null;
     }>;
   };
@@ -2984,6 +3030,9 @@ export const GetCompaniesDocument = gql`
         createdAt
         deletedAt
         jobCount
+        entryCount
+        interviewCount
+        offerCount
         acceptCount
       }
       limit

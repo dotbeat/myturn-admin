@@ -12,6 +12,9 @@ export const SEARCH_COMPANY = gql`
         createdAt
         deletedAt
         jobCount
+        entryCount
+        interviewCount
+        offerCount
         acceptCount
       }
       limit
