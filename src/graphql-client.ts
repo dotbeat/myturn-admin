@@ -711,6 +711,10 @@ export type GetUserEntriesInput = {
   userId: Scalars["Int"]["input"];
 };
 
+export type GetUserUnreadMessagesInput = {
+  userId: Scalars["Int"]["input"];
+};
+
 export type GetUsersStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -1372,8 +1376,11 @@ export type Query = {
   company?: Maybe<CompanyWithJobsType>;
   companyIds: Array<Scalars["Int"]["output"]>;
   companyMe: CompanyType;
+  /** 企業のスカウトチケット情報 */
+  companyScoutTicket: ScoutTicketType;
   getAdminMessages: AdminMessagesResult;
   getAllCompanyIds: Array<CompanyIdInfoType>;
+  getAllUserIds: Array<UserType>;
   getCompanies: CompanySearchResultType;
   getCompaniesStatistics: CompaniesStatisticsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
@@ -1403,6 +1410,7 @@ export type Query = {
   getUserMessages: Array<EntryWithLastMessage>;
   getUserNotifications: Array<Notification>;
   getUserStatistics: UserStatisticsResultType;
+  getUserUnreadMessages: Array<UserUnreadMessages>;
   getUsersStatistics: UsersStatisticsResultType;
   isFavorite: Scalars["Boolean"]["output"];
   job?: Maybe<JobWithCompanyType>;
@@ -1517,6 +1525,10 @@ export type QueryGetUserEntriesArgs = {
 
 export type QueryGetUserStatisticsArgs = {
   id: Scalars["Int"]["input"];
+};
+
+export type QueryGetUserUnreadMessagesArgs = {
+  input: GetUserUnreadMessagesInput;
 };
 
 export type QueryGetUsersStatisticsArgs = {
@@ -1743,6 +1755,18 @@ export type ScoutNotification = {
   userId: Scalars["Int"]["output"];
 };
 
+export type ScoutTicketType = {
+  __typename?: "ScoutTicketType";
+  companyId: Scalars["Int"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  remainingCount: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  usedCount: Scalars["Int"]["output"];
+  yearMonth: Scalars["Int"]["output"];
+};
+
 export type ScoutUserType = {
   __typename?: "ScoutUserType";
   avatarUrl?: Maybe<Scalars["String"]["output"]>;
@@ -1955,6 +1979,15 @@ export type SubscriptionScoutSentArgs = {
 export type UncheckedEntriesCountType = {
   __typename?: "UncheckedEntriesCountType";
   count: Scalars["Int"]["output"];
+};
+
+export type UnreadMessage = {
+  __typename?: "UnreadMessage";
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  entryId: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  isRead: Scalars["Boolean"]["output"];
 };
 
 export type UnreadMessageInfo = {
@@ -2204,6 +2237,23 @@ export type UserType = {
   selfPR?: Maybe<Scalars["String"]["output"]>;
   university?: Maybe<Scalars["String"]["output"]>;
   updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type UserUnreadCompany = {
+  __typename?: "UserUnreadCompany";
+  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type UserUnreadMessages = {
+  __typename?: "UserUnreadMessages";
+  company: UserUnreadCompany;
+  entryId: Scalars["Int"]["output"];
+  jobId: Scalars["Int"]["output"];
+  jobTitle: Scalars["String"]["output"];
+  unreadCount: Scalars["Int"]["output"];
+  unreadMessages: Array<UnreadMessage>;
 };
 
 export type UserWithCountType = {
