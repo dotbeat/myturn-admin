@@ -7,5 +7,8 @@ export type CompanyItem = {
   createdAt: Date;
   deletedAt: Date | null;
   jobCount: number;
+  entryCount: number;
+  interviewCount: number;
+  offerCount: number;
   acceptCount: number;
 };
