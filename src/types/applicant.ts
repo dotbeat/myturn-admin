@@ -27,4 +27,5 @@ export type ApplicantItem = {
   };
   createdAt: string;
   status: ApplyStatus;
+  hasAcceptReport: boolean;
 };
