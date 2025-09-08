@@ -10,6 +10,7 @@ export const SEARCH_ENTRIES = gql`
         createdAt
         updatedAt
         status
+        hasAcceptReport
         job {
           id
           title

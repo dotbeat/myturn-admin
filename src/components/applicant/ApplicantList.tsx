@@ -24,6 +24,7 @@ export default function ApplicantList({
     { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
     { property: "entryDate", label: "応募日" },
     { property: "status", label: "ステータス" },
+    { property: "hasAcceptReport", label: "内定報告" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
   const before3years = new Date();
@@ -83,6 +84,7 @@ export default function ApplicantList({
     ),
     entryDate: new Date(item.createdAt)?.toLocaleDateString("ja") ?? "—",
     status: applyStatusIndex[item.status]?.label ?? "—",
+    hasAcceptReport: item.hasAcceptReport ? "あり" : "なし",
   }));
 
   return (

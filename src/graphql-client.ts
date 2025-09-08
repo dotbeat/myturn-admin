@@ -368,6 +368,11 @@ export type CreateScoutsInput = {
   scouts: Array<CreateScoutInput>;
 };
 
+export type CreateUserAcceptReportInput = {
+  companyId: Scalars["Int"]["input"];
+  joinDate: Scalars["DateTime"]["input"];
+};
+
 export type CreateUserInput = {
   availableDaysPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
   availableDurationMonths?: InputMaybe<Scalars["Int"]["input"]>;
@@ -529,6 +534,7 @@ export type EntryWithDetailsType = {
   applicantNote?: Maybe<Scalars["String"]["output"]>;
   createdAt: Scalars["DateTime"]["output"];
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  hasAcceptReport?: Maybe<Scalars["Boolean"]["output"]>;
   id: Scalars["Int"]["output"];
   interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   isChecked: Scalars["Boolean"]["output"];
@@ -564,6 +570,7 @@ export type EntryWithLastMessage = {
   jobId: Scalars["Int"]["output"];
   lastMessage: Scalars["String"]["output"];
   lastMessageAt: Scalars["DateTime"]["output"];
+  status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   user?: Maybe<UserInfo>;
   userId: Scalars["Int"]["output"];
@@ -1106,6 +1113,7 @@ export type Mutation = {
   /** スカウトを一括作成 */
   createScouts: Array<Scout>;
   createUser: UserType;
+  createUserAcceptReport: Scalars["Boolean"]["output"];
   deleteCompany: Scalars["Boolean"]["output"];
   deleteJob: JobType;
   deleteMessageTemplate: Scalars["Boolean"]["output"];
@@ -1189,6 +1197,11 @@ export type MutationCreateScoutsArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+export type MutationCreateUserAcceptReportArgs = {
+  id: Scalars["Int"]["input"];
+  input: CreateUserAcceptReportInput;
 };
 
 export type MutationDeleteJobArgs = {
@@ -2447,6 +2460,7 @@ export type SearchEntriesQuery = {
       createdAt: any;
       updatedAt: any;
       status: string;
+      hasAcceptReport?: boolean | null;
       job: {
         __typename?: "JobWithCompanyType";
         id: number;
@@ -3214,6 +3228,7 @@ export const SearchEntriesDocument = gql`
         createdAt
         updatedAt
         status
+        hasAcceptReport
         job {
           id
           title
