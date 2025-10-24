@@ -61,6 +61,19 @@ export default function ApplicantFilterForm({
           />
         </FilterItem>
       </FilterGroup>
+      <FilterGroup heading="内定報告">
+        <Box>
+          <p className="mb-1 text-sm">内定報告有りのみ</p>
+          <SelectMini
+            name="isOnlyAccepted"
+            items={[
+              { value: "", label: "" },
+              { value: "y", label: "はい" },
+            ]}
+            className="w-24"
+          />
+        </Box>
+      </FilterGroup>
       <Button
         type="submit"
         disabled={isLoading}

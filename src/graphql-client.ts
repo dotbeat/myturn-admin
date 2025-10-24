@@ -1880,6 +1880,7 @@ export type SearchEntriesInput = {
   entryDateEnd?: InputMaybe<Scalars['DateTime']['input']>;
   entryDateStart?: InputMaybe<Scalars['DateTime']['input']>;
   industry?: InputMaybe<Scalars['String']['input']>;
+  isOnlyAccepted?: InputMaybe<Scalars['String']['input']>;
   jobTitle?: InputMaybe<Scalars['String']['input']>;
   jobType?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;

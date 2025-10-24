@@ -53,6 +53,7 @@ export default function PageBody() {
     entryDateStart: paramsConverter.toDate("entryDateStart"),
     entryDateEnd: paramsConverter.toDate("entryDateEnd"),
     status: paramsConverter.toString("status") as ApplyStatus | "",
+    isOnlyAccepted: paramsConverter.toString("isOnlyAccepted") as "y" | "",
   };
   const methods = useForm<ApplicantFilterFormData>({
     resolver: zodResolver(applicantFilterFormSchema),
