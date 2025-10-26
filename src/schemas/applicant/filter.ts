@@ -11,6 +11,7 @@ export const applicantFilterFormSchema = z
     entryDateStart: z.string().length(10).nullable(), // 応募日(開始)
     entryDateEnd: z.string().length(10).nullable(), // 応募日(終了)
     status: z.enum(["", ...applyStatuses]), // ステータス
+    isOnlyAccepted: z.enum(["", "y"]), // 内定報告済みユーザーに絞り込む
   })
   .superRefine(({ entryDateStart: start, entryDateEnd: end }, ctx) => {
     if (start != null && end != null && start > end) {
