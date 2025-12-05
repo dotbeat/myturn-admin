@@ -11,6 +11,8 @@ export const SEARCH_ENTRIES = gql`
         updatedAt
         status
         joinDate
+        interviewScheduledAt
+        secondInterviewScheduledAt
         job {
           id
           title

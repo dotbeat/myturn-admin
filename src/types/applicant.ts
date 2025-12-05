@@ -28,4 +28,6 @@ export type ApplicantItem = {
   createdAt: string;
   status: ApplyStatus;
   joinDate: string;
+  interviewScheduledAt: string | null;
+  secondInterviewScheduledAt: string | null;
 };
