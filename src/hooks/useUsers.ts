@@ -44,7 +44,7 @@ export function useUsers(
 
   // 求職者一覧情報を取得
   const { loading } = useQuery(SEARCH_USERS, {
-    variables: { input: { ...input, page, limit } },
+    variables: { input: { ...input, isIncludeDeleted: true, page, limit } },
     fetchPolicy: "no-cache",
     onCompleted(result) {
       setTotalCount(result.searchUsers.totalCount);

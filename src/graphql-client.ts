@@ -376,6 +376,7 @@ export type CreateUserInput = {
   graduationYear?: InputMaybe<Scalars['Int']['input']>;
   interestedIndustries?: InputMaybe<Array<Scalars['String']['input']>>;
   interestedJobTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  isAllowScout?: Scalars['Boolean']['input'];
   lastName?: InputMaybe<Scalars['String']['input']>;
   magazineNotification?: Scalars['Boolean']['input'];
   messageNotification?: Scalars['Boolean']['input'];
@@ -1939,6 +1940,7 @@ export type SearchUsersInput = {
   interestedIndustries?: InputMaybe<Array<Scalars['String']['input']>>;
   interestedJobTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   isAccepted?: InputMaybe<Scalars['Boolean']['input']>;
+  isIncludeDeleted?: InputMaybe<Scalars['Boolean']['input']>;
   /** スカウト情報を含めるか */
   isIncludeScout?: InputMaybe<Scalars['Boolean']['input']>;
   /** 自社がスカウトした求職者のみを表示するか */
@@ -2244,6 +2246,7 @@ export type UpdateUserInput = {
   graduationYear?: InputMaybe<Scalars['Int']['input']>;
   interestedIndustries?: InputMaybe<Array<Scalars['String']['input']>>;
   interestedJobTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  isAllowScout?: InputMaybe<Scalars['Boolean']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   magazineNotification?: InputMaybe<Scalars['Boolean']['input']>;
   messageNotification?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2331,6 +2334,7 @@ export type UserType = {
   id: Scalars['Int']['output'];
   interestedIndustries: Array<Scalars['String']['output']>;
   interestedJobTypes: Array<Scalars['String']['output']>;
+  isAllowScout: Scalars['Boolean']['output'];
   lastLoggedInAt: Scalars['DateTime']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   magazineNotification: Scalars['Boolean']['output'];
