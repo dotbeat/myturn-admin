@@ -1136,6 +1136,7 @@ export type Mutation = {
   updateJobsStatus: Scalars['Int']['output'];
   updateMagazines: Array<MagazineType>;
   updateMessageTemplate: MessageTemplateType;
+  updatePickJobs: PickJobType;
   updateUser: UserType;
   updateUserEmail: UserType;
   updateUserPassword: UserType;
@@ -1356,6 +1357,11 @@ export type MutationUpdateMessageTemplateArgs = {
 };
 
 
+export type MutationUpdatePickJobsArgs = {
+  input: UpdatePickJobsInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   id: Scalars['Int']['input'];
   input: UpdateUserInput;
@@ -1419,6 +1425,18 @@ export type PendingEntriesType = {
   entries: Array<EntryWithUserAndJobType>;
 };
 
+export type PickJobItemInput = {
+  jobId: Scalars['Int']['input'];
+};
+
+export type PickJobType = {
+  __typename?: 'PickJobType';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  jobId: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   checkUserJobEntry: EntryCheck;
@@ -1444,6 +1462,7 @@ export type Query = {
   getInterviewReminderEntries: InterviewReminderEntriesType;
   getInterviewStatusReminderEntries: InterviewStatusReminderEntriesType;
   getJobsByHotList: Array<JobWithCompanyType>;
+  getJobsByPickList: Array<JobWithCompanyType>;
   getJobsStatistics: JobsStatisticsResultType;
   getMessages: Array<Message>;
   getNewEntriesWithoutMessages: NewEntriesWithoutMessagesType;
@@ -2225,6 +2244,10 @@ export type UpdateMessageTemplateInput = {
   title: Scalars['String']['input'];
 };
 
+export type UpdatePickJobsInput = {
+  pickJobs: Array<PickJobItemInput>;
+};
+
 export type UpdateUserEmailInput = {
   email: Scalars['String']['input'];
 };
@@ -2508,6 +2531,11 @@ export type GetJobsByHotListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetJobsByHotListQuery = { __typename?: 'Query', getJobsByHotList: Array<{ __typename?: 'JobWithCompanyType', id: number }> };
 
+export type GetJobsByPickListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetJobsByPickListQuery = { __typename?: 'Query', getJobsByPickList: Array<{ __typename?: 'JobWithCompanyType', id: number }> };
+
 export type UpdateMagazineMutationVariables = Exact<{
   input: UpdateMagazinesInput;
 }>;
@@ -2526,6 +2554,13 @@ export type GetAdminMessagesQueryVariables = Exact<{
 
 
 export type GetAdminMessagesQuery = { __typename?: 'Query', getAdminMessages: { __typename?: 'AdminMessagesResult', totalCount: number, page: number, limit: number, totalPages: number, hasNextPage: boolean, hasPreviousPage: boolean, items: Array<{ __typename?: 'AdminMessage', id: number, content: string, type: string, isRead: boolean, createdAt: any, updatedAt: any, entryId: number, user?: { __typename?: 'AdminMessageUser', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null, university?: string | null, faculty?: string | null } | null, company?: { __typename?: 'AdminMessageCompany', id: number, name: string, iconImageUrl?: string | null } | null, entryUser: { __typename?: 'AdminMessageUser', id: number, firstName?: string | null, lastName?: string | null, avatarUrl?: string | null, university?: string | null, faculty?: string | null }, job: { __typename?: 'AdminMessageJob', id: number, title: string, jobHeader: string, industry: string, jobType: string, company: { __typename?: 'AdminMessageCompany', id: number, name: string, iconImageUrl?: string | null } } }> } };
+
+export type UpdatePickJobsMutationVariables = Exact<{
+  input: UpdatePickJobsInput;
+}>;
+
+
+export type UpdatePickJobsMutation = { __typename?: 'Mutation', updatePickJobs: { __typename: 'PickJobType' } };
 
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
@@ -3189,6 +3224,45 @@ export type GetJobsByHotListQueryHookResult = ReturnType<typeof useGetJobsByHotL
 export type GetJobsByHotListLazyQueryHookResult = ReturnType<typeof useGetJobsByHotListLazyQuery>;
 export type GetJobsByHotListSuspenseQueryHookResult = ReturnType<typeof useGetJobsByHotListSuspenseQuery>;
 export type GetJobsByHotListQueryResult = Apollo.QueryResult<GetJobsByHotListQuery, GetJobsByHotListQueryVariables>;
+export const GetJobsByPickListDocument = gql`
+    query GetJobsByPickList {
+  getJobsByPickList {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetJobsByPickListQuery__
+ *
+ * To run a query within a React component, call `useGetJobsByPickListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobsByPickListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobsByPickListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetJobsByPickListQuery(baseOptions?: Apollo.QueryHookOptions<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>(GetJobsByPickListDocument, options);
+      }
+export function useGetJobsByPickListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>(GetJobsByPickListDocument, options);
+        }
+export function useGetJobsByPickListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>(GetJobsByPickListDocument, options);
+        }
+export type GetJobsByPickListQueryHookResult = ReturnType<typeof useGetJobsByPickListQuery>;
+export type GetJobsByPickListLazyQueryHookResult = ReturnType<typeof useGetJobsByPickListLazyQuery>;
+export type GetJobsByPickListSuspenseQueryHookResult = ReturnType<typeof useGetJobsByPickListSuspenseQuery>;
+export type GetJobsByPickListQueryResult = Apollo.QueryResult<GetJobsByPickListQuery, GetJobsByPickListQueryVariables>;
 export const UpdateMagazineDocument = gql`
     mutation UpdateMagazine($input: UpdateMagazinesInput!) {
   updateMagazines(input: $input) {
@@ -3358,6 +3432,39 @@ export type GetAdminMessagesQueryHookResult = ReturnType<typeof useGetAdminMessa
 export type GetAdminMessagesLazyQueryHookResult = ReturnType<typeof useGetAdminMessagesLazyQuery>;
 export type GetAdminMessagesSuspenseQueryHookResult = ReturnType<typeof useGetAdminMessagesSuspenseQuery>;
 export type GetAdminMessagesQueryResult = Apollo.QueryResult<GetAdminMessagesQuery, GetAdminMessagesQueryVariables>;
+export const UpdatePickJobsDocument = gql`
+    mutation UpdatePickJobs($input: UpdatePickJobsInput!) {
+  updatePickJobs(input: $input) {
+    __typename
+  }
+}
+    `;
+export type UpdatePickJobsMutationFn = Apollo.MutationFunction<UpdatePickJobsMutation, UpdatePickJobsMutationVariables>;
+
+/**
+ * __useUpdatePickJobsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePickJobsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePickJobsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePickJobsMutation, { data, loading, error }] = useUpdatePickJobsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePickJobsMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePickJobsMutation, UpdatePickJobsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePickJobsMutation, UpdatePickJobsMutationVariables>(UpdatePickJobsDocument, options);
+      }
+export type UpdatePickJobsMutationHookResult = ReturnType<typeof useUpdatePickJobsMutation>;
+export type UpdatePickJobsMutationResult = Apollo.MutationResult<UpdatePickJobsMutation>;
+export type UpdatePickJobsMutationOptions = Apollo.BaseMutationOptions<UpdatePickJobsMutation, UpdatePickJobsMutationVariables>;
 export const SearchUsersDocument = gql`
     query SearchUsers($input: SearchUsersInput!) {
   searchUsers(input: $input) {

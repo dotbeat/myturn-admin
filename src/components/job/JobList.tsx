@@ -77,10 +77,7 @@ export default function JobList({
       ),
     jobType: getSelectItem(jobTypes, item.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.industry)?.label ?? "",
-    openDate:
-      item.openedAt && item.status != "DRAFT"
-        ? new Date(item.openedAt).toLocaleDateString("ja")
-        : "—",
+    openDate: item.id,
     status: jobOfferStatusIndex[item.status]?.label ?? "—",
     pvCount: item.pv,
     favoriteCount: item.favoriteCount,
