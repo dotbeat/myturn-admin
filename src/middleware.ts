@@ -22,5 +22,5 @@ export function middleware(req: NextRequest) {
 
 // すべてのルートに対して認証を適用
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

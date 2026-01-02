@@ -39,7 +39,7 @@ export default function Page() {
           人気求人
         </Link>
         <Link href="/pick-jobs" className="underline">
-          おすすめ求人
+          注目の求人
         </Link>
       </Stack>
     </Box>

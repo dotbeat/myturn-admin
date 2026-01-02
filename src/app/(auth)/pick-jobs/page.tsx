@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import PageBody from "./PageBody";
 
 export const metadata: Metadata = {
-  title: "運営おすすめの求人 - myturn管理",
+  title: "注目の求人 - myturn管理",
 };
 
 export default function Page() {
