@@ -48,3 +48,11 @@ export const GET_JOBS_BY_HOT_LIST = gql`
     }
   }
 `;
+
+export const GET_JOBS_BY_PICK_LIST = gql`
+  query GetJobsByPickList {
+    getJobsByPickList {
+      id
+    }
+  }
+`;

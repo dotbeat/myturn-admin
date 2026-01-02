@@ -54,7 +54,7 @@ export default function JobList({
     ),
     title: (
       <Typography
-        title={item.title}
+        title={`(求人ID：${item.id}) ${item.title}`}
         className="line-clamp-3 w-72 text-wrap text-left"
       >
         {item.title}

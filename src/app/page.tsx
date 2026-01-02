@@ -38,6 +38,9 @@ export default function Page() {
         <Link href="/hot-jobs" className="underline">
           人気求人
         </Link>
+        <Link href="/pick-jobs" className="underline">
+          注目の求人
+        </Link>
       </Stack>
     </Box>
   );
