@@ -1841,6 +1841,8 @@ export type SearchJobsInput = {
   jobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
   keywords?: InputMaybe<Array<Scalars["String"]["input"]>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
+  /** 都道府県とともに指定する市区町村 */
+  municipalities?: InputMaybe<Array<Scalars["String"]["input"]>>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   prefectures?: InputMaybe<Array<Scalars["String"]["input"]>>;
   preferences?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -1877,6 +1879,7 @@ export type SearchUsersInput = {
   availableHoursPerWeekMax?: InputMaybe<Scalars["Int"]["input"]>;
   availableHoursPerWeekMin?: InputMaybe<Scalars["Int"]["input"]>;
   departments?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  enteredCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
   entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
   entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   faculty?: InputMaybe<Scalars["String"]["input"]>;
@@ -2321,8 +2324,10 @@ export type UserWithCountType = {
   department: Scalars["String"]["output"];
   email: Scalars["String"]["output"];
   entryCount: Scalars["Int"]["output"];
+  entryCountForTheCompany: Scalars["Int"]["output"];
   faculty: Scalars["String"]["output"];
   firstName: Scalars["String"]["output"];
+  futureGoals: Scalars["String"]["output"];
   gender: Scalars["String"]["output"];
   grade: Scalars["String"]["output"];
   graduationYear: Scalars["Int"]["output"];
@@ -2335,6 +2340,7 @@ export type UserWithCountType = {
   phoneNumber: Scalars["String"]["output"];
   prefecture: Scalars["String"]["output"];
   scoutCount: Scalars["Int"]["output"];
+  selfPR: Scalars["String"]["output"];
   university: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
 };
