@@ -24,13 +24,8 @@ export function useApplicants(
     },
   });
 
-  // サーバー側DB取得時は、内定報告有りのユーザーに絞り込むことまでしかできない
-  // そのため取得後に、内定報告した対象企業についての応募のみに絞り込む
-
   return {
-    applicants: input.isOnlyAccepted
-      ? applicants.filter((applicant) => applicant.joinDate)
-      : applicants,
+    applicants,
     totalCount,
     totalPages,
     loading,
