@@ -18,10 +18,9 @@ import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import ScheduleInput from "@/components/common/ScheduleInput";
 
-// NOTE: API側が未着手のため、クエリ・ミューテーションをコメントアウト
-// import { useQuery, useMutation } from "@apollo/client";
-// import { GET_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/queries";
-// import { UPDATE_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/mutations";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/queries";
+import { UPDATE_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/mutations";
 
 type NotificationTypeInfo = {
   key: string;
@@ -229,71 +228,84 @@ export default function PageBody() {
     defaultValues: createDefaultValues(),
   });
 
-  // NOTE: API側が未着手のため、設定取得クエリをコメントアウト
-  // useQuery(GET_LINE_NOTIFICATION_SETTINGS, {
-  //   fetchPolicy: "network-only",
-  //   onCompleted: (data) => {
-  //     const updated = createDefaultValues();
-  //     data.getLineNotificationSettings.forEach((setting) => {
-  //       const index = NOTIFICATION_TYPES.findIndex((n) => n.key === setting.key);
-  //       if (index !== -1) {
-  //         updated.notifications[index].message = setting.message;
-  //         if (setting.schedule) {
-  //           updated.notifications[index].schedule = {
-  //             scheduleType: setting.schedule.scheduleType,
-  //             dayOfWeek: setting.schedule.dayOfWeek ?? null,
-  //             dayOfMonth: setting.schedule.dayOfMonth ?? null,
-  //             hour: setting.schedule.hour,
-  //             minute: setting.schedule.minute,
-  //           };
-  //         }
-  //       }
-  //     });
-  //     methods.reset(updated);
-  //   },
-  // });
+  useQuery(GET_LINE_NOTIFICATION_SETTINGS, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      const updated = createDefaultValues();
+      data.getLineNotificationSettings.forEach(
+        (setting: {
+          key: string;
+          message: string;
+          schedule?: {
+            scheduleType: string;
+            dayOfWeek?: number[] | null;
+            dayOfMonth?: (number | null)[] | null;
+            hour?: number | null;
+            minute?: number | null;
+          } | null;
+        }) => {
+          const index = NOTIFICATION_TYPES.findIndex(
+            (n) => n.key === setting.key,
+          );
+          if (index !== -1) {
+            updated.notifications[index].message = setting.message;
+            if (setting.schedule) {
+              updated.notifications[index].schedule = {
+                scheduleType: setting.schedule.scheduleType as
+                  | "daily"
+                  | "weekly"
+                  | "monthly",
+                dayOfWeek: setting.schedule.dayOfWeek ?? [],
+                dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
+                hour: setting.schedule.hour ?? 0,
+                minute: setting.schedule.minute ?? 0,
+              };
+            }
+          }
+        },
+      );
+      methods.reset(updated);
+    },
+  });
 
-  // NOTE: API側が未着手のため、ミューテーションフックをコメントアウト
-  // const [updateLineNotificationSettings, { loading: isUpdating }] = useMutation(
-  //   UPDATE_LINE_NOTIFICATION_SETTINGS,
-  //   {
-  //     onCompleted: () => {
-  //       showToast("LINE通知設定が更新されました", "success");
-  //     },
-  //     onError: (err) => {
-  //       console.error("更新中にエラーが発生しました:", err);
-  //       setError(err.message || "更新中にエラーが発生しました");
-  //       showToast("更新中にエラーが発生しました", "error");
-  //     },
-  //   },
-  // );
-  const isUpdating = false;
+  const [updateLineNotificationSettings, { loading: isUpdating }] = useMutation(
+    UPDATE_LINE_NOTIFICATION_SETTINGS,
+    {
+      onCompleted: () => {
+        showToast("LINE通知設定が更新されました", "success");
+      },
+      onError: (err) => {
+        console.error("更新中にエラーが発生しました:", err);
+        setError(err.message || "更新中にエラーが発生しました");
+        showToast("更新中にエラーが発生しました", "error");
+      },
+    },
+  );
 
   const onSubmit = async (data: LineNotificationEditFormData) => {
     try {
-      // NOTE: API側が未着手のため、ミューテーション実行をコメントアウト
-      // const input = {
-      //   notifications: data.notifications.map((n) => ({
-      //     key: n.key,
-      //     message: n.message,
-      //     ...(n.schedule
-      //       ? {
-      //           schedule: {
-      //             scheduleType: n.schedule.scheduleType,
-      //             ...(n.schedule.scheduleType === "weekly"
-      //               ? { dayOfWeek: n.schedule.dayOfWeek }
-      //               : {}),
-      //             ...(n.schedule.scheduleType === "monthly"
-      //               ? { dayOfMonth: n.schedule.dayOfMonth }
-      //               : {}),
-      //             hour: n.schedule.hour,
-      //             minute: n.schedule.minute,
-      //           },
-      //         }
-      //       : {}),
-      //   })),
-      // };
-      // await updateLineNotificationSettings({ variables: { input } });
+      const input = {
+        notifications: data.notifications.map((n) => ({
+          key: n.key,
+          message: n.message,
+          ...(n.schedule
+            ? {
+                schedule: {
+                  scheduleType: n.schedule.scheduleType,
+                  ...(n.schedule.scheduleType === "weekly"
+                    ? { dayOfWeek: n.schedule.dayOfWeek }
+                    : {}),
+                  ...(n.schedule.scheduleType === "monthly"
+                    ? { dayOfMonth: n.schedule.dayOfMonth }
+                    : {}),
+                  hour: n.schedule.hour,
+                  minute: n.schedule.minute,
+                },
+              }
+            : {}),
+        })),
+      };
+      await updateLineNotificationSettings({ variables: { input } });
 
       setError(null);
     } catch (err) {
