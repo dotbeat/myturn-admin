@@ -41,6 +41,9 @@ export default function Page() {
         <Link href="/pick-jobs" className="underline">
           注目の求人
         </Link>
+        <Link href="/line-notifications" className="underline">
+          LINE通知メッセージ設定
+        </Link>
       </Stack>
     </Box>
   );
