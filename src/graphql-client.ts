@@ -412,6 +412,17 @@ export type DeleteMessageTemplateInput = {
   id: Scalars["Int"]["input"];
 };
 
+export type DispatchResult = {
+  __typename?: "DispatchResult";
+  dispatched: Array<DispatchedItem>;
+};
+
+export type DispatchedItem = {
+  __typename?: "DispatchedItem";
+  key: Scalars["String"]["output"];
+  sentCount: Scalars["Int"]["output"];
+};
+
 export type DuplicateJobInput = {
   access: Scalars["String"]["input"];
   acquirableSkills: Array<Scalars["String"]["input"]>;
@@ -1012,6 +1023,37 @@ export type JobsStatisticsResultType = {
   totalCount: Scalars["Int"]["output"];
 };
 
+export type LineNotificationItemInput = {
+  key: Scalars["String"]["input"];
+  message: Scalars["String"]["input"];
+  schedule?: InputMaybe<LineNotificationScheduleInput>;
+};
+
+export type LineNotificationScheduleConfig = {
+  __typename?: "LineNotificationScheduleConfig";
+  dayOfMonth?: Maybe<Array<Maybe<Scalars["Int"]["output"]>>>;
+  dayOfWeek: Array<Scalars["Int"]["output"]>;
+  hour: Scalars["Int"]["output"];
+  minute: Scalars["Int"]["output"];
+  scheduleType: Scalars["String"]["output"];
+};
+
+export type LineNotificationScheduleInput = {
+  dayOfMonth?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
+  dayOfWeek?: InputMaybe<Array<Scalars["Int"]["input"]>>;
+  hour: Scalars["Int"]["input"];
+  minute: Scalars["Int"]["input"];
+  scheduleType: Scalars["String"]["input"];
+};
+
+export type LineNotificationSettingType = {
+  __typename?: "LineNotificationSettingType";
+  isEnabled: Scalars["Boolean"]["output"];
+  key: Scalars["String"]["output"];
+  message: Scalars["String"]["output"];
+  schedule?: Maybe<LineNotificationScheduleConfig>;
+};
+
 export type LoginInput = {
   email: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
@@ -1130,6 +1172,7 @@ export type Mutation = {
   deleteJob: JobType;
   deleteMessageTemplate: Scalars["Boolean"]["output"];
   deleteUserAccount: Scalars["Boolean"]["output"];
+  dispatchScheduledLineNotifications: DispatchResult;
   duplicateJob: JobType;
   login: LoginResponse;
   loginOrCreateWithLine: LoginResponse;
@@ -1158,6 +1201,7 @@ export type Mutation = {
   updateJobPv: JobType;
   updateJobStatus: JobType;
   updateJobsStatus: Scalars["Int"]["output"];
+  updateLineNotificationSettings: UpdateLineNotificationSettingsResult;
   updateMagazines: Array<MagazineType>;
   updateMessageTemplate: MessageTemplateType;
   updatePickJobs: PickJobType;
@@ -1335,6 +1379,10 @@ export type MutationUpdateJobsStatusArgs = {
   input: UpdateJobsStatusInput;
 };
 
+export type MutationUpdateLineNotificationSettingsArgs = {
+  input: UpdateLineNotificationSettingsInput;
+};
+
 export type MutationUpdateMagazinesArgs = {
   input: UpdateMagazinesInput;
 };
@@ -1448,6 +1496,7 @@ export type Query = {
   getJobsByHotList: Array<JobWithCompanyType>;
   getJobsByPickList: Array<JobWithCompanyType>;
   getJobsStatistics: JobsStatisticsResultType;
+  getLineNotificationSettings: Array<LineNotificationSettingType>;
   getMessages: Array<Message>;
   getNewEntriesWithoutMessages: NewEntriesWithoutMessagesType;
   getPendingEntries: PendingEntriesType;
@@ -2197,6 +2246,15 @@ export type UpdateJobsStatusInput = {
   status: Scalars["String"]["input"];
 };
 
+export type UpdateLineNotificationSettingsInput = {
+  notifications: Array<LineNotificationItemInput>;
+};
+
+export type UpdateLineNotificationSettingsResult = {
+  __typename?: "UpdateLineNotificationSettingsResult";
+  success: Scalars["Boolean"]["output"];
+};
+
 export type UpdateMagazinesInput = {
   magazines: Array<MagazineItemInput>;
 };
@@ -2711,6 +2769,39 @@ export type GetJobsByPickListQueryVariables = Exact<{ [key: string]: never }>;
 export type GetJobsByPickListQuery = {
   __typename?: "Query";
   getJobsByPickList: Array<{ __typename?: "JobWithCompanyType"; id: number }>;
+};
+
+export type UpdateLineNotificationSettingsMutationVariables = Exact<{
+  input: UpdateLineNotificationSettingsInput;
+}>;
+
+export type UpdateLineNotificationSettingsMutation = {
+  __typename?: "Mutation";
+  updateLineNotificationSettings: {
+    __typename: "UpdateLineNotificationSettingsResult";
+  };
+};
+
+export type GetLineNotificationSettingsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetLineNotificationSettingsQuery = {
+  __typename?: "Query";
+  getLineNotificationSettings: Array<{
+    __typename?: "LineNotificationSettingType";
+    key: string;
+    message: string;
+    isEnabled: boolean;
+    schedule?: {
+      __typename?: "LineNotificationScheduleConfig";
+      scheduleType: string;
+      dayOfWeek: Array<number>;
+      dayOfMonth?: Array<number | null> | null;
+      hour: number;
+      minute: number;
+    } | null;
+  }>;
 };
 
 export type UpdateMagazineMutationVariables = Exact<{
@@ -4110,6 +4201,145 @@ export type GetJobsByPickListSuspenseQueryHookResult = ReturnType<
 export type GetJobsByPickListQueryResult = Apollo.QueryResult<
   GetJobsByPickListQuery,
   GetJobsByPickListQueryVariables
+>;
+export const UpdateLineNotificationSettingsDocument = gql`
+  mutation UpdateLineNotificationSettings(
+    $input: UpdateLineNotificationSettingsInput!
+  ) {
+    updateLineNotificationSettings(input: $input) {
+      __typename
+    }
+  }
+`;
+export type UpdateLineNotificationSettingsMutationFn = Apollo.MutationFunction<
+  UpdateLineNotificationSettingsMutation,
+  UpdateLineNotificationSettingsMutationVariables
+>;
+
+/**
+ * __useUpdateLineNotificationSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateLineNotificationSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLineNotificationSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLineNotificationSettingsMutation, { data, loading, error }] = useUpdateLineNotificationSettingsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLineNotificationSettingsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLineNotificationSettingsMutation,
+    UpdateLineNotificationSettingsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateLineNotificationSettingsMutation,
+    UpdateLineNotificationSettingsMutationVariables
+  >(UpdateLineNotificationSettingsDocument, options);
+}
+export type UpdateLineNotificationSettingsMutationHookResult = ReturnType<
+  typeof useUpdateLineNotificationSettingsMutation
+>;
+export type UpdateLineNotificationSettingsMutationResult =
+  Apollo.MutationResult<UpdateLineNotificationSettingsMutation>;
+export type UpdateLineNotificationSettingsMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateLineNotificationSettingsMutation,
+    UpdateLineNotificationSettingsMutationVariables
+  >;
+export const GetLineNotificationSettingsDocument = gql`
+  query GetLineNotificationSettings {
+    getLineNotificationSettings {
+      key
+      message
+      isEnabled
+      schedule {
+        scheduleType
+        dayOfWeek
+        dayOfMonth
+        hour
+        minute
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLineNotificationSettingsQuery__
+ *
+ * To run a query within a React component, call `useGetLineNotificationSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLineNotificationSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLineNotificationSettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLineNotificationSettingsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >(GetLineNotificationSettingsDocument, options);
+}
+export function useGetLineNotificationSettingsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >(GetLineNotificationSettingsDocument, options);
+}
+export function useGetLineNotificationSettingsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLineNotificationSettingsQuery,
+        GetLineNotificationSettingsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >(GetLineNotificationSettingsDocument, options);
+}
+export type GetLineNotificationSettingsQueryHookResult = ReturnType<
+  typeof useGetLineNotificationSettingsQuery
+>;
+export type GetLineNotificationSettingsLazyQueryHookResult = ReturnType<
+  typeof useGetLineNotificationSettingsLazyQuery
+>;
+export type GetLineNotificationSettingsSuspenseQueryHookResult = ReturnType<
+  typeof useGetLineNotificationSettingsSuspenseQuery
+>;
+export type GetLineNotificationSettingsQueryResult = Apollo.QueryResult<
+  GetLineNotificationSettingsQuery,
+  GetLineNotificationSettingsQueryVariables
 >;
 export const UpdateMagazineDocument = gql`
   mutation UpdateMagazine($input: UpdateMagazinesInput!) {
