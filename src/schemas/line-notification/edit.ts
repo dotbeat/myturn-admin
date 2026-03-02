@@ -42,7 +42,7 @@ export const scheduleConfigSchema = z.object({
 
 const notificationItemSchema = z.object({
   key: z.string(),
-  message: z.string().min(1, "メッセージを入力してください"),
+  message: z.string(),
   schedule: scheduleConfigSchema.optional(),
 });
 
