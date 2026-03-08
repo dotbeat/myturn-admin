@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -8,6 +13,7 @@ import {
   Button,
   Divider,
   Snackbar,
+  Switch,
   Typography,
 } from "@mui/material";
 import {
@@ -19,6 +25,10 @@ import TextField from "@/components/common/form/TextField";
 import ScheduleInput from "@/components/common/ScheduleInput";
 
 import { useQuery, useMutation } from "@apollo/client";
+import {
+  GetLineNotificationSettingsQuery,
+  UpdateLineNotificationSettingsMutation,
+} from "@/graphql-client";
 import { GET_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/queries";
 import { UPDATE_LINE_NOTIFICATION_SETTINGS } from "@/server/graphql/line-notification/mutations";
 
@@ -187,6 +197,7 @@ const scheduleNotifications = NOTIFICATION_TYPES.filter(
 const createDefaultValues = (): LineNotificationEditFormData => ({
   notifications: NOTIFICATION_TYPES.map((type) => ({
     key: type.key,
+    isEnabled: true,
     message: "",
     ...(type.defaultSchedule
       ? {
@@ -228,65 +239,56 @@ export default function PageBody() {
     defaultValues: createDefaultValues(),
   });
 
-  useQuery(GET_LINE_NOTIFICATION_SETTINGS, {
+  useQuery<GetLineNotificationSettingsQuery>(GET_LINE_NOTIFICATION_SETTINGS, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       const updated = createDefaultValues();
-      data.getLineNotificationSettings.forEach(
-        (setting: {
-          key: string;
-          message: string;
-          schedule?: {
-            scheduleType: string;
-            dayOfWeek?: number[] | null;
-            dayOfMonth?: (number | null)[] | null;
-            hour?: number | null;
-            minute?: number | null;
-          } | null;
-        }) => {
-          const index = NOTIFICATION_TYPES.findIndex(
-            (n) => n.key === setting.key,
-          );
-          if (index !== -1) {
-            updated.notifications[index].message = setting.message;
-            if (setting.schedule) {
-              updated.notifications[index].schedule = {
-                scheduleType: setting.schedule.scheduleType as
-                  | "daily"
-                  | "weekly"
-                  | "monthly",
-                dayOfWeek: setting.schedule.dayOfWeek ?? [],
-                dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
-                hour: setting.schedule.hour ?? 0,
-                minute: setting.schedule.minute ?? 0,
-              };
-            }
+      data.getLineNotificationSettings.forEach((setting) => {
+        const index = NOTIFICATION_TYPES.findIndex(
+          (n) => n.key === setting.key,
+        );
+        if (index !== -1) {
+          updated.notifications[index].isEnabled = setting.isEnabled;
+          updated.notifications[index].message = setting.message;
+          if (setting.schedule) {
+            updated.notifications[index].schedule = {
+              scheduleType: setting.schedule.scheduleType as
+                | "daily"
+                | "weekly"
+                | "monthly",
+              dayOfWeek: setting.schedule.dayOfWeek ?? [],
+              dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
+              hour: setting.schedule.hour ?? 0,
+              minute: setting.schedule.minute ?? 0,
+            };
           }
-        },
-      );
+        }
+      });
       methods.reset(updated);
     },
   });
 
-  const [updateLineNotificationSettings, { loading: isUpdating }] = useMutation(
-    UPDATE_LINE_NOTIFICATION_SETTINGS,
-    {
-      onCompleted: () => {
-        showToast("LINE通知設定が更新されました", "success");
+  const [updateLineNotificationSettings, { loading: isUpdating }] =
+    useMutation<UpdateLineNotificationSettingsMutation>(
+      UPDATE_LINE_NOTIFICATION_SETTINGS,
+      {
+        onCompleted: () => {
+          showToast("LINE通知設定が更新されました", "success");
+        },
+        onError: (err) => {
+          console.error("更新中にエラーが発生しました:", err);
+          setError(err.message || "更新中にエラーが発生しました");
+          showToast("更新中にエラーが発生しました", "error");
+        },
       },
-      onError: (err) => {
-        console.error("更新中にエラーが発生しました:", err);
-        setError(err.message || "更新中にエラーが発生しました");
-        showToast("更新中にエラーが発生しました", "error");
-      },
-    },
-  );
+    );
 
   const onSubmit = async (data: LineNotificationEditFormData) => {
     try {
       const input = {
         notifications: data.notifications.map((n) => ({
           key: n.key,
+          isEnabled: n.isEnabled,
           message: n.message,
           ...(n.schedule
             ? {
@@ -305,6 +307,7 @@ export default function PageBody() {
             : {}),
         })),
       };
+      console.log("input", input);
       await updateLineNotificationSettings({ variables: { input } });
 
       setError(null);
@@ -324,7 +327,6 @@ export default function PageBody() {
 
       <FormProvider {...methods}>
         <form
-          method="POST"
           className="flex flex-col gap-10"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
@@ -431,13 +433,29 @@ function NotificationCard({
   notification: NotificationTypeInfo;
   formIndex: number;
 }) {
+  const { control: isEnabledControl } =
+    useFormContext<LineNotificationEditFormData>();
+
   return (
     <Box className="space-y-2 rounded-lg border border-[var(--myturn-border)] bg-[var(--background)] p-3">
       <Box className="p-2">
         {/* ヘッダー */}
-        <Typography className="mb-1 text-base font-bold">
-          {notification.name}
-        </Typography>
+        <Box className="mb-1 flex items-center justify-between">
+          <Typography className="text-base font-bold">
+            {notification.name}
+          </Typography>
+          <Controller
+            control={isEnabledControl}
+            name={`notifications.${formIndex}.isEnabled`}
+            render={({ field }) => (
+              <Switch
+                checked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+                size="small"
+              />
+            )}
+          />
+        </Box>
         <Typography
           variant="body2"
           className="mb-2 text-[var(--myturn-sub-text)]"

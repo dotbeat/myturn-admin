@@ -1024,6 +1024,7 @@ export type JobsStatisticsResultType = {
 };
 
 export type LineNotificationItemInput = {
+  isEnabled: Scalars["Boolean"]["input"];
   key: Scalars["String"]["input"];
   message: Scalars["String"]["input"];
   schedule?: InputMaybe<LineNotificationScheduleInput>;

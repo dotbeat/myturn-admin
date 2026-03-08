@@ -26,7 +26,7 @@ export const scheduleConfigSchema = z.object({
         ]),
       ),
     )
-    .length(3)
+    .max(3)
     .optional(),
   hour: z.coerce
     .number({ message: "半角数字で入力してください" })
@@ -42,6 +42,7 @@ export const scheduleConfigSchema = z.object({
 
 const notificationItemSchema = z.object({
   key: z.string(),
+  isEnabled: z.boolean(),
   message: z.string(),
   schedule: scheduleConfigSchema.optional(),
 });
