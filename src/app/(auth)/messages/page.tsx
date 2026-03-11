@@ -136,8 +136,8 @@ export default function MessagesPage() {
                 type="text"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="メッセージ内容、ユーザー名、求人名で検索"
-                value={filters.search || ""}
-                onChange={(e) =>
+                defaultValue={filters.search || ""}
+                onBlur={(e) =>
                   handleFilterChange({ ...filters, search: e.target.value })
                 }
               />
@@ -150,8 +150,8 @@ export default function MessagesPage() {
                 type="number"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="企業IDで絞り込み"
-                value={filters.companyId || ""}
-                onChange={(e) =>
+                defaultValue={filters.companyId || ""}
+                onBlur={(e) =>
                   handleFilterChange({
                     ...filters,
                     companyId: e.target.value
@@ -169,8 +169,8 @@ export default function MessagesPage() {
                 type="number"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="ユーザーIDで絞り込み"
-                value={filters.userId || ""}
-                onChange={(e) =>
+                defaultValue={filters.userId || ""}
+                onBlur={(e) =>
                   handleFilterChange({
                     ...filters,
                     userId: e.target.value
@@ -188,8 +188,8 @@ export default function MessagesPage() {
                 type="number"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="求人IDで絞り込み"
-                value={filters.jobId || ""}
-                onChange={(e) =>
+                defaultValue={filters.jobId || ""}
+                onBlur={(e) =>
                   handleFilterChange({
                     ...filters,
                     jobId: e.target.value
