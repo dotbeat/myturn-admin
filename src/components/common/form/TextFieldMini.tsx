@@ -67,7 +67,7 @@ export default function TextFieldMini({
         tooltip: { className: "text-sm p-2" },
       }}
     >
-      <Box className={`space-y-1 ${className}`}>
+      <Box className={className}>
         {/* inputに直接refを付けるとregisterメソッド戻り値のrefと衝突する */}
         <Box ref={beforeInputRef} className="hidden" />
         <input

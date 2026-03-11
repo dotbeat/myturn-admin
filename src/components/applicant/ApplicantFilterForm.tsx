@@ -47,7 +47,7 @@ export default function ApplicantFilterForm({
             <TextFieldMini type="date" name="entryDateEnd" />
           </Box>
         </FilterItem>
-        <FilterItem label="ステータス">
+        <FilterItem label="ステータス" className="mb-2">
           <SelectMini
             name="status"
             items={[
@@ -60,18 +60,29 @@ export default function ApplicantFilterForm({
             className="w-24"
           />
         </FilterItem>
-      </FilterGroup>
-      <FilterGroup heading="内定報告">
-        <Box>
-          <p className="mb-1 text-sm">内定報告有りのみ</p>
-          <SelectMini
-            name="isOnlyAccepted"
-            items={[
-              { value: "", label: "" },
-              { value: "y", label: "はい" },
-            ]}
-            className="w-24"
-          />
+        <Box className="mb-2 max-w-36">
+          <p className="mb-1 text-sm">1回目面談日</p>
+          <TextFieldMini type="date" name="interviewDateStart" />
+          <Typography className="px-2 text-sm">〜</Typography>
+          <TextFieldMini type="date" name="interviewDateEnd" />
+        </Box>
+        <Box className="mb-2 max-w-36">
+          <p className="mb-1 text-sm">2回目面談日</p>
+          <TextFieldMini type="date" name="secondInterviewDateStart" />
+          <Typography className="px-2 text-sm">〜</Typography>
+          <TextFieldMini type="date" name="secondInterviewDateEnd" />
+        </Box>
+        <Box className="mb-2 max-w-36">
+          <p className="mb-1 text-sm">入社予定日</p>
+          <TextFieldMini type="date" name="joinDateStart" />
+          <Typography className="px-2 text-sm">〜</Typography>
+          <TextFieldMini type="date" name="joinDateEnd" />
+        </Box>
+        <Box className="max-w-36">
+          <p className="mb-1 text-sm">(学生報告)入社予定日</p>
+          <TextFieldMini type="date" name="joinDateByApplicantStart" />
+          <Typography className="px-2 text-sm">〜</Typography>
+          <TextFieldMini type="date" name="joinDateByApplicantEnd" />
         </Box>
       </FilterGroup>
       <Button

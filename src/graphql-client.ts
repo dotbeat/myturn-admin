@@ -1826,13 +1826,20 @@ export type SearchEntriesInput = {
   entryDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   entryDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   industry?: InputMaybe<Scalars["String"]["input"]>;
-  isOnlyAccepted?: InputMaybe<Scalars["String"]["input"]>;
+  interviewDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  interviewDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   jobTitle?: InputMaybe<Scalars["String"]["input"]>;
   jobType?: InputMaybe<Scalars["String"]["input"]>;
+  joinDateByApplicantEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  joinDateByApplicantStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  joinDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  joinDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   scoutedUserId?: InputMaybe<Scalars["Int"]["input"]>;
+  secondInterviewDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  secondInterviewDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
 };
 

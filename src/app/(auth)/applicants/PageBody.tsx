@@ -53,7 +53,18 @@ export default function PageBody() {
     entryDateStart: paramsConverter.toDate("entryDateStart"),
     entryDateEnd: paramsConverter.toDate("entryDateEnd"),
     status: paramsConverter.toString("status") as ApplyStatus | "",
-    isOnlyAccepted: paramsConverter.toString("isOnlyAccepted") as "y" | "",
+    interviewDateStart: paramsConverter.toDate("interviewDateStart"),
+    interviewDateEnd: paramsConverter.toDate("interviewDateEnd"),
+    secondInterviewDateStart: paramsConverter.toDate(
+      "secondInterviewDateStart",
+    ),
+    secondInterviewDateEnd: paramsConverter.toDate("secondInterviewDateEnd"),
+    joinDateStart: paramsConverter.toDate("joinDateStart"),
+    joinDateEnd: paramsConverter.toDate("joinDateEnd"),
+    joinDateByApplicantStart: paramsConverter.toDate(
+      "joinDateByApplicantStart",
+    ),
+    joinDateByApplicantEnd: paramsConverter.toDate("joinDateByApplicantEnd"),
   };
   const methods = useForm<ApplicantFilterFormData>({
     resolver: zodResolver(applicantFilterFormSchema),
