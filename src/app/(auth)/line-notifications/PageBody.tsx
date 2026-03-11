@@ -117,7 +117,7 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
   {
     key: "UnreadScout",
     name: "未読スカウト",
-    description: "承認待ちのスカウトがあることのリマインド通知",
+    description: "承諾待ちのスカウトがあることのリマインド通知",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 19, minute: 3 },
   },
