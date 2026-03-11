@@ -24,10 +24,10 @@ export default function ApplicantList({
     { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
     { property: "entryDate", label: "応募日" },
     { property: "status", label: "ステータス" },
-    { property: "hasAcceptReport", label: "内定報告" },
     { property: "interviewScheduledAt", label: "1回目面談日" },
     { property: "secondInterviewScheduledAt", label: "2回目面談日" },
     { property: "joinDate", label: "入社予定日" },
+    { property: "joinDateByApplicant", label: "(学生報告)入社予定日" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
   const before3years = new Date();
@@ -87,14 +87,16 @@ export default function ApplicantList({
     ),
     entryDate: new Date(item.createdAt)?.toLocaleDateString("ja") ?? "—",
     status: applyStatusIndex[item.status]?.label ?? "—",
-    hasAcceptReport: item.joinDate ? "あり" : "なし",
     interviewScheduledAt: item.interviewScheduledAt
       ? new Date(item.interviewScheduledAt)?.toLocaleDateString("ja")
       : "—",
     secondInterviewScheduledAt: item.secondInterviewScheduledAt
       ? new Date(item.secondInterviewScheduledAt)?.toLocaleDateString("ja")
       : "—",
-    joinDate: item.joinDate
+    joinDate: item.jobOfferScheduledAt
+      ? new Date(item.jobOfferScheduledAt)?.toLocaleDateString("ja")
+      : "—",
+    joinDateByApplicant: item.joinDate
       ? new Date(item.joinDate)?.toLocaleDateString("ja")
       : "—",
   }));
