@@ -30,4 +30,5 @@ export type ApplicantItem = {
   joinDate: string;
   interviewScheduledAt: string | null;
   secondInterviewScheduledAt: string | null;
+  jobOfferScheduledAt: string | null;
 };

@@ -2611,6 +2611,7 @@ export type SearchEntriesQuery = {
       joinDate?: any | null;
       interviewScheduledAt?: any | null;
       secondInterviewScheduledAt?: any | null;
+      jobOfferScheduledAt?: any | null;
       job: {
         __typename?: "JobWithCompanyType";
         id: number;
@@ -3430,6 +3431,7 @@ export const SearchEntriesDocument = gql`
         joinDate
         interviewScheduledAt
         secondInterviewScheduledAt
+        jobOfferScheduledAt
         job {
           id
           title
