@@ -239,8 +239,10 @@ export type CompanyType = {
   id: Scalars["Int"]["output"];
   industry?: Maybe<Scalars["String"]["output"]>;
   initialMessage?: Maybe<Scalars["String"]["output"]>;
+  initialScoutedMessage?: Maybe<Scalars["String"]["output"]>;
   interviewCount?: Maybe<Scalars["Int"]["output"]>;
   isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
+  isInitialScoutedMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isOfficial: Scalars["Boolean"]["output"];
   jobCount?: Maybe<Scalars["Int"]["output"]>;
   jobType?: Maybe<Scalars["String"]["output"]>;
@@ -522,9 +524,12 @@ export type EntryType = {
   __typename?: "EntryType";
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
+  interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   isChecked: Scalars["Boolean"]["output"];
   isScouted: Scalars["Boolean"]["output"];
   jobId: Scalars["Int"]["output"];
+  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
+  secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   userId: Scalars["Int"]["output"];
@@ -1150,6 +1155,7 @@ export type Mutation = {
   updateMagazines: Array<MagazineType>;
   updateMessageTemplate: MessageTemplateType;
   updatePickJobs: PickJobType;
+  updateSecondInterviewSchedule: Entry;
   updateUser: UserType;
   updateUserEmail: UserType;
   updateUserPassword: UserType;
@@ -1331,6 +1337,10 @@ export type MutationUpdatePickJobsArgs = {
   input: UpdatePickJobsInput;
 };
 
+export type MutationUpdateSecondInterviewScheduleArgs = {
+  input: UpdateSecondInterviewScheduleInput;
+};
+
 export type MutationUpdateUserArgs = {
   id: Scalars["Int"]["input"];
   input: UpdateUserInput;
@@ -1456,7 +1466,7 @@ export type Query = {
   me: UserType;
   messageTemplates: Array<MessageTemplateType>;
   /** 受信したスカウト一覧 */
-  receivedScouts: Array<Scout>;
+  receivedScouts: Array<ScoutWithEntryIds>;
   recentJobs: Array<JobWithCompanyType>;
   /** 管理者用スカウト一覧 */
   scoutsForAdmin: ScoutsForAdminResultType;
@@ -1808,6 +1818,21 @@ export type ScoutUserType = {
   name: Scalars["String"]["output"];
 };
 
+export type ScoutWithEntryIds = {
+  __typename?: "ScoutWithEntryIds";
+  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  companyId: Scalars["Int"]["output"];
+  content: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  entryIds: Array<Scalars["Int"]["output"]>;
+  id: Scalars["Int"]["output"];
+  jobId?: Maybe<Scalars["Int"]["output"]>;
+  status: Scalars["String"]["output"];
+  title: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
 export type ScoutsForAdminResultType = {
   __typename?: "ScoutsForAdminResultType";
   scouts: Array<ScoutForAdminType>;
@@ -1890,6 +1915,7 @@ export type SearchUsersInput = {
   entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
   entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   faculty?: InputMaybe<Scalars["String"]["input"]>;
+  favoritedJobId?: InputMaybe<Scalars["Int"]["input"]>;
   gender?: InputMaybe<Scalars["String"]["input"]>;
   grades?: InputMaybe<Array<Scalars["String"]["input"]>>;
   interestedIndustries?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2063,7 +2089,9 @@ export type UpdateCompanyInput = {
   id: Scalars["Int"]["input"];
   industry?: InputMaybe<Scalars["String"]["input"]>;
   initialMessage?: InputMaybe<Scalars["String"]["input"]>;
+  initialScoutedMessage?: InputMaybe<Scalars["String"]["input"]>;
   isInitialMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
+  isInitialScoutedMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   isOfficial?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobType?: InputMaybe<Scalars["String"]["input"]>;
   members?: InputMaybe<Array<CompanyMemberInput>>;
@@ -2179,6 +2207,11 @@ export type UpdateMessageTemplateInput = {
 
 export type UpdatePickJobsInput = {
   pickJobs: Array<PickJobItemInput>;
+};
+
+export type UpdateSecondInterviewScheduleInput = {
+  id: Scalars["Int"]["input"];
+  secondInterviewScheduledAt: Scalars["String"]["input"];
 };
 
 export type UpdateUserEmailInput = {
