@@ -84,14 +84,6 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
     notificationType: "transaction",
     timingDescription: "求人ステータスが内定に変更された時に自動送信されます",
   },
-  {
-    key: "JobRejection",
-    name: "採用見送り",
-    description: "応募した求人ステータスが採用見送りになった時の通知",
-    notificationType: "transaction",
-    timingDescription:
-      "求人ステータスが採用見送りに変更された時に自動送信されます",
-  },
   // ── スケジュール通知 ──────────────────────────────────────────
   {
     key: "YesterdayOfInterview",
@@ -145,30 +137,6 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
       dayOfWeek: 1,
       hour: 9,
       minute: 3,
-    },
-  },
-  {
-    key: "RecommendJob",
-    name: "おすすめ求人",
-    description: "ユーザーに合いそうな求人を紹介する通知",
-    notificationType: "schedule",
-    defaultSchedule: {
-      scheduleType: "weekly",
-      dayOfWeek: 0,
-      hour: 10,
-      minute: 6,
-    },
-  },
-  {
-    key: "RecommendMagazine",
-    name: "おすすめマガジン記事",
-    description: "マガジン記事を紹介する通知",
-    notificationType: "schedule",
-    defaultSchedule: {
-      scheduleType: "weekly",
-      dayOfWeek: 6,
-      hour: 10,
-      minute: 6,
     },
   },
   {
