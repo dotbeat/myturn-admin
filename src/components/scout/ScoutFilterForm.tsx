@@ -14,6 +14,7 @@ const scoutStatuses = [
   { value: "", label: "" },
   { value: "PENDING", label: "未承認" },
   { value: "ACCEPTED", label: "承認" },
+  { value: "REJECTED", label: "辞退" },
 ];
 
 export default function ScoutFilterForm({ isLoading }: Props) {

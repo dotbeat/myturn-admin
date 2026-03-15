@@ -34,8 +34,9 @@ type Props = {
 };
 
 const statusConfig = {
-  PENDING: { label: "未承認", color: "warning" as const },
-  ACCEPTED: { label: "承認", color: "success" as const },
+  PENDING: { label: "未承諾", color: "warning" as const },
+  ACCEPTED: { label: "承諾", color: "success" as const },
+  REJECTED: { label: "辞退", color: "default" as const },
 };
 
 export default function ScoutList({ items, isLoading, className }: Props) {
