@@ -32,6 +32,7 @@ export type Scalars = {
 };
 
 export type AcceptScoutInput = {
+  isAccept: Scalars["Boolean"]["input"];
   scoutId: Scalars["Int"]["input"];
 };
 
@@ -406,6 +407,7 @@ export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email: Scalars["String"]["input"];
   lineAccountId: Scalars["String"]["input"];
+  userDetail?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DeleteMessageTemplateInput = {
@@ -545,6 +547,7 @@ export type EntryType = {
   isChecked: Scalars["Boolean"]["output"];
   isScouted: Scalars["Boolean"]["output"];
   jobId: Scalars["Int"]["output"];
+  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
@@ -1055,6 +1058,14 @@ export type LineNotificationSettingType = {
   schedule?: Maybe<LineNotificationScheduleConfig>;
 };
 
+export type LineNotificationUserSettingType = {
+  __typename?: "LineNotificationUserSettingType";
+  id: Scalars["Int"]["output"];
+  isEnabled: Scalars["Boolean"]["output"];
+  notificationKey: Scalars["String"]["output"];
+  userId: Scalars["Int"]["output"];
+};
+
 export type LoginInput = {
   email: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
@@ -1209,6 +1220,7 @@ export type Mutation = {
   updateSecondInterviewSchedule: Entry;
   updateUser: UserType;
   updateUserEmail: UserType;
+  updateUserLineNotificationSettings: Array<LineNotificationUserSettingType>;
   updateUserPassword: UserType;
   uploadAvatar: Scalars["String"]["output"];
   verifyCompanyPasswordResetToken: VerifyCompanyPasswordResetTokenResponse;
@@ -1410,6 +1422,11 @@ export type MutationUpdateUserEmailArgs = {
   input: UpdateUserEmailInput;
 };
 
+export type MutationUpdateUserLineNotificationSettingsArgs = {
+  input: UpdateUserLineNotificationSettingsInput;
+  userId: Scalars["Int"]["input"];
+};
+
 export type MutationUpdateUserPasswordArgs = {
   id: Scalars["Int"]["input"];
   input: UpdateUserPasswordInput;
@@ -1522,6 +1539,7 @@ export type Query = {
   jobs: Array<JobWithCompanyType>;
   jobsByCompanyId: Array<JobWithCompanyType>;
   jobsByCompanyIdWithStats: Array<JobWithStatsType>;
+  lineNotificationUserSettings: Array<LineNotificationUserSettingType>;
   magazines: Array<MagazineType>;
   me: UserType;
   messageTemplates: Array<MessageTemplateType>;
@@ -1653,6 +1671,10 @@ export type QueryJobsByCompanyIdArgs = {
 
 export type QueryJobsByCompanyIdWithStatsArgs = {
   companyId: Scalars["Int"]["input"];
+};
+
+export type QueryLineNotificationUserSettingsArgs = {
+  userId: Scalars["Int"]["input"];
 };
 
 export type QueryRecentJobsArgs = {
@@ -2306,12 +2328,17 @@ export type UpdateUserInput = {
   interestedJobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
   isAllowScout?: InputMaybe<Scalars["Boolean"]["input"]>;
   lastName?: InputMaybe<Scalars["String"]["input"]>;
+  lineNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
   magazineNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
   messageNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
   phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
   prefecture?: InputMaybe<Scalars["String"]["input"]>;
   selfPR?: InputMaybe<Scalars["String"]["input"]>;
   university?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateUserLineNotificationSettingsInput = {
+  settings: Array<UserLineNotificationSettingItemInput>;
 };
 
 export type UpdateUserPasswordInput = {
@@ -2355,6 +2382,11 @@ export type UserInfo = {
   university?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type UserLineNotificationSettingItemInput = {
+  isEnabled: Scalars["Boolean"]["input"];
+  notificationKey: Scalars["String"]["input"];
+};
+
 export type UserSearchResultType = {
   __typename?: "UserSearchResultType";
   hasNextPage: Scalars["Boolean"]["output"];
@@ -2395,6 +2427,8 @@ export type UserType = {
   isAllowScout: Scalars["Boolean"]["output"];
   lastLoggedInAt: Scalars["DateTime"]["output"];
   lastName?: Maybe<Scalars["String"]["output"]>;
+  lineAccountId?: Maybe<Scalars["String"]["output"]>;
+  lineNotification: Scalars["Boolean"]["output"];
   magazineNotification: Scalars["Boolean"]["output"];
   messageNotification: Scalars["Boolean"]["output"];
   phoneNumber?: Maybe<Scalars["String"]["output"]>;
