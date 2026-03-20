@@ -71,13 +71,6 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
     timingDescription: "スカウト受信時に自動送信されます",
   },
   {
-    key: "NewJob",
-    name: "新着求人",
-    description: "新着求人が掲載された時の通知",
-    notificationType: "transaction",
-    timingDescription: "新着求人掲載時に自動送信されます",
-  },
-  {
     key: "JobOffer",
     name: "内定通知",
     description: "応募した求人ステータスが内定になった時の通知",
@@ -119,6 +112,13 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
     description: "プロフィールが未記入であることの促進通知",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 9, minute: 3 },
+  },
+  {
+    key: "NewJob",
+    name: "新着求人",
+    description: "直近24時間以内に作成・公開された新着求人の通知",
+    notificationType: "schedule",
+    defaultSchedule: { scheduleType: "daily", hour: 9, minute: 6 },
   },
   {
     key: "EncourageApply",
