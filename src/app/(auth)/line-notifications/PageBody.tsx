@@ -116,7 +116,8 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
   {
     key: "NewJob",
     name: "新着求人",
-    description: "直近24時間以内に作成・公開された新着求人の通知",
+    description:
+      "直近24時間以内に作成・公開された新着求人の通知（内定の無いユーザーのみ）",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 9, minute: 6 },
   },
@@ -130,7 +131,8 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
   {
     key: "EncourageMoreApply",
     name: "追加応募促進",
-    description: "1件のみ応募したユーザーへのさらなる応募促進通知",
+    description:
+      "1件のみ応募したユーザーへのさらなる応募促進通知（内定の無いユーザーのみ）",
     notificationType: "schedule",
     defaultSchedule: {
       scheduleType: "weekly",
