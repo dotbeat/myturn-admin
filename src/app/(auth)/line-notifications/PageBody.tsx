@@ -293,7 +293,14 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 pb-12 pt-6">
-      <PageTitle className="mb-8">LINE通知メッセージ設定</PageTitle>
+      <PageTitle className="mb-1">LINE通知メッセージ設定</PageTitle>
+      <Typography
+        variant="body2"
+        className="mb-8 text-[var(--myturn-sub-text)]"
+      >
+        使用可能なプレースホルダー ...{" "}
+        {"{候補者名} {企業名} {求人名} {面談日時}"}
+      </Typography>
 
       <FormProvider {...methods}>
         <form
