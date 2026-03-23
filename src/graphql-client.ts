@@ -407,7 +407,6 @@ export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email: Scalars["String"]["input"];
   lineAccountId: Scalars["String"]["input"];
-  userDetail?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type DeleteMessageTemplateInput = {
@@ -570,6 +569,7 @@ export type EntryWithDetailsType = {
   joinDate?: Maybe<Scalars["DateTime"]["output"]>;
   messages: Array<Message>;
   scout?: Maybe<Scout>;
+  scoutId?: Maybe<Scalars["Float"]["output"]>;
   secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
   status: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
