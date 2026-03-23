@@ -109,7 +109,8 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
   {
     key: "IncompleteProfile",
     name: "プロフィール未記入",
-    description: "プロフィールが未記入であることの促進通知",
+    description:
+      "プロフィールが未記入であることの促進通知（登録後24時間経過したユーザーのみ）",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 9, minute: 3 },
   },
