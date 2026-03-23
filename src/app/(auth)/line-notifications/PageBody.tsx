@@ -144,14 +144,14 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
   {
     key: "RequestOfferReport",
     name: "内定報告依頼",
-    description: "二次面談後に内定の有無を確認するリマインド通知",
+    description: "二次面談後の3日後に内定の有無を確認するリマインド通知",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 9, minute: 6 },
   },
   {
     key: "Comeback",
     name: "再来促進",
-    description: "長期間ログインしていないユーザーへの再来促進通知",
+    description: "30日間/60日間ログインしていないユーザーへの再来促進通知",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 10, minute: 9 },
   },
