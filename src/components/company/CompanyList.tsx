@@ -61,9 +61,9 @@ export default function CompanyList({
       : "—",
     jobCount: item.jobCount,
     acceptCount: item.acceptCount,
-    interviewRate: `${item.entryCount ? (item.interviewCount / item.entryCount) * 100 : 0}%`,
-    offerRate: `${item.entryCount ? (item.offerCount / item.entryCount) * 100 : 0}%`,
-    acceptRate: `${item.entryCount ? (item.acceptCount / item.entryCount) * 100 : 0}%`,
+    interviewRate: `${item.entryCount ? ((item.interviewCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
+    offerRate: `${item.entryCount ? ((item.offerCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
+    acceptRate: `${item.entryCount ? ((item.acceptCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
   }));
 
   return (

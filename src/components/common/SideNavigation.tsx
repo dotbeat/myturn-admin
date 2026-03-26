@@ -52,6 +52,9 @@ export default function SideNavigation({
         <ListItem className="p-0">
           <SideNavigationItem href="/pick-jobs" label="注目の求人" />
         </ListItem>
+        <ListItem className="p-0">
+          <SideNavigationItem href="/line-notifications" label="LINE通知設定" />
+        </ListItem>
       </List>
     </Box>
   );
