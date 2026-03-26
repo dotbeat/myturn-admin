@@ -118,7 +118,7 @@ const NOTIFICATION_TYPES: NotificationTypeInfo[] = [
     key: "NewJob",
     name: "新着求人",
     description:
-      "直近24時間以内に作成・公開された新着求人の通知（内定の無いユーザーのみ）",
+      "直近24時間以内に作成・公開された新着求人の通知（内定の無いユーザーかつ同じ都道府県のみ）",
     notificationType: "schedule",
     defaultSchedule: { scheduleType: "daily", hour: 9, minute: 6 },
   },
