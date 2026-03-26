@@ -405,7 +405,7 @@ export type CreateUserInput = {
 
 export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
-  email: Scalars["String"]["input"];
+  email?: InputMaybe<Scalars["String"]["input"]>;
   lineAccountId: Scalars["String"]["input"];
 };
 
