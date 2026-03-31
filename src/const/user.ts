@@ -62,6 +62,7 @@ export const schoolGraduationYears: SelectItem<number>[] = [
   { value: 2029, label: "2029年卒" },
   { value: 2030, label: "2030年卒" },
   { value: 2031, label: "2031年卒" },
+  { value: 2032, label: "2032年卒" },
   { value: 9999, label: "その他" },
 ];
 export function schoolGraduationYearsAndEmpty(
