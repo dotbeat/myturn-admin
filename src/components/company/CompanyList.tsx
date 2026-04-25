@@ -16,7 +16,7 @@ export default function CompanyList({
 }) {
   const columns = [
     { property: "iconImageUrl", label: "ロゴ" },
-    { property: "name", label: "企業名" },
+    { property: "name", label: "企業名", headCellClass: "w-48" },
     { property: "prefecture", label: "都道府県" },
     { property: "industry", label: "業界" },
     { property: "createdAt", label: "登録日" },
