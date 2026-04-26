@@ -36,17 +36,6 @@ export type AcceptScoutInput = {
   scoutId: Scalars["Int"]["input"];
 };
 
-export type AcceptTicketType = {
-  __typename?: "AcceptTicketType";
-  amount: Scalars["Int"]["output"];
-  companyId: Scalars["Int"]["output"];
-  count: Scalars["Int"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  expiredAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
 export type AddFavoriteInput = {
   jobId: Scalars["Int"]["input"];
 };
@@ -126,11 +115,23 @@ export type CompaniesStatisticsResultType = {
   totalCount: Scalars["Int"]["output"];
 };
 
+export type CompanyAcceptTicketType = {
+  __typename?: "CompanyAcceptTicketType";
+  amount: Scalars["Int"]["output"];
+  companyId: Scalars["Int"]["output"];
+  companyName: Scalars["String"]["output"];
+  count: Scalars["Int"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  expiredAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
 export type CompanyAcceptTicketsResultType = {
   __typename?: "CompanyAcceptTicketsResultType";
   hasNextPage: Scalars["Boolean"]["output"];
   hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<AcceptTicketType>;
+  items: Array<CompanyAcceptTicketType>;
   limit: Scalars["Int"]["output"];
   page: Scalars["Int"]["output"];
   totalCount: Scalars["Int"]["output"];
@@ -1251,7 +1252,7 @@ export type Mutation = {
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
-  createCompanyAcceptTicket: AcceptTicketType;
+  createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
@@ -2676,7 +2677,7 @@ export type CreateCompanyAcceptTicketMutationVariables = Exact<{
 export type CreateCompanyAcceptTicketMutation = {
   __typename?: "Mutation";
   createCompanyAcceptTicket: {
-    __typename?: "AcceptTicketType";
+    __typename?: "CompanyAcceptTicketType";
     id: number;
     companyId: number;
     count: number;
@@ -2723,6 +2724,28 @@ export type GetAllCompaniesQueryVariables = Exact<{ [key: string]: never }>;
 export type GetAllCompaniesQuery = {
   __typename?: "Query";
   companies: Array<{ __typename?: "CompanyType"; id: number; name: string }>;
+};
+
+export type GetCompanyAcceptTicketsQueryVariables = Exact<{
+  input: GetCompanyAcceptTicketsInput;
+}>;
+
+export type GetCompanyAcceptTicketsQuery = {
+  __typename?: "Query";
+  getCompanyAcceptTickets: {
+    __typename?: "CompanyAcceptTicketsResultType";
+    totalCount: number;
+    totalPages: number;
+    items: Array<{
+      __typename?: "CompanyAcceptTicketType";
+      id: number;
+      companyId: number;
+      companyName: string;
+      count: number;
+      expiredAt: any;
+      amount: number;
+    }>;
+  };
 };
 
 export type GetCompaniesStatisticsQueryVariables = Exact<{
@@ -3620,6 +3643,97 @@ export type GetAllCompaniesSuspenseQueryHookResult = ReturnType<
 export type GetAllCompaniesQueryResult = Apollo.QueryResult<
   GetAllCompaniesQuery,
   GetAllCompaniesQueryVariables
+>;
+export const GetCompanyAcceptTicketsDocument = gql`
+  query GetCompanyAcceptTickets($input: GetCompanyAcceptTicketsInput!) {
+    getCompanyAcceptTickets(input: $input) {
+      items {
+        id
+        companyId
+        companyName
+        count
+        expiredAt
+        amount
+      }
+      totalCount
+      totalPages
+    }
+  }
+`;
+
+/**
+ * __useGetCompanyAcceptTicketsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyAcceptTicketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyAcceptTicketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyAcceptTicketsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyAcceptTicketsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  > &
+    (
+      | { variables: GetCompanyAcceptTicketsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export function useGetCompanyAcceptTicketsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export function useGetCompanyAcceptTicketsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyAcceptTicketsQuery,
+        GetCompanyAcceptTicketsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export type GetCompanyAcceptTicketsQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsQuery
+>;
+export type GetCompanyAcceptTicketsLazyQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsLazyQuery
+>;
+export type GetCompanyAcceptTicketsSuspenseQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsSuspenseQuery
+>;
+export type GetCompanyAcceptTicketsQueryResult = Apollo.QueryResult<
+  GetCompanyAcceptTicketsQuery,
+  GetCompanyAcceptTicketsQueryVariables
 >;
 export const GetCompaniesStatisticsDocument = gql`
   query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {

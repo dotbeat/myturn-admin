@@ -8,9 +8,13 @@ import {
   Alert,
   Box,
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
+  Link,
+  Pagination,
+  PaginationItem,
   Snackbar,
   Table,
   TableBody,
@@ -25,9 +29,13 @@ import {
   CreateTicketFormData,
   createTicketSchema,
 } from "@/schemas/company/create-accept-ticket";
-import { GET_ALL_COMPANIES } from "@/server/graphql/company/queries";
+import {
+  GET_ALL_COMPANIES,
+  GET_COMPANY_ACCEPT_TICKETS,
+} from "@/server/graphql/company/queries";
 import { CREATE_COMPANY_ACCEPT_TICKET } from "@/server/graphql/company/mutations";
 import TextField from "@/components/common/form/TextField";
+import { CompanyAcceptTicketType } from "@/graphql-client";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import PageTitle from "@/components/common/PageTitle";
 
@@ -57,6 +65,20 @@ export default function PageBody() {
       setCompanyOptions(data.companies ?? []);
     },
   });
+
+  const { data: ticketsData, loading: ticketsLoading } = useQuery(
+    GET_COMPANY_ACCEPT_TICKETS,
+    {
+      fetchPolicy: "no-cache",
+      variables: { input: { page, limit } },
+    },
+  );
+
+  const tickets = ticketsData?.getCompanyAcceptTickets?.items ?? [];
+  const ticketsTotalCount =
+    ticketsData?.getCompanyAcceptTickets?.totalCount ?? 0;
+  const ticketsTotalPages =
+    ticketsData?.getCompanyAcceptTickets?.totalPages ?? 0;
 
   const ticketMethods = useForm<CreateTicketFormData>({
     resolver: zodResolver(createTicketSchema),
@@ -223,6 +245,97 @@ export default function PageBody() {
           </Table>
         </DialogContent>
       </Dialog>
+
+      {/* 採用チケット一覧 */}
+      <Box className="mt-8">
+        <Typography className="mb-2 px-4 text-lg font-semibold">
+          採用チケット一覧 {ticketsTotalCount} 件
+        </Typography>
+        <Box className="mb-4 max-w-5xl overflow-x-auto rounded-lg bg-[var(--background)]">
+          <Table className="border-separate text-nowrap py-2">
+            <TableHead>
+              <TableRow className="text-nowrap">
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  企業名
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  追加した数
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  有効期限
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  請求金額
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket: CompanyAcceptTicketType) => (
+                <TableRow key={ticket.id}>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.companyName}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.count}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {new Date(ticket.expiredAt).toLocaleDateString("ja")}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.amount.toLocaleString()}円
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {ticketsLoading && (
+            <Container className="flex flex-col items-center gap-4 py-8">
+              <Typography className="font-semibold">読み込み中です</Typography>
+            </Container>
+          )}
+          {!ticketsLoading && tickets.length === 0 && (
+            <Container className="flex flex-col items-center gap-4 py-8">
+              <Typography className="font-semibold">
+                採用チケットはありません
+              </Typography>
+            </Container>
+          )}
+        </Box>
+        <Box className="flex justify-center">
+          <Pagination
+            count={ticketsTotalPages}
+            page={page}
+            shape="rounded"
+            renderItem={(item) => (
+              <PaginationItem
+                component={item.page !== page ? Link : Box}
+                {...item}
+                href={(() => {
+                  const newParams = new URLSearchParams(searchParams);
+                  if (item.page === 1) {
+                    newParams.delete("page");
+                  } else {
+                    newParams.set("page", String(item.page));
+                  }
+                  return `/company-accept-tickets${newParams.size ? "?" : ""}${newParams}`;
+                })()}
+              />
+            )}
+          />
+        </Box>
+      </Box>
 
       {/* トースト通知 */}
       <Snackbar

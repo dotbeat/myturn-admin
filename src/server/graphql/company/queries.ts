@@ -36,6 +36,23 @@ export const GET_ALL_COMPANIES = gql`
   }
 `;
 
+export const GET_COMPANY_ACCEPT_TICKETS = gql`
+  query GetCompanyAcceptTickets($input: GetCompanyAcceptTicketsInput!) {
+    getCompanyAcceptTickets(input: $input) {
+      items {
+        id
+        companyId
+        companyName
+        count
+        expiredAt
+        amount
+      }
+      totalCount
+      totalPages
+    }
+  }
+`;
+
 export const GET_COMPANIES_STATISTICS = gql`
   query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
     getCompaniesStatistics(input: $input) {
