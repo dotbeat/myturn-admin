@@ -112,12 +112,14 @@ export default function PageBody() {
   );
 
   const onTicketSubmit = (data: CreateTicketFormData) => {
+    const expiredAt = new Date(data.expiredAt);
+    expiredAt.setHours(23, 59, 59, 999);
     createTicket({
       variables: {
         input: {
           companyId: data.companyId,
           count: data.count,
-          expiredAt: new Date(data.expiredAt).toISOString(),
+          expiredAt: expiredAt.toISOString(),
           amount: data.amount,
         },
       },
