@@ -161,14 +161,14 @@ export default function PageBody() {
               label="採用チケット追加数"
               type="number"
               className="w-36"
-              onInput={() => {
+              onBlur={() => {
                 const count = Number(ticketMethods.getValues("count"));
                 ticketMethods.setValue("amount", count * acceptTicketUnitPrice);
               }}
             />
             <TextField
               name="amount"
-              label="請求金額（円）"
+              label="請求金額"
               type="number"
               className="w-40"
             />
