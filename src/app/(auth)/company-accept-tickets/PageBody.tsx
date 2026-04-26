@@ -130,7 +130,7 @@ export default function PageBody() {
       {/* 採用チケット作成フォーム */}
       <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
         <Typography className="mb-2 font-semibold">
-          採用チケットを追加する
+          採用チケット（前払いの成果報酬）を追加する
         </Typography>
         <FormProvider {...ticketMethods}>
           <form
