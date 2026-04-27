@@ -44,6 +44,7 @@ export const GET_COMPANY_ACCEPT_TICKETS = gql`
         companyId
         companyName
         count
+        usedCount
         expiredAt
         amount
       }

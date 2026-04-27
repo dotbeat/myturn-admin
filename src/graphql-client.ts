@@ -125,6 +125,7 @@ export type CompanyAcceptTicketType = {
   expiredAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
+  usedCount: Scalars["Int"]["output"];
 };
 
 export type CompanyAcceptTicketsResultType = {
@@ -2742,6 +2743,7 @@ export type GetCompanyAcceptTicketsQuery = {
       companyId: number;
       companyName: string;
       count: number;
+      usedCount: number;
       expiredAt: any;
       amount: number;
     }>;
@@ -3652,6 +3654,7 @@ export const GetCompanyAcceptTicketsDocument = gql`
         companyId
         companyName
         count
+        usedCount
         expiredAt
         amount
       }

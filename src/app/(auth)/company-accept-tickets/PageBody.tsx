@@ -35,7 +35,10 @@ import {
 } from "@/server/graphql/company/queries";
 import { CREATE_COMPANY_ACCEPT_TICKET } from "@/server/graphql/company/mutations";
 import TextField from "@/components/common/form/TextField";
-import { CompanyAcceptTicketType } from "@/graphql-client";
+import {
+  CompanyAcceptTicketType,
+  GetCompanyAcceptTicketsQuery,
+} from "@/graphql-client";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import PageTitle from "@/components/common/PageTitle";
 
@@ -66,13 +69,11 @@ export default function PageBody() {
     },
   });
 
-  const { data: ticketsData, loading: ticketsLoading } = useQuery(
-    GET_COMPANY_ACCEPT_TICKETS,
-    {
+  const { data: ticketsData, loading: ticketsLoading } =
+    useQuery<GetCompanyAcceptTicketsQuery>(GET_COMPANY_ACCEPT_TICKETS, {
       fetchPolicy: "no-cache",
       variables: { input: { page, limit } },
-    },
-  );
+    });
 
   const tickets = ticketsData?.getCompanyAcceptTickets?.items ?? [];
   const ticketsTotalCount =
@@ -258,8 +259,8 @@ export default function PageBody() {
         <Typography className="mb-2 px-4 text-lg font-semibold">
           採用チケット一覧 {ticketsTotalCount} 件
         </Typography>
-        <Box className="mb-4 max-w-5xl overflow-x-auto rounded-lg bg-[var(--background)]">
-          <Table className="border-separate text-nowrap py-2">
+        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
+          <Table className="max-w-5xl border-separate text-nowrap py-2">
             <TableHead>
               <TableRow className="text-nowrap">
                 <TableCell
@@ -278,6 +279,12 @@ export default function PageBody() {
                   align="center"
                   className="p-2 text-base text-[var(--myturn-sub-text)]"
                 >
+                  消費した数
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
                   有効期限
                 </TableCell>
                 <TableCell
@@ -289,13 +296,16 @@ export default function PageBody() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tickets.map((ticket: CompanyAcceptTicketType) => (
+              {tickets.map((ticket) => (
                 <TableRow key={ticket.id}>
                   <TableCell align="center" className="p-2 text-base">
                     {ticket.companyName}
                   </TableCell>
                   <TableCell align="center" className="p-2 text-base">
                     {ticket.count}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.usedCount}
                   </TableCell>
                   <TableCell align="center" className="p-2 text-base">
                     {new Date(ticket.expiredAt).toLocaleDateString("ja")}
