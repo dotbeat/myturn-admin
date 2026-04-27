@@ -82,7 +82,12 @@ export default function PageBody() {
 
   const ticketMethods = useForm<CreateTicketFormData>({
     resolver: zodResolver(createTicketSchema),
-    defaultValues: { companyId: 0, count: 1, expiredAt: "", amount: 0 },
+    defaultValues: {
+      companyId: 0,
+      count: 1,
+      expiredAt: "9999-12-31",
+      amount: 0,
+    },
   });
 
   const [createTicket, { loading: isCreating }] = useMutation(
