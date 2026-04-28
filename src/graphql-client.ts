@@ -166,7 +166,8 @@ export type CompanyInvoiceType = {
   createdAt: Scalars["DateTime"]["output"];
   entryId: Scalars["Int"]["output"];
   id: Scalars["Int"]["output"];
-  paymentLimitDate: Scalars["DateTime"]["output"];
+  isDeposit: Scalars["Boolean"]["output"];
+  paymentLimitDate?: Maybe<Scalars["DateTime"]["output"]>;
   service: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   userId: Scalars["Int"]["output"];
@@ -2864,9 +2865,10 @@ export type GetCompanyInvoicesQuery = {
       companyName: string;
       entryId: number;
       userId: number;
+      isDeposit: boolean;
       applicantName: string;
       acceptDate: any;
-      paymentLimitDate: any;
+      paymentLimitDate?: any | null;
       service: string;
       amount: number;
     }>;
@@ -4087,6 +4089,7 @@ export const GetCompanyInvoicesDocument = gql`
         companyName
         entryId
         userId
+        isDeposit
         applicantName
         acceptDate
         paymentLimitDate

@@ -25,10 +25,12 @@ export default function InvoiceList({
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     acceptDate: new Date(item.acceptDate).toLocaleDateString("ja"),
-    paymentLimitDate: new Date(item.paymentLimitDate).toLocaleDateString("ja"),
+    paymentLimitDate: item.paymentLimitDate
+      ? new Date(item.paymentLimitDate).toLocaleDateString("ja")
+      : "—",
     content: (
-      <Typography className="line-clamp-3 w-[12.5rem] text-wrap text-left">
-        採用成果報酬：
+      <Typography className="line-clamp-3 w-[15rem] text-wrap text-left">
+        {item.isDeposit ? "採用チケット消費：" : "採用成果報酬："}
         {item.applicantName ? (
           <Link
             href={`/users/${item.userId}`}
@@ -46,7 +48,7 @@ export default function InvoiceList({
         {getSelectItem(invoceServices, item.service)?.label}インターン採用
       </Box>
     ),
-    amount: item.amount.toLocaleString("en") + "円",
+    amount: item.isDeposit ? "—" : item.amount.toLocaleString("en") + "円",
     companyName: item.companyName,
   }));
 

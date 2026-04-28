@@ -8,6 +8,7 @@ export const SEARCH_COMPANY_INVOICE = gql`
         companyName
         entryId
         userId
+        isDeposit
         applicantName
         acceptDate
         paymentLimitDate
