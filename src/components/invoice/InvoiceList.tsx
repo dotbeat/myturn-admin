@@ -39,7 +39,7 @@ export default function InvoiceList({
             {item.applicantName}
           </Link>
         ) : (
-          "(退会済ユーザー)"
+          "(名前未設定ユーザー)"
         )}
       </Typography>
     ),
