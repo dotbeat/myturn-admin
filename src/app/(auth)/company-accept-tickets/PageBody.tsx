@@ -52,7 +52,7 @@ export default function PageBody() {
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
 
-  // ---- 採用チケット作成フォーム ----
+  // ---- 採用デポジット作成フォーム ----
   const [companyOptions, setCompanyOptions] = useState<CompanyOption[]>([]);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
@@ -97,7 +97,7 @@ export default function PageBody() {
       onCompleted() {
         setToast({
           open: true,
-          message: "採用チケットを作成しました",
+          message: "採用デポジットを作成しました",
           severity: "success",
         });
         ticketMethods.reset({
@@ -134,11 +134,11 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">企業の採用チケット管理</PageTitle>
-      {/* 採用チケット作成フォーム */}
+      <PageTitle className="mb-8">企業の採用デポジット管理</PageTitle>
+      {/* 採用デポジット作成フォーム */}
       <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
         <Typography className="mb-2 font-semibold">
-          採用チケット（前払いの成果報酬）を追加する
+          採用デポジット（前払いの成果報酬）を追加する
         </Typography>
         <FormProvider {...ticketMethods}>
           <form
@@ -166,7 +166,7 @@ export default function PageBody() {
             </Box>
             <TextField
               name="count"
-              label="採用チケット追加数"
+              label="採用デポジット追加数"
               type="number"
               className="w-36"
               onBlur={() => {
@@ -197,7 +197,7 @@ export default function PageBody() {
         </FormProvider>
       </Box>
 
-      {/* 採用チケットを追加する企業の選択ダイアログ */}
+      {/* 採用デポジットを追加する企業の選択ダイアログ */}
       <Dialog
         open={companyDialogOpen}
         onClose={() => setCompanyDialogOpen(false)}
@@ -254,10 +254,10 @@ export default function PageBody() {
         </DialogContent>
       </Dialog>
 
-      {/* 採用チケット一覧 */}
+      {/* 採用デポジット一覧 */}
       <Box className="mt-8">
         <Typography className="mb-2 px-4 text-lg font-semibold">
-          採用チケット一覧 {ticketsTotalCount} 件
+          採用デポジット一覧 {ticketsTotalCount} 件
         </Typography>
         <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
           <Table className="max-w-5xl border-separate text-nowrap py-2">
@@ -325,7 +325,7 @@ export default function PageBody() {
           {!ticketsLoading && tickets.length === 0 && (
             <Container className="flex flex-col items-center gap-4 py-8">
               <Typography className="font-semibold">
-                採用チケットはありません
+                採用デポジットはありません
               </Typography>
             </Container>
           )}

@@ -46,7 +46,7 @@ export default function SideNavigation({
         <ListItem className="p-0">
           <SideNavigationItem
             href="/company-accept-tickets"
-            label="企業の採用チケット"
+            label="企業の採用デポジット"
           />
         </ListItem>
         <ListItem className="p-0">

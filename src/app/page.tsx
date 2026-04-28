@@ -33,7 +33,7 @@ export default function Page() {
           請求
         </Link>
         <Link href="/company-accept-tickets" className="underline">
-          企業の採用チケット
+          企業の採用デポジット
         </Link>
         <Link href="/magazine" className="underline">
           Magazine

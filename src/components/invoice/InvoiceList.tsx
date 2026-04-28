@@ -30,7 +30,7 @@ export default function InvoiceList({
       : "—",
     content: (
       <Typography className="line-clamp-3 w-[15rem] text-wrap text-left">
-        {item.isDeposit ? "採用チケット消費：" : "採用成果報酬："}
+        {item.isDeposit ? "採用デポジット消費：" : "採用成果報酬："}
         {item.applicantName ? (
           <Link
             href={`/users/${item.userId}`}
