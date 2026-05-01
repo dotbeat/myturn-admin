@@ -85,9 +85,9 @@ export default function PageBody() {
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
       companyId: 0,
-      count: 1,
+      count: 5,
       expiredAt: "9999-12-31",
-      amount: 0,
+      amount: 500000,
     },
   });
 
