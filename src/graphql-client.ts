@@ -1287,6 +1287,7 @@ export type Mutation = {
   sendJobOffer: Entry;
   sendMessage: Message;
   updateCompany: CompanyType;
+  updateCompanyAcceptTicket: CompanyAcceptTicketType;
   updateEntriesStatus: Array<Entry>;
   updateEntryApplicantNote: Entry;
   updateEntryStatus: Entry;
@@ -1438,6 +1439,10 @@ export type MutationSendMessageArgs = {
 
 export type MutationUpdateCompanyArgs = {
   input: UpdateCompanyInput;
+};
+
+export type MutationUpdateCompanyAcceptTicketArgs = {
+  input: UpdateCompanyAcceptTicketInput;
 };
 
 export type MutationUpdateEntriesStatusArgs = {
@@ -2244,6 +2249,13 @@ export type UnreadMessageInfo = {
   entryId: Scalars["Int"]["output"];
   id: Scalars["Int"]["output"];
   isRead: Scalars["Boolean"]["output"];
+};
+
+export type UpdateCompanyAcceptTicketInput = {
+  amount?: InputMaybe<Scalars["Int"]["input"]>;
+  count?: InputMaybe<Scalars["Int"]["input"]>;
+  expiredAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id: Scalars["Int"]["input"];
 };
 
 export type UpdateCompanyInput = {

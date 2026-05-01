@@ -10,6 +10,7 @@ import {
   Button,
   Container,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Link,
@@ -25,21 +26,26 @@ import {
   Typography,
 } from "@mui/material";
 import { acceptTicketUnitPrice } from "@/const/company";
+import { GetCompanyAcceptTicketsQuery } from "@/graphql-client";
 import {
   CreateTicketFormData,
   createTicketSchema,
 } from "@/schemas/company/create-accept-ticket";
 import {
+  UpdateTicketFormData,
+  updateTicketSchema,
+} from "@/schemas/company/update-accept-ticket";
+import {
   GET_ALL_COMPANIES,
   GET_COMPANY_ACCEPT_TICKETS,
 } from "@/server/graphql/company/queries";
-import { CREATE_COMPANY_ACCEPT_TICKET } from "@/server/graphql/company/mutations";
-import TextField from "@/components/common/form/TextField";
 import {
-  CompanyAcceptTicketType,
-  GetCompanyAcceptTicketsQuery,
-} from "@/graphql-client";
+  CREATE_COMPANY_ACCEPT_TICKET,
+  UPDATE_COMPANY_ACCEPT_TICKET,
+} from "@/server/graphql/company/mutations";
+import { AcceptTicket } from "@/types/invoice";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
+import TextField from "@/components/common/form/TextField";
 import PageTitle from "@/components/common/PageTitle";
 
 type CompanyOption = { id: number; name: string };
@@ -71,19 +77,40 @@ export default function PageBody() {
   });
 
   const {
-    data: ticketsData,
     loading: ticketsLoading,
     refetch: refetchTickets,
+    data: ticketsData,
   } = useQuery<GetCompanyAcceptTicketsQuery>(GET_COMPANY_ACCEPT_TICKETS, {
     fetchPolicy: "no-cache",
     variables: { input: { page, limit } },
   });
 
-  const tickets = ticketsData?.getCompanyAcceptTickets?.items ?? [];
-  const ticketsTotalCount =
-    ticketsData?.getCompanyAcceptTickets?.totalCount ?? 0;
-  const ticketsTotalPages =
-    ticketsData?.getCompanyAcceptTickets?.totalPages ?? 0;
+  const resetPaginateAndList = () => {
+    if (page !== 1) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("page");
+      router.push(
+        `/company-accept-tickets${newParams.size ? `?${newParams}` : ""}`,
+      );
+    } else {
+      refetchTickets();
+    }
+  };
+
+  const ticketsResult = ticketsData?.getCompanyAcceptTickets;
+  const tickets: AcceptTicket[] =
+    ticketsResult?.items.map((ticket) => ({
+      id: ticket.id,
+      companyId: ticket.companyId,
+      companyName: ticket.companyName,
+      count: ticket.count,
+      usedCount: ticket.usedCount,
+      expiredAt: new Date(ticket.expiredAt),
+      amount: ticket.amount,
+      createdAt: new Date(ticket.createdAt),
+    })) ?? [];
+  const ticketsTotalCount = ticketsResult?.totalCount ?? 0;
+  const ticketsTotalPages = ticketsResult?.totalPages ?? 0;
 
   const ticketMethods = useForm<CreateTicketFormData>({
     resolver: zodResolver(createTicketSchema),
@@ -94,6 +121,62 @@ export default function PageBody() {
       amount: 500000,
     },
   });
+
+  // ---- 採用デポジット編集フォーム ----
+  const [editingTicket, setEditingTicket] = useState<AcceptTicket | null>(null);
+  const editMethods = useForm<UpdateTicketFormData>({
+    resolver: zodResolver(updateTicketSchema),
+  });
+
+  const [updateTicket, { loading: isUpdating }] = useMutation(
+    UPDATE_COMPANY_ACCEPT_TICKET,
+    {
+      onCompleted() {
+        setToast({
+          open: true,
+          message: "採用デポジットを更新しました",
+          severity: "success",
+        });
+        setEditingTicket(null);
+        refetchTickets();
+      },
+      onError(error) {
+        setToast({
+          open: true,
+          message: error.message || "更新中にエラーが発生しました",
+          severity: "error",
+        });
+      },
+    },
+  );
+
+  const openEditDialog = (ticket: AcceptTicket) => {
+    const yyyy = ticket.expiredAt.getFullYear();
+    const mm = String(ticket.expiredAt.getMonth() + 1).padStart(2, "0");
+    const dd = String(ticket.expiredAt.getDate()).padStart(2, "0");
+    editMethods.reset({
+      count: ticket.count,
+      expiredAt: `${yyyy}-${mm}-${dd}`,
+      amount: ticket.amount,
+    });
+    setEditingTicket(ticket);
+  };
+
+  const onEditSubmit = (data: UpdateTicketFormData) => {
+    if (!editingTicket) return;
+    const expiredAt = new Date(data.expiredAt);
+    expiredAt.setHours(23, 59, 59, 999);
+    updateTicket({
+      variables: {
+        input: {
+          id: editingTicket.id,
+          count: data.count,
+          expiredAt: expiredAt.toISOString(),
+          amount: data.amount,
+        },
+      },
+    });
+  };
 
   const [createTicket, { loading: isCreating }] = useMutation(
     CREATE_COMPANY_ACCEPT_TICKET,
@@ -110,15 +193,7 @@ export default function PageBody() {
           expiredAt: "9999-12-31",
           amount: 500000,
         });
-        if (page !== 1) {
-          const newParams = new URLSearchParams(searchParams);
-          newParams.delete("page");
-          router.push(
-            `/company-accept-tickets${newParams.size ? `?${newParams}` : ""}`,
-          );
-        } else {
-          refetchTickets();
-        }
+        resetPaginateAndList();
       },
       onError(error) {
         setToast({
@@ -210,6 +285,124 @@ export default function PageBody() {
         </FormProvider>
       </Box>
 
+      {/* 採用デポジット一覧 */}
+      <Box className="mt-8">
+        <Typography className="mb-2 px-4 text-lg font-semibold">
+          採用デポジット一覧 {ticketsTotalCount} 件
+        </Typography>
+        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
+          <Table className="max-w-5xl border-separate text-nowrap py-2">
+            <TableHead>
+              <TableRow className="text-nowrap">
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  企業名
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  追加した数
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  消費した数
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  有効期限
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  請求金額
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  チャージ日
+                </TableCell>
+                <TableCell className="p-2 text-base text-[var(--myturn-sub-text)]" />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow key={ticket.id}>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.companyName}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.count}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.usedCount}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {new Date(ticket.expiredAt).toLocaleDateString("ja")}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {ticket.amount.toLocaleString()}円
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {new Date(ticket.createdAt).toLocaleDateString("ja")}
+                  </TableCell>
+                  <TableCell align="center" className="p-2">
+                    <Button
+                      className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+                      onClick={() => openEditDialog(ticket)}
+                    >
+                      編集
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {ticketsLoading && (
+            <Container className="flex flex-col items-center gap-4 py-8">
+              <Typography className="font-semibold">読み込み中です</Typography>
+            </Container>
+          )}
+          {!ticketsLoading && tickets.length === 0 && (
+            <Container className="flex flex-col items-center gap-4 py-8">
+              <Typography className="font-semibold">
+                採用デポジットはありません
+              </Typography>
+            </Container>
+          )}
+        </Box>
+        <Box className="flex justify-center">
+          <Pagination
+            count={ticketsTotalPages}
+            page={page}
+            shape="rounded"
+            renderItem={(item) => (
+              <PaginationItem
+                component={item.page !== page ? Link : Box}
+                {...item}
+                href={(() => {
+                  const newParams = new URLSearchParams(searchParams);
+                  if (item.page === 1) {
+                    newParams.delete("page");
+                  } else {
+                    newParams.set("page", String(item.page));
+                  }
+                  return `/company-accept-tickets${newParams.size ? "?" : ""}${newParams}`;
+                })()}
+              />
+            )}
+          />
+        </Box>
+      </Box>
+
       {/* 採用デポジットを追加する企業の選択ダイアログ */}
       <Dialog
         open={companyDialogOpen}
@@ -267,114 +460,67 @@ export default function PageBody() {
         </DialogContent>
       </Dialog>
 
-      {/* 採用デポジット一覧 */}
-      <Box className="mt-8">
-        <Typography className="mb-2 px-4 text-lg font-semibold">
-          採用デポジット一覧 {ticketsTotalCount} 件
-        </Typography>
-        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-          <Table className="max-w-5xl border-separate text-nowrap py-2">
-            <TableHead>
-              <TableRow className="text-nowrap">
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  企業名
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  追加した数
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  消費した数
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  有効期限
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  請求金額
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
-                >
-                  チャージ日
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tickets.map((ticket) => (
-                <TableRow key={ticket.id}>
-                  <TableCell align="center" className="p-2 text-base">
-                    {ticket.companyName}
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {ticket.count}
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {ticket.usedCount}
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {new Date(ticket.expiredAt).toLocaleDateString("ja")}
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {ticket.amount.toLocaleString()}円
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {new Date(ticket.createdAt).toLocaleDateString("ja")}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {ticketsLoading && (
-            <Container className="flex flex-col items-center gap-4 py-8">
-              <Typography className="font-semibold">読み込み中です</Typography>
-            </Container>
-          )}
-          {!ticketsLoading && tickets.length === 0 && (
-            <Container className="flex flex-col items-center gap-4 py-8">
-              <Typography className="font-semibold">
-                採用デポジットはありません
-              </Typography>
-            </Container>
-          )}
-        </Box>
-        <Box className="flex justify-center">
-          <Pagination
-            count={ticketsTotalPages}
-            page={page}
-            shape="rounded"
-            renderItem={(item) => (
-              <PaginationItem
-                component={item.page !== page ? Link : Box}
-                {...item}
-                href={(() => {
-                  const newParams = new URLSearchParams(searchParams);
-                  if (item.page === 1) {
-                    newParams.delete("page");
-                  } else {
-                    newParams.set("page", String(item.page));
-                  }
-                  return `/company-accept-tickets${newParams.size ? "?" : ""}${newParams}`;
-                })()}
+      {/* 採用デポジット編集ダイアログ */}
+      <Dialog
+        open={editingTicket !== null}
+        onClose={() => setEditingTicket(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="pb-0 pt-6 font-semibold">
+          採用デポジットを編集
+        </DialogTitle>
+        <FormProvider {...editMethods}>
+          <form onSubmit={editMethods.handleSubmit(onEditSubmit)}>
+            <DialogContent className="flex flex-col gap-4">
+              {editingTicket && (
+                <Box className="mb-2 rounded bg-[var(--background)] text-[var(--myturn-sub-text)]">
+                  <Typography>企業名：{editingTicket.companyName}</Typography>
+                  <Typography>
+                    チャージ日：
+                    {editingTicket.createdAt.toLocaleDateString("ja")}
+                  </Typography>
+                </Box>
+              )}
+              <TextField
+                name="count"
+                label="追加した数"
+                type="number"
+                className="w-full"
               />
-            )}
-          />
-        </Box>
-      </Box>
+              <TextField
+                name="amount"
+                label="請求金額"
+                type="number"
+                className="w-full"
+              />
+              <TextField
+                name="expiredAt"
+                label="有効期限"
+                type="date"
+                className="w-full"
+              />
+            </DialogContent>
+            <DialogActions className="gap-2 px-6 pb-6">
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={() => setEditingTicket(null)}
+                className="px-3 py-1"
+              >
+                キャンセル
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUpdating}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+              >
+                {isUpdating ? "保存中..." : "保存する"}
+              </Button>
+            </DialogActions>
+          </form>
+        </FormProvider>
+      </Dialog>
 
       {/* トースト通知 */}
       <Snackbar

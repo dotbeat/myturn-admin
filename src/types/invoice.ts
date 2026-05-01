@@ -12,3 +12,14 @@ export type InvoiceItem = {
   amount: number;
   companyName: string;
 };
+
+export type AcceptTicket = {
+  id: number;
+  companyId: number;
+  companyName: string;
+  count: number;
+  usedCount: number;
+  expiredAt: Date;
+  amount: number;
+  createdAt: Date;
+};
