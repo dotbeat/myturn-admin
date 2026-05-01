@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@apollo/client";
 import {
@@ -48,6 +48,7 @@ export default function PageBody() {
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
+  const router = useRouter();
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
@@ -69,11 +70,14 @@ export default function PageBody() {
     },
   });
 
-  const { data: ticketsData, loading: ticketsLoading } =
-    useQuery<GetCompanyAcceptTicketsQuery>(GET_COMPANY_ACCEPT_TICKETS, {
-      fetchPolicy: "no-cache",
-      variables: { input: { page, limit } },
-    });
+  const {
+    data: ticketsData,
+    loading: ticketsLoading,
+    refetch: refetchTickets,
+  } = useQuery<GetCompanyAcceptTicketsQuery>(GET_COMPANY_ACCEPT_TICKETS, {
+    fetchPolicy: "no-cache",
+    variables: { input: { page, limit } },
+  });
 
   const tickets = ticketsData?.getCompanyAcceptTickets?.items ?? [];
   const ticketsTotalCount =
@@ -102,10 +106,19 @@ export default function PageBody() {
         });
         ticketMethods.reset({
           companyId: 0,
-          count: 1,
-          expiredAt: "",
-          amount: 0,
+          count: 5,
+          expiredAt: "9999-12-31",
+          amount: 500000,
         });
+        if (page !== 1) {
+          const newParams = new URLSearchParams(searchParams);
+          newParams.delete("page");
+          router.push(
+            `/company-accept-tickets${newParams.size ? `?${newParams}` : ""}`,
+          );
+        } else {
+          refetchTickets();
+        }
       },
       onError(error) {
         setToast({
