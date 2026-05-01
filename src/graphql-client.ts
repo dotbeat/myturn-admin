@@ -270,6 +270,7 @@ export type CompanyType = {
   isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isInitialScoutedMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isOfficial: Scalars["Boolean"]["output"];
+  isSuspension: Scalars["Boolean"]["output"];
   jobCount?: Maybe<Scalars["Int"]["output"]>;
   jobType?: Maybe<Scalars["String"]["output"]>;
   members?: Maybe<Array<CompanyMemberType>>;
@@ -1580,7 +1581,7 @@ export type Query = {
   companies: Array<CompanyType>;
   company?: Maybe<CompanyWithJobsType>;
   companyIds: Array<Scalars["Int"]["output"]>;
-  companyMe: CompanyType;
+  companyMe?: Maybe<CompanyType>;
   /** 企業のスカウトチケット情報 */
   companyScoutTicket: ScoutTicketType;
   getAdminMessages: AdminMessagesResult;
@@ -2559,6 +2560,7 @@ export type UserWithCountType = {
   department: Scalars["String"]["output"];
   email: Scalars["String"]["output"];
   entryCount: Scalars["Int"]["output"];
+  /** 指定企業への非スカウト応募数を取得 */
   entryCountForTheCompany: Scalars["Int"]["output"];
   faculty: Scalars["String"]["output"];
   firstName: Scalars["String"]["output"];
@@ -2747,6 +2749,7 @@ export type GetCompanyAcceptTicketsQuery = {
       usedCount: number;
       expiredAt: any;
       amount: number;
+      createdAt: any;
     }>;
   };
 };
@@ -3659,6 +3662,7 @@ export const GetCompanyAcceptTicketsDocument = gql`
         usedCount
         expiredAt
         amount
+        createdAt
       }
       totalCount
       totalPages

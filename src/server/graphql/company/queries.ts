@@ -47,6 +47,7 @@ export const GET_COMPANY_ACCEPT_TICKETS = gql`
         usedCount
         expiredAt
         amount
+        createdAt
       }
       totalCount
       totalPages

@@ -306,6 +306,12 @@ export default function PageBody() {
                 >
                   請求金額
                 </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  チャージ日
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -325,6 +331,9 @@ export default function PageBody() {
                   </TableCell>
                   <TableCell align="center" className="p-2 text-base">
                     {ticket.amount.toLocaleString()}円
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {new Date(ticket.createdAt).toLocaleDateString("ja")}
                   </TableCell>
                 </TableRow>
               ))}
