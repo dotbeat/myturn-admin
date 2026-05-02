@@ -41,6 +41,7 @@ import {
 } from "@/server/graphql/company/queries";
 import {
   CREATE_COMPANY_ACCEPT_TICKET,
+  DELETE_COMPANY_ACCEPT_TICKET,
   UPDATE_COMPANY_ACCEPT_TICKET,
 } from "@/server/graphql/company/mutations";
 import { AcceptTicket } from "@/types/invoice";
@@ -121,6 +122,33 @@ export default function PageBody() {
       amount: 500000,
     },
   });
+
+  // ---- 採用デポジット削除 ----
+  const [deletingTicket, setDeletingTicket] = useState<AcceptTicket | null>(
+    null,
+  );
+
+  const [deleteTicket, { loading: isDeleting }] = useMutation(
+    DELETE_COMPANY_ACCEPT_TICKET,
+    {
+      onCompleted() {
+        setToast({
+          open: true,
+          message: "採用デポジットを削除しました",
+          severity: "success",
+        });
+        setDeletingTicket(null);
+        refetchTickets();
+      },
+      onError(error) {
+        setToast({
+          open: true,
+          message: error.message || "削除中にエラーが発生しました",
+          severity: "error",
+        });
+      },
+    },
+  );
 
   // ---- 採用デポジット編集フォーム ----
   const [editingTicket, setEditingTicket] = useState<AcceptTicket | null>(null);
@@ -355,12 +383,20 @@ export default function PageBody() {
                     {new Date(ticket.createdAt).toLocaleDateString("ja")}
                   </TableCell>
                   <TableCell align="center" className="p-2">
-                    <Button
-                      className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
-                      onClick={() => openEditDialog(ticket)}
-                    >
-                      編集
-                    </Button>
+                    <Box className="flex items-center justify-center gap-2">
+                      <Button
+                        className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+                        onClick={() => openEditDialog(ticket)}
+                      >
+                        編集
+                      </Button>
+                      <Button
+                        className="rounded-md border border-red-500 px-2 py-1 text-red-500"
+                        onClick={() => setDeletingTicket(ticket)}
+                      >
+                        削除
+                      </Button>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -520,6 +556,54 @@ export default function PageBody() {
             </DialogActions>
           </form>
         </FormProvider>
+      </Dialog>
+
+      {/* 採用デポジット削除確認ダイアログ */}
+      <Dialog
+        open={deletingTicket !== null}
+        onClose={() => setDeletingTicket(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="pb-0 pt-6 font-semibold">
+          採用デポジットを削除しますか？
+        </DialogTitle>
+        <DialogContent className="pt-4">
+          {deletingTicket && (
+            <Typography>
+              <span className="font-semibold">
+                {deletingTicket.companyName}
+              </span>
+              の採用デポジット（
+              {deletingTicket.count}
+              件・{deletingTicket.amount.toLocaleString()}
+              円）を削除します。この操作は取り消せません。
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions className="gap-2 px-6 pb-6">
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() => setDeletingTicket(null)}
+            className="px-3 py-1"
+          >
+            キャンセル
+          </Button>
+          <Button
+            type="button"
+            disabled={isDeleting}
+            className="rounded-full border border-red-500 px-4 py-2 text-red-500"
+            onClick={() => {
+              if (!deletingTicket) return;
+              deleteTicket({
+                variables: { input: { id: deletingTicket.id } },
+              });
+            }}
+          >
+            {isDeleting ? "削除中..." : "削除する"}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       {/* トースト通知 */}

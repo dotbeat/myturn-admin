@@ -122,6 +122,7 @@ export type CompanyAcceptTicketType = {
   companyName: Scalars["String"]["output"];
   count: Scalars["Int"]["output"];
   createdAt: Scalars["DateTime"]["output"];
+  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
   expiredAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
@@ -440,6 +441,10 @@ export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   lineAccountId: Scalars["String"]["input"];
+};
+
+export type DeleteCompanyAcceptTicketInput = {
+  id: Scalars["Int"]["input"];
 };
 
 export type DeleteMessageTemplateInput = {
@@ -1265,6 +1270,7 @@ export type Mutation = {
   createUser: UserType;
   createUserAcceptReport: UserAcceptReportType;
   deleteCompany: Scalars["Boolean"]["output"];
+  deleteCompanyAcceptTicket: CompanyAcceptTicketType;
   deleteJob: JobType;
   deleteMessageTemplate: Scalars["Boolean"]["output"];
   deleteUserAccount: Scalars["Boolean"]["output"];
@@ -1363,6 +1369,10 @@ export type MutationCreateUserArgs = {
 export type MutationCreateUserAcceptReportArgs = {
   id: Scalars["Int"]["input"];
   input: CreateUserAcceptReportInput;
+};
+
+export type MutationDeleteCompanyAcceptTicketArgs = {
+  input: DeleteCompanyAcceptTicketInput;
 };
 
 export type MutationDeleteJobArgs = {
@@ -2686,6 +2696,21 @@ export type BatchDailyMutation = {
   batchDaily: boolean;
 };
 
+export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
+  input: UpdateCompanyAcceptTicketInput;
+}>;
+
+export type UpdateCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  updateCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+    count: number;
+    expiredAt: any;
+    amount: number;
+  };
+};
+
 export type CreateCompanyAcceptTicketMutationVariables = Exact<{
   input: CreateCompanyAcceptTicketInput;
 }>;
@@ -2700,6 +2725,18 @@ export type CreateCompanyAcceptTicketMutation = {
     expiredAt: any;
     amount: number;
     createdAt: any;
+  };
+};
+
+export type DeleteCompanyAcceptTicketMutationVariables = Exact<{
+  input: DeleteCompanyAcceptTicketInput;
+}>;
+
+export type DeleteCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  deleteCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
   };
 };
 
@@ -3428,6 +3465,60 @@ export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
   BatchDailyMutation,
   BatchDailyMutationVariables
 >;
+export const UpdateCompanyAcceptTicketDocument = gql`
+  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
+    updateCompanyAcceptTicket(input: $input) {
+      id
+      count
+      expiredAt
+      amount
+    }
+  }
+`;
+export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  UpdateCompanyAcceptTicketMutation,
+  UpdateCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useUpdateCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >(UpdateCompanyAcceptTicketDocument, options);
+}
+export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useUpdateCompanyAcceptTicketMutation
+>;
+export type UpdateCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
+export type UpdateCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >;
 export const CreateCompanyAcceptTicketDocument = gql`
   mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
     createCompanyAcceptTicket(input: $input) {
@@ -3483,6 +3574,57 @@ export type CreateCompanyAcceptTicketMutationOptions =
   Apollo.BaseMutationOptions<
     CreateCompanyAcceptTicketMutation,
     CreateCompanyAcceptTicketMutationVariables
+  >;
+export const DeleteCompanyAcceptTicketDocument = gql`
+  mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
+    deleteCompanyAcceptTicket(input: $input) {
+      id
+    }
+  }
+`;
+export type DeleteCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  DeleteCompanyAcceptTicketMutation,
+  DeleteCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useDeleteCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useDeleteCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCompanyAcceptTicketMutation, { data, loading, error }] = useDeleteCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
+  >(DeleteCompanyAcceptTicketDocument, options);
+}
+export type DeleteCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useDeleteCompanyAcceptTicketMutation
+>;
+export type DeleteCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<DeleteCompanyAcceptTicketMutation>;
+export type DeleteCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
   >;
 export const GetCompaniesDocument = gql`
   query getCompanies($input: GetCompaniesInput!) {

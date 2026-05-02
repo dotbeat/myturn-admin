@@ -23,3 +23,11 @@ export const CREATE_COMPANY_ACCEPT_TICKET = gql`
     }
   }
 `;
+
+export const DELETE_COMPANY_ACCEPT_TICKET = gql`
+  mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
+    deleteCompanyAcceptTicket(input: $input) {
+      id
+    }
+  }
+`;
