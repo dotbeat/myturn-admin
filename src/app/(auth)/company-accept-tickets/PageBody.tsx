@@ -45,6 +45,7 @@ import {
 } from "@/server/graphql/company/mutations";
 import { AcceptTicket } from "@/types/invoice";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
+import { get1YearLaterFormatted } from "@/utils/shared/date";
 import TextField from "@/components/common/form/TextField";
 import PageTitle from "@/components/common/PageTitle";
 
@@ -118,7 +119,7 @@ export default function PageBody() {
       companyId: 0,
       count: 0,
       amount: 0,
-      expiredAt: "9999-12-31",
+      expiredAt: get1YearLaterFormatted(),
     },
   });
 
@@ -217,7 +218,7 @@ export default function PageBody() {
         ticketMethods.reset({
           companyId: 0,
           count: 5,
-          expiredAt: "9999-12-31",
+          expiredAt: get1YearLaterFormatted(),
           amount: 500000,
         });
         resetPaginateAndList();
