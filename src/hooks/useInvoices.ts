@@ -18,8 +18,8 @@ export function useInvoices(
     variables: { input: { ...input, page, limit } },
     fetchPolicy: "no-cache",
     onCompleted(result) {
-      setTotalCount(result.getCompanyInvoices.totalCount);
       setInvoices(result.getCompanyInvoices.items);
+      setTotalCount(result.getCompanyInvoices.totalCount);
       setTotalPages(result.getCompanyInvoices.totalPages);
     },
   });

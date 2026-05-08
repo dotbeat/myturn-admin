@@ -1,11 +1,9 @@
 import { Box, Container, Typography } from "@mui/material";
-import { industries } from "@/const/job";
 import { CompanyItem } from "@/types/company";
-import { getSelectItem } from "@/utils/shared/select";
 import Avatar from "@/components/common/Avatar";
 import Table, { TableColumn, TableRow } from "@/components/common/Table";
 
-export default function CompanyList({
+export default function CompanyAcceptTicketList({
   items,
   isLoading,
   className = "",
@@ -17,11 +15,6 @@ export default function CompanyList({
   const columns = [
     { property: "iconImageUrl", label: "ロゴ" },
     { property: "name", label: "企業名", headCellClass: "w-48" },
-    { property: "prefecture", label: "都道府県" },
-    { property: "industry", label: "業界" },
-    { property: "createdAt", label: "登録日" },
-    { property: "deletedAt", label: "退会日" },
-    { property: "jobCount", label: "掲載求人" },
     { property: "acceptCount", label: "累計採用" },
     { property: "interviewRate", label: "面談率" },
     { property: "offerRate", label: "内定率" },
@@ -53,13 +46,6 @@ export default function CompanyList({
       ) : (
         <Typography className="text-left">(退会済企業)</Typography>
       ),
-    prefecture: item.prefecture || "—",
-    industry: getSelectItem(industries, item.industry)?.label ?? "—",
-    createdAt: new Date(item.createdAt).toLocaleDateString("ja"),
-    deletedAt: item.deletedAt
-      ? new Date(item.deletedAt).toLocaleDateString("ja")
-      : "—",
-    jobCount: item.jobCount,
     acceptCount: item.acceptCount,
     interviewRate: `${item.entryCount ? ((item.interviewCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     offerRate: `${item.entryCount ? ((item.offerCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,

@@ -15,6 +15,7 @@ export default function TextField({
   className = "",
   inputClass = "",
   onInput,
+  onBlur,
 }: {
   name: string;
   label?: string;
@@ -26,6 +27,7 @@ export default function TextField({
   className?: string;
   inputClass?: string;
   onInput?: () => void;
+  onBlur?: () => void;
 } & ({ type?: never; rows: number } | { type?: string; rows?: never })) {
   const beforeInputRef = useRef<HTMLElement>(null);
 
@@ -74,6 +76,7 @@ export default function TextField({
         {...register(name)}
         className={`w-full rounded-md border px-3 py-2.5 shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
         onInput={onInput}
+        onBlur={onBlur}
       />
       {error?.message && (
         <Typography variant="body2" className="text-[var(--myturn-accent)]">

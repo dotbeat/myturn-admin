@@ -115,6 +115,31 @@ export type CompaniesStatisticsResultType = {
   totalCount: Scalars["Int"]["output"];
 };
 
+export type CompanyAcceptTicketType = {
+  __typename?: "CompanyAcceptTicketType";
+  amount: Scalars["Int"]["output"];
+  companyId: Scalars["Int"]["output"];
+  companyName: Scalars["String"]["output"];
+  count: Scalars["Int"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  expiredAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  usedCount: Scalars["Int"]["output"];
+};
+
+export type CompanyAcceptTicketsResultType = {
+  __typename?: "CompanyAcceptTicketsResultType";
+  hasNextPage: Scalars["Boolean"]["output"];
+  hasPreviousPage: Scalars["Boolean"]["output"];
+  items: Array<CompanyAcceptTicketType>;
+  limit: Scalars["Int"]["output"];
+  page: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  totalPages: Scalars["Int"]["output"];
+};
+
 export type CompanyIdInfoType = {
   __typename?: "CompanyIdInfoType";
   email: Scalars["String"]["output"];
@@ -142,7 +167,8 @@ export type CompanyInvoiceType = {
   createdAt: Scalars["DateTime"]["output"];
   entryId: Scalars["Int"]["output"];
   id: Scalars["Int"]["output"];
-  paymentLimitDate: Scalars["DateTime"]["output"];
+  isDeposit: Scalars["Boolean"]["output"];
+  paymentLimitDate?: Maybe<Scalars["DateTime"]["output"]>;
   service: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   userId: Scalars["Int"]["output"];
@@ -245,6 +271,7 @@ export type CompanyType = {
   isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isInitialScoutedMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
   isOfficial: Scalars["Boolean"]["output"];
+  isSuspension: Scalars["Boolean"]["output"];
   jobCount?: Maybe<Scalars["Int"]["output"]>;
   jobType?: Maybe<Scalars["String"]["output"]>;
   members?: Maybe<Array<CompanyMemberType>>;
@@ -280,6 +307,13 @@ export type CompanyWithJobsType = {
   company: CompanyType;
   jobs: Array<JobType>;
   members: Array<CompanyMemberType>;
+};
+
+export type CreateCompanyAcceptTicketInput = {
+  amount: Scalars["Int"]["input"];
+  companyId: Scalars["Int"]["input"];
+  count: Scalars["Int"]["input"];
+  expiredAt: Scalars["DateTime"]["input"];
 };
 
 export type CreateCompanyInput = {
@@ -407,6 +441,10 @@ export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   lineAccountId: Scalars["String"]["input"];
+};
+
+export type DeleteCompanyAcceptTicketInput = {
+  id: Scalars["Int"]["input"];
 };
 
 export type DeleteMessageTemplateInput = {
@@ -659,6 +697,14 @@ export type GetCompaniesInput = {
 export type GetCompaniesStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+};
+
+export type GetCompanyAcceptTicketsInput = {
+  companyId?: InputMaybe<Scalars["Int"]["input"]>;
+  expiredAtEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
+  expiredAtStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type GetCompanyInvoicesInput = {
@@ -1071,6 +1117,13 @@ export type LoginInput = {
   password: Scalars["String"]["input"];
 };
 
+export type LoginOrCreateWithLineResponse = {
+  __typename?: "LoginOrCreateWithLineResponse";
+  accessToken: Scalars["String"]["output"];
+  isCreated: Scalars["Boolean"]["output"];
+  user: UserType;
+};
+
 export type LoginResponse = {
   __typename?: "LoginResponse";
   accessToken: Scalars["String"]["output"];
@@ -1115,6 +1168,41 @@ export type MarkMessageAsReadInput = {
 
 export type MarkNotificationAsReadInput = {
   notificationId: Scalars["Int"]["input"];
+};
+
+export type MeUserType = {
+  __typename?: "MeUserType";
+  availableDaysPerWeek?: Maybe<Scalars["Int"]["output"]>;
+  availableDurationMonths?: Maybe<Scalars["Int"]["output"]>;
+  availableHoursPerWeek?: Maybe<Scalars["Int"]["output"]>;
+  avatarUrl?: Maybe<Scalars["String"]["output"]>;
+  birthDate?: Maybe<Scalars["DateTime"]["output"]>;
+  createdAt: Scalars["DateTime"]["output"];
+  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  department?: Maybe<Scalars["String"]["output"]>;
+  email: Scalars["String"]["output"];
+  faculty?: Maybe<Scalars["String"]["output"]>;
+  firstName?: Maybe<Scalars["String"]["output"]>;
+  futureGoals?: Maybe<Scalars["String"]["output"]>;
+  gender?: Maybe<Scalars["String"]["output"]>;
+  grade?: Maybe<Scalars["String"]["output"]>;
+  graduationYear?: Maybe<Scalars["Int"]["output"]>;
+  id: Scalars["Int"]["output"];
+  interestedIndustries: Array<Scalars["String"]["output"]>;
+  interestedJobTypes: Array<Scalars["String"]["output"]>;
+  isAllowScout: Scalars["Boolean"]["output"];
+  lastLoggedInAt: Scalars["DateTime"]["output"];
+  lastName?: Maybe<Scalars["String"]["output"]>;
+  lineAccountId?: Maybe<Scalars["String"]["output"]>;
+  lineNotification: Scalars["Boolean"]["output"];
+  magazineNotification: Scalars["Boolean"]["output"];
+  messageNotification: Scalars["Boolean"]["output"];
+  offeredEntryCount: Scalars["Int"]["output"];
+  phoneNumber?: Maybe<Scalars["String"]["output"]>;
+  prefecture?: Maybe<Scalars["String"]["output"]>;
+  selfPR?: Maybe<Scalars["String"]["output"]>;
+  university?: Maybe<Scalars["String"]["output"]>;
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type Message = {
@@ -1172,6 +1260,7 @@ export type Mutation = {
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   createCompany: CompanyType;
+  createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
@@ -1181,13 +1270,14 @@ export type Mutation = {
   createUser: UserType;
   createUserAcceptReport: UserAcceptReportType;
   deleteCompany: Scalars["Boolean"]["output"];
+  deleteCompanyAcceptTicket: CompanyAcceptTicketType;
   deleteJob: JobType;
   deleteMessageTemplate: Scalars["Boolean"]["output"];
   deleteUserAccount: Scalars["Boolean"]["output"];
   dispatchScheduledLineNotifications: DispatchResult;
   duplicateJob: JobType;
   login: LoginResponse;
-  loginOrCreateWithLine: LoginResponse;
+  loginOrCreateWithLine: LoginOrCreateWithLineResponse;
   logout: LogoutResponse;
   markAllNotificationsAsRead: Scalars["Boolean"]["output"];
   markEntryAsChecked: Array<Entry>;
@@ -1203,6 +1293,7 @@ export type Mutation = {
   sendJobOffer: Entry;
   sendMessage: Message;
   updateCompany: CompanyType;
+  updateCompanyAcceptTicket: CompanyAcceptTicketType;
   updateEntriesStatus: Array<Entry>;
   updateEntryApplicantNote: Entry;
   updateEntryStatus: Entry;
@@ -1247,6 +1338,10 @@ export type MutationCreateCompanyArgs = {
   input: CreateCompanyInput;
 };
 
+export type MutationCreateCompanyAcceptTicketArgs = {
+  input: CreateCompanyAcceptTicketInput;
+};
+
 export type MutationCreateCompanyInvoicesArgs = {
   entryIds: Array<Scalars["Int"]["input"]>;
 };
@@ -1274,6 +1369,10 @@ export type MutationCreateUserArgs = {
 export type MutationCreateUserAcceptReportArgs = {
   id: Scalars["Int"]["input"];
   input: CreateUserAcceptReportInput;
+};
+
+export type MutationDeleteCompanyAcceptTicketArgs = {
+  input: DeleteCompanyAcceptTicketInput;
 };
 
 export type MutationDeleteJobArgs = {
@@ -1350,6 +1449,10 @@ export type MutationSendMessageArgs = {
 
 export type MutationUpdateCompanyArgs = {
   input: UpdateCompanyInput;
+};
+
+export type MutationUpdateCompanyAcceptTicketArgs = {
+  input: UpdateCompanyAcceptTicketInput;
 };
 
 export type MutationUpdateEntriesStatusArgs = {
@@ -1493,7 +1596,7 @@ export type Query = {
   companies: Array<CompanyType>;
   company?: Maybe<CompanyWithJobsType>;
   companyIds: Array<Scalars["Int"]["output"]>;
-  companyMe: CompanyType;
+  companyMe?: Maybe<CompanyType>;
   /** 企業のスカウトチケット情報 */
   companyScoutTicket: ScoutTicketType;
   getAdminMessages: AdminMessagesResult;
@@ -1501,6 +1604,7 @@ export type Query = {
   getAllUserIds: Array<UserType>;
   getCompanies: CompanySearchResultType;
   getCompaniesStatistics: CompaniesStatisticsResultType;
+  getCompanyAcceptTickets: CompanyAcceptTicketsResultType;
   getCompanyEntries: Array<EntryWithLastMessage>;
   getCompanyInvoices: CompanyInvoicesResultType;
   getCompanyInvoicesStatistics: CompanyInvoicesStatisticsResultType;
@@ -1541,7 +1645,7 @@ export type Query = {
   jobsByCompanyIdWithStats: Array<JobWithStatsType>;
   lineNotificationUserSettings: Array<LineNotificationUserSettingType>;
   magazines: Array<MagazineType>;
-  me: UserType;
+  me: MeUserType;
   messageTemplates: Array<MessageTemplateType>;
   /** 受信したスカウト一覧 */
   receivedScouts: Array<ScoutWithEntryIds>;
@@ -1579,6 +1683,10 @@ export type QueryGetCompaniesArgs = {
 
 export type QueryGetCompaniesStatisticsArgs = {
   input: GetCompaniesStatisticsInput;
+};
+
+export type QueryGetCompanyAcceptTicketsArgs = {
+  input: GetCompanyAcceptTicketsInput;
 };
 
 export type QueryGetCompanyInvoicesArgs = {
@@ -2153,6 +2261,13 @@ export type UnreadMessageInfo = {
   isRead: Scalars["Boolean"]["output"];
 };
 
+export type UpdateCompanyAcceptTicketInput = {
+  amount?: InputMaybe<Scalars["Int"]["input"]>;
+  count?: InputMaybe<Scalars["Int"]["input"]>;
+  expiredAt?: InputMaybe<Scalars["DateTime"]["input"]>;
+  id: Scalars["Int"]["input"];
+};
+
 export type UpdateCompanyInput = {
   about?: InputMaybe<Scalars["String"]["input"]>;
   businessContent?: InputMaybe<Scalars["String"]["input"]>;
@@ -2467,6 +2582,7 @@ export type UserWithCountType = {
   department: Scalars["String"]["output"];
   email: Scalars["String"]["output"];
   entryCount: Scalars["Int"]["output"];
+  /** 指定企業への非スカウト応募数を取得 */
   entryCountForTheCompany: Scalars["Int"]["output"];
   faculty: Scalars["String"]["output"];
   firstName: Scalars["String"]["output"];
@@ -2580,6 +2696,50 @@ export type BatchDailyMutation = {
   batchDaily: boolean;
 };
 
+export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
+  input: UpdateCompanyAcceptTicketInput;
+}>;
+
+export type UpdateCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  updateCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+    count: number;
+    expiredAt: any;
+    amount: number;
+  };
+};
+
+export type CreateCompanyAcceptTicketMutationVariables = Exact<{
+  input: CreateCompanyAcceptTicketInput;
+}>;
+
+export type CreateCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  createCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+    companyId: number;
+    count: number;
+    expiredAt: any;
+    amount: number;
+    createdAt: any;
+  };
+};
+
+export type DeleteCompanyAcceptTicketMutationVariables = Exact<{
+  input: DeleteCompanyAcceptTicketInput;
+}>;
+
+export type DeleteCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  deleteCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+  };
+};
+
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
@@ -2608,6 +2768,37 @@ export type GetCompaniesQuery = {
       interviewCount?: number | null;
       offerCount?: number | null;
       acceptCount?: number | null;
+    }>;
+  };
+};
+
+export type GetAllCompaniesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCompaniesQuery = {
+  __typename?: "Query";
+  companies: Array<{ __typename?: "CompanyType"; id: number; name: string }>;
+};
+
+export type GetCompanyAcceptTicketsQueryVariables = Exact<{
+  input: GetCompanyAcceptTicketsInput;
+}>;
+
+export type GetCompanyAcceptTicketsQuery = {
+  __typename?: "Query";
+  getCompanyAcceptTickets: {
+    __typename?: "CompanyAcceptTicketsResultType";
+    totalCount: number;
+    totalPages: number;
+    items: Array<{
+      __typename?: "CompanyAcceptTicketType";
+      id: number;
+      companyId: number;
+      companyName: string;
+      count: number;
+      usedCount: number;
+      expiredAt: any;
+      amount: number;
+      createdAt: any;
     }>;
   };
 };
@@ -2726,9 +2917,10 @@ export type GetCompanyInvoicesQuery = {
       companyName: string;
       entryId: number;
       userId: number;
+      isDeposit: boolean;
       applicantName: string;
       acceptDate: any;
-      paymentLimitDate: any;
+      paymentLimitDate?: any | null;
       service: string;
       amount: number;
     }>;
@@ -3273,6 +3465,167 @@ export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
   BatchDailyMutation,
   BatchDailyMutationVariables
 >;
+export const UpdateCompanyAcceptTicketDocument = gql`
+  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
+    updateCompanyAcceptTicket(input: $input) {
+      id
+      count
+      expiredAt
+      amount
+    }
+  }
+`;
+export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  UpdateCompanyAcceptTicketMutation,
+  UpdateCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useUpdateCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >(UpdateCompanyAcceptTicketDocument, options);
+}
+export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useUpdateCompanyAcceptTicketMutation
+>;
+export type UpdateCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
+export type UpdateCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >;
+export const CreateCompanyAcceptTicketDocument = gql`
+  mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
+    createCompanyAcceptTicket(input: $input) {
+      id
+      companyId
+      count
+      expiredAt
+      amount
+      createdAt
+    }
+  }
+`;
+export type CreateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  CreateCompanyAcceptTicketMutation,
+  CreateCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useCreateCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useCreateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCompanyAcceptTicketMutation, { data, loading, error }] = useCreateCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCompanyAcceptTicketMutation,
+    CreateCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCompanyAcceptTicketMutation,
+    CreateCompanyAcceptTicketMutationVariables
+  >(CreateCompanyAcceptTicketDocument, options);
+}
+export type CreateCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useCreateCompanyAcceptTicketMutation
+>;
+export type CreateCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<CreateCompanyAcceptTicketMutation>;
+export type CreateCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateCompanyAcceptTicketMutation,
+    CreateCompanyAcceptTicketMutationVariables
+  >;
+export const DeleteCompanyAcceptTicketDocument = gql`
+  mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
+    deleteCompanyAcceptTicket(input: $input) {
+      id
+    }
+  }
+`;
+export type DeleteCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  DeleteCompanyAcceptTicketMutation,
+  DeleteCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useDeleteCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useDeleteCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCompanyAcceptTicketMutation, { data, loading, error }] = useDeleteCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
+  >(DeleteCompanyAcceptTicketDocument, options);
+}
+export type DeleteCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useDeleteCompanyAcceptTicketMutation
+>;
+export type DeleteCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<DeleteCompanyAcceptTicketMutation>;
+export type DeleteCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    DeleteCompanyAcceptTicketMutation,
+    DeleteCompanyAcceptTicketMutationVariables
+  >;
 export const GetCompaniesDocument = gql`
   query getCompanies($input: GetCompaniesInput!) {
     getCompanies(input: $input) {
@@ -3373,6 +3726,177 @@ export type GetCompaniesSuspenseQueryHookResult = ReturnType<
 export type GetCompaniesQueryResult = Apollo.QueryResult<
   GetCompaniesQuery,
   GetCompaniesQueryVariables
+>;
+export const GetAllCompaniesDocument = gql`
+  query GetAllCompanies {
+    companies {
+      id
+      name
+    }
+  }
+`;
+
+/**
+ * __useGetAllCompaniesQuery__
+ *
+ * To run a query within a React component, call `useGetAllCompaniesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCompaniesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCompaniesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllCompaniesQuery,
+    GetAllCompaniesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllCompaniesQuery, GetAllCompaniesQueryVariables>(
+    GetAllCompaniesDocument,
+    options,
+  );
+}
+export function useGetAllCompaniesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllCompaniesQuery,
+    GetAllCompaniesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAllCompaniesQuery,
+    GetAllCompaniesQueryVariables
+  >(GetAllCompaniesDocument, options);
+}
+export function useGetAllCompaniesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAllCompaniesQuery,
+        GetAllCompaniesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAllCompaniesQuery,
+    GetAllCompaniesQueryVariables
+  >(GetAllCompaniesDocument, options);
+}
+export type GetAllCompaniesQueryHookResult = ReturnType<
+  typeof useGetAllCompaniesQuery
+>;
+export type GetAllCompaniesLazyQueryHookResult = ReturnType<
+  typeof useGetAllCompaniesLazyQuery
+>;
+export type GetAllCompaniesSuspenseQueryHookResult = ReturnType<
+  typeof useGetAllCompaniesSuspenseQuery
+>;
+export type GetAllCompaniesQueryResult = Apollo.QueryResult<
+  GetAllCompaniesQuery,
+  GetAllCompaniesQueryVariables
+>;
+export const GetCompanyAcceptTicketsDocument = gql`
+  query GetCompanyAcceptTickets($input: GetCompanyAcceptTicketsInput!) {
+    getCompanyAcceptTickets(input: $input) {
+      items {
+        id
+        companyId
+        companyName
+        count
+        usedCount
+        expiredAt
+        amount
+        createdAt
+      }
+      totalCount
+      totalPages
+    }
+  }
+`;
+
+/**
+ * __useGetCompanyAcceptTicketsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyAcceptTicketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyAcceptTicketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyAcceptTicketsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyAcceptTicketsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  > &
+    (
+      | { variables: GetCompanyAcceptTicketsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export function useGetCompanyAcceptTicketsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export function useGetCompanyAcceptTicketsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyAcceptTicketsQuery,
+        GetCompanyAcceptTicketsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >(GetCompanyAcceptTicketsDocument, options);
+}
+export type GetCompanyAcceptTicketsQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsQuery
+>;
+export type GetCompanyAcceptTicketsLazyQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsLazyQuery
+>;
+export type GetCompanyAcceptTicketsSuspenseQueryHookResult = ReturnType<
+  typeof useGetCompanyAcceptTicketsSuspenseQuery
+>;
+export type GetCompanyAcceptTicketsQueryResult = Apollo.QueryResult<
+  GetCompanyAcceptTicketsQuery,
+  GetCompanyAcceptTicketsQueryVariables
 >;
 export const GetCompaniesStatisticsDocument = gql`
   query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
@@ -3723,6 +4247,7 @@ export const GetCompanyInvoicesDocument = gql`
         companyName
         entryId
         userId
+        isDeposit
         applicantName
         acceptDate
         paymentLimitDate

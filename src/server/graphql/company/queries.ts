@@ -27,6 +27,34 @@ export const SEARCH_COMPANY = gql`
   }
 `;
 
+export const GET_ALL_COMPANIES = gql`
+  query GetAllCompanies {
+    companies {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_COMPANY_ACCEPT_TICKETS = gql`
+  query GetCompanyAcceptTickets($input: GetCompanyAcceptTicketsInput!) {
+    getCompanyAcceptTickets(input: $input) {
+      items {
+        id
+        companyId
+        companyName
+        count
+        usedCount
+        expiredAt
+        amount
+        createdAt
+      }
+      totalCount
+      totalPages
+    }
+  }
+`;
+
 export const GET_COMPANIES_STATISTICS = gql`
   query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
     getCompaniesStatistics(input: $input) {
