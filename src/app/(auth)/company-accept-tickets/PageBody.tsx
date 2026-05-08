@@ -25,7 +25,6 @@ import {
   TextField as MuiTextField,
   Typography,
 } from "@mui/material";
-import { acceptTicketUnitPrice } from "@/const/company";
 import { GetCompanyAcceptTicketsQuery } from "@/graphql-client";
 import {
   CreateTicketFormData,
@@ -285,10 +284,6 @@ export default function PageBody() {
               label="採用デポジット追加数"
               type="number"
               className="w-36"
-              onBlur={() => {
-                const count = Number(ticketMethods.getValues("count"));
-                ticketMethods.setValue("amount", count * acceptTicketUnitPrice);
-              }}
             />
             <TextField
               name="amount"
