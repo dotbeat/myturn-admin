@@ -1,12 +1,10 @@
 import { gql } from "@apollo/client";
 
-export const UPDATE_COMPANY_ACCEPT_TICKET = gql`
-  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
-    updateCompanyAcceptTicket(input: $input) {
+export const UPDATE_COMPANY_AGENT_PLAN_AMOUNT = gql`
+  mutation UpdateCompany($input: UpdateCompanyInput!) {
+    updateCompany(input: $input) {
       id
-      count
-      expiredAt
-      amount
+      agentPlanAmount
     }
   }
 `;
@@ -20,6 +18,17 @@ export const CREATE_COMPANY_ACCEPT_TICKET = gql`
       expiredAt
       amount
       createdAt
+    }
+  }
+`;
+
+export const UPDATE_COMPANY_ACCEPT_TICKET = gql`
+  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
+    updateCompanyAcceptTicket(input: $input) {
+      id
+      count
+      expiredAt
+      amount
     }
   }
 `;

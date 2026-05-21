@@ -260,6 +260,7 @@ export type CompanyType = {
   __typename?: "CompanyType";
   about?: Maybe<Scalars["String"]["output"]>;
   acceptCount?: Maybe<Scalars["Int"]["output"]>;
+  agentPlanAmount?: Maybe<Scalars["Int"]["output"]>;
   businessContent?: Maybe<Scalars["String"]["output"]>;
   capital?: Maybe<Scalars["Int"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
@@ -362,6 +363,7 @@ export type CreateJobInput = {
   headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
+  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -492,6 +494,7 @@ export type DuplicateJobInput = {
   headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
+  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -920,6 +923,7 @@ export type JobType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -979,6 +983,7 @@ export type JobWithCompanyType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -1048,6 +1053,7 @@ export type JobWithStatsType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -1917,6 +1923,7 @@ export type SaveDraftJobInput = {
   id?: InputMaybe<Scalars["Int"]["input"]>;
   industry?: InputMaybe<Scalars["String"]["input"]>;
   internJobDescription?: InputMaybe<Scalars["String"]["input"]>;
+  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -2041,7 +2048,6 @@ export type ScoutTicketType = {
   __typename?: "ScoutTicketType";
   additionalRemainingCount: Scalars["Int"]["output"];
   additionalTickets: Array<ScoutTicketAdditionalDetailType>;
-  combinedRemainingCount: Scalars["Int"]["output"];
   companyId: Scalars["Int"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
@@ -2327,6 +2333,7 @@ export type UpdateCompanyAcceptTicketInput = {
 
 export type UpdateCompanyInput = {
   about?: InputMaybe<Scalars["String"]["input"]>;
+  agentPlanAmount?: InputMaybe<Scalars["Int"]["input"]>;
   businessContent?: InputMaybe<Scalars["String"]["input"]>;
   capital?: InputMaybe<Scalars["Int"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
@@ -2399,6 +2406,7 @@ export type UpdateJobInput = {
   id: Scalars["Int"]["input"];
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
+  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -2694,18 +2702,16 @@ export type BatchDailyMutation = {
   batchDaily: boolean;
 };
 
-export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
-  input: UpdateCompanyAcceptTicketInput;
+export type UpdateCompanyMutationVariables = Exact<{
+  input: UpdateCompanyInput;
 }>;
 
-export type UpdateCompanyAcceptTicketMutation = {
+export type UpdateCompanyMutation = {
   __typename?: "Mutation";
-  updateCompanyAcceptTicket: {
-    __typename?: "CompanyAcceptTicketType";
+  updateCompany: {
+    __typename?: "CompanyType";
     id: number;
-    count: number;
-    expiredAt: any;
-    amount: number;
+    agentPlanAmount?: number | null;
   };
 };
 
@@ -2723,6 +2729,21 @@ export type CreateCompanyAcceptTicketMutation = {
     expiredAt: any;
     amount: number;
     createdAt: any;
+  };
+};
+
+export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
+  input: UpdateCompanyAcceptTicketInput;
+}>;
+
+export type UpdateCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  updateCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+    count: number;
+    expiredAt: any;
+    amount: number;
   };
 };
 
@@ -3317,60 +3338,57 @@ export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
   BatchDailyMutation,
   BatchDailyMutationVariables
 >;
-export const UpdateCompanyAcceptTicketDocument = gql`
-  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
-    updateCompanyAcceptTicket(input: $input) {
+export const UpdateCompanyDocument = gql`
+  mutation UpdateCompany($input: UpdateCompanyInput!) {
+    updateCompany(input: $input) {
       id
-      count
-      expiredAt
-      amount
+      agentPlanAmount
     }
   }
 `;
-export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
-  UpdateCompanyAcceptTicketMutation,
-  UpdateCompanyAcceptTicketMutationVariables
+export type UpdateCompanyMutationFn = Apollo.MutationFunction<
+  UpdateCompanyMutation,
+  UpdateCompanyMutationVariables
 >;
 
 /**
- * __useUpdateCompanyAcceptTicketMutation__
+ * __useUpdateCompanyMutation__
  *
- * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ * const [updateCompanyMutation, { data, loading, error }] = useUpdateCompanyMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateCompanyAcceptTicketMutation(
+export function useUpdateCompanyMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
+    UpdateCompanyMutation,
+    UpdateCompanyMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >(UpdateCompanyAcceptTicketDocument, options);
+    UpdateCompanyMutation,
+    UpdateCompanyMutationVariables
+  >(UpdateCompanyDocument, options);
 }
-export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
-  typeof useUpdateCompanyAcceptTicketMutation
+export type UpdateCompanyMutationHookResult = ReturnType<
+  typeof useUpdateCompanyMutation
 >;
-export type UpdateCompanyAcceptTicketMutationResult =
-  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
-export type UpdateCompanyAcceptTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >;
+export type UpdateCompanyMutationResult =
+  Apollo.MutationResult<UpdateCompanyMutation>;
+export type UpdateCompanyMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCompanyMutation,
+  UpdateCompanyMutationVariables
+>;
 export const CreateCompanyAcceptTicketDocument = gql`
   mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
     createCompanyAcceptTicket(input: $input) {
@@ -3426,6 +3444,60 @@ export type CreateCompanyAcceptTicketMutationOptions =
   Apollo.BaseMutationOptions<
     CreateCompanyAcceptTicketMutation,
     CreateCompanyAcceptTicketMutationVariables
+  >;
+export const UpdateCompanyAcceptTicketDocument = gql`
+  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
+    updateCompanyAcceptTicket(input: $input) {
+      id
+      count
+      expiredAt
+      amount
+    }
+  }
+`;
+export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  UpdateCompanyAcceptTicketMutation,
+  UpdateCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useUpdateCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >(UpdateCompanyAcceptTicketDocument, options);
+}
+export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useUpdateCompanyAcceptTicketMutation
+>;
+export type UpdateCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
+export type UpdateCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
   >;
 export const DeleteCompanyAcceptTicketDocument = gql`
   mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
