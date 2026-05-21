@@ -68,8 +68,8 @@ export default function CompanyList({
     offerRate: `${item.entryCount ? ((item.offerCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     acceptRate: `${item.entryCount ? ((item.acceptCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     agentPlanAmount: (
-      <Box className="flex items-center justify-center gap-4">
-        <Typography className="min-w-20 text-end">
+      <Box className="flex items-center justify-center gap-2">
+        <Typography className="min-w-20 text-start">
           {(item.agentPlanAmount ?? 250000).toLocaleString()}円
         </Typography>
         <Button

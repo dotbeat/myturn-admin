@@ -1322,6 +1322,7 @@ export type Mutation = {
   updateHotJobs: HotJobType;
   updateInterviewSchedule: Entry;
   updateJob: JobType;
+  updateJobIsAgentPlanOnly: JobType;
   updateJobOfferAcceptance: Entry;
   updateJobPv: JobType;
   updateJobStatus: JobType;
@@ -1503,6 +1504,10 @@ export type MutationUpdateInterviewScheduleArgs = {
 
 export type MutationUpdateJobArgs = {
   input: UpdateJobInput;
+};
+
+export type MutationUpdateJobIsAgentPlanOnlyArgs = {
+  input: UpdateJobIsAgentPlanOnlyInput;
 };
 
 export type MutationUpdateJobOfferAcceptanceArgs = {
@@ -2437,6 +2442,11 @@ export type UpdateJobInput = {
   workingHoursStart: Scalars["String"]["input"];
 };
 
+export type UpdateJobIsAgentPlanOnlyInput = {
+  id: Scalars["Int"]["input"];
+  isAgentPlanOnly: Scalars["Boolean"]["input"];
+};
+
 export type UpdateJobOfferAcceptanceInput = {
   entryId: Scalars["Int"]["input"];
   isAccepted: Scalars["Boolean"]["input"];
@@ -2787,6 +2797,7 @@ export type GetCompaniesQuery = {
       interviewCount?: number | null;
       offerCount?: number | null;
       acceptCount?: number | null;
+      agentPlanAmount?: number | null;
     }>;
   };
 };
@@ -2961,6 +2972,19 @@ export type GetCompanyInvoicesStatisticsQuery = {
   };
 };
 
+export type UpdateJobIsAgentPlanOnlyMutationVariables = Exact<{
+  input: UpdateJobIsAgentPlanOnlyInput;
+}>;
+
+export type UpdateJobIsAgentPlanOnlyMutation = {
+  __typename?: "Mutation";
+  updateJobIsAgentPlanOnly: {
+    __typename?: "JobType";
+    id: number;
+    isAgentPlanOnly: boolean;
+  };
+};
+
 export type SearchJobsWithStatsQueryVariables = Exact<{
   input: SearchJobsWithStatsInput;
 }>;
@@ -2980,6 +3004,7 @@ export type SearchJobsWithStatsQuery = {
       id: number;
       title: string;
       status: string;
+      isAgentPlanOnly: boolean;
       openedAt?: any | null;
       pv: number;
       jobHeader: string;
@@ -3566,6 +3591,7 @@ export const GetCompaniesDocument = gql`
         interviewCount
         offerCount
         acceptCount
+        agentPlanAmount
       }
       limit
       page
@@ -4517,6 +4543,58 @@ export type GetCompanyInvoicesStatisticsQueryResult = Apollo.QueryResult<
   GetCompanyInvoicesStatisticsQuery,
   GetCompanyInvoicesStatisticsQueryVariables
 >;
+export const UpdateJobIsAgentPlanOnlyDocument = gql`
+  mutation UpdateJobIsAgentPlanOnly($input: UpdateJobIsAgentPlanOnlyInput!) {
+    updateJobIsAgentPlanOnly(input: $input) {
+      id
+      isAgentPlanOnly
+    }
+  }
+`;
+export type UpdateJobIsAgentPlanOnlyMutationFn = Apollo.MutationFunction<
+  UpdateJobIsAgentPlanOnlyMutation,
+  UpdateJobIsAgentPlanOnlyMutationVariables
+>;
+
+/**
+ * __useUpdateJobIsAgentPlanOnlyMutation__
+ *
+ * To run a mutation, you first call `useUpdateJobIsAgentPlanOnlyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJobIsAgentPlanOnlyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateJobIsAgentPlanOnlyMutation, { data, loading, error }] = useUpdateJobIsAgentPlanOnlyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateJobIsAgentPlanOnlyMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >(UpdateJobIsAgentPlanOnlyDocument, options);
+}
+export type UpdateJobIsAgentPlanOnlyMutationHookResult = ReturnType<
+  typeof useUpdateJobIsAgentPlanOnlyMutation
+>;
+export type UpdateJobIsAgentPlanOnlyMutationResult =
+  Apollo.MutationResult<UpdateJobIsAgentPlanOnlyMutation>;
+export type UpdateJobIsAgentPlanOnlyMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >;
 export const SearchJobsWithStatsDocument = gql`
   query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
     searchJobsWithStats(input: $input) {
@@ -4524,6 +4602,7 @@ export const SearchJobsWithStatsDocument = gql`
         id
         title
         status
+        isAgentPlanOnly
         openedAt
         pv
         jobHeader

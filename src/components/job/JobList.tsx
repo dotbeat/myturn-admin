@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { industries, jobTypes } from "@/const/job";
 import { JobItem } from "@/types/job";
 import { jobOfferStatusIndex } from "@/utils/shared/job";
@@ -9,10 +9,12 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 export default function JobList({
   items,
   isLoading,
+  onEditAgentPlanOnly,
   className = "",
 }: {
   items: JobItem[];
   isLoading: boolean;
+  onEditAgentPlanOnly: (item: JobItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -27,6 +29,7 @@ export default function JobList({
     { property: "favoriteCount", label: "❤️" },
     { property: "entryCount", label: "応募" },
     { property: "acceptCount", label: "採用" },
+    { property: "agentPlanOnly", label: "エージェントプラン専用" },
   ] as const satisfies TableColumn<(keyof JobItem)[number]>[];
 
   const before3years = new Date();
@@ -86,6 +89,19 @@ export default function JobList({
     favoriteCount: item.favoriteCount,
     entryCount: item.entryCount,
     acceptCount: item.acceptCount,
+    agentPlanOnly: (
+      <Box className="flex items-center gap-2">
+        <Typography className="min-w-12 text-start">
+          {item.isAgentPlanOnly ? "はい" : "いいえ"}
+        </Typography>
+        <Button
+          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+          onClick={() => onEditAgentPlanOnly(item)}
+        >
+          編集
+        </Button>
+      </Box>
+    ),
   }));
 
   return (
