@@ -35,9 +35,6 @@ export default function Page() {
         <Link href="/company-accept-tickets" className="underline">
           企業の採用デポジット
         </Link>
-        <Link href="/scout-tickets" className="underline">
-          追加スカウトチケット
-        </Link>
         <Link href="/magazine" className="underline">
           Magazine
         </Link>
