@@ -90,7 +90,7 @@ export default function JobList({
     entryCount: item.entryCount,
     acceptCount: item.acceptCount,
     agentPlanOnly: (
-      <Box className="flex items-center gap-2">
+      <Box className="flex items-center justify-center gap-2">
         <Typography className="min-w-12 text-start">
           {item.isAgentPlanOnly ? "はい" : "いいえ"}
         </Typography>
