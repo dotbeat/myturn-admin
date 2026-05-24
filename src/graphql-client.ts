@@ -363,7 +363,6 @@ export type CreateJobInput = {
   headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
-  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -494,7 +493,6 @@ export type DuplicateJobInput = {
   headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
-  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -1928,7 +1926,6 @@ export type SaveDraftJobInput = {
   id?: InputMaybe<Scalars["Int"]["input"]>;
   industry?: InputMaybe<Scalars["String"]["input"]>;
   internJobDescription?: InputMaybe<Scalars["String"]["input"]>;
-  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
@@ -2411,7 +2408,6 @@ export type UpdateJobInput = {
   id: Scalars["Int"]["input"];
   industry: Scalars["String"]["input"];
   internJobDescription: Scalars["String"]["input"];
-  isAgentPlanOnly?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobAtmosphereImage: Scalars["String"]["input"];
   jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
   jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
