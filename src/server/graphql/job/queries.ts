@@ -7,6 +7,7 @@ export const SEARCH_JOB = gql`
         id
         title
         status
+        isAgentPlanOnly
         openedAt
         pv
         jobHeader

@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { industries } from "@/const/job";
 import { CompanyItem } from "@/types/company";
 import { getSelectItem } from "@/utils/shared/select";
@@ -8,10 +8,12 @@ import Table, { TableColumn, TableRow } from "@/components/common/Table";
 export default function CompanyList({
   items,
   isLoading,
+  onEditAgentPlanAmount,
   className = "",
 }: {
   items: CompanyItem[];
   isLoading: boolean;
+  onEditAgentPlanAmount: (item: CompanyItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -26,6 +28,7 @@ export default function CompanyList({
     { property: "interviewRate", label: "面談率" },
     { property: "offerRate", label: "内定率" },
     { property: "acceptRate", label: "入社決定率" },
+    { property: "agentPlanAmount", label: "エージェントプラン請求金額" },
   ] as const satisfies TableColumn<(keyof CompanyItem)[number]>[];
 
   const before3years = new Date();
@@ -64,6 +67,19 @@ export default function CompanyList({
     interviewRate: `${item.entryCount ? ((item.interviewCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     offerRate: `${item.entryCount ? ((item.offerCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     acceptRate: `${item.entryCount ? ((item.acceptCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
+    agentPlanAmount: (
+      <Box className="flex items-center justify-center gap-2">
+        <Typography className="min-w-20 text-start">
+          {(item.agentPlanAmount ?? 250000).toLocaleString()}円
+        </Typography>
+        <Button
+          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+          onClick={() => onEditAgentPlanAmount(item)}
+        >
+          編集
+        </Button>
+      </Box>
+    ),
   }));
 
   return (

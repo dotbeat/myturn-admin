@@ -3,21 +3,36 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@apollo/client";
 import {
+  Alert,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Link,
   MenuItem,
   Pagination,
   PaginationItem,
+  Snackbar,
   Typography,
 } from "@mui/material";
+import TextField from "@/components/common/form/TextField";
 import { periods } from "@/const/date";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useCompaniesStatistics } from "@/hooks/useCompaniesStatistics";
 import {
+  EditAgentPlanAmountFormData,
+  editAgentPlanAmountSchema,
+} from "@/schemas/company/edit-agent-plan-amount";
+import {
   CompanyFilterFormData,
   companyFilterFormSchema,
 } from "@/schemas/company/filter";
+import { UPDATE_COMPANY_AGENT_PLAN_AMOUNT } from "@/server/graphql/company/mutations";
+import { CompanyItem } from "@/types/company";
 import {
   convertFormDataToUrlParams,
   ConvertUrlParamEntry,
@@ -38,6 +53,55 @@ export default function PageBody() {
   const [selectedPeriod, setSelectedPeriod] = useState<string>(
     periods[0].value,
   );
+  const [editingCompany, setEditingCompany] = useState<CompanyItem | null>(
+    null,
+  );
+
+  const [toast, setToast] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+
+  const [
+    updateCompanyAgentPlanAmount,
+    { loading: isUpdatingCompanyAgentPlanAmount },
+  ] = useMutation(UPDATE_COMPANY_AGENT_PLAN_AMOUNT, {
+    onCompleted() {
+      setToast({
+        open: true,
+        message: "エージェントプラン採用金額を更新しました",
+        severity: "success",
+      });
+      setEditingCompany(null);
+    },
+    onError(error) {
+      setToast({
+        open: true,
+        message: error.message || "更新中にエラーが発生しました",
+        severity: "error",
+      });
+    },
+  });
+
+  const openAgentPlanAmountDialog = (item: CompanyItem) => {
+    agentPlanEditMethods.reset({
+      agentPlanAmount: item.agentPlanAmount ?? 250000,
+    });
+    setEditingCompany(item);
+  };
+
+  const onAgentPlanEditSubmit = (data: { agentPlanAmount: number }) => {
+    if (!editingCompany) return;
+    updateCompanyAgentPlanAmount({
+      variables: {
+        input: {
+          id: editingCompany.id,
+          agentPlanAmount: data.agentPlanAmount || 250000,
+        },
+      },
+    });
+  };
 
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
   const page = paramsConverter.toNumber("page", 1);
@@ -60,6 +124,11 @@ export default function PageBody() {
     resolver: zodResolver(companyFilterFormSchema),
     mode: "onChange", // リアルタイムバリデーション
     defaultValues: initialFormData,
+  });
+
+  const agentPlanEditMethods = useForm<EditAgentPlanAmountFormData>({
+    resolver: zodResolver(editAgentPlanAmountSchema),
+    defaultValues: { agentPlanAmount: 250000 },
   });
 
   const { companies, totalCount, totalPages, loading } = useCompanies(
@@ -147,6 +216,7 @@ export default function PageBody() {
           <CompanyList
             items={companies}
             isLoading={loading}
+            onEditAgentPlanAmount={openAgentPlanAmountDialog}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">
@@ -173,6 +243,69 @@ export default function PageBody() {
           </Box>
         </Box>
       </Box>
+
+      {/* エージェントプラン請求金額編集ダイアログ */}
+      <Dialog
+        open={editingCompany !== null}
+        onClose={() => setEditingCompany(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="pb-0 pt-6 font-semibold">
+          エージェントプラン採用金額の編集
+        </DialogTitle>
+        <FormProvider {...agentPlanEditMethods}>
+          <form
+            onSubmit={agentPlanEditMethods.handleSubmit(onAgentPlanEditSubmit)}
+          >
+            <DialogContent className="flex flex-col gap-4 pt-4">
+              {editingCompany && (
+                <Typography className="text-[var(--myturn-sub-text)]">
+                  企業名：{editingCompany.name}
+                </Typography>
+              )}
+              <TextField
+                name="agentPlanAmount"
+                label="エージェントプラン請求金額"
+                type="number"
+              />
+            </DialogContent>
+            <DialogActions className="gap-2 px-6 pb-6">
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={() => setEditingCompany(null)}
+                className="px-3 py-1"
+              >
+                キャンセル
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUpdatingCompanyAgentPlanAmount}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+              >
+                {isUpdatingCompanyAgentPlanAmount ? "保存中..." : "保存する"}
+              </Button>
+            </DialogActions>
+          </form>
+        </FormProvider>
+      </Dialog>
+
+      {/* トースト通知 */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={5000}
+        onClose={() => setToast((t) => ({ ...t, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setToast((t) => ({ ...t, open: false }))}
+          severity={toast.severity}
+          sx={{ width: "100%" }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

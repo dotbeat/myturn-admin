@@ -11,6 +11,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  { ignores: ["src/graphql-client.ts"] },
   ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
     plugins: {

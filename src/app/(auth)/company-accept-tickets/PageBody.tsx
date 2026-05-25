@@ -106,9 +106,9 @@ export default function PageBody() {
       companyName: ticket.companyName,
       count: ticket.count,
       usedCount: ticket.usedCount,
-      expiredAt: new Date(ticket.expiredAt),
+      expiredAt: new Date(ticket.expiredAt as any),
       amount: ticket.amount,
-      createdAt: new Date(ticket.createdAt),
+      createdAt: new Date(ticket.createdAt as any),
     })) ?? [];
   const ticketsTotalCount = ticketsResult?.totalCount ?? 0;
   const ticketsTotalPages = ticketsResult?.totalPages ?? 0;

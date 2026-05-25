@@ -11,6 +11,7 @@ export type JobItem = {
   openedAt: Date | null;
   deletedAt: Date | null;
   status: JobStatus;
+  isAgentPlanOnly: boolean;
   pv: number;
   favoriteCount: number;
   entryCount: number;

@@ -40,6 +40,15 @@ export type AddFavoriteInput = {
   jobId: Scalars["Int"]["input"];
 };
 
+export type AdditionalScoutTicketsResultType = {
+  __typename?: "AdditionalScoutTicketsResultType";
+  items: Array<ScoutTicketAdditionalType>;
+  limit: Scalars["Int"]["output"];
+  page: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  totalPages: Scalars["Int"]["output"];
+};
+
 export type AdminMessage = {
   __typename?: "AdminMessage";
   company?: Maybe<AdminMessageCompany>;
@@ -251,6 +260,7 @@ export type CompanyType = {
   __typename?: "CompanyType";
   about?: Maybe<Scalars["String"]["output"]>;
   acceptCount?: Maybe<Scalars["Int"]["output"]>;
+  agentPlanAmount?: Maybe<Scalars["Int"]["output"]>;
   businessContent?: Maybe<Scalars["String"]["output"]>;
   capital?: Maybe<Scalars["Int"]["output"]>;
   city?: Maybe<Scalars["String"]["output"]>;
@@ -307,6 +317,11 @@ export type CompanyWithJobsType = {
   company: CompanyType;
   jobs: Array<JobType>;
   members: Array<CompanyMemberType>;
+};
+
+export type CreateAdditionalScoutTicketInput = {
+  companyId: Scalars["Int"]["input"];
+  totalCount: Scalars["Int"]["input"];
 };
 
 export type CreateCompanyAcceptTicketInput = {
@@ -906,6 +921,7 @@ export type JobType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -965,6 +981,7 @@ export type JobWithCompanyType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -1034,6 +1051,7 @@ export type JobWithStatsType = {
   id: Scalars["Int"]["output"];
   industry: Scalars["String"]["output"];
   internJobDescription: Scalars["String"]["output"];
+  isAgentPlanOnly: Scalars["Boolean"]["output"];
   isDeleted: Scalars["Boolean"]["output"];
   jobAtmosphereImage: Scalars["String"]["output"];
   jobHeader: Scalars["String"]["output"];
@@ -1259,6 +1277,8 @@ export type Mutation = {
   batchDaily: Scalars["Boolean"]["output"];
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
+  /** スカウトチケットを追加付与（管理者用） */
+  createAdditionalScoutTicket: ScoutTicketAdditionalType;
   createCompany: CompanyType;
   createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
@@ -1300,6 +1320,7 @@ export type Mutation = {
   updateHotJobs: HotJobType;
   updateInterviewSchedule: Entry;
   updateJob: JobType;
+  updateJobIsAgentPlanOnly: JobType;
   updateJobOfferAcceptance: Entry;
   updateJobPv: JobType;
   updateJobStatus: JobType;
@@ -1332,6 +1353,10 @@ export type MutationAutoUpdateEntryStatusArgs = {
 
 export type MutationCompanyLoginArgs = {
   companyLoginInput: CompanyLoginInput;
+};
+
+export type MutationCreateAdditionalScoutTicketArgs = {
+  input: CreateAdditionalScoutTicketInput;
 };
 
 export type MutationCreateCompanyArgs = {
@@ -1479,6 +1504,10 @@ export type MutationUpdateJobArgs = {
   input: UpdateJobInput;
 };
 
+export type MutationUpdateJobIsAgentPlanOnlyArgs = {
+  input: UpdateJobIsAgentPlanOnlyInput;
+};
+
 export type MutationUpdateJobOfferAcceptanceArgs = {
   input: UpdateJobOfferAcceptanceInput;
 };
@@ -1599,6 +1628,8 @@ export type Query = {
   companyMe?: Maybe<CompanyType>;
   /** 企業のスカウトチケット情報 */
   companyScoutTicket: ScoutTicketType;
+  /** 追加スカウトチケット一覧（管理者用） */
+  getAdditionalScoutTickets: AdditionalScoutTicketsResultType;
   getAdminMessages: AdminMessagesResult;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getAllUserIds: Array<UserType>;
@@ -1671,6 +1702,10 @@ export type QueryCheckUserJobEntryArgs = {
 
 export type QueryCompanyArgs = {
   id: Scalars["Int"]["input"];
+};
+
+export type QueryGetAdditionalScoutTicketsArgs = {
+  input: SearchAdditionalScoutTicketsInput;
 };
 
 export type QueryGetAdminMessagesArgs = {
@@ -1989,8 +2024,32 @@ export type ScoutNotification = {
   userId: Scalars["Int"]["output"];
 };
 
+export type ScoutTicketAdditionalDetailType = {
+  __typename?: "ScoutTicketAdditionalDetailType";
+  expiredAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  remainingCount: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  usedCount: Scalars["Int"]["output"];
+};
+
+export type ScoutTicketAdditionalType = {
+  __typename?: "ScoutTicketAdditionalType";
+  companyId: Scalars["Int"]["output"];
+  companyName: Scalars["String"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  expiredAt: Scalars["DateTime"]["output"];
+  id: Scalars["Int"]["output"];
+  remainingCount: Scalars["Int"]["output"];
+  totalCount: Scalars["Int"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  usedCount: Scalars["Int"]["output"];
+};
+
 export type ScoutTicketType = {
   __typename?: "ScoutTicketType";
+  additionalRemainingCount: Scalars["Int"]["output"];
+  additionalTickets: Array<ScoutTicketAdditionalDetailType>;
   companyId: Scalars["Int"]["output"];
   createdAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
@@ -2034,6 +2093,12 @@ export type ScoutsStatisticsType = {
   __typename?: "ScoutsStatisticsType";
   acceptedCount: Scalars["Int"]["output"];
   totalScoutCount: Scalars["Int"]["output"];
+};
+
+export type SearchAdditionalScoutTicketsInput = {
+  companyName?: InputMaybe<Scalars["String"]["input"]>;
+  limit: Scalars["Int"]["input"];
+  page: Scalars["Int"]["input"];
 };
 
 export type SearchEntriesInput = {
@@ -2270,6 +2335,7 @@ export type UpdateCompanyAcceptTicketInput = {
 
 export type UpdateCompanyInput = {
   about?: InputMaybe<Scalars["String"]["input"]>;
+  agentPlanAmount?: InputMaybe<Scalars["Int"]["input"]>;
   businessContent?: InputMaybe<Scalars["String"]["input"]>;
   capital?: InputMaybe<Scalars["Int"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
@@ -2370,6 +2436,11 @@ export type UpdateJobInput = {
   workConditions: Array<Scalars["String"]["input"]>;
   workingHoursEnd: Scalars["String"]["input"];
   workingHoursStart: Scalars["String"]["input"];
+};
+
+export type UpdateJobIsAgentPlanOnlyInput = {
+  id: Scalars["Int"]["input"];
+  isAgentPlanOnly: Scalars["Boolean"]["input"];
 };
 
 export type UpdateJobOfferAcceptanceInput = {
@@ -2630,65 +2701,6 @@ export type VerifyPasswordResetTokenResponse = {
   isValid: Scalars["Boolean"]["output"];
 };
 
-export type GetScoutsForAdminQueryVariables = Exact<{
-  filter?: InputMaybe<ScoutFilterInput>;
-  page?: InputMaybe<Scalars["Float"]["input"]>;
-  limit?: InputMaybe<Scalars["Float"]["input"]>;
-}>;
-
-export type GetScoutsForAdminQuery = {
-  __typename?: "Query";
-  scoutsForAdmin: {
-    __typename?: "ScoutsForAdminResultType";
-    totalCount: number;
-    totalPages: number;
-    scouts: Array<{
-      __typename?: "ScoutForAdminType";
-      id: number;
-      userId: number;
-      companyId: number;
-      jobId?: number | null;
-      title: string;
-      content: string;
-      status: string;
-      acceptedAt?: any | null;
-      createdAt: any;
-      updatedAt: any;
-      user?: {
-        __typename?: "ScoutUserType";
-        id: number;
-        name: string;
-        avatarUrl?: string | null;
-      } | null;
-      company?: {
-        __typename?: "ScoutCompanyType";
-        id: number;
-        name: string;
-        industry?: string | null;
-      } | null;
-      job?: {
-        __typename?: "ScoutJobType";
-        id: number;
-        title: string;
-        jobType?: string | null;
-      } | null;
-    }>;
-  };
-};
-
-export type GetScoutsStatisticsQueryVariables = Exact<{
-  period?: InputMaybe<Scalars["String"]["input"]>;
-}>;
-
-export type GetScoutsStatisticsQuery = {
-  __typename?: "Query";
-  scoutsStatistics: {
-    __typename?: "ScoutsStatisticsType";
-    totalScoutCount: number;
-    acceptedCount: number;
-  };
-};
-
 export type BatchDailyMutationVariables = Exact<{ [key: string]: never }>;
 
 export type BatchDailyMutation = {
@@ -2696,18 +2708,16 @@ export type BatchDailyMutation = {
   batchDaily: boolean;
 };
 
-export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
-  input: UpdateCompanyAcceptTicketInput;
+export type UpdateCompanyMutationVariables = Exact<{
+  input: UpdateCompanyInput;
 }>;
 
-export type UpdateCompanyAcceptTicketMutation = {
+export type UpdateCompanyMutation = {
   __typename?: "Mutation";
-  updateCompanyAcceptTicket: {
-    __typename?: "CompanyAcceptTicketType";
+  updateCompany: {
+    __typename?: "CompanyType";
     id: number;
-    count: number;
-    expiredAt: any;
-    amount: number;
+    agentPlanAmount?: number | null;
   };
 };
 
@@ -2725,6 +2735,21 @@ export type CreateCompanyAcceptTicketMutation = {
     expiredAt: any;
     amount: number;
     createdAt: any;
+  };
+};
+
+export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
+  input: UpdateCompanyAcceptTicketInput;
+}>;
+
+export type UpdateCompanyAcceptTicketMutation = {
+  __typename?: "Mutation";
+  updateCompanyAcceptTicket: {
+    __typename?: "CompanyAcceptTicketType";
+    id: number;
+    count: number;
+    expiredAt: any;
+    amount: number;
   };
 };
 
@@ -2768,6 +2793,7 @@ export type GetCompaniesQuery = {
       interviewCount?: number | null;
       offerCount?: number | null;
       acceptCount?: number | null;
+      agentPlanAmount?: number | null;
     }>;
   };
 };
@@ -2942,6 +2968,19 @@ export type GetCompanyInvoicesStatisticsQuery = {
   };
 };
 
+export type UpdateJobIsAgentPlanOnlyMutationVariables = Exact<{
+  input: UpdateJobIsAgentPlanOnlyInput;
+}>;
+
+export type UpdateJobIsAgentPlanOnlyMutation = {
+  __typename?: "Mutation";
+  updateJobIsAgentPlanOnly: {
+    __typename?: "JobType";
+    id: number;
+    isAgentPlanOnly: boolean;
+  };
+};
+
 export type SearchJobsWithStatsQueryVariables = Exact<{
   input: SearchJobsWithStatsInput;
 }>;
@@ -2961,6 +3000,7 @@ export type SearchJobsWithStatsQuery = {
       id: number;
       title: string;
       status: string;
+      isAgentPlanOnly: boolean;
       openedAt?: any | null;
       pv: number;
       jobHeader: string;
@@ -3145,6 +3185,51 @@ export type UpdatePickJobsMutation = {
   updatePickJobs: { __typename: "PickJobType" };
 };
 
+export type CreateAdditionalScoutTicketMutationVariables = Exact<{
+  input: CreateAdditionalScoutTicketInput;
+}>;
+
+export type CreateAdditionalScoutTicketMutation = {
+  __typename?: "Mutation";
+  createAdditionalScoutTicket: {
+    __typename?: "ScoutTicketAdditionalType";
+    id: number;
+    companyId: number;
+    companyName: string;
+    totalCount: number;
+    usedCount: number;
+    remainingCount: number;
+    expiredAt: any;
+    createdAt: any;
+  };
+};
+
+export type GetAdditionalScoutTicketsQueryVariables = Exact<{
+  input: SearchAdditionalScoutTicketsInput;
+}>;
+
+export type GetAdditionalScoutTicketsQuery = {
+  __typename?: "Query";
+  getAdditionalScoutTickets: {
+    __typename?: "AdditionalScoutTicketsResultType";
+    totalCount: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+    items: Array<{
+      __typename?: "ScoutTicketAdditionalType";
+      id: number;
+      companyId: number;
+      companyName: string;
+      totalCount: number;
+      usedCount: number;
+      remainingCount: number;
+      expiredAt: any;
+      createdAt: any;
+    }>;
+  };
+};
+
 export type SearchUsersQueryVariables = Exact<{
   input: SearchUsersInput;
 }>;
@@ -3227,197 +3312,6 @@ export type GetUserQuery = {
   } | null;
 };
 
-export const GetScoutsForAdminDocument = gql`
-  query GetScoutsForAdmin(
-    $filter: ScoutFilterInput
-    $page: Float
-    $limit: Float
-  ) {
-    scoutsForAdmin(filter: $filter, page: $page, limit: $limit) {
-      scouts {
-        id
-        userId
-        user {
-          id
-          name
-          avatarUrl
-        }
-        companyId
-        company {
-          id
-          name
-          industry
-        }
-        jobId
-        job {
-          id
-          title
-          jobType
-        }
-        title
-        content
-        status
-        acceptedAt
-        createdAt
-        updatedAt
-      }
-      totalCount
-      totalPages
-    }
-  }
-`;
-
-/**
- * __useGetScoutsForAdminQuery__
- *
- * To run a query within a React component, call `useGetScoutsForAdminQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScoutsForAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetScoutsForAdminQuery({
- *   variables: {
- *      filter: // value for 'filter'
- *      page: // value for 'page'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useGetScoutsForAdminQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetScoutsForAdminQuery,
-    GetScoutsForAdminQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetScoutsForAdminQuery,
-    GetScoutsForAdminQueryVariables
-  >(GetScoutsForAdminDocument, options);
-}
-export function useGetScoutsForAdminLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetScoutsForAdminQuery,
-    GetScoutsForAdminQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetScoutsForAdminQuery,
-    GetScoutsForAdminQueryVariables
-  >(GetScoutsForAdminDocument, options);
-}
-export function useGetScoutsForAdminSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetScoutsForAdminQuery,
-        GetScoutsForAdminQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetScoutsForAdminQuery,
-    GetScoutsForAdminQueryVariables
-  >(GetScoutsForAdminDocument, options);
-}
-export type GetScoutsForAdminQueryHookResult = ReturnType<
-  typeof useGetScoutsForAdminQuery
->;
-export type GetScoutsForAdminLazyQueryHookResult = ReturnType<
-  typeof useGetScoutsForAdminLazyQuery
->;
-export type GetScoutsForAdminSuspenseQueryHookResult = ReturnType<
-  typeof useGetScoutsForAdminSuspenseQuery
->;
-export type GetScoutsForAdminQueryResult = Apollo.QueryResult<
-  GetScoutsForAdminQuery,
-  GetScoutsForAdminQueryVariables
->;
-export const GetScoutsStatisticsDocument = gql`
-  query GetScoutsStatistics($period: String) {
-    scoutsStatistics(period: $period) {
-      totalScoutCount
-      acceptedCount
-    }
-  }
-`;
-
-/**
- * __useGetScoutsStatisticsQuery__
- *
- * To run a query within a React component, call `useGetScoutsStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScoutsStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetScoutsStatisticsQuery({
- *   variables: {
- *      period: // value for 'period'
- *   },
- * });
- */
-export function useGetScoutsStatisticsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetScoutsStatisticsQuery,
-    GetScoutsStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetScoutsStatisticsQuery,
-    GetScoutsStatisticsQueryVariables
-  >(GetScoutsStatisticsDocument, options);
-}
-export function useGetScoutsStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetScoutsStatisticsQuery,
-    GetScoutsStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetScoutsStatisticsQuery,
-    GetScoutsStatisticsQueryVariables
-  >(GetScoutsStatisticsDocument, options);
-}
-export function useGetScoutsStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetScoutsStatisticsQuery,
-        GetScoutsStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetScoutsStatisticsQuery,
-    GetScoutsStatisticsQueryVariables
-  >(GetScoutsStatisticsDocument, options);
-}
-export type GetScoutsStatisticsQueryHookResult = ReturnType<
-  typeof useGetScoutsStatisticsQuery
->;
-export type GetScoutsStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetScoutsStatisticsLazyQuery
->;
-export type GetScoutsStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetScoutsStatisticsSuspenseQuery
->;
-export type GetScoutsStatisticsQueryResult = Apollo.QueryResult<
-  GetScoutsStatisticsQuery,
-  GetScoutsStatisticsQueryVariables
->;
 export const BatchDailyDocument = gql`
   mutation BatchDaily {
     batchDaily
@@ -3465,60 +3359,57 @@ export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
   BatchDailyMutation,
   BatchDailyMutationVariables
 >;
-export const UpdateCompanyAcceptTicketDocument = gql`
-  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
-    updateCompanyAcceptTicket(input: $input) {
+export const UpdateCompanyDocument = gql`
+  mutation UpdateCompany($input: UpdateCompanyInput!) {
+    updateCompany(input: $input) {
       id
-      count
-      expiredAt
-      amount
+      agentPlanAmount
     }
   }
 `;
-export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
-  UpdateCompanyAcceptTicketMutation,
-  UpdateCompanyAcceptTicketMutationVariables
+export type UpdateCompanyMutationFn = Apollo.MutationFunction<
+  UpdateCompanyMutation,
+  UpdateCompanyMutationVariables
 >;
 
 /**
- * __useUpdateCompanyAcceptTicketMutation__
+ * __useUpdateCompanyMutation__
  *
- * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ * const [updateCompanyMutation, { data, loading, error }] = useUpdateCompanyMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateCompanyAcceptTicketMutation(
+export function useUpdateCompanyMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
+    UpdateCompanyMutation,
+    UpdateCompanyMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >(UpdateCompanyAcceptTicketDocument, options);
+    UpdateCompanyMutation,
+    UpdateCompanyMutationVariables
+  >(UpdateCompanyDocument, options);
 }
-export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
-  typeof useUpdateCompanyAcceptTicketMutation
+export type UpdateCompanyMutationHookResult = ReturnType<
+  typeof useUpdateCompanyMutation
 >;
-export type UpdateCompanyAcceptTicketMutationResult =
-  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
-export type UpdateCompanyAcceptTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >;
+export type UpdateCompanyMutationResult =
+  Apollo.MutationResult<UpdateCompanyMutation>;
+export type UpdateCompanyMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCompanyMutation,
+  UpdateCompanyMutationVariables
+>;
 export const CreateCompanyAcceptTicketDocument = gql`
   mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
     createCompanyAcceptTicket(input: $input) {
@@ -3574,6 +3465,60 @@ export type CreateCompanyAcceptTicketMutationOptions =
   Apollo.BaseMutationOptions<
     CreateCompanyAcceptTicketMutation,
     CreateCompanyAcceptTicketMutationVariables
+  >;
+export const UpdateCompanyAcceptTicketDocument = gql`
+  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
+    updateCompanyAcceptTicket(input: $input) {
+      id
+      count
+      expiredAt
+      amount
+    }
+  }
+`;
+export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+  UpdateCompanyAcceptTicketMutation,
+  UpdateCompanyAcceptTicketMutationVariables
+>;
+
+/**
+ * __useUpdateCompanyAcceptTicketMutation__
+ *
+ * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCompanyAcceptTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
+  >(UpdateCompanyAcceptTicketDocument, options);
+}
+export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
+  typeof useUpdateCompanyAcceptTicketMutation
+>;
+export type UpdateCompanyAcceptTicketMutationResult =
+  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
+export type UpdateCompanyAcceptTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCompanyAcceptTicketMutation,
+    UpdateCompanyAcceptTicketMutationVariables
   >;
 export const DeleteCompanyAcceptTicketDocument = gql`
   mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
@@ -3642,6 +3587,7 @@ export const GetCompaniesDocument = gql`
         interviewCount
         offerCount
         acceptCount
+        agentPlanAmount
       }
       limit
       page
@@ -3697,6 +3643,24 @@ export function useGetCompaniesLazyQuery(
     options,
   );
 }
+// @ts-ignore
+export function useGetCompaniesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompaniesQuery,
+    GetCompaniesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<GetCompaniesQuery, GetCompaniesQueryVariables>;
+export function useGetCompaniesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompaniesQuery,
+        GetCompaniesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompaniesQuery | undefined,
+  GetCompaniesQueryVariables
+>;
 export function useGetCompaniesSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -3775,6 +3739,27 @@ export function useGetAllCompaniesLazyQuery(
     GetAllCompaniesQueryVariables
   >(GetAllCompaniesDocument, options);
 }
+// @ts-ignore
+export function useGetAllCompaniesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAllCompaniesQuery,
+    GetAllCompaniesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetAllCompaniesQuery,
+  GetAllCompaniesQueryVariables
+>;
+export function useGetAllCompaniesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAllCompaniesQuery,
+        GetAllCompaniesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetAllCompaniesQuery | undefined,
+  GetAllCompaniesQueryVariables
+>;
 export function useGetAllCompaniesSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -3868,6 +3853,27 @@ export function useGetCompanyAcceptTicketsLazyQuery(
     GetCompanyAcceptTicketsQueryVariables
   >(GetCompanyAcceptTicketsDocument, options);
 }
+// @ts-ignore
+export function useGetCompanyAcceptTicketsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompanyAcceptTicketsQuery,
+    GetCompanyAcceptTicketsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyAcceptTicketsQuery,
+  GetCompanyAcceptTicketsQueryVariables
+>;
+export function useGetCompanyAcceptTicketsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyAcceptTicketsQuery,
+        GetCompanyAcceptTicketsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyAcceptTicketsQuery | undefined,
+  GetCompanyAcceptTicketsQueryVariables
+>;
 export function useGetCompanyAcceptTicketsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -3953,6 +3959,27 @@ export function useGetCompaniesStatisticsLazyQuery(
     GetCompaniesStatisticsQueryVariables
   >(GetCompaniesStatisticsDocument, options);
 }
+// @ts-ignore
+export function useGetCompaniesStatisticsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompaniesStatisticsQuery,
+    GetCompaniesStatisticsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompaniesStatisticsQuery,
+  GetCompaniesStatisticsQueryVariables
+>;
+export function useGetCompaniesStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompaniesStatisticsQuery,
+        GetCompaniesStatisticsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompaniesStatisticsQuery | undefined,
+  GetCompaniesStatisticsQueryVariables
+>;
 export function useGetCompaniesStatisticsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4070,6 +4097,27 @@ export function useSearchEntriesLazyQuery(
     options,
   );
 }
+// @ts-ignore
+export function useSearchEntriesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    SearchEntriesQuery,
+    SearchEntriesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  SearchEntriesQuery,
+  SearchEntriesQueryVariables
+>;
+export function useSearchEntriesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SearchEntriesQuery,
+        SearchEntriesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  SearchEntriesQuery | undefined,
+  SearchEntriesQueryVariables
+>;
 export function useSearchEntriesSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4159,6 +4207,27 @@ export function useGetEntriesStatisticsLazyQuery(
     GetEntriesStatisticsQueryVariables
   >(GetEntriesStatisticsDocument, options);
 }
+// @ts-ignore
+export function useGetEntriesStatisticsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetEntriesStatisticsQuery,
+    GetEntriesStatisticsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetEntriesStatisticsQuery,
+  GetEntriesStatisticsQueryVariables
+>;
+export function useGetEntriesStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetEntriesStatisticsQuery,
+        GetEntriesStatisticsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetEntriesStatisticsQuery | undefined,
+  GetEntriesStatisticsQueryVariables
+>;
 export function useGetEntriesStatisticsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4308,6 +4377,27 @@ export function useGetCompanyInvoicesLazyQuery(
     GetCompanyInvoicesQueryVariables
   >(GetCompanyInvoicesDocument, options);
 }
+// @ts-ignore
+export function useGetCompanyInvoicesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompanyInvoicesQuery,
+    GetCompanyInvoicesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyInvoicesQuery,
+  GetCompanyInvoicesQueryVariables
+>;
+export function useGetCompanyInvoicesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyInvoicesQuery,
+        GetCompanyInvoicesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyInvoicesQuery | undefined,
+  GetCompanyInvoicesQueryVariables
+>;
 export function useGetCompanyInvoicesSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4398,6 +4488,27 @@ export function useGetCompanyInvoicesStatisticsLazyQuery(
     GetCompanyInvoicesStatisticsQueryVariables
   >(GetCompanyInvoicesStatisticsDocument, options);
 }
+// @ts-ignore
+export function useGetCompanyInvoicesStatisticsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompanyInvoicesStatisticsQuery,
+    GetCompanyInvoicesStatisticsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyInvoicesStatisticsQuery,
+  GetCompanyInvoicesStatisticsQueryVariables
+>;
+export function useGetCompanyInvoicesStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyInvoicesStatisticsQuery,
+        GetCompanyInvoicesStatisticsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyInvoicesStatisticsQuery | undefined,
+  GetCompanyInvoicesStatisticsQueryVariables
+>;
 export function useGetCompanyInvoicesStatisticsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4428,6 +4539,58 @@ export type GetCompanyInvoicesStatisticsQueryResult = Apollo.QueryResult<
   GetCompanyInvoicesStatisticsQuery,
   GetCompanyInvoicesStatisticsQueryVariables
 >;
+export const UpdateJobIsAgentPlanOnlyDocument = gql`
+  mutation UpdateJobIsAgentPlanOnly($input: UpdateJobIsAgentPlanOnlyInput!) {
+    updateJobIsAgentPlanOnly(input: $input) {
+      id
+      isAgentPlanOnly
+    }
+  }
+`;
+export type UpdateJobIsAgentPlanOnlyMutationFn = Apollo.MutationFunction<
+  UpdateJobIsAgentPlanOnlyMutation,
+  UpdateJobIsAgentPlanOnlyMutationVariables
+>;
+
+/**
+ * __useUpdateJobIsAgentPlanOnlyMutation__
+ *
+ * To run a mutation, you first call `useUpdateJobIsAgentPlanOnlyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJobIsAgentPlanOnlyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateJobIsAgentPlanOnlyMutation, { data, loading, error }] = useUpdateJobIsAgentPlanOnlyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateJobIsAgentPlanOnlyMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >(UpdateJobIsAgentPlanOnlyDocument, options);
+}
+export type UpdateJobIsAgentPlanOnlyMutationHookResult = ReturnType<
+  typeof useUpdateJobIsAgentPlanOnlyMutation
+>;
+export type UpdateJobIsAgentPlanOnlyMutationResult =
+  Apollo.MutationResult<UpdateJobIsAgentPlanOnlyMutation>;
+export type UpdateJobIsAgentPlanOnlyMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateJobIsAgentPlanOnlyMutation,
+    UpdateJobIsAgentPlanOnlyMutationVariables
+  >;
 export const SearchJobsWithStatsDocument = gql`
   query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
     searchJobsWithStats(input: $input) {
@@ -4435,6 +4598,7 @@ export const SearchJobsWithStatsDocument = gql`
         id
         title
         status
+        isAgentPlanOnly
         openedAt
         pv
         jobHeader
@@ -4502,6 +4666,27 @@ export function useSearchJobsWithStatsLazyQuery(
     SearchJobsWithStatsQueryVariables
   >(SearchJobsWithStatsDocument, options);
 }
+// @ts-ignore
+export function useSearchJobsWithStatsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    SearchJobsWithStatsQuery,
+    SearchJobsWithStatsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  SearchJobsWithStatsQuery,
+  SearchJobsWithStatsQueryVariables
+>;
+export function useSearchJobsWithStatsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SearchJobsWithStatsQuery,
+        SearchJobsWithStatsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  SearchJobsWithStatsQuery | undefined,
+  SearchJobsWithStatsQueryVariables
+>;
 export function useSearchJobsWithStatsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4587,6 +4772,27 @@ export function useGetJobsStatisticsLazyQuery(
     GetJobsStatisticsQueryVariables
   >(GetJobsStatisticsDocument, options);
 }
+// @ts-ignore
+export function useGetJobsStatisticsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetJobsStatisticsQuery,
+    GetJobsStatisticsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsStatisticsQuery,
+  GetJobsStatisticsQueryVariables
+>;
+export function useGetJobsStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsStatisticsQuery,
+        GetJobsStatisticsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsStatisticsQuery | undefined,
+  GetJobsStatisticsQueryVariables
+>;
 export function useGetJobsStatisticsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4664,6 +4870,27 @@ export function useGetJobsByHotListLazyQuery(
     GetJobsByHotListQueryVariables
   >(GetJobsByHotListDocument, options);
 }
+// @ts-ignore
+export function useGetJobsByHotListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByHotListQuery,
+  GetJobsByHotListQueryVariables
+>;
+export function useGetJobsByHotListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByHotListQuery,
+        GetJobsByHotListQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByHotListQuery | undefined,
+  GetJobsByHotListQueryVariables
+>;
 export function useGetJobsByHotListSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4741,6 +4968,27 @@ export function useGetJobsByPickListLazyQuery(
     GetJobsByPickListQueryVariables
   >(GetJobsByPickListDocument, options);
 }
+// @ts-ignore
+export function useGetJobsByPickListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByPickListQuery,
+  GetJobsByPickListQueryVariables
+>;
+export function useGetJobsByPickListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByPickListQuery,
+        GetJobsByPickListQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByPickListQuery | undefined,
+  GetJobsByPickListQueryVariables
+>;
 export function useGetJobsByPickListSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -4880,6 +5128,27 @@ export function useGetLineNotificationSettingsLazyQuery(
     GetLineNotificationSettingsQueryVariables
   >(GetLineNotificationSettingsDocument, options);
 }
+// @ts-ignore
+export function useGetLineNotificationSettingsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetLineNotificationSettingsQuery,
+    GetLineNotificationSettingsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetLineNotificationSettingsQuery,
+  GetLineNotificationSettingsQueryVariables
+>;
+export function useGetLineNotificationSettingsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetLineNotificationSettingsQuery,
+        GetLineNotificationSettingsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetLineNotificationSettingsQuery | undefined,
+  GetLineNotificationSettingsQueryVariables
+>;
 export function useGetLineNotificationSettingsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -5017,6 +5286,24 @@ export function useGetMagazineLazyQuery(
     options,
   );
 }
+// @ts-ignore
+export function useGetMagazineSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetMagazineQuery,
+    GetMagazineQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<GetMagazineQuery, GetMagazineQueryVariables>;
+export function useGetMagazineSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetMagazineQuery,
+        GetMagazineQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetMagazineQuery | undefined,
+  GetMagazineQueryVariables
+>;
 export function useGetMagazineSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -5144,6 +5431,27 @@ export function useGetAdminMessagesLazyQuery(
     GetAdminMessagesQueryVariables
   >(GetAdminMessagesDocument, options);
 }
+// @ts-ignore
+export function useGetAdminMessagesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAdminMessagesQuery,
+    GetAdminMessagesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminMessagesQuery,
+  GetAdminMessagesQueryVariables
+>;
+export function useGetAdminMessagesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminMessagesQuery,
+        GetAdminMessagesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminMessagesQuery | undefined,
+  GetAdminMessagesQueryVariables
+>;
 export function useGetAdminMessagesSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -5224,6 +5532,182 @@ export type UpdatePickJobsMutationOptions = Apollo.BaseMutationOptions<
   UpdatePickJobsMutation,
   UpdatePickJobsMutationVariables
 >;
+export const CreateAdditionalScoutTicketDocument = gql`
+  mutation CreateAdditionalScoutTicket(
+    $input: CreateAdditionalScoutTicketInput!
+  ) {
+    createAdditionalScoutTicket(input: $input) {
+      id
+      companyId
+      companyName
+      totalCount
+      usedCount
+      remainingCount
+      expiredAt
+      createdAt
+    }
+  }
+`;
+export type CreateAdditionalScoutTicketMutationFn = Apollo.MutationFunction<
+  CreateAdditionalScoutTicketMutation,
+  CreateAdditionalScoutTicketMutationVariables
+>;
+
+/**
+ * __useCreateAdditionalScoutTicketMutation__
+ *
+ * To run a mutation, you first call `useCreateAdditionalScoutTicketMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAdditionalScoutTicketMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAdditionalScoutTicketMutation, { data, loading, error }] = useCreateAdditionalScoutTicketMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAdditionalScoutTicketMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAdditionalScoutTicketMutation,
+    CreateAdditionalScoutTicketMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateAdditionalScoutTicketMutation,
+    CreateAdditionalScoutTicketMutationVariables
+  >(CreateAdditionalScoutTicketDocument, options);
+}
+export type CreateAdditionalScoutTicketMutationHookResult = ReturnType<
+  typeof useCreateAdditionalScoutTicketMutation
+>;
+export type CreateAdditionalScoutTicketMutationResult =
+  Apollo.MutationResult<CreateAdditionalScoutTicketMutation>;
+export type CreateAdditionalScoutTicketMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateAdditionalScoutTicketMutation,
+    CreateAdditionalScoutTicketMutationVariables
+  >;
+export const GetAdditionalScoutTicketsDocument = gql`
+  query GetAdditionalScoutTickets($input: SearchAdditionalScoutTicketsInput!) {
+    getAdditionalScoutTickets(input: $input) {
+      items {
+        id
+        companyId
+        companyName
+        totalCount
+        usedCount
+        remainingCount
+        expiredAt
+        createdAt
+      }
+      totalCount
+      totalPages
+      page
+      limit
+    }
+  }
+`;
+
+/**
+ * __useGetAdditionalScoutTicketsQuery__
+ *
+ * To run a query within a React component, call `useGetAdditionalScoutTicketsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdditionalScoutTicketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdditionalScoutTicketsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetAdditionalScoutTicketsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  > &
+    (
+      | { variables: GetAdditionalScoutTicketsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  >(GetAdditionalScoutTicketsDocument, options);
+}
+export function useGetAdditionalScoutTicketsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  >(GetAdditionalScoutTicketsDocument, options);
+}
+// @ts-ignore
+export function useGetAdditionalScoutTicketsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdditionalScoutTicketsQuery,
+  GetAdditionalScoutTicketsQueryVariables
+>;
+export function useGetAdditionalScoutTicketsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdditionalScoutTicketsQuery,
+        GetAdditionalScoutTicketsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdditionalScoutTicketsQuery | undefined,
+  GetAdditionalScoutTicketsQueryVariables
+>;
+export function useGetAdditionalScoutTicketsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdditionalScoutTicketsQuery,
+        GetAdditionalScoutTicketsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAdditionalScoutTicketsQuery,
+    GetAdditionalScoutTicketsQueryVariables
+  >(GetAdditionalScoutTicketsDocument, options);
+}
+export type GetAdditionalScoutTicketsQueryHookResult = ReturnType<
+  typeof useGetAdditionalScoutTicketsQuery
+>;
+export type GetAdditionalScoutTicketsLazyQueryHookResult = ReturnType<
+  typeof useGetAdditionalScoutTicketsLazyQuery
+>;
+export type GetAdditionalScoutTicketsSuspenseQueryHookResult = ReturnType<
+  typeof useGetAdditionalScoutTicketsSuspenseQuery
+>;
+export type GetAdditionalScoutTicketsQueryResult = Apollo.QueryResult<
+  GetAdditionalScoutTicketsQuery,
+  GetAdditionalScoutTicketsQueryVariables
+>;
 export const SearchUsersDocument = gql`
   query SearchUsers($input: SearchUsersInput!) {
     searchUsers(input: $input) {
@@ -5298,6 +5782,24 @@ export function useSearchUsersLazyQuery(
     options,
   );
 }
+// @ts-ignore
+export function useSearchUsersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    SearchUsersQuery,
+    SearchUsersQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<SearchUsersQuery, SearchUsersQueryVariables>;
+export function useSearchUsersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        SearchUsersQuery,
+        SearchUsersQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  SearchUsersQuery | undefined,
+  SearchUsersQueryVariables
+>;
 export function useSearchUsersSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -5381,6 +5883,27 @@ export function useGetUsersStatisticsLazyQuery(
     GetUsersStatisticsQueryVariables
   >(GetUsersStatisticsDocument, options);
 }
+// @ts-ignore
+export function useGetUsersStatisticsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetUsersStatisticsQuery,
+    GetUsersStatisticsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetUsersStatisticsQuery,
+  GetUsersStatisticsQueryVariables
+>;
+export function useGetUsersStatisticsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetUsersStatisticsQuery,
+        GetUsersStatisticsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetUsersStatisticsQuery | undefined,
+  GetUsersStatisticsQueryVariables
+>;
 export function useGetUsersStatisticsSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken
@@ -5477,6 +6000,21 @@ export function useGetUserLazyQuery(
     options,
   );
 }
+// @ts-ignore
+export function useGetUserSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetUserQuery,
+    GetUserQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<GetUserQuery, GetUserQueryVariables>;
+export function useGetUserSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>,
+): Apollo.UseSuspenseQueryResult<
+  GetUserQuery | undefined,
+  GetUserQueryVariables
+>;
 export function useGetUserSuspenseQuery(
   baseOptions?:
     | Apollo.SkipToken

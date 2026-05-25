@@ -16,6 +16,7 @@ export const SEARCH_COMPANY = gql`
         interviewCount
         offerCount
         acceptCount
+        agentPlanAmount
       }
       limit
       page

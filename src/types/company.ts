@@ -11,4 +11,5 @@ export type CompanyItem = {
   interviewCount: number;
   offerCount: number;
   acceptCount: number;
+  agentPlanAmount: number | null;
 };
