@@ -97,7 +97,7 @@ export default function PageBody() {
       variables: {
         input: {
           id: editingCompany.id,
-          agentPlanAmount: data.agentPlanAmount,
+          agentPlanAmount: data.agentPlanAmount || 250000,
         },
       },
     });
