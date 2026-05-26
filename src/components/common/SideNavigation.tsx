@@ -50,6 +50,12 @@ export default function SideNavigation({
           />
         </ListItem>
         <ListItem className="p-0">
+          <SideNavigationItem
+            href="/scout-tickets"
+            label="追加スカウトチケット"
+          />
+        </ListItem>
+        <ListItem className="p-0">
           <SideNavigationItem href="/magazine" label="Magazine" />
         </ListItem>
         <ListItem className="p-0">
