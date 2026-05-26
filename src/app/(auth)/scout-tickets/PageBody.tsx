@@ -272,10 +272,7 @@ export default function PageBody() {
                 const isExpired = ticket.expiredAt < now;
                 const isExhausted = ticket.remainingCount === 0;
                 return (
-                  <TableRow
-                    key={ticket.id}
-                    className={isExhausted ? "bg-red-50" : ""}
-                  >
+                  <TableRow key={ticket.id}>
                     <TableCell align="center" className="p-2 text-base">
                       {ticket.companyName}
                     </TableCell>
@@ -285,7 +282,10 @@ export default function PageBody() {
                     <TableCell align="center" className="p-2 text-base">
                       {ticket.usedCount}
                     </TableCell>
-                    <TableCell align="center" className="p-2 text-base">
+                    <TableCell
+                      align="center"
+                      className={`p-2 text-base ${isExhausted ? "text-red-500" : ""}`}
+                    >
                       {ticket.remainingCount}
                     </TableCell>
                     <TableCell
