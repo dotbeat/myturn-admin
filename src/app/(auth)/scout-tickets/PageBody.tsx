@@ -209,17 +209,16 @@ export default function PageBody() {
               >
                 企業選択
               </Button>
-              <Select
-                name="totalCount"
-                label="追加数"
-                items={ALLOWED_TOTAL_COUNTS.map((c) => ({
-                  value: c,
-                  label: `${c}通`,
-                }))}
-                className="w-28"
-              />
             </Box>
-
+            <Select
+              name="totalCount"
+              label="追加数"
+              items={ALLOWED_TOTAL_COUNTS.map((c) => ({
+                value: c,
+                label: `${c}通`,
+              }))}
+              className="w-28"
+            />
             <Box>
               <Typography className="text-sm">
                 料金：{priceDisplay ? `${priceDisplay}円` : "—"}
@@ -228,7 +227,6 @@ export default function PageBody() {
                 有効期限：付与日から{VALIDITY_DAYS}日 ({previewExpiredAt})
               </Typography>
             </Box>
-
             <Button
               type="submit"
               disabled={isCreating}
