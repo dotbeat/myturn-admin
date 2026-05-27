@@ -821,6 +821,21 @@ export type HotJobItemInput = {
   jobId: Scalars["Int"]["input"];
 };
 
+export type HotJobScoringWeightItemInput = {
+  indicator: Scalars["String"]["input"];
+  weight: Scalars["Int"]["input"];
+};
+
+export type HotJobScoringWeightType = {
+  __typename?: "HotJobScoringWeightType";
+  createdAt: Scalars["DateTime"]["output"];
+  displayOrder: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  indicator: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  weight: Scalars["Int"]["output"];
+};
+
 export type HotJobType = {
   __typename?: "HotJobType";
   createdAt: Scalars["DateTime"]["output"];
@@ -876,6 +891,12 @@ export type JobMemberType = {
   position?: Maybe<Scalars["String"]["output"]>;
   title?: Maybe<Scalars["String"]["output"]>;
 };
+
+export enum JobOrderBy {
+  IdAsc = "ID_ASC",
+  OpenedAtDesc = "OPENED_AT_DESC",
+  Popularity = "POPULARITY",
+}
 
 export type JobSearchResultType = {
   __typename?: "JobSearchResultType";
@@ -1303,6 +1324,8 @@ export type Mutation = {
   markEntryAsChecked: Array<Entry>;
   markMessageAsRead: Scalars["Boolean"]["output"];
   markNotificationAsRead: Scalars["Boolean"]["output"];
+  recalculateHotJobs: RecalculateResultType;
+  recalculatePickJobs: RecalculateResultType;
   removeFavorite: Scalars["Boolean"]["output"];
   requestCompanyPasswordReset: RequestCompanyPasswordResetResponse;
   requestPasswordReset: RequestPasswordResetResponse;
@@ -1317,6 +1340,7 @@ export type Mutation = {
   updateEntriesStatus: Array<Entry>;
   updateEntryApplicantNote: Entry;
   updateEntryStatus: Entry;
+  updateHotJobScoringWeights: Array<HotJobScoringWeightType>;
   updateHotJobs: HotJobType;
   updateInterviewSchedule: Entry;
   updateJob: JobType;
@@ -1328,6 +1352,7 @@ export type Mutation = {
   updateLineNotificationSettings: UpdateLineNotificationSettingsResult;
   updateMagazines: Array<MagazineType>;
   updateMessageTemplate: MessageTemplateType;
+  updatePickJobScoringWeights: Array<PickJobScoringWeightType>;
   updatePickJobs: PickJobType;
   updateSecondInterviewSchedule: Entry;
   updateUser: UserType;
@@ -1492,6 +1517,10 @@ export type MutationUpdateEntryStatusArgs = {
   input: UpdateEntryStatusInput;
 };
 
+export type MutationUpdateHotJobScoringWeightsArgs = {
+  input: UpdateHotJobScoringWeightsInput;
+};
+
 export type MutationUpdateHotJobsArgs = {
   input: UpdateHotJobsInput;
 };
@@ -1534,6 +1563,10 @@ export type MutationUpdateMagazinesArgs = {
 
 export type MutationUpdateMessageTemplateArgs = {
   input: UpdateMessageTemplateInput;
+};
+
+export type MutationUpdatePickJobScoringWeightsArgs = {
+  input: UpdatePickJobScoringWeightsInput;
 };
 
 export type MutationUpdatePickJobsArgs = {
@@ -1611,6 +1644,21 @@ export type PickJobItemInput = {
   jobId: Scalars["Int"]["input"];
 };
 
+export type PickJobScoringWeightItemInput = {
+  indicator: Scalars["String"]["input"];
+  weight: Scalars["Int"]["input"];
+};
+
+export type PickJobScoringWeightType = {
+  __typename?: "PickJobScoringWeightType";
+  createdAt: Scalars["DateTime"]["output"];
+  displayOrder: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  indicator: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+  weight: Scalars["Int"]["output"];
+};
+
 export type PickJobType = {
   __typename?: "PickJobType";
   createdAt: Scalars["DateTime"]["output"];
@@ -1644,6 +1692,7 @@ export type Query = {
   getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
   getEntriesStatistics: EntriesStatisticsResultType;
   getEntryById: EntryWithDetailsType;
+  getHotJobScoringWeights: Array<HotJobScoringWeightType>;
   getInterviewReminderEntries: InterviewReminderEntriesType;
   getInterviewStatusReminderEntries: InterviewStatusReminderEntriesType;
   getJobsByHotList: Array<JobWithCompanyType>;
@@ -1653,6 +1702,7 @@ export type Query = {
   getMessages: Array<Message>;
   getNewEntriesWithoutMessages: NewEntriesWithoutMessagesType;
   getPendingEntries: PendingEntriesType;
+  getPickJobScoringWeights: Array<PickJobScoringWeightType>;
   getRecommendJobsByUserId: Array<JobWithCompanyType>;
   getReviewingEntries: ReviewingEntriesType;
   getStaleEntries: StaleEntriesType;
@@ -1860,6 +1910,11 @@ export type QueryUserByEmailArgs = {
 
 export type QueryUsersWithIncompleteProfileArgs = {
   input: GetUsersWithIncompleteProfileInput;
+};
+
+export type RecalculateResultType = {
+  __typename?: "RecalculateResultType";
+  updatedCount: Scalars["Int"]["output"];
 };
 
 export type RemoveFavoriteInput = {
@@ -2130,6 +2185,8 @@ export type SearchJobsInput = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   /** 都道府県とともに指定する市区町村 */
   municipalities?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  /** 並び順。未指定時は既存挙動と同じ */
+  orderBy?: InputMaybe<JobOrderBy>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   prefectures?: InputMaybe<Array<Scalars["String"]["input"]>>;
   preferences?: InputMaybe<Array<Scalars["String"]["input"]>>;
@@ -2383,6 +2440,10 @@ export type UpdateEntryStatusInput = {
   status: Scalars["String"]["input"];
 };
 
+export type UpdateHotJobScoringWeightsInput = {
+  weights: Array<HotJobScoringWeightItemInput>;
+};
+
 export type UpdateHotJobsInput = {
   hotJobs: Array<HotJobItemInput>;
 };
@@ -2450,6 +2511,7 @@ export type UpdateJobOfferAcceptanceInput = {
 
 export type UpdateJobPvInput = {
   id: Scalars["Int"]["input"];
+  userId?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type UpdateJobStatusInput = {
@@ -2480,6 +2542,10 @@ export type UpdateMessageTemplateInput = {
   id: Scalars["Int"]["input"];
   isScoutTemplate?: InputMaybe<Scalars["Boolean"]["input"]>;
   title: Scalars["String"]["input"];
+};
+
+export type UpdatePickJobScoringWeightsInput = {
+  weights: Array<PickJobScoringWeightItemInput>;
 };
 
 export type UpdatePickJobsInput = {
@@ -2923,6 +2989,50 @@ export type UpdateHotJobsMutation = {
   updateHotJobs: { __typename: "HotJobType" };
 };
 
+export type UpdateHotJobScoringWeightsMutationVariables = Exact<{
+  input: UpdateHotJobScoringWeightsInput;
+}>;
+
+export type UpdateHotJobScoringWeightsMutation = {
+  __typename?: "Mutation";
+  updateHotJobScoringWeights: Array<{
+    __typename?: "HotJobScoringWeightType";
+    id: number;
+    indicator: string;
+    weight: number;
+    displayOrder: number;
+    updatedAt: any;
+  }>;
+};
+
+export type RecalculateHotJobsMutationVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type RecalculateHotJobsMutation = {
+  __typename?: "Mutation";
+  recalculateHotJobs: {
+    __typename?: "RecalculateResultType";
+    updatedCount: number;
+  };
+};
+
+export type GetHotJobScoringWeightsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetHotJobScoringWeightsQuery = {
+  __typename?: "Query";
+  getHotJobScoringWeights: Array<{
+    __typename?: "HotJobScoringWeightType";
+    id: number;
+    indicator: string;
+    weight: number;
+    displayOrder: number;
+    updatedAt: any;
+  }>;
+};
+
 export type GetCompanyInvoicesQueryVariables = Exact<{
   input: GetCompanyInvoicesInput;
 }>;
@@ -3183,6 +3293,50 @@ export type UpdatePickJobsMutationVariables = Exact<{
 export type UpdatePickJobsMutation = {
   __typename?: "Mutation";
   updatePickJobs: { __typename: "PickJobType" };
+};
+
+export type UpdatePickJobScoringWeightsMutationVariables = Exact<{
+  input: UpdatePickJobScoringWeightsInput;
+}>;
+
+export type UpdatePickJobScoringWeightsMutation = {
+  __typename?: "Mutation";
+  updatePickJobScoringWeights: Array<{
+    __typename?: "PickJobScoringWeightType";
+    id: number;
+    indicator: string;
+    weight: number;
+    displayOrder: number;
+    updatedAt: any;
+  }>;
+};
+
+export type RecalculatePickJobsMutationVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type RecalculatePickJobsMutation = {
+  __typename?: "Mutation";
+  recalculatePickJobs: {
+    __typename?: "RecalculateResultType";
+    updatedCount: number;
+  };
+};
+
+export type GetPickJobScoringWeightsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetPickJobScoringWeightsQuery = {
+  __typename?: "Query";
+  getPickJobScoringWeights: Array<{
+    __typename?: "PickJobScoringWeightType";
+    id: number;
+    indicator: string;
+    weight: number;
+    displayOrder: number;
+    updatedAt: any;
+  }>;
 };
 
 export type CreateAdditionalScoutTicketMutationVariables = Exact<{
@@ -4307,6 +4461,214 @@ export type UpdateHotJobsMutationResult =
 export type UpdateHotJobsMutationOptions = Apollo.BaseMutationOptions<
   UpdateHotJobsMutation,
   UpdateHotJobsMutationVariables
+>;
+export const UpdateHotJobScoringWeightsDocument = gql`
+  mutation UpdateHotJobScoringWeights(
+    $input: UpdateHotJobScoringWeightsInput!
+  ) {
+    updateHotJobScoringWeights(input: $input) {
+      id
+      indicator
+      weight
+      displayOrder
+      updatedAt
+    }
+  }
+`;
+export type UpdateHotJobScoringWeightsMutationFn = Apollo.MutationFunction<
+  UpdateHotJobScoringWeightsMutation,
+  UpdateHotJobScoringWeightsMutationVariables
+>;
+
+/**
+ * __useUpdateHotJobScoringWeightsMutation__
+ *
+ * To run a mutation, you first call `useUpdateHotJobScoringWeightsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateHotJobScoringWeightsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateHotJobScoringWeightsMutation, { data, loading, error }] = useUpdateHotJobScoringWeightsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateHotJobScoringWeightsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateHotJobScoringWeightsMutation,
+    UpdateHotJobScoringWeightsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateHotJobScoringWeightsMutation,
+    UpdateHotJobScoringWeightsMutationVariables
+  >(UpdateHotJobScoringWeightsDocument, options);
+}
+export type UpdateHotJobScoringWeightsMutationHookResult = ReturnType<
+  typeof useUpdateHotJobScoringWeightsMutation
+>;
+export type UpdateHotJobScoringWeightsMutationResult =
+  Apollo.MutationResult<UpdateHotJobScoringWeightsMutation>;
+export type UpdateHotJobScoringWeightsMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateHotJobScoringWeightsMutation,
+    UpdateHotJobScoringWeightsMutationVariables
+  >;
+export const RecalculateHotJobsDocument = gql`
+  mutation RecalculateHotJobs {
+    recalculateHotJobs {
+      updatedCount
+    }
+  }
+`;
+export type RecalculateHotJobsMutationFn = Apollo.MutationFunction<
+  RecalculateHotJobsMutation,
+  RecalculateHotJobsMutationVariables
+>;
+
+/**
+ * __useRecalculateHotJobsMutation__
+ *
+ * To run a mutation, you first call `useRecalculateHotJobsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecalculateHotJobsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [recalculateHotJobsMutation, { data, loading, error }] = useRecalculateHotJobsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecalculateHotJobsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RecalculateHotJobsMutation,
+    RecalculateHotJobsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    RecalculateHotJobsMutation,
+    RecalculateHotJobsMutationVariables
+  >(RecalculateHotJobsDocument, options);
+}
+export type RecalculateHotJobsMutationHookResult = ReturnType<
+  typeof useRecalculateHotJobsMutation
+>;
+export type RecalculateHotJobsMutationResult =
+  Apollo.MutationResult<RecalculateHotJobsMutation>;
+export type RecalculateHotJobsMutationOptions = Apollo.BaseMutationOptions<
+  RecalculateHotJobsMutation,
+  RecalculateHotJobsMutationVariables
+>;
+export const GetHotJobScoringWeightsDocument = gql`
+  query GetHotJobScoringWeights {
+    getHotJobScoringWeights {
+      id
+      indicator
+      weight
+      displayOrder
+      updatedAt
+    }
+  }
+`;
+
+/**
+ * __useGetHotJobScoringWeightsQuery__
+ *
+ * To run a query within a React component, call `useGetHotJobScoringWeightsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHotJobScoringWeightsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHotJobScoringWeightsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHotJobScoringWeightsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >(GetHotJobScoringWeightsDocument, options);
+}
+export function useGetHotJobScoringWeightsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >(GetHotJobScoringWeightsDocument, options);
+}
+// @ts-ignore
+export function useGetHotJobScoringWeightsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetHotJobScoringWeightsQuery,
+  GetHotJobScoringWeightsQueryVariables
+>;
+export function useGetHotJobScoringWeightsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetHotJobScoringWeightsQuery,
+        GetHotJobScoringWeightsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetHotJobScoringWeightsQuery | undefined,
+  GetHotJobScoringWeightsQueryVariables
+>;
+export function useGetHotJobScoringWeightsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetHotJobScoringWeightsQuery,
+        GetHotJobScoringWeightsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetHotJobScoringWeightsQuery,
+    GetHotJobScoringWeightsQueryVariables
+  >(GetHotJobScoringWeightsDocument, options);
+}
+export type GetHotJobScoringWeightsQueryHookResult = ReturnType<
+  typeof useGetHotJobScoringWeightsQuery
+>;
+export type GetHotJobScoringWeightsLazyQueryHookResult = ReturnType<
+  typeof useGetHotJobScoringWeightsLazyQuery
+>;
+export type GetHotJobScoringWeightsSuspenseQueryHookResult = ReturnType<
+  typeof useGetHotJobScoringWeightsSuspenseQuery
+>;
+export type GetHotJobScoringWeightsQueryResult = Apollo.QueryResult<
+  GetHotJobScoringWeightsQuery,
+  GetHotJobScoringWeightsQueryVariables
 >;
 export const GetCompanyInvoicesDocument = gql`
   query GetCompanyInvoices($input: GetCompanyInvoicesInput!) {
@@ -5531,6 +5893,214 @@ export type UpdatePickJobsMutationResult =
 export type UpdatePickJobsMutationOptions = Apollo.BaseMutationOptions<
   UpdatePickJobsMutation,
   UpdatePickJobsMutationVariables
+>;
+export const UpdatePickJobScoringWeightsDocument = gql`
+  mutation UpdatePickJobScoringWeights(
+    $input: UpdatePickJobScoringWeightsInput!
+  ) {
+    updatePickJobScoringWeights(input: $input) {
+      id
+      indicator
+      weight
+      displayOrder
+      updatedAt
+    }
+  }
+`;
+export type UpdatePickJobScoringWeightsMutationFn = Apollo.MutationFunction<
+  UpdatePickJobScoringWeightsMutation,
+  UpdatePickJobScoringWeightsMutationVariables
+>;
+
+/**
+ * __useUpdatePickJobScoringWeightsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePickJobScoringWeightsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePickJobScoringWeightsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePickJobScoringWeightsMutation, { data, loading, error }] = useUpdatePickJobScoringWeightsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePickJobScoringWeightsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePickJobScoringWeightsMutation,
+    UpdatePickJobScoringWeightsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdatePickJobScoringWeightsMutation,
+    UpdatePickJobScoringWeightsMutationVariables
+  >(UpdatePickJobScoringWeightsDocument, options);
+}
+export type UpdatePickJobScoringWeightsMutationHookResult = ReturnType<
+  typeof useUpdatePickJobScoringWeightsMutation
+>;
+export type UpdatePickJobScoringWeightsMutationResult =
+  Apollo.MutationResult<UpdatePickJobScoringWeightsMutation>;
+export type UpdatePickJobScoringWeightsMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdatePickJobScoringWeightsMutation,
+    UpdatePickJobScoringWeightsMutationVariables
+  >;
+export const RecalculatePickJobsDocument = gql`
+  mutation RecalculatePickJobs {
+    recalculatePickJobs {
+      updatedCount
+    }
+  }
+`;
+export type RecalculatePickJobsMutationFn = Apollo.MutationFunction<
+  RecalculatePickJobsMutation,
+  RecalculatePickJobsMutationVariables
+>;
+
+/**
+ * __useRecalculatePickJobsMutation__
+ *
+ * To run a mutation, you first call `useRecalculatePickJobsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecalculatePickJobsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [recalculatePickJobsMutation, { data, loading, error }] = useRecalculatePickJobsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecalculatePickJobsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RecalculatePickJobsMutation,
+    RecalculatePickJobsMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    RecalculatePickJobsMutation,
+    RecalculatePickJobsMutationVariables
+  >(RecalculatePickJobsDocument, options);
+}
+export type RecalculatePickJobsMutationHookResult = ReturnType<
+  typeof useRecalculatePickJobsMutation
+>;
+export type RecalculatePickJobsMutationResult =
+  Apollo.MutationResult<RecalculatePickJobsMutation>;
+export type RecalculatePickJobsMutationOptions = Apollo.BaseMutationOptions<
+  RecalculatePickJobsMutation,
+  RecalculatePickJobsMutationVariables
+>;
+export const GetPickJobScoringWeightsDocument = gql`
+  query GetPickJobScoringWeights {
+    getPickJobScoringWeights {
+      id
+      indicator
+      weight
+      displayOrder
+      updatedAt
+    }
+  }
+`;
+
+/**
+ * __useGetPickJobScoringWeightsQuery__
+ *
+ * To run a query within a React component, call `useGetPickJobScoringWeightsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPickJobScoringWeightsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPickJobScoringWeightsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPickJobScoringWeightsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >(GetPickJobScoringWeightsDocument, options);
+}
+export function useGetPickJobScoringWeightsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >(GetPickJobScoringWeightsDocument, options);
+}
+// @ts-ignore
+export function useGetPickJobScoringWeightsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetPickJobScoringWeightsQuery,
+  GetPickJobScoringWeightsQueryVariables
+>;
+export function useGetPickJobScoringWeightsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPickJobScoringWeightsQuery,
+        GetPickJobScoringWeightsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetPickJobScoringWeightsQuery | undefined,
+  GetPickJobScoringWeightsQueryVariables
+>;
+export function useGetPickJobScoringWeightsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetPickJobScoringWeightsQuery,
+        GetPickJobScoringWeightsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetPickJobScoringWeightsQuery,
+    GetPickJobScoringWeightsQueryVariables
+  >(GetPickJobScoringWeightsDocument, options);
+}
+export type GetPickJobScoringWeightsQueryHookResult = ReturnType<
+  typeof useGetPickJobScoringWeightsQuery
+>;
+export type GetPickJobScoringWeightsLazyQueryHookResult = ReturnType<
+  typeof useGetPickJobScoringWeightsLazyQuery
+>;
+export type GetPickJobScoringWeightsSuspenseQueryHookResult = ReturnType<
+  typeof useGetPickJobScoringWeightsSuspenseQuery
+>;
+export type GetPickJobScoringWeightsQueryResult = Apollo.QueryResult<
+  GetPickJobScoringWeightsQuery,
+  GetPickJobScoringWeightsQueryVariables
 >;
 export const CreateAdditionalScoutTicketDocument = gql`
   mutation CreateAdditionalScoutTicket(
