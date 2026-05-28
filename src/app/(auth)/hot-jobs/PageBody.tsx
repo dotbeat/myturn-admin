@@ -132,12 +132,12 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-1">人気求人管理（重み設定）</PageTitle>
+      <PageTitle className="mb-1">人気求人ランキング管理（重み設定）</PageTitle>
       <Typography
         variant="body2"
         className="mb-8 text-[var(--myturn-sub-text)]"
       >
-        myturnトップページで表示される人気求人一覧のアルゴリズムを管理します。一覧は1時間おきに更新されます。
+        myturnトップページで表示される人気求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
       </Typography>
 
       <Box className="flex gap-12">
@@ -212,7 +212,7 @@ export default function PageBody() {
 
         <Box className="min-w-64">
           <Typography variant="h6" className="mb-4 font-semibold">
-            現在の人気求人一覧
+            現在の人気求人ランキング
           </Typography>
           {hotJobs.length === 0 ? (
             <Typography

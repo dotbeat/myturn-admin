@@ -137,7 +137,7 @@ export default function PageBody() {
         variant="body2"
         className="mb-8 text-[var(--myturn-sub-text)]"
       >
-        myturnトップページで表示される人気求人一覧のアルゴリズムを管理します。一覧は1時間おきに更新されます。
+        myturnトップページで表示される注目の求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
       </Typography>
 
       <Box className="flex gap-12">
