@@ -827,10 +827,6 @@ export type GetUsersWithIncompleteProfileInput = {
   daysSinceCreation: Scalars["Int"]["input"];
 };
 
-export type HotJobItemInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
 export type HotJobScoringWeightItemInput = {
   indicator: Scalars["String"]["input"];
   weight: Scalars["Int"]["input"];
@@ -844,14 +840,6 @@ export type HotJobScoringWeightType = {
   indicator: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   weight: Scalars["Int"]["output"];
-};
-
-export type HotJobType = {
-  __typename?: "HotJobType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type InterviewReminderEntriesType = {
@@ -1351,7 +1339,6 @@ export type Mutation = {
   updateEntryApplicantNote: Entry;
   updateEntryStatus: Entry;
   updateHotJobScoringWeights: Array<HotJobScoringWeightType>;
-  updateHotJobs: HotJobType;
   updateInterviewSchedule: Entry;
   updateJob: JobType;
   updateJobIsAgentPlanOnly: JobType;
@@ -1363,7 +1350,6 @@ export type Mutation = {
   updateMagazines: Array<MagazineType>;
   updateMessageTemplate: MessageTemplateType;
   updatePickJobScoringWeights: Array<PickJobScoringWeightType>;
-  updatePickJobs: PickJobType;
   updateSecondInterviewSchedule: Entry;
   updateUser: UserType;
   updateUserEmail: UserType;
@@ -1531,10 +1517,6 @@ export type MutationUpdateHotJobScoringWeightsArgs = {
   input: UpdateHotJobScoringWeightsInput;
 };
 
-export type MutationUpdateHotJobsArgs = {
-  input: UpdateHotJobsInput;
-};
-
 export type MutationUpdateInterviewScheduleArgs = {
   input: UpdateInterviewScheduleInput;
 };
@@ -1577,10 +1559,6 @@ export type MutationUpdateMessageTemplateArgs = {
 
 export type MutationUpdatePickJobScoringWeightsArgs = {
   input: UpdatePickJobScoringWeightsInput;
-};
-
-export type MutationUpdatePickJobsArgs = {
-  input: UpdatePickJobsInput;
 };
 
 export type MutationUpdateSecondInterviewScheduleArgs = {
@@ -1650,10 +1628,6 @@ export type PendingEntriesType = {
   entries: Array<EntryWithUserAndJobType>;
 };
 
-export type PickJobItemInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
 export type PickJobScoringWeightItemInput = {
   indicator: Scalars["String"]["input"];
   weight: Scalars["Int"]["input"];
@@ -1667,14 +1641,6 @@ export type PickJobScoringWeightType = {
   indicator: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   weight: Scalars["Int"]["output"];
-};
-
-export type PickJobType = {
-  __typename?: "PickJobType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type Query = {
@@ -2462,10 +2428,6 @@ export type UpdateHotJobScoringWeightsInput = {
   weights: Array<HotJobScoringWeightItemInput>;
 };
 
-export type UpdateHotJobsInput = {
-  hotJobs: Array<HotJobItemInput>;
-};
-
 export type UpdateInterviewScheduleInput = {
   id: Scalars["Int"]["input"];
   interviewScheduledAt: Scalars["String"]["input"];
@@ -2564,10 +2526,6 @@ export type UpdateMessageTemplateInput = {
 
 export type UpdatePickJobScoringWeightsInput = {
   weights: Array<PickJobScoringWeightItemInput>;
-};
-
-export type UpdatePickJobsInput = {
-  pickJobs: Array<PickJobItemInput>;
 };
 
 export type UpdateSecondInterviewScheduleInput = {
@@ -2998,15 +2956,6 @@ export type GetEntriesStatisticsQuery = {
   };
 };
 
-export type UpdateHotJobsMutationVariables = Exact<{
-  input: UpdateHotJobsInput;
-}>;
-
-export type UpdateHotJobsMutation = {
-  __typename?: "Mutation";
-  updateHotJobs: { __typename: "HotJobType" };
-};
-
 export type UpdateHotJobScoringWeightsMutationVariables = Exact<{
   input: UpdateHotJobScoringWeightsInput;
 }>;
@@ -3299,15 +3248,6 @@ export type GetAdminMessagesQuery = {
       };
     }>;
   };
-};
-
-export type UpdatePickJobsMutationVariables = Exact<{
-  input: UpdatePickJobsInput;
-}>;
-
-export type UpdatePickJobsMutation = {
-  __typename?: "Mutation";
-  updatePickJobs: { __typename: "PickJobType" };
 };
 
 export type UpdatePickJobScoringWeightsMutationVariables = Exact<{
@@ -4437,56 +4377,6 @@ export type GetEntriesStatisticsSuspenseQueryHookResult = ReturnType<
 export type GetEntriesStatisticsQueryResult = Apollo.QueryResult<
   GetEntriesStatisticsQuery,
   GetEntriesStatisticsQueryVariables
->;
-export const UpdateHotJobsDocument = gql`
-  mutation UpdateHotJobs($input: UpdateHotJobsInput!) {
-    updateHotJobs(input: $input) {
-      __typename
-    }
-  }
-`;
-export type UpdateHotJobsMutationFn = Apollo.MutationFunction<
-  UpdateHotJobsMutation,
-  UpdateHotJobsMutationVariables
->;
-
-/**
- * __useUpdateHotJobsMutation__
- *
- * To run a mutation, you first call `useUpdateHotJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateHotJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateHotJobsMutation, { data, loading, error }] = useUpdateHotJobsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateHotJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateHotJobsMutation,
-    UpdateHotJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateHotJobsMutation,
-    UpdateHotJobsMutationVariables
-  >(UpdateHotJobsDocument, options);
-}
-export type UpdateHotJobsMutationHookResult = ReturnType<
-  typeof useUpdateHotJobsMutation
->;
-export type UpdateHotJobsMutationResult =
-  Apollo.MutationResult<UpdateHotJobsMutation>;
-export type UpdateHotJobsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateHotJobsMutation,
-  UpdateHotJobsMutationVariables
 >;
 export const UpdateHotJobScoringWeightsDocument = gql`
   mutation UpdateHotJobScoringWeights(
@@ -5772,56 +5662,6 @@ export type GetAdminMessagesSuspenseQueryHookResult = ReturnType<
 export type GetAdminMessagesQueryResult = Apollo.QueryResult<
   GetAdminMessagesQuery,
   GetAdminMessagesQueryVariables
->;
-export const UpdatePickJobsDocument = gql`
-  mutation UpdatePickJobs($input: UpdatePickJobsInput!) {
-    updatePickJobs(input: $input) {
-      __typename
-    }
-  }
-`;
-export type UpdatePickJobsMutationFn = Apollo.MutationFunction<
-  UpdatePickJobsMutation,
-  UpdatePickJobsMutationVariables
->;
-
-/**
- * __useUpdatePickJobsMutation__
- *
- * To run a mutation, you first call `useUpdatePickJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePickJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePickJobsMutation, { data, loading, error }] = useUpdatePickJobsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePickJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdatePickJobsMutation,
-    UpdatePickJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdatePickJobsMutation,
-    UpdatePickJobsMutationVariables
-  >(UpdatePickJobsDocument, options);
-}
-export type UpdatePickJobsMutationHookResult = ReturnType<
-  typeof useUpdatePickJobsMutation
->;
-export type UpdatePickJobsMutationResult =
-  Apollo.MutationResult<UpdatePickJobsMutation>;
-export type UpdatePickJobsMutationOptions = Apollo.BaseMutationOptions<
-  UpdatePickJobsMutation,
-  UpdatePickJobsMutationVariables
 >;
 export const UpdatePickJobScoringWeightsDocument = gql`
   mutation UpdatePickJobScoringWeights(
