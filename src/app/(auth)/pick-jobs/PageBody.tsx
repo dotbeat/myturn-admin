@@ -215,7 +215,7 @@ export default function PageBody() {
         </FormProvider>
 
         <Box className="min-w-64">
-          <Typography variant="h6" className="mb-4 font-semibold">
+          <Typography variant="body1" className="mb-4 font-semibold">
             現在の注目の求人一覧
           </Typography>
           {pickJobs.length === 0 ? (
