@@ -148,7 +148,7 @@ export default function PageBody() {
         <FormProvider {...methods}>
           <form
             method="POST"
-            className="flex flex-col items-start gap-4"
+            className="w-2xl flex flex-col items-start gap-4"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <Typography variant="body1" className="font-semibold">
@@ -165,12 +165,12 @@ export default function PageBody() {
               </span>
             </Typography>
 
-            <Table className="max-w-2xl bg-[var(--background)]">
+            <Table className="bg-[var(--background)]">
               <TableHead>
                 <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
-                  <TableCell className="p-2">指標名</TableCell>
+                  <TableCell className="p-2 pl-4">指標名</TableCell>
                   <TableCell className="p-2">重み (%)</TableCell>
-                  <TableCell className="p-2">説明</TableCell>
+                  <TableCell className="p-2 pr-4">説明</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -214,7 +214,7 @@ export default function PageBody() {
           </form>
         </FormProvider>
 
-        <Box className="min-w-64">
+        <Box className="min-w-64 max-w-2xl">
           <Typography variant="body1" className="mb-4 font-semibold">
             現在の注目の求人一覧
           </Typography>
