@@ -753,6 +753,16 @@ export type GetEntryByIdInput = {
   id: Scalars["Int"]["input"];
 };
 
+export type GetJobsByHotListInput = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type GetJobsByPickListInput = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
 export type GetJobsStatisticsInput = {
   periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
@@ -767,8 +777,8 @@ export type GetPendingEntriesInput = {
 };
 
 export type GetRecentJobsInput = {
-  /** 取得する最新ジョブの件数 */
   limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type GetRecommendJobsByUserIdInput = {
@@ -1792,6 +1802,14 @@ export type QueryGetEntriesStatisticsArgs = {
 
 export type QueryGetEntryByIdArgs = {
   input: GetEntryByIdInput;
+};
+
+export type QueryGetJobsByHotListArgs = {
+  input?: InputMaybe<GetJobsByHotListInput>;
+};
+
+export type QueryGetJobsByPickListArgs = {
+  input?: InputMaybe<GetJobsByPickListInput>;
 };
 
 export type QueryGetJobsStatisticsArgs = {
@@ -3033,6 +3051,17 @@ export type GetHotJobScoringWeightsQuery = {
   }>;
 };
 
+export type GetJobsByHotListQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetJobsByHotListQuery = {
+  __typename?: "Query";
+  getJobsByHotList: Array<{
+    __typename?: "JobWithCompanyType";
+    id: number;
+    title: string;
+  }>;
+};
+
 export type GetCompanyInvoicesQueryVariables = Exact<{
   input: GetCompanyInvoicesInput;
 }>;
@@ -3140,20 +3169,6 @@ export type GetJobsStatisticsQuery = {
     activeCount: number;
     closedCount: number;
   };
-};
-
-export type GetJobsByHotListQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetJobsByHotListQuery = {
-  __typename?: "Query";
-  getJobsByHotList: Array<{ __typename?: "JobWithCompanyType"; id: number }>;
-};
-
-export type GetJobsByPickListQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetJobsByPickListQuery = {
-  __typename?: "Query";
-  getJobsByPickList: Array<{ __typename?: "JobWithCompanyType"; id: number }>;
 };
 
 export type UpdateLineNotificationSettingsMutationVariables = Exact<{
@@ -3336,6 +3351,17 @@ export type GetPickJobScoringWeightsQuery = {
     weight: number;
     displayOrder: number;
     updatedAt: any;
+  }>;
+};
+
+export type GetJobsByPickListQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetJobsByPickListQuery = {
+  __typename?: "Query";
+  getJobsByPickList: Array<{
+    __typename?: "JobWithCompanyType";
+    id: number;
+    title: string;
   }>;
 };
 
@@ -4670,6 +4696,105 @@ export type GetHotJobScoringWeightsQueryResult = Apollo.QueryResult<
   GetHotJobScoringWeightsQuery,
   GetHotJobScoringWeightsQueryVariables
 >;
+export const GetJobsByHotListDocument = gql`
+  query GetJobsByHotList {
+    getJobsByHotList {
+      id
+      title
+    }
+  }
+`;
+
+/**
+ * __useGetJobsByHotListQuery__
+ *
+ * To run a query within a React component, call `useGetJobsByHotListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobsByHotListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobsByHotListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetJobsByHotListQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetJobsByHotListQuery, GetJobsByHotListQueryVariables>(
+    GetJobsByHotListDocument,
+    options,
+  );
+}
+export function useGetJobsByHotListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >(GetJobsByHotListDocument, options);
+}
+// @ts-ignore
+export function useGetJobsByHotListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByHotListQuery,
+  GetJobsByHotListQueryVariables
+>;
+export function useGetJobsByHotListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByHotListQuery,
+        GetJobsByHotListQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByHotListQuery | undefined,
+  GetJobsByHotListQueryVariables
+>;
+export function useGetJobsByHotListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByHotListQuery,
+        GetJobsByHotListQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetJobsByHotListQuery,
+    GetJobsByHotListQueryVariables
+  >(GetJobsByHotListDocument, options);
+}
+export type GetJobsByHotListQueryHookResult = ReturnType<
+  typeof useGetJobsByHotListQuery
+>;
+export type GetJobsByHotListLazyQueryHookResult = ReturnType<
+  typeof useGetJobsByHotListLazyQuery
+>;
+export type GetJobsByHotListSuspenseQueryHookResult = ReturnType<
+  typeof useGetJobsByHotListSuspenseQuery
+>;
+export type GetJobsByHotListQueryResult = Apollo.QueryResult<
+  GetJobsByHotListQuery,
+  GetJobsByHotListQueryVariables
+>;
 export const GetCompanyInvoicesDocument = gql`
   query GetCompanyInvoices($input: GetCompanyInvoicesInput!) {
     getCompanyInvoices(input: $input) {
@@ -5184,202 +5309,6 @@ export type GetJobsStatisticsSuspenseQueryHookResult = ReturnType<
 export type GetJobsStatisticsQueryResult = Apollo.QueryResult<
   GetJobsStatisticsQuery,
   GetJobsStatisticsQueryVariables
->;
-export const GetJobsByHotListDocument = gql`
-  query GetJobsByHotList {
-    getJobsByHotList {
-      id
-    }
-  }
-`;
-
-/**
- * __useGetJobsByHotListQuery__
- *
- * To run a query within a React component, call `useGetJobsByHotListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByHotListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByHotListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByHotListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetJobsByHotListQuery, GetJobsByHotListQueryVariables>(
-    GetJobsByHotListDocument,
-    options,
-  );
-}
-export function useGetJobsByHotListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >(GetJobsByHotListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByHotListQuery,
-  GetJobsByHotListQueryVariables
->;
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByHotListQuery,
-        GetJobsByHotListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByHotListQuery | undefined,
-  GetJobsByHotListQueryVariables
->;
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByHotListQuery,
-        GetJobsByHotListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >(GetJobsByHotListDocument, options);
-}
-export type GetJobsByHotListQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListQuery
->;
-export type GetJobsByHotListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListLazyQuery
->;
-export type GetJobsByHotListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListSuspenseQuery
->;
-export type GetJobsByHotListQueryResult = Apollo.QueryResult<
-  GetJobsByHotListQuery,
-  GetJobsByHotListQueryVariables
->;
-export const GetJobsByPickListDocument = gql`
-  query GetJobsByPickList {
-    getJobsByPickList {
-      id
-    }
-  }
-`;
-
-/**
- * __useGetJobsByPickListQuery__
- *
- * To run a query within a React component, call `useGetJobsByPickListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByPickListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByPickListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByPickListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-export function useGetJobsByPickListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByPickListQuery,
-  GetJobsByPickListQueryVariables
->;
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByPickListQuery,
-        GetJobsByPickListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByPickListQuery | undefined,
-  GetJobsByPickListQueryVariables
->;
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByPickListQuery,
-        GetJobsByPickListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-export type GetJobsByPickListQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListQuery
->;
-export type GetJobsByPickListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListLazyQuery
->;
-export type GetJobsByPickListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListSuspenseQuery
->;
-export type GetJobsByPickListQueryResult = Apollo.QueryResult<
-  GetJobsByPickListQuery,
-  GetJobsByPickListQueryVariables
 >;
 export const UpdateLineNotificationSettingsDocument = gql`
   mutation UpdateLineNotificationSettings(
@@ -6101,6 +6030,105 @@ export type GetPickJobScoringWeightsSuspenseQueryHookResult = ReturnType<
 export type GetPickJobScoringWeightsQueryResult = Apollo.QueryResult<
   GetPickJobScoringWeightsQuery,
   GetPickJobScoringWeightsQueryVariables
+>;
+export const GetJobsByPickListDocument = gql`
+  query GetJobsByPickList {
+    getJobsByPickList {
+      id
+      title
+    }
+  }
+`;
+
+/**
+ * __useGetJobsByPickListQuery__
+ *
+ * To run a query within a React component, call `useGetJobsByPickListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobsByPickListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobsByPickListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetJobsByPickListQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >(GetJobsByPickListDocument, options);
+}
+export function useGetJobsByPickListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >(GetJobsByPickListDocument, options);
+}
+// @ts-ignore
+export function useGetJobsByPickListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByPickListQuery,
+  GetJobsByPickListQueryVariables
+>;
+export function useGetJobsByPickListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByPickListQuery,
+        GetJobsByPickListQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetJobsByPickListQuery | undefined,
+  GetJobsByPickListQueryVariables
+>;
+export function useGetJobsByPickListSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetJobsByPickListQuery,
+        GetJobsByPickListQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetJobsByPickListQuery,
+    GetJobsByPickListQueryVariables
+  >(GetJobsByPickListDocument, options);
+}
+export type GetJobsByPickListQueryHookResult = ReturnType<
+  typeof useGetJobsByPickListQuery
+>;
+export type GetJobsByPickListLazyQueryHookResult = ReturnType<
+  typeof useGetJobsByPickListLazyQuery
+>;
+export type GetJobsByPickListSuspenseQueryHookResult = ReturnType<
+  typeof useGetJobsByPickListSuspenseQuery
+>;
+export type GetJobsByPickListQueryResult = Apollo.QueryResult<
+  GetJobsByPickListQuery,
+  GetJobsByPickListQueryVariables
 >;
 export const CreateAdditionalScoutTicketDocument = gql`
   mutation CreateAdditionalScoutTicket(

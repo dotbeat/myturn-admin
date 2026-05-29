@@ -41,19 +41,3 @@ export const GET_JOBS_STATISTICS = gql`
     }
   }
 `;
-
-export const GET_JOBS_BY_HOT_LIST = gql`
-  query GetJobsByHotList {
-    getJobsByHotList {
-      id
-    }
-  }
-`;
-
-export const GET_JOBS_BY_PICK_LIST = gql`
-  query GetJobsByPickList {
-    getJobsByPickList {
-      id
-    }
-  }
-`;
