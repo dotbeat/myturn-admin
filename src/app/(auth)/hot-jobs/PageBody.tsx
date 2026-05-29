@@ -68,9 +68,12 @@ export default function PageBody() {
     0,
   );
 
-  const { data: hotJobsData } = useQuery(GET_JOBS_BY_HOT_LIST, {
-    fetchPolicy: "network-only",
-  });
+  const { data: hotJobsData, refetch: refetchHotJobs } = useQuery(
+    GET_JOBS_BY_HOT_LIST,
+    {
+      fetchPolicy: "network-only",
+    },
+  );
   const hotJobs: { id: number; title: string }[] =
     hotJobsData?.getJobsByHotList ?? [];
 
@@ -109,6 +112,7 @@ export default function PageBody() {
           `再計算完了: ${data.recalculateHotJobs.updatedCount}件更新`,
           "success",
         );
+        refetchHotJobs();
       },
       onError: (err) => showToast(`再計算エラー: ${err.message}`, "error"),
     },

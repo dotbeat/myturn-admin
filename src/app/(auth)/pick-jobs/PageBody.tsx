@@ -68,9 +68,12 @@ export default function PageBody() {
     0,
   );
 
-  const { data: pickJobsData } = useQuery(GET_JOBS_BY_PICK_LIST, {
-    fetchPolicy: "network-only",
-  });
+  const { data: pickJobsData, refetch: refetchPickJobs } = useQuery(
+    GET_JOBS_BY_PICK_LIST,
+    {
+      fetchPolicy: "network-only",
+    },
+  );
   const pickJobs: { id: number; title: string }[] =
     pickJobsData?.getJobsByPickList ?? [];
 
@@ -109,6 +112,7 @@ export default function PageBody() {
           `再計算完了: ${data.recalculatePickJobs.updatedCount}件更新`,
           "success",
         );
+        refetchPickJobs();
       },
       onError: (err) => showToast(`再計算エラー: ${err.message}`, "error"),
     },
