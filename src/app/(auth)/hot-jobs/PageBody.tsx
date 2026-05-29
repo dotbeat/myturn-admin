@@ -70,9 +70,7 @@ export default function PageBody() {
 
   const { data: hotJobsData, refetch: refetchHotJobs } = useQuery(
     GET_JOBS_BY_HOT_LIST,
-    {
-      fetchPolicy: "network-only",
-    },
+    { fetchPolicy: "network-only" },
   );
   const hotJobs: { id: number; title: string }[] =
     hotJobsData?.getJobsByHotList ?? [];
@@ -215,9 +213,14 @@ export default function PageBody() {
         </FormProvider>
 
         <Box className="min-w-64 max-w-2xl">
-          <Typography variant="body1" className="mb-4 font-semibold">
-            現在の人気求人ランキング
-          </Typography>
+          <Box className="mb-4 flex items-center gap-2">
+            <Typography variant="body1" className="font-semibold">
+              現在の人気求人ランキング
+            </Typography>
+            <Typography className="text-sm text-[var(--myturn-sub-text)]">
+              (上位30位)
+            </Typography>
+          </Box>
           {hotJobs.length === 0 ? (
             <Typography
               variant="body2"
