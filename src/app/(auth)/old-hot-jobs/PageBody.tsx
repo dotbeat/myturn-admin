@@ -60,7 +60,7 @@ export default function PageBody() {
     });
   };
 
-  // (旧版)人気求人データ更新
+  // 人気求人データ更新
   const [updateOldHotJobs, { loading: isUpdating }] = useMutation(
     UPDATE_OLD_HOT_JOBS,
     {
@@ -90,7 +90,7 @@ export default function PageBody() {
     name: "oldHotJobs",
   });
 
-  // (旧版)人気求人データ取得
+  // 人気求人データ取得
   useQuery(GET_JOBS_BY_OLD_HOT_LIST, {
     fetchPolicy: "network-only",
     onCompleted: (data: GetJobsByOldHotListQuery) => {
@@ -128,18 +128,18 @@ export default function PageBody() {
 
       setError(null);
     } catch (err) {
-      console.error("(旧版)人気求人更新中にエラーが発生しました:", err);
+      console.error("人気求人更新中にエラーが発生しました:", err);
       setError(
         err instanceof Error
           ? err.message
-          : "(旧版)人気求人更新中にエラーが発生しました",
+          : "人気求人更新中にエラーが発生しました",
       );
     }
   };
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">(旧版)人気求人管理</PageTitle>
+      <PageTitle className="mb-8">人気求人管理</PageTitle>
 
       <FormProvider {...methods}>
         <form

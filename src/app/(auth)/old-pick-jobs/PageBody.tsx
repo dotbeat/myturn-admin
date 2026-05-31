@@ -60,7 +60,7 @@ export default function PageBody() {
     });
   };
 
-  // (旧版)注目の求人データ更新
+  // 注目の求人データ更新
   const [updateOldPickJobs, { loading: isUpdating }] = useMutation(
     UPDATE_OLD_PICK_JOBS,
     {
@@ -92,7 +92,7 @@ export default function PageBody() {
     name: "oldPickJobs",
   });
 
-  // (旧版)注目の求人データ取得
+  // 注目の求人データ取得
   useQuery(GET_JOBS_BY_OLD_PICK_LIST, {
     fetchPolicy: "network-only",
     onCompleted: (data: GetJobsByOldPickListQuery) => {
@@ -130,18 +130,18 @@ export default function PageBody() {
 
       setError(null);
     } catch (err) {
-      console.error("(旧版)注目の求人更新中にエラーが発生しました:", err);
+      console.error("注目の求人更新中にエラーが発生しました:", err);
       setError(
         err instanceof Error
           ? err.message
-          : "(旧版)注目の求人更新中にエラーが発生しました",
+          : "注目の求人更新中にエラーが発生しました",
       );
     }
   };
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">(旧版)注目の求人一覧管理</PageTitle>
+      <PageTitle className="mb-8">注目の求人一覧管理</PageTitle>
 
       <FormProvider {...methods}>
         <form

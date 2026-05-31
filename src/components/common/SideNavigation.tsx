@@ -59,16 +59,16 @@ export default function SideNavigation({
           <SideNavigationItem href="/magazine" label="Magazine" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/hot-jobs" label="人気求人ランキング" />
+          <SideNavigationItem href="/old-hot-jobs" label="人気求人" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/pick-jobs" label="注目の求人" />
+          <SideNavigationItem href="/old-pick-jobs" label="注目の求人" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/old-hot-jobs" label="(旧版)人気求人" />
+          <SideNavigationItem href="/hot-jobs" label="(仮)人気求人ランキング" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/old-pick-jobs" label="(旧版)注目の求人" />
+          <SideNavigationItem href="/pick-jobs" label="(仮)注目の求人" />
         </ListItem>
         <ListItem className="p-0">
           <SideNavigationItem href="/line-notifications" label="LINE通知設定" />
