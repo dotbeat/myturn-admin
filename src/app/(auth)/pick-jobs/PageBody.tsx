@@ -134,11 +134,12 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-1">注目の求人一覧管理（重み設定）</PageTitle>
+      <PageTitle className="mb-1">(仮)注目の求人一覧管理（重み設定）</PageTitle>
       <Typography
         variant="body2"
         className="mb-8 text-[var(--myturn-sub-text)]"
       >
+        (未リリースの機能で、これは検証用ページです)
         myturnトップページで表示される注目の求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
       </Typography>
 
