@@ -42,7 +42,7 @@ export default function Page() {
           Magazine
         </Link>
         <Link href="/hot-jobs" className="underline">
-          人気求人
+          人気求人ランキング
         </Link>
         <Link href="/pick-jobs" className="underline">
           注目の求人

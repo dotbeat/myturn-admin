@@ -59,7 +59,7 @@ export default function SideNavigation({
           <SideNavigationItem href="/magazine" label="Magazine" />
         </ListItem>
         <ListItem className="p-0">
-          <SideNavigationItem href="/hot-jobs" label="人気求人" />
+          <SideNavigationItem href="/hot-jobs" label="人気求人ランキング" />
         </ListItem>
         <ListItem className="p-0">
           <SideNavigationItem href="/pick-jobs" label="注目の求人" />

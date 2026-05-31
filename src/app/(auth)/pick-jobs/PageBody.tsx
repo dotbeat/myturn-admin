@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,179 +20,246 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { GetJobsByPickListQuery } from "@/graphql-client";
 import {
-  PickJobEditFormData,
-  pickJobEditFormSchema,
+  PickJobWeightFormData,
+  pickJobWeightFormSchema,
 } from "@/schemas/pick-job/edit";
-import { UPDATE_PICK_JOBS } from "@/server/graphql/pick-job/mutations";
-import { GET_JOBS_BY_PICK_LIST } from "@/server/graphql/job/queries";
+import {
+  UPDATE_PICK_JOB_SCORING_WEIGHTS,
+  RECALCULATE_PICK_JOBS,
+} from "@/server/graphql/pick-job/mutations";
+import {
+  GET_PICK_JOB_SCORING_WEIGHTS,
+  GET_JOBS_BY_PICK_LIST,
+} from "@/server/graphql/pick-job/queries";
+import { PICK_JOB_WEIGHT_METADATA } from "@/utils/frontend/hot-job";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 
-type EditingPickJobItem = {
-  jobId: number;
-};
-
 export default function PageBody() {
   const [error, setError] = useState<string | null>(null);
-
-  // トースト通知の状態
   const [toast, setToast] = useState<{
     open: boolean;
     message: string;
     severity: "success" | "error" | "info" | "warning";
-  }>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
+  }>({ open: false, message: "", severity: "info" });
 
-  // トースト通知を閉じる
-  const handleCloseToast = () => {
-    setToast({ ...toast, open: false });
-  };
-
-  // トースト通知を表示
+  const handleCloseToast = () => setToast({ ...toast, open: false });
   const showToast = (
     message: string,
     severity: "success" | "error" | "info" | "warning",
-  ) => {
-    setToast({
-      open: true,
-      message,
-      severity,
-    });
-  };
+  ) => setToast({ open: true, message, severity });
 
-  // 注目の求人データ更新
-  const [updatePickJobs, { loading: isUpdating }] = useMutation(
-    UPDATE_PICK_JOBS,
+  const methods = useForm<PickJobWeightFormData>({
+    resolver: zodResolver(pickJobWeightFormSchema),
+    mode: "onChange",
+    defaultValues: { weights: [] },
+  });
+  const { fields } = useFieldArray({
+    control: methods.control,
+    name: "weights",
+  });
+  const watchedWeights = useWatch({
+    control: methods.control,
+    name: "weights",
+  });
+  const totalPercent = (watchedWeights ?? []).reduce(
+    (sum, w) => sum + (Number(w?.weight) || 0),
+    0,
+  );
+
+  const { data: pickJobsData, refetch: refetchPickJobs } = useQuery(
+    GET_JOBS_BY_PICK_LIST,
+    { fetchPolicy: "network-only" },
+  );
+  const pickJobs: { id: number; title: string }[] =
+    pickJobsData?.getJobsByPickList ?? [];
+
+  useQuery(GET_PICK_JOB_SCORING_WEIGHTS, {
+    fetchPolicy: "network-only",
+    onCompleted: (data: any) => {
+      const sorted = [...data.getPickJobScoringWeights].sort(
+        (a: any, b: any) => a.displayOrder - b.displayOrder,
+      );
+      methods.setValue(
+        "weights",
+        sorted.map((w: any) => ({
+          indicator: w.indicator,
+          weight: w.weight,
+        })),
+      );
+    },
+  });
+
+  const [updateWeights, { loading: isUpdating }] = useMutation(
+    UPDATE_PICK_JOB_SCORING_WEIGHTS,
     {
-      onCompleted: () => {
-        // 更新成功時のトースト表示
-        showToast("一覧情報が更新されました", "success");
-      },
-      onError: (error) => {
-        console.error("更新中にエラーが発生しました:", error);
-        setError(error.message || "更新中にエラーが発生しました");
-        // エラー時のトースト表示
+      onCompleted: () => showToast("重み設定を更新しました", "success"),
+      onError: (err) => {
+        setError(err.message);
         showToast("更新中にエラーが発生しました", "error");
       },
     },
   );
 
-  const initFormPickJobs: PickJobEditFormData["pickJobs"] = new Array(18)
-    .fill(null)
-    .map(() => ({ jobId: 0 }));
-  const methods = useForm<PickJobEditFormData>({
-    resolver: zodResolver(pickJobEditFormSchema),
-    mode: "onChange", // リアルタイムバリデーション
-    defaultValues: { pickJobs: initFormPickJobs },
-  });
-  const pickJobsControl = useFieldArray({
-    control: methods.control,
-    name: "pickJobs",
-  });
-
-  // 注目の求人データ取得
-  useQuery(GET_JOBS_BY_PICK_LIST, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: GetJobsByPickListQuery) => {
-      const pickList = data.getJobsByPickList.map((job) => ({ jobId: job.id }));
-      initFormPickJobs.splice(0, pickList.length, ...pickList);
-      methods.setValue("pickJobs", initFormPickJobs);
+  const [recalculate, { loading: isRecalculating }] = useMutation(
+    RECALCULATE_PICK_JOBS,
+    {
+      onCompleted: (data: any) => {
+        showToast(
+          `再計算完了: ${data.recalculatePickJobs.updatedCount}件更新`,
+          "success",
+        );
+        refetchPickJobs();
+      },
+      onError: (err) => showToast(`再計算エラー: ${err.message}`, "error"),
     },
-  });
+  );
 
-  // フォームデータをGraphQLミューテーションの入力形式に変換する関数
-  const convertFormDataToUpdateInput = async (data: PickJobEditFormData) => {
-    const pickJobsInput = await Promise.all(
-      data.pickJobs.map(async (pickJob) => {
-        const pickJobData: EditingPickJobItem = {
-          jobId: pickJob.jobId,
-        };
-        return pickJobData;
-      }),
-    );
-
-    // 更新用の入力データを作成
-    return { pickJobs: pickJobsInput };
+  const onSubmit = async (data: PickJobWeightFormData) => {
+    setError(null);
+    await updateWeights({
+      variables: {
+        input: {
+          weights: data.weights.map((w) => ({
+            indicator: w.indicator,
+            weight: w.weight,
+          })),
+        },
+      },
+    });
   };
 
-  const onSubmit = async (data: PickJobEditFormData) => {
-    try {
-      // フォームデータをGraphQLミューテーションの入力形式に変換
-      const updateInput = await convertFormDataToUpdateInput(data);
-      // 更新ミューテーションを実行
-      await updatePickJobs({
-        variables: { input: updateInput },
-      });
-
-      setError(null);
-    } catch (err) {
-      console.error("注目の求人更新中にエラーが発生しました:", err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "注目の求人更新中にエラーが発生しました",
-      );
-    }
-  };
+  const isWeightSumValid = Math.abs(totalPercent - 100) < 0.01;
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-8">注目の求人一覧管理</PageTitle>
+      <PageTitle className="mb-1">注目の求人一覧管理（重み設定）</PageTitle>
+      <Typography
+        variant="body2"
+        className="mb-8 text-[var(--myturn-sub-text)]"
+      >
+        myturnトップページで表示される注目の求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
+      </Typography>
 
-      <FormProvider {...methods}>
-        <form
-          method="POST"
-          className="flex flex-col items-start gap-6"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
-          <Table className="max-w-64 bg-[var(--background)]">
-            <TableHead>
-              <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
-                <TableCell className="p-2"></TableCell>
-                <TableCell className="p-2">求人ID</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {pickJobsControl.fields.map((pickJob, i) => {
-                return (
+      <Box className="flex gap-12">
+        <FormProvider {...methods}>
+          <form
+            method="POST"
+            className="w-2xl flex flex-col items-start gap-4"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <Typography variant="body1" className="font-semibold">
+              合計:{" "}
+              <span
+                className={
+                  isWeightSumValid
+                    ? "text-[var(--myturn-main)]"
+                    : "text-[var(--myturn-accent)]"
+                }
+              >
+                {totalPercent.toFixed(1).replace(".0", "")}%{" "}
+                {isWeightSumValid ? "" : "(合計100%にしてください)"}
+              </span>
+            </Typography>
+
+            <Table className="bg-[var(--background)]">
+              <TableHead>
+                <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+                  <TableCell className="p-2 pl-4">指標名</TableCell>
+                  <TableCell className="p-2">重み (%)</TableCell>
+                  <TableCell className="p-2 pr-4">説明</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {fields.map((field, i) => (
                   <TableRow
-                    key={pickJob.id}
+                    key={field.id}
                     className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
                   >
-                    <TableCell className="p-2 pl-4">{i + 1}</TableCell>
+                    <TableCell className="p-2 pl-4">
+                      {PICK_JOB_WEIGHT_METADATA[field.indicator].label}
+                    </TableCell>
                     <TableCell className="p-2">
                       <TextField
-                        name={`pickJobs.${i}.jobId`}
+                        name={`weights.${i}.weight`}
                         type="number"
-                        className="w-32"
+                        className="w-24"
                         inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </TableCell>
+                    <TableCell className="p-2 text-sm">
+                      {PICK_JOB_WEIGHT_METADATA[field.indicator].description}
+                    </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
+                ))}
+              </TableBody>
+            </Table>
+
+            {error && (
+              <Typography className="text-[var(--myturn-accent)]">
+                {error}
+              </Typography>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isUpdating || !isWeightSumValid}
+              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)] disabled:bg-[var(--myturn-support-middle)]"
+            >
+              {isUpdating ? "更新中..." : "設定を更新する"}
+            </Button>
+          </form>
+        </FormProvider>
+
+        <Box className="min-w-64 max-w-2xl">
+          <Box className="mb-4 flex items-center gap-2">
+            <Typography variant="body1" className="font-semibold">
+              現在の注目の求人一覧
             </Typography>
+            <Typography className="text-sm text-[var(--myturn-sub-text)]">
+              (上位30位)
+            </Typography>
+          </Box>
+          {pickJobs.length === 0 ? (
+            <Typography
+              variant="body2"
+              className="mb-4 text-[var(--myturn-sub-text)]"
+            >
+              設定済みの求人はありません
+            </Typography>
+          ) : (
+            <Table className="mb-4 bg-[var(--background)]">
+              <TableHead>
+                <TableRow className="border border-[var(--myturn-support-middle)]">
+                  <TableCell className="p-2 text-sm">ID</TableCell>
+                  <TableCell className="p-2 text-sm">求人タイトル</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pickJobs.map((job) => (
+                  <TableRow
+                    key={job.id}
+                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                  >
+                    <TableCell className="p-2 text-sm">{job.id}</TableCell>
+                    <TableCell className="p-2 text-sm">{job.title}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
           <Button
-            type="submit"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
+            type="button"
+            disabled={isRecalculating}
+            className="rounded-full border border-[var(--myturn-sub-text)] px-4 py-3"
+            onClick={() => recalculate()}
           >
-            {isUpdating ? "更新中..." : "更新する"}
+            {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}
           </Button>
-        </form>
-      </FormProvider>
+        </Box>
+      </Box>
 
-      {/* トースト通知 */}
       <Snackbar
         open={toast.open}
         autoHideDuration={6000}
