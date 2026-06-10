@@ -64,6 +64,8 @@ export const jobTypes: SelectItem[] = [
   "事務",
   "コンサルタント",
   "秘書",
+  "SNSマーケティング",
+  "カスタマーサクセス",
   "その他",
 ].map((period) => ({
   value: period,
