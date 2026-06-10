@@ -55,6 +55,7 @@ export function industriesAndEmpty(emptyLabel: string): SelectItem[] {
 export const jobTypes: SelectItem[] = [
   "営業",
   "マーケティング",
+  "SNSマーケティング・運用",
   "エンジニア",
   "企画",
   "編集/ライター",
@@ -64,7 +65,6 @@ export const jobTypes: SelectItem[] = [
   "事務",
   "コンサルタント",
   "秘書",
-  "SNSマーケティング",
   "カスタマーサクセス",
   "その他",
 ].map((period) => ({
