@@ -55,7 +55,6 @@ export function industriesAndEmpty(emptyLabel: string): SelectItem[] {
 export const jobTypes: SelectItem[] = [
   "営業",
   "マーケティング",
-  "SNSマーケティング・運用",
   "エンジニア",
   "企画",
   "編集/ライター",
