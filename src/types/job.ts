@@ -1,5 +1,10 @@
 export type JobStatus = "DRAFT" | "ACTIVE" | "CLOSED";
 
+export type StatusIndicator = {
+  label: string;
+  colorClass: string;
+};
+
 export type JobItem = {
   id: number;
   jobHeader: string;

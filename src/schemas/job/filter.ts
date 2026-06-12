@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { jobStatuses } from "@/utils/shared/job";
+import { jobOfferStatuses } from "@/utils/shared/job";
 import { ruleDateNullable } from "../common/date";
 
 export const jobFilterFormSchema = z
@@ -7,7 +7,7 @@ export const jobFilterFormSchema = z
     title: z.string().trim(), // 求人タイトル
     companyName: z.string().trim(), // 企業名
     prefecture: z.string(), // 都道府県
-    status: z.enum(["", ...jobStatuses]), // ステータス
+    status: z.enum(["", ...jobOfferStatuses]), // ステータス
     openDateStart: ruleDateNullable(), // 公開日(開始)
     openDateEnd: ruleDateNullable(), // 公開日(終了)
     closeDateStart: ruleDateNullable(), // 終了日(開始)

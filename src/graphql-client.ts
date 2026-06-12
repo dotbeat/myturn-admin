@@ -3113,6 +3113,21 @@ export type UpdateJobIsAgentPlanOnlyMutation = {
   };
 };
 
+export type UpdateJobStatusMutationVariables = Exact<{
+  input: UpdateJobStatusInput;
+}>;
+
+export type UpdateJobStatusMutation = {
+  __typename?: "Mutation";
+  updateJobStatus: {
+    __typename?: "JobType";
+    id: number;
+    title: string;
+    status: string;
+    updatedAt: any;
+  };
+};
+
 export type SearchJobsWithStatsQueryVariables = Exact<{
   input: SearchJobsWithStatsInput;
 }>;
@@ -5049,6 +5064,59 @@ export type UpdateJobIsAgentPlanOnlyMutationOptions =
     UpdateJobIsAgentPlanOnlyMutation,
     UpdateJobIsAgentPlanOnlyMutationVariables
   >;
+export const UpdateJobStatusDocument = gql`
+  mutation UpdateJobStatus($input: UpdateJobStatusInput!) {
+    updateJobStatus(input: $input) {
+      id
+      title
+      status
+      updatedAt
+    }
+  }
+`;
+export type UpdateJobStatusMutationFn = Apollo.MutationFunction<
+  UpdateJobStatusMutation,
+  UpdateJobStatusMutationVariables
+>;
+
+/**
+ * __useUpdateJobStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateJobStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJobStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateJobStatusMutation, { data, loading, error }] = useUpdateJobStatusMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateJobStatusMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateJobStatusMutation,
+    UpdateJobStatusMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateJobStatusMutation,
+    UpdateJobStatusMutationVariables
+  >(UpdateJobStatusDocument, options);
+}
+export type UpdateJobStatusMutationHookResult = ReturnType<
+  typeof useUpdateJobStatusMutation
+>;
+export type UpdateJobStatusMutationResult =
+  Apollo.MutationResult<UpdateJobStatusMutation>;
+export type UpdateJobStatusMutationOptions = Apollo.BaseMutationOptions<
+  UpdateJobStatusMutation,
+  UpdateJobStatusMutationVariables
+>;
 export const SearchJobsWithStatsDocument = gql`
   query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
     searchJobsWithStats(input: $input) {
