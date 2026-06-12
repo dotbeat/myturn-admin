@@ -1,20 +1,22 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import { industries, jobTypes } from "@/const/job";
 import { JobItem } from "@/types/job";
-import { jobOfferStatusIndex } from "@/utils/shared/job";
 import { getSelectItem } from "@/utils/shared/select";
 import { ImageFillIcon } from "@/icons/image/fill";
 import Table, { TableColumn, TableRow } from "@/components/common/Table";
+import JobOfferStatus from "@/components/job/JobOfferStatus";
 
 export default function JobList({
   items,
   isLoading,
   onEditAgentPlanOnly,
+  onStatusUpdated,
   className = "",
 }: {
   items: JobItem[];
   isLoading: boolean;
   onEditAgentPlanOnly: (item: JobItem) => void;
+  onStatusUpdated?: () => Promise<void>;
   className?: string;
 }) {
   const columns = [
@@ -84,7 +86,13 @@ export default function JobList({
       item.openedAt && item.status != "DRAFT"
         ? new Date(item.openedAt).toLocaleDateString("ja")
         : "—",
-    status: jobOfferStatusIndex[item.status]?.label ?? "—",
+    status: (
+      <JobOfferStatus
+        id={item.id}
+        status={item.status}
+        onStatusUpdated={onStatusUpdated}
+      />
+    ),
     pvCount: item.pv,
     favoriteCount: item.favoriteCount,
     entryCount: item.entryCount,

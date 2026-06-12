@@ -25,7 +25,7 @@ export default function JobOfferStatus({
   const [statusInfo, setStatusInfo] = useState(jobOfferStatusIndex[status]);
 
   const [updateJobStatus] = useMutation(UPDATE_JOB_STATUS, {
-    onCompleted: async (data) => {
+    onCompleted: async () => {
       if (onStatusUpdated) {
         try {
           await onStatusUpdated();
@@ -168,52 +168,36 @@ export default function JobOfferStatus({
 
   return (
     <>
-      {status !== "CLOSED" ? (
-        <Menu
-          id={`job-offer-status-${id}`}
-          className={`flex items-center gap-1 px-2 py-1 ${className}`}
-          menuClass="p-2"
-          activator={({ isOpenMenu }) => (
-            <>
-              <Box
-                className={`h-4 w-4 rounded-full ${statusInfo.colorClass}`}
-              />
-              <Typography className="shrink-0">{statusInfo.label}</Typography>
-              <ArrowDownNarrowIcon
-                size={12}
-                className={isOpenMenu ? "rotate-180" : ""}
-              />
-            </>
-          )}
-        >
-          {jobOfferStatuses.map((statusItem) => {
-            // 下書き→募集中→募集終了の一方通行で、逆方向には切り替えられない
-            const isBlockSwitch =
-              status === statusItem ||
-              (status !== "DRAFT" && statusItem === "DRAFT");
-            return (
-              <Button
-                key={statusItem}
-                disabled={isBlockSwitch}
-                className="flex w-full items-center gap-4 px-4 py-3 disabled:opacity-30 [&:not(:disabled)]:hover:bg-stone-300/30"
-                onClick={() => !isBlockSwitch && handleStatusChange(statusItem)}
-              >
-                <Box
-                  className={`h-4 w-4 rounded-full ${jobOfferStatusIndex[statusItem].colorClass}`}
-                />
-                <Typography className="flex-1 shrink-0 text-left">
-                  {jobOfferStatusIndex[statusItem].label}
-                </Typography>
-              </Button>
-            );
-          })}
-        </Menu>
-      ) : (
-        <Box className="flex items-center gap-1 px-2">
-          <Box className={`h-4 w-4 rounded-full ${statusInfo.colorClass}`} />
-          <Typography className="leading-none">{statusInfo.label}</Typography>
-        </Box>
-      )}
+      <Menu
+        id={`job-offer-status-${id}`}
+        className={`flex items-center gap-1 px-2 py-1 ${className}`}
+        menuClass="p-2"
+        activator={({ isOpenMenu }) => (
+          <>
+            <Box className={`h-4 w-4 rounded-full ${statusInfo.colorClass}`} />
+            <Typography className="shrink-0">{statusInfo.label}</Typography>
+            <ArrowDownNarrowIcon
+              size={12}
+              className={isOpenMenu ? "rotate-180" : ""}
+            />
+          </>
+        )}
+      >
+        {jobOfferStatuses.map((statusItem) => (
+          <Button
+            key={statusItem}
+            className="flex w-full items-center gap-4 px-4 py-3 disabled:opacity-30 [&:not(:disabled)]:hover:bg-stone-300/30"
+            onClick={() => handleStatusChange(statusItem)}
+          >
+            <Box
+              className={`h-4 w-4 rounded-full ${jobOfferStatusIndex[statusItem].colorClass}`}
+            />
+            <Typography className="flex-1 shrink-0 text-left">
+              {jobOfferStatusIndex[statusItem].label}
+            </Typography>
+          </Button>
+        ))}
+      </Menu>
 
       {/* トースト通知 */}
       <Snackbar
