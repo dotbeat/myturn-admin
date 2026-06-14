@@ -2,10 +2,10 @@ import { JobStatus } from "@/types/job";
 import { SelectItem } from "@/types/select";
 import {
   jobOfferStatusIndex,
-  jobStatuses as jobStatusKeys,
+  jobOfferStatuses as jobStatusKeys,
 } from "@/utils/shared/job";
 
-export const jobStatuses: SelectItem<JobStatus>[] = jobStatusKeys.map(
+export const jobOfferStatuses: SelectItem<JobStatus>[] = jobStatusKeys.map(
   (key) => ({
     value: key,
     label: jobOfferStatusIndex[key].label,
@@ -14,7 +14,7 @@ export const jobStatuses: SelectItem<JobStatus>[] = jobStatusKeys.map(
 export function jobStatusesAndEmpty(
   emptyLabel: string,
 ): SelectItem<JobStatus | "">[] {
-  return [{ value: "", label: emptyLabel }, ...jobStatuses];
+  return [{ value: "", label: emptyLabel }, ...jobOfferStatuses];
 }
 
 export const industries: SelectItem[] = [

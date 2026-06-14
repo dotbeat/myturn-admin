@@ -1,13 +1,16 @@
-import { JobStatus } from "@/types/job";
+import { JobStatus, StatusIndicator } from "@/types/job";
 
-export const jobStatuses = [
+export const jobOfferStatuses = [
   "DRAFT",
   "ACTIVE",
   "CLOSED",
 ] as const satisfies JobStatus[];
 
-export const jobOfferStatusIndex: Record<JobStatus, { label: string }> = {
-  DRAFT: { label: "下書き" },
-  ACTIVE: { label: "募集中" },
-  CLOSED: { label: "募集終了" },
+export const jobOfferStatusIndex: Record<JobStatus, StatusIndicator> = {
+  DRAFT: { label: "下書き", colorClass: "bg-[var(--myturn-sub-text)]" },
+  ACTIVE: { label: "募集中", colorClass: "bg-[var(--myturn-main)]" },
+  CLOSED: {
+    label: "募集終了",
+    colorClass: "bg-[var(--myturn-support-middle)]",
+  },
 };

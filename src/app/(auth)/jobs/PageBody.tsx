@@ -142,7 +142,7 @@ export default function PageBody() {
     defaultValues: { isAgentPlanOnly: "false" },
   });
 
-  const { jobs, totalCount, totalPages, loading } = useJobs(
+  const { jobs, totalCount, totalPages, loading, refetchJobs } = useJobs(
     initialFormData,
     page,
     limit,
@@ -228,6 +228,7 @@ export default function PageBody() {
             items={jobs}
             isLoading={loading}
             onEditAgentPlanOnly={openAgentPlanDialog}
+            onStatusUpdated={refetchJobs}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">
