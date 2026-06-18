@@ -274,7 +274,7 @@ export default function MessagesPage() {
         </div>
 
         {/* チャット表示 */}
-        <div className="flex flex-1 flex-col rounded-lg bg-white shadow">
+        <div className="flex flex-1 flex-col break-words rounded-lg bg-white shadow">
           {selectedGroup ? (
             <>
               <div className="border-b border-gray-200 px-6 py-4">
@@ -325,7 +325,9 @@ export default function MessagesPage() {
                         )}
                       </div>
 
-                      <p className="text-sm">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-sm">
+                        {message.content}
+                      </p>
 
                       <div className="mt-1 text-xs opacity-75">
                         {new Date(message.createdAt).toLocaleString("ja-JP")}
