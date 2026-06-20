@@ -707,6 +707,8 @@ export type GetCompaniesInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   offerCountMax?: InputMaybe<Scalars["Int"]["input"]>;
   offerCountMin?: InputMaybe<Scalars["Int"]["input"]>;
+  orderBy?: InputMaybe<Scalars["String"]["input"]>;
+  orderDirection?: InputMaybe<Scalars["String"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   prefecture?: InputMaybe<Scalars["String"]["input"]>;
   registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
