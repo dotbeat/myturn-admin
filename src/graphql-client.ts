@@ -695,6 +695,8 @@ export type GetAdminMessagesInput = {
 export type GetCompaniesInput = {
   acceptCountMax?: InputMaybe<Scalars["Int"]["input"]>;
   acceptCountMin?: InputMaybe<Scalars["Int"]["input"]>;
+  entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
+  entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   includeDeleted?: InputMaybe<Scalars["Boolean"]["input"]>;
   industry?: InputMaybe<Scalars["String"]["input"]>;
   jobCountMax?: InputMaybe<Scalars["Int"]["input"]>;
@@ -703,6 +705,8 @@ export type GetCompaniesInput = {
   leaveDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  offerCountMax?: InputMaybe<Scalars["Int"]["input"]>;
+  offerCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   prefecture?: InputMaybe<Scalars["String"]["input"]>;
   registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;

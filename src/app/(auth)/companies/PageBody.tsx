@@ -117,6 +117,10 @@ export default function PageBody() {
     industry: paramsConverter.toString("industry"),
     jobCountMin: paramsConverter.toNumber("jobCountMin"),
     jobCountMax: paramsConverter.toNumber("jobCountMax"),
+    entryCountMin: paramsConverter.toNumber("entryCountMin"),
+    entryCountMax: paramsConverter.toNumber("entryCountMax"),
+    offerCountMin: paramsConverter.toNumber("offerCountMin"),
+    offerCountMax: paramsConverter.toNumber("offerCountMax"),
     acceptCountMin: paramsConverter.toNumber("acceptCountMin"),
     acceptCountMax: paramsConverter.toNumber("acceptCountMax"),
   };
