@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,12 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
+import SelectMini from "@/components/common/form/SelectMini";
 import TextField from "@/components/common/form/TextField";
+import {
+  companyOrderByItems,
+  companyOrderDirectionItems,
+} from "@/const/company";
 import { periods } from "@/const/date";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useCompaniesStatistics } from "@/hooks/useCompaniesStatistics";
@@ -106,6 +111,8 @@ export default function PageBody() {
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
+  const orderBy = paramsConverter.toString("orderBy", "createdAt");
+  const orderDirection = paramsConverter.toString("orderDirection", "DESC");
 
   const initialFormData: CompanyFilterFormData = {
     name: paramsConverter.toString("name"),
@@ -117,6 +124,10 @@ export default function PageBody() {
     industry: paramsConverter.toString("industry"),
     jobCountMin: paramsConverter.toNumber("jobCountMin"),
     jobCountMax: paramsConverter.toNumber("jobCountMax"),
+    entryCountMin: paramsConverter.toNumber("entryCountMin"),
+    entryCountMax: paramsConverter.toNumber("entryCountMax"),
+    offerCountMin: paramsConverter.toNumber("offerCountMin"),
+    offerCountMax: paramsConverter.toNumber("offerCountMax"),
     acceptCountMin: paramsConverter.toNumber("acceptCountMin"),
     acceptCountMax: paramsConverter.toNumber("acceptCountMax"),
   };
@@ -131,10 +142,29 @@ export default function PageBody() {
     defaultValues: { agentPlanAmount: 250000 },
   });
 
+  // 並び替え選択欄(URLパラメータと同期)
+  const sortMethods = useForm<{ orderBy: string; orderDirection: string }>({
+    defaultValues: { orderBy, orderDirection },
+  });
+
+  // 選択を変更したらURLパラメータを更新する
+  useEffect(() => {
+    const subscription = sortMethods.watch((value) => {
+      const newParams = new URLSearchParams(window.location.search);
+      newParams.set("orderBy", value.orderBy ?? "createdAt");
+      newParams.set("orderDirection", value.orderDirection ?? "DESC");
+      newParams.delete("page"); // 並び替え変更時は1ページ目に戻す
+      location.search = `?${newParams.toString()}`;
+    });
+    return () => subscription.unsubscribe();
+  }, [sortMethods]);
+
   const { companies, totalCount, totalPages, loading } = useCompanies(
     initialFormData,
     page,
     limit,
+    orderBy,
+    orderDirection,
   );
 
   const {
@@ -210,9 +240,20 @@ export default function PageBody() {
           </form>
         </FormProvider>
         <Box className="min-w-0 flex-1">
-          <Typography className="mb-2 px-4 text-lg font-semibold">
-            検索結果 {totalCount} 件
-          </Typography>
+          <Box className="mb-2 flex items-center justify-between gap-8 px-4">
+            <Typography className="text-lg font-semibold">
+              検索結果 {totalCount} 件
+            </Typography>
+            <Box className="flex items-center gap-2">
+              <FormProvider {...sortMethods}>
+                <SelectMini name="orderBy" items={companyOrderByItems} />
+                <SelectMini
+                  name="orderDirection"
+                  items={companyOrderDirectionItems}
+                />
+              </FormProvider>
+            </Box>
+          </Box>
           <CompanyList
             items={companies}
             isLoading={loading}

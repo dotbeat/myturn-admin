@@ -57,7 +57,7 @@ export default function SelectMini({
             </option>
           ))}
         </select>
-        <Box className="absolute right-1.5 top-1/2 -translate-y-1/2 peer-disabled:opacity-40">
+        <Box className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 peer-disabled:opacity-40">
           <ArrowDownNarrowIcon
             size={12}
             className={error ? "text-[var(--myturn-accent)]" : ""}

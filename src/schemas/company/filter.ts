@@ -12,6 +12,10 @@ export const companyFilterFormSchema = z
     industry: z.string(), // 業界
     jobCountMin: z.coerce.number().min(0), // 掲載数(最小)
     jobCountMax: z.coerce.number().min(0), // 掲載数(最大)
+    entryCountMin: z.coerce.number().min(0), // 応募数(最小)
+    entryCountMax: z.coerce.number().min(0), // 応募数(最大)
+    offerCountMin: z.coerce.number().min(0), // 内定数(最小)
+    offerCountMax: z.coerce.number().min(0), // 内定数(最大)
     acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
     acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
   })
@@ -54,6 +58,34 @@ export const companyFilterFormSchema = z
         code: z.ZodIssueCode.custom,
         message: "範囲指定が逆です",
         path: ["jobCountMax"],
+      });
+    }
+  })
+  .superRefine(({ entryCountMin: min, entryCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["entryCountMax"],
+      });
+    }
+  })
+  .superRefine(({ offerCountMin: min, offerCountMax: max }, ctx) => {
+    if (max !== 0 && min > max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["offerCountMin"],
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "範囲指定が逆です",
+        path: ["offerCountMax"],
       });
     }
   })

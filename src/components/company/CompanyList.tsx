@@ -24,6 +24,8 @@ export default function CompanyList({
     { property: "createdAt", label: "登録日" },
     { property: "deletedAt", label: "退会日" },
     { property: "jobCount", label: "掲載求人" },
+    { property: "entryCount", label: "累計応募" },
+    { property: "offerCount", label: "累計内定" },
     { property: "acceptCount", label: "累計採用" },
     { property: "interviewRate", label: "面談率" },
     { property: "offerRate", label: "内定率" },
@@ -63,6 +65,8 @@ export default function CompanyList({
       ? new Date(item.deletedAt).toLocaleDateString("ja")
       : "—",
     jobCount: item.jobCount,
+    entryCount: item.entryCount,
+    offerCount: item.offerCount,
     acceptCount: item.acceptCount,
     interviewRate: `${item.entryCount ? ((item.interviewCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,
     offerRate: `${item.entryCount ? ((item.offerCount / item.entryCount) * 100).toFixed(1).replace(".0", "") : 0}%`,

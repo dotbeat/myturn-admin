@@ -8,6 +8,8 @@ export function useCompanies(
   input: CompanyFilterFormData,
   page: number,
   limit: number,
+  orderBy: string,
+  orderDirection: string,
 ) {
   const [companies, setCompanies] = useState<CompanyItem[]>([]);
   const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
@@ -15,7 +17,16 @@ export function useCompanies(
 
   // 求職者一覧情報を取得
   const { loading } = useQuery(SEARCH_COMPANY, {
-    variables: { input: { ...input, includeDeleted: true, page, limit } },
+    variables: {
+      input: {
+        ...input,
+        includeDeleted: true,
+        page,
+        limit,
+        orderBy,
+        orderDirection,
+      },
+    },
     fetchPolicy: "no-cache",
     onCompleted(result) {
       setTotalCount(result.getCompanies.totalCount);

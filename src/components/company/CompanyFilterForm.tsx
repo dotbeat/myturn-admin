@@ -56,6 +56,20 @@ export default function CompanyFilterForm({
           <TextFieldMini type="number" name="jobCountMax" className="w-14" />
         </Box>
       </FilterItem>
+      <FilterItem label="応募数">
+        <Box className="flex items-center gap-1">
+          <TextFieldMini type="number" name="entryCountMin" className="w-12" />
+          <Typography className="text-sm">〜</Typography>
+          <TextFieldMini type="number" name="entryCountMax" className="w-14" />
+        </Box>
+      </FilterItem>
+      <FilterItem label="内定数">
+        <Box className="flex items-center gap-1">
+          <TextFieldMini type="number" name="offerCountMin" className="w-12" />
+          <Typography className="text-sm">〜</Typography>
+          <TextFieldMini type="number" name="offerCountMax" className="w-14" />
+        </Box>
+      </FilterItem>
       <FilterItem label="採用数">
         <Box className="flex items-center gap-1">
           <TextFieldMini type="number" name="acceptCountMin" className="w-12" />
