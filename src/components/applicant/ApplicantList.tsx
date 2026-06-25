@@ -1,20 +1,28 @@
-import { Box, Container, Link, Typography } from "@mui/material";
+"use client";
+import { useState } from "react";
+import { Box, Button, Container, Link, Typography } from "@mui/material";
 import { industries, jobTypes } from "@/const/job";
 import { ApplicantItem } from "@/types/applicant";
 import { applyStatusIndex } from "@/utils/shared/applicant";
 import { getSelectItem } from "@/utils/shared/select";
 import Avatar from "@/components/common/Avatar";
 import Table, { TableColumn, TableRow } from "@/components/common/Table";
+import ApplicantEditDialog from "@/components/applicant/ApplicantEditDialog";
 
 export default function ApplicantList({
   items,
   isLoading,
+  refetch,
   className = "",
 }: {
   items: ApplicantItem[];
   isLoading: boolean;
+  refetch: () => void;
   className?: string;
 }) {
+  // 編集ダイアログで編集中の応募情報
+  const [editingItem, setEditingItem] = useState<ApplicantItem | null>(null);
+
   const columns = [
     { property: "avatarUrl", label: "", headCellClass: "w-20" },
     { property: "name", label: "氏名" },
@@ -28,6 +36,7 @@ export default function ApplicantList({
     { property: "secondInterviewScheduledAt", label: "2回目面談日" },
     { property: "joinDate", label: "入社予定日" },
     { property: "joinDateByApplicant", label: "(学生報告)入社予定日" },
+    { property: "edit", label: "" },
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
   const before3years = new Date();
@@ -46,7 +55,7 @@ export default function ApplicantList({
     ),
     name:
       item.user.lastName && item.user.firstName ? (
-        <Box className="w-28 text-left">
+        <Box className="w-36 text-left">
           <Link
             href={`/users/${item.user.id}`}
             title={`${item.user.lastName} ${item.user.firstName}`}
@@ -64,7 +73,7 @@ export default function ApplicantList({
     companyName:
       !item.job.company.deletedAt ||
       new Date(item.job.company.deletedAt) > before3years ? (
-        <Box className="w-48 text-left">
+        <Box className="w-56 text-left">
           <Typography
             title={item.job.company.name}
             className="line-clamp-3 text-wrap"
@@ -99,6 +108,14 @@ export default function ApplicantList({
     joinDateByApplicant: item.joinDate
       ? new Date(item.joinDate)?.toLocaleDateString("ja")
       : "—",
+    edit: (
+      <Button
+        className="mr-2 text-nowrap rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+        onClick={() => setEditingItem(item)}
+      >
+        編集
+      </Button>
+    ),
   }));
 
   return (
@@ -118,6 +135,11 @@ export default function ApplicantList({
           <Typography className="font-semibold">応募者はいません</Typography>
         </Container>
       )}
+      <ApplicantEditDialog
+        item={editingItem}
+        onClose={() => setEditingItem(null)}
+        onSaved={refetch}
+      />
     </Box>
   );
 }

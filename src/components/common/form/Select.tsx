@@ -47,7 +47,7 @@ export default function Select({
           id={inputId}
           {...register(name)}
           disabled={disabled}
-          className={`peer w-full appearance-none rounded-md border bg-[var(--background)] py-2.5 pl-3 pr-7 placeholder:text-[var(--myturn-support-middle)] disabled:opacity-60 ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-current focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"}`}
+          className={`peer w-full appearance-none rounded-md border bg-[var(--background)] py-2.5 pl-3 pr-7 placeholder:text-[var(--myturn-support-middle)] disabled:opacity-60 ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"}`}
         >
           {groups?.map((group, i) => (
             <optgroup key={i} label={group.label}>
