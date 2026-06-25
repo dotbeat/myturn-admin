@@ -1342,6 +1342,7 @@ export type Mutation = {
   updateCompany: CompanyType;
   updateCompanyAcceptTicket: CompanyAcceptTicketType;
   updateEntriesStatus: Array<Entry>;
+  updateEntry: Entry;
   updateEntryApplicantNote: Entry;
   updateEntryStatus: Entry;
   updateHotJobScoringWeights: Array<HotJobScoringWeightType>;
@@ -1511,6 +1512,10 @@ export type MutationUpdateCompanyAcceptTicketArgs = {
 
 export type MutationUpdateEntriesStatusArgs = {
   input: UpdateEntriesStatusInput;
+};
+
+export type MutationUpdateEntryArgs = {
+  input: UpdateEntryInput;
 };
 
 export type MutationUpdateEntryApplicantNoteArgs = {
@@ -2461,6 +2466,14 @@ export type UpdateEntryApplicantNoteInput = {
   id: Scalars["Int"]["input"];
 };
 
+export type UpdateEntryInput = {
+  id: Scalars["Int"]["input"];
+  interviewScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  jobOfferScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  secondInterviewScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type UpdateEntryStatusInput = {
   id: Scalars["Int"]["input"];
   status: Scalars["String"]["input"];
@@ -2934,6 +2947,15 @@ export type GetCompaniesStatisticsQuery = {
     acceptedCount: number;
     leavedCount: number;
   };
+};
+
+export type UpdateEntryMutationVariables = Exact<{
+  input: UpdateEntryInput;
+}>;
+
+export type UpdateEntryMutation = {
+  __typename?: "Mutation";
+  updateEntry: { __typename?: "Entry"; id: number; updatedAt: any };
 };
 
 export type SearchEntriesQueryVariables = Exact<{
@@ -4231,6 +4253,57 @@ export type GetCompaniesStatisticsSuspenseQueryHookResult = ReturnType<
 export type GetCompaniesStatisticsQueryResult = Apollo.QueryResult<
   GetCompaniesStatisticsQuery,
   GetCompaniesStatisticsQueryVariables
+>;
+export const UpdateEntryDocument = gql`
+  mutation UpdateEntry($input: UpdateEntryInput!) {
+    updateEntry(input: $input) {
+      id
+      updatedAt
+    }
+  }
+`;
+export type UpdateEntryMutationFn = Apollo.MutationFunction<
+  UpdateEntryMutation,
+  UpdateEntryMutationVariables
+>;
+
+/**
+ * __useUpdateEntryMutation__
+ *
+ * To run a mutation, you first call `useUpdateEntryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEntryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEntryMutation, { data, loading, error }] = useUpdateEntryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateEntryMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateEntryMutation,
+    UpdateEntryMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateEntryMutation, UpdateEntryMutationVariables>(
+    UpdateEntryDocument,
+    options,
+  );
+}
+export type UpdateEntryMutationHookResult = ReturnType<
+  typeof useUpdateEntryMutation
+>;
+export type UpdateEntryMutationResult =
+  Apollo.MutationResult<UpdateEntryMutation>;
+export type UpdateEntryMutationOptions = Apollo.BaseMutationOptions<
+  UpdateEntryMutation,
+  UpdateEntryMutationVariables
 >;
 export const SearchEntriesDocument = gql`
   query SearchEntries($input: SearchEntriesInput!) {

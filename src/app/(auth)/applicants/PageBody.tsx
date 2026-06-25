@@ -72,11 +72,8 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { applicants, totalCount, totalPages, loading } = useApplicants(
-    initialFormData,
-    page,
-    limit,
-  );
+  const { applicants, totalCount, totalPages, loading, refetch } =
+    useApplicants(initialFormData, page, limit);
 
   const {
     allApplicantCount, // 合計応募者数
@@ -177,6 +174,7 @@ export default function PageBody() {
           <ApplicantList
             items={applicants}
             isLoading={loading}
+            refetch={refetch}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">
