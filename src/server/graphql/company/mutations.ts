@@ -40,3 +40,11 @@ export const DELETE_COMPANY_ACCEPT_TICKET = gql`
     }
   }
 `;
+
+export const CREATE_COMPANY_INVOICES = gql`
+  mutation CreateCompanyInvoices($entryIds: [Int!]!) {
+    createCompanyInvoices(entryIds: $entryIds) {
+      id
+    }
+  }
+`;

@@ -5,6 +5,7 @@ export const UPDATE_ENTRY = gql`
   mutation UpdateEntry($input: UpdateEntryInput!) {
     updateEntry(input: $input) {
       id
+      status
       updatedAt
     }
   }

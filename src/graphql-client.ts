@@ -2870,6 +2870,18 @@ export type DeleteCompanyAcceptTicketMutation = {
   };
 };
 
+export type CreateCompanyInvoicesMutationVariables = Exact<{
+  entryIds: Array<Scalars["Int"]["input"]> | Scalars["Int"]["input"];
+}>;
+
+export type CreateCompanyInvoicesMutation = {
+  __typename?: "Mutation";
+  createCompanyInvoices: Array<{
+    __typename?: "CompanyInvoiceType";
+    id: number;
+  }>;
+};
+
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
@@ -2955,7 +2967,12 @@ export type UpdateEntryMutationVariables = Exact<{
 
 export type UpdateEntryMutation = {
   __typename?: "Mutation";
-  updateEntry: { __typename?: "Entry"; id: number; updatedAt: any };
+  updateEntry: {
+    __typename?: "Entry";
+    id: number;
+    status: string;
+    updatedAt: any;
+  };
 };
 
 export type SearchEntriesQueryVariables = Exact<{
@@ -3815,6 +3832,56 @@ export type DeleteCompanyAcceptTicketMutationOptions =
     DeleteCompanyAcceptTicketMutation,
     DeleteCompanyAcceptTicketMutationVariables
   >;
+export const CreateCompanyInvoicesDocument = gql`
+  mutation CreateCompanyInvoices($entryIds: [Int!]!) {
+    createCompanyInvoices(entryIds: $entryIds) {
+      id
+    }
+  }
+`;
+export type CreateCompanyInvoicesMutationFn = Apollo.MutationFunction<
+  CreateCompanyInvoicesMutation,
+  CreateCompanyInvoicesMutationVariables
+>;
+
+/**
+ * __useCreateCompanyInvoicesMutation__
+ *
+ * To run a mutation, you first call `useCreateCompanyInvoicesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCompanyInvoicesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCompanyInvoicesMutation, { data, loading, error }] = useCreateCompanyInvoicesMutation({
+ *   variables: {
+ *      entryIds: // value for 'entryIds'
+ *   },
+ * });
+ */
+export function useCreateCompanyInvoicesMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCompanyInvoicesMutation,
+    CreateCompanyInvoicesMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateCompanyInvoicesMutation,
+    CreateCompanyInvoicesMutationVariables
+  >(CreateCompanyInvoicesDocument, options);
+}
+export type CreateCompanyInvoicesMutationHookResult = ReturnType<
+  typeof useCreateCompanyInvoicesMutation
+>;
+export type CreateCompanyInvoicesMutationResult =
+  Apollo.MutationResult<CreateCompanyInvoicesMutation>;
+export type CreateCompanyInvoicesMutationOptions = Apollo.BaseMutationOptions<
+  CreateCompanyInvoicesMutation,
+  CreateCompanyInvoicesMutationVariables
+>;
 export const GetCompaniesDocument = gql`
   query getCompanies($input: GetCompaniesInput!) {
     getCompanies(input: $input) {
@@ -4258,6 +4325,7 @@ export const UpdateEntryDocument = gql`
   mutation UpdateEntry($input: UpdateEntryInput!) {
     updateEntry(input: $input) {
       id
+      status
       updatedAt
     }
   }

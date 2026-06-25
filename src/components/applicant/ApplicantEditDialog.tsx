@@ -18,8 +18,13 @@ import {
   UpdateEntryFormData,
   updateEntrySchema,
 } from "@/schemas/applicant/update-entry";
+import {
+  CreateCompanyInvoicesMutation,
+  UpdateEntryMutation,
+} from "@/graphql-client";
+import { CREATE_COMPANY_INVOICES } from "@/server/graphql/company/mutations";
 import { UPDATE_ENTRY } from "@/server/graphql/entry/mutations";
-import { ApplicantItem } from "@/types/applicant";
+import { ApplicantItem, ApplyStatus } from "@/types/applicant";
 import { applyStatuses, applyStatusIndex } from "@/utils/shared/applicant";
 import Select from "@/components/common/form/Select";
 import TextField from "@/components/common/form/TextField";
@@ -81,24 +86,49 @@ export default function ApplicantEditDialog({
     });
   }, [item, methods]);
 
-  const [updateEntry, { loading: isUpdating }] = useMutation(UPDATE_ENTRY, {
-    onCompleted() {
-      setToast({
-        open: true,
-        message: "応募情報を更新しました",
-        severity: "success",
-      });
-      onSaved();
-      onClose();
+  const [updateEntry, { loading: isUpdating }] =
+    useMutation<UpdateEntryMutation>(UPDATE_ENTRY, {
+      onCompleted(data) {
+        setToast({
+          open: true,
+          message: "応募情報を更新しました",
+          severity: "success",
+        });
+        if (
+          item?.status !== "ACCEPTED" &&
+          (data.updateEntry.status as ApplyStatus) === "ACCEPTED"
+        ) {
+          // 元々別statusだった応募を入社決定に変更した場合のみ、バックグラウンドで請求情報を作成
+          createInvoices({
+            variables: { entryIds: [data.updateEntry.id] },
+          });
+        }
+        onSaved();
+        onClose();
+      },
+      onError(error) {
+        setToast({
+          open: true,
+          message: error.message || "更新中にエラーが発生しました",
+          severity: "error",
+        });
+      },
+    });
+
+  // 請求情報作成ミューテーション
+  const [createInvoices] = useMutation<CreateCompanyInvoicesMutation>(
+    CREATE_COMPANY_INVOICES,
+    {
+      onError: (error) => {
+        console.error("Failed to create company invoice:", error);
+        setToast({
+          open: true,
+          message: error.message || "請求情報の作成に失敗しました",
+          severity: "error",
+        });
+      },
     },
-    onError(error) {
-      setToast({
-        open: true,
-        message: error.message || "更新中にエラーが発生しました",
-        severity: "error",
-      });
-    },
-  });
+  );
 
   const onSubmit = (data: UpdateEntryFormData) => {
     if (!item) return;
@@ -137,6 +167,7 @@ export default function ApplicantEditDialog({
               <Select
                 name="status"
                 label="ステータス"
+                disabled={item?.status === "ACCEPTED"}
                 items={applyStatuses.map((status) => ({
                   value: status,
                   label: applyStatusIndex[status].label,
