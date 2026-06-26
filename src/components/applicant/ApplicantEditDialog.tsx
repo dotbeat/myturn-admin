@@ -18,11 +18,11 @@ import {
   UpdateEntryFormData,
   updateEntrySchema,
 } from "@/schemas/applicant/update-entry";
+import { UpdateEntryMutation } from "@/graphql-client";
 import {
-  CreateCompanyInvoicesMutation,
-  UpdateEntryMutation,
-} from "@/graphql-client";
-import { CREATE_COMPANY_INVOICES } from "@/server/graphql/company/mutations";
+  CREATE_COMPANY_INVOICES,
+  DELETE_COMPANY_INVOICE,
+} from "@/server/graphql/company/mutations";
 import { UPDATE_ENTRY } from "@/server/graphql/entry/mutations";
 import { ApplicantItem, ApplyStatus } from "@/types/applicant";
 import { applyStatuses, applyStatusIndex } from "@/utils/shared/applicant";
@@ -63,6 +63,30 @@ export default function ApplicantEditDialog({
     severity: "success" | "error";
   }>({ open: false, message: "", severity: "success" });
 
+  // 請求情報作成ミューテーション
+  const [createInvoices] = useMutation(CREATE_COMPANY_INVOICES, {
+    onError: (error) => {
+      console.error("Failed to create company invoice:", error);
+      setToast({
+        open: true,
+        message: error.message || "請求情報の作成に失敗しました",
+        severity: "error",
+      });
+    },
+  });
+
+  // 請求情報削除ミューテーション
+  const [deleteInvoice] = useMutation(DELETE_COMPANY_INVOICE, {
+    onError: (error) => {
+      console.error("Failed to delete company invoice:", error);
+      setToast({
+        open: true,
+        message: error.message || "請求情報の削除に失敗しました",
+        severity: "error",
+      });
+    },
+  });
+
   const methods = useForm<UpdateEntryFormData>({
     resolver: zodResolver(updateEntrySchema),
     defaultValues: {
@@ -94,14 +118,19 @@ export default function ApplicantEditDialog({
           message: "応募情報を更新しました",
           severity: "success",
         });
-        if (
-          item?.status !== "ACCEPTED" &&
-          (data.updateEntry.status as ApplyStatus) === "ACCEPTED"
-        ) {
-          // 元々別statusだった応募を入社決定に変更した場合のみ、バックグラウンドで請求情報を作成
-          createInvoices({
-            variables: { entryIds: [data.updateEntry.id] },
-          });
+        if (item) {
+          const newStatus = data.updateEntry.status as ApplyStatus;
+          if (item.status !== "ACCEPTED" && newStatus === "ACCEPTED") {
+            // 元々他ステータスだった応募を入社決定に変更した場合のみ、バックグラウンドで請求情報を作成
+            createInvoices({
+              variables: { entryIds: [data.updateEntry.id] },
+            });
+          } else if (item.status === "ACCEPTED" && newStatus !== "ACCEPTED") {
+            // 入社決定から他ステータスに変更した場合は請求情報を削除
+            deleteInvoice({
+              variables: { entryId: data.updateEntry.id },
+            });
+          }
         }
         onSaved();
         onClose();
@@ -114,21 +143,6 @@ export default function ApplicantEditDialog({
         });
       },
     });
-
-  // 請求情報作成ミューテーション
-  const [createInvoices] = useMutation<CreateCompanyInvoicesMutation>(
-    CREATE_COMPANY_INVOICES,
-    {
-      onError: (error) => {
-        console.error("Failed to create company invoice:", error);
-        setToast({
-          open: true,
-          message: error.message || "請求情報の作成に失敗しました",
-          severity: "error",
-        });
-      },
-    },
-  );
 
   const onSubmit = (data: UpdateEntryFormData) => {
     if (!item) return;
@@ -167,7 +181,6 @@ export default function ApplicantEditDialog({
               <Select
                 name="status"
                 label="ステータス"
-                disabled={item?.status === "ACCEPTED"}
                 items={applyStatuses.map((status) => ({
                   value: status,
                   label: applyStatusIndex[status].label,
