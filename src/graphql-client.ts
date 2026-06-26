@@ -1316,6 +1316,7 @@ export type Mutation = {
   createUserAcceptReport: UserAcceptReportType;
   deleteCompany: Scalars["Boolean"]["output"];
   deleteCompanyAcceptTicket: CompanyAcceptTicketType;
+  deleteCompanyInvoice: Scalars["Boolean"]["output"];
   deleteJob: JobType;
   deleteMessageTemplate: Scalars["Boolean"]["output"];
   deleteUserAccount: Scalars["Boolean"]["output"];
@@ -1428,6 +1429,10 @@ export type MutationCreateUserAcceptReportArgs = {
 
 export type MutationDeleteCompanyAcceptTicketArgs = {
   input: DeleteCompanyAcceptTicketInput;
+};
+
+export type MutationDeleteCompanyInvoiceArgs = {
+  entryId: Scalars["Int"]["input"];
 };
 
 export type MutationDeleteJobArgs = {
@@ -2882,6 +2887,15 @@ export type CreateCompanyInvoicesMutation = {
   }>;
 };
 
+export type DeleteCompanyInvoiceMutationVariables = Exact<{
+  entryId: Scalars["Int"]["input"];
+}>;
+
+export type DeleteCompanyInvoiceMutation = {
+  __typename?: "Mutation";
+  deleteCompanyInvoice: boolean;
+};
+
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
@@ -3881,6 +3895,54 @@ export type CreateCompanyInvoicesMutationResult =
 export type CreateCompanyInvoicesMutationOptions = Apollo.BaseMutationOptions<
   CreateCompanyInvoicesMutation,
   CreateCompanyInvoicesMutationVariables
+>;
+export const DeleteCompanyInvoiceDocument = gql`
+  mutation DeleteCompanyInvoice($entryId: Int!) {
+    deleteCompanyInvoice(entryId: $entryId)
+  }
+`;
+export type DeleteCompanyInvoiceMutationFn = Apollo.MutationFunction<
+  DeleteCompanyInvoiceMutation,
+  DeleteCompanyInvoiceMutationVariables
+>;
+
+/**
+ * __useDeleteCompanyInvoiceMutation__
+ *
+ * To run a mutation, you first call `useDeleteCompanyInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCompanyInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCompanyInvoiceMutation, { data, loading, error }] = useDeleteCompanyInvoiceMutation({
+ *   variables: {
+ *      entryId: // value for 'entryId'
+ *   },
+ * });
+ */
+export function useDeleteCompanyInvoiceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteCompanyInvoiceMutation,
+    DeleteCompanyInvoiceMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteCompanyInvoiceMutation,
+    DeleteCompanyInvoiceMutationVariables
+  >(DeleteCompanyInvoiceDocument, options);
+}
+export type DeleteCompanyInvoiceMutationHookResult = ReturnType<
+  typeof useDeleteCompanyInvoiceMutation
+>;
+export type DeleteCompanyInvoiceMutationResult =
+  Apollo.MutationResult<DeleteCompanyInvoiceMutation>;
+export type DeleteCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
+  DeleteCompanyInvoiceMutation,
+  DeleteCompanyInvoiceMutationVariables
 >;
 export const GetCompaniesDocument = gql`
   query getCompanies($input: GetCompaniesInput!) {

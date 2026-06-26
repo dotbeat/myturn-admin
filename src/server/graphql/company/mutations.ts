@@ -48,3 +48,9 @@ export const CREATE_COMPANY_INVOICES = gql`
     }
   }
 `;
+
+export const DELETE_COMPANY_INVOICE = gql`
+  mutation DeleteCompanyInvoice($entryId: Int!) {
+    deleteCompanyInvoice(entryId: $entryId)
+  }
+`;
