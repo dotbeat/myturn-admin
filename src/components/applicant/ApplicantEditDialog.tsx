@@ -33,18 +33,15 @@ import TextField from "@/components/common/form/TextField";
 function toDateInputValue(value: string | null): string {
   if (!value) return "";
   const date = new Date(value);
-  if (isNaN(date.getTime())) return "";
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
 }
 
 // date入力欄の値(yyyy-MM-dd) → ISO日時(空ならnull)
 function toIsoOrNull(value: string): string | null {
   if (!value) return null;
   const date = new Date(value);
-  if (isNaN(date.getTime())) return null;
+  if (Number.isNaN(date.getTime())) return null;
   return date.toISOString();
 }
 
