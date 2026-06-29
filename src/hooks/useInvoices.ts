@@ -14,7 +14,7 @@ export function useInvoices(
   const [totalPages, setTotalPages] = useState(0); // 一覧表のページ数
 
   // 企業請求一覧情報を取得
-  const { loading } = useQuery(SEARCH_COMPANY_INVOICE, {
+  const { loading, refetch } = useQuery(SEARCH_COMPANY_INVOICE, {
     variables: { input: { ...input, page, limit } },
     fetchPolicy: "no-cache",
     onCompleted(result) {
@@ -24,10 +24,18 @@ export function useInvoices(
     },
   });
 
+  const refetchInvoices = async () => {
+    const { data } = await refetch();
+    setInvoices(data.getCompanyInvoices.items);
+    setTotalCount(data.getCompanyInvoices.totalCount);
+    setTotalPages(data.getCompanyInvoices.totalPages);
+  };
+
   return {
     invoices,
     totalCount,
     totalPages,
     loading,
+    refetch: refetchInvoices,
   };
 }
