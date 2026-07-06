@@ -134,6 +134,8 @@ export type CompanyAcceptTicketType = {
   deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
   expiredAt: Scalars["DateTime"]["output"];
   id: Scalars["Int"]["output"];
+  isGuaranteed: Scalars["Boolean"]["output"];
+  service: Scalars["String"]["output"];
   updatedAt: Scalars["DateTime"]["output"];
   usedCount: Scalars["Int"]["output"];
 };
@@ -329,6 +331,8 @@ export type CreateCompanyAcceptTicketInput = {
   companyId: Scalars["Int"]["input"];
   count: Scalars["Int"]["input"];
   expiredAt: Scalars["DateTime"]["input"];
+  isGuaranteed?: InputMaybe<Scalars["Boolean"]["input"]>;
+  service?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type CreateCompanyInput = {
@@ -1322,6 +1326,7 @@ export type Mutation = {
   deleteUserAccount: Scalars["Boolean"]["output"];
   dispatchScheduledLineNotifications: DispatchResult;
   duplicateJob: JobType;
+  guaranteeCompanyInvoice: CompanyAcceptTicketType;
   login: LoginResponse;
   loginOrCreateWithLine: LoginOrCreateWithLineResponse;
   logout: LogoutResponse;
@@ -1450,6 +1455,10 @@ export type MutationDeleteUserAccountArgs = {
 
 export type MutationDuplicateJobArgs = {
   input: DuplicateJobInput;
+};
+
+export type MutationGuaranteeCompanyInvoiceArgs = {
+  invoiceId: Scalars["Int"]["input"];
 };
 
 export type MutationLoginArgs = {
@@ -3134,6 +3143,19 @@ export type UpdateCompanyInvoiceMutation = {
   __typename?: "Mutation";
   updateCompanyInvoice: {
     __typename?: "CompanyInvoiceType";
+    id: number;
+    amount: number;
+  };
+};
+
+export type GuaranteeCompanyInvoiceMutationVariables = Exact<{
+  invoiceId: Scalars["Int"]["input"];
+}>;
+
+export type GuaranteeCompanyInvoiceMutation = {
+  __typename?: "Mutation";
+  guaranteeCompanyInvoice: {
+    __typename?: "CompanyAcceptTicketType";
     id: number;
     amount: number;
   };
@@ -5065,6 +5087,57 @@ export type UpdateCompanyInvoiceMutationResult =
 export type UpdateCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
   UpdateCompanyInvoiceMutation,
   UpdateCompanyInvoiceMutationVariables
+>;
+export const GuaranteeCompanyInvoiceDocument = gql`
+  mutation GuaranteeCompanyInvoice($invoiceId: Int!) {
+    guaranteeCompanyInvoice(invoiceId: $invoiceId) {
+      id
+      amount
+    }
+  }
+`;
+export type GuaranteeCompanyInvoiceMutationFn = Apollo.MutationFunction<
+  GuaranteeCompanyInvoiceMutation,
+  GuaranteeCompanyInvoiceMutationVariables
+>;
+
+/**
+ * __useGuaranteeCompanyInvoiceMutation__
+ *
+ * To run a mutation, you first call `useGuaranteeCompanyInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGuaranteeCompanyInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [guaranteeCompanyInvoiceMutation, { data, loading, error }] = useGuaranteeCompanyInvoiceMutation({
+ *   variables: {
+ *      invoiceId: // value for 'invoiceId'
+ *   },
+ * });
+ */
+export function useGuaranteeCompanyInvoiceMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    GuaranteeCompanyInvoiceMutation,
+    GuaranteeCompanyInvoiceMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    GuaranteeCompanyInvoiceMutation,
+    GuaranteeCompanyInvoiceMutationVariables
+  >(GuaranteeCompanyInvoiceDocument, options);
+}
+export type GuaranteeCompanyInvoiceMutationHookResult = ReturnType<
+  typeof useGuaranteeCompanyInvoiceMutation
+>;
+export type GuaranteeCompanyInvoiceMutationResult =
+  Apollo.MutationResult<GuaranteeCompanyInvoiceMutation>;
+export type GuaranteeCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
+  GuaranteeCompanyInvoiceMutation,
+  GuaranteeCompanyInvoiceMutationVariables
 >;
 export const GetCompanyInvoicesDocument = gql`
   query GetCompanyInvoices($input: GetCompanyInvoicesInput!) {

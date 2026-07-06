@@ -8,3 +8,12 @@ export const UPDATE_COMPANY_INVOICE = gql`
     }
   }
 `;
+
+export const GUARANTEE_COMPANY_INVOICE = gql`
+  mutation GuaranteeCompanyInvoice($invoiceId: Int!) {
+    guaranteeCompanyInvoice(invoiceId: $invoiceId) {
+      id
+      amount
+    }
+  }
+`;

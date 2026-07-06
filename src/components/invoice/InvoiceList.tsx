@@ -8,11 +8,13 @@ export default function InvoiceList({
   items,
   isLoading,
   onEditInvoice,
+  onGuaranteeInvoice,
   className = "",
 }: {
   items: InvoiceItem[];
   isLoading: boolean;
   onEditInvoice: (item: InvoiceItem) => void;
+  onGuaranteeInvoice: (item: InvoiceItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -57,6 +59,12 @@ export default function InvoiceList({
           onClick={() => onEditInvoice(item)}
         >
           編集
+        </Button>
+        <Button
+          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+          onClick={() => onGuaranteeInvoice(item)}
+        >
+          早期退職保証
         </Button>
       </Box>
     ),
