@@ -43,11 +43,12 @@ import {
   DELETE_COMPANY_ACCEPT_TICKET,
   UPDATE_COMPANY_ACCEPT_TICKET,
 } from "@/server/graphql/company/mutations";
-import { AcceptTicket } from "@/types/invoice";
+import { AcceptTicket, InvoiceService } from "@/types/invoice";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import { get1YearLaterFormatted } from "@/utils/shared/date";
 import TextField from "@/components/common/form/TextField";
 import PageTitle from "@/components/common/PageTitle";
+import { invoceServices } from "@/const/invoice";
 
 type CompanyOption = { id: number; name: string };
 
@@ -108,6 +109,7 @@ export default function PageBody() {
       usedCount: ticket.usedCount,
       expiredAt: new Date(ticket.expiredAt as any),
       amount: ticket.amount,
+      service: ticket.service as InvoiceService | "",
       createdAt: new Date(ticket.createdAt as any),
     })) ?? [];
   const ticketsTotalCount = ticketsResult?.totalCount ?? 0;
@@ -354,6 +356,12 @@ export default function PageBody() {
                 >
                   チャージ日
                 </TableCell>
+                <TableCell
+                  align="center"
+                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                >
+                  対象職種
+                </TableCell>
                 <TableCell className="p-2 text-base text-[var(--myturn-sub-text)]" />
               </TableRow>
             </TableHead>
@@ -377,6 +385,10 @@ export default function PageBody() {
                   </TableCell>
                   <TableCell align="center" className="p-2 text-base">
                     {new Date(ticket.createdAt).toLocaleDateString("ja")}
+                  </TableCell>
+                  <TableCell align="center" className="p-2 text-base">
+                    {invoceServices.find((s) => s.value === ticket.service)
+                      ?.label ?? ""}
                   </TableCell>
                   <TableCell align="center" className="p-2">
                     <Box className="flex items-center justify-center gap-2">

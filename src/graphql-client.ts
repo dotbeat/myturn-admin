@@ -2976,6 +2976,7 @@ export type GetCompanyAcceptTicketsQuery = {
       usedCount: number;
       expiredAt: any;
       amount: number;
+      service: string;
       createdAt: any;
     }>;
   };
@@ -4221,6 +4222,7 @@ export const GetCompanyAcceptTicketsDocument = gql`
         usedCount
         expiredAt
         amount
+        service
         createdAt
       }
       totalCount
