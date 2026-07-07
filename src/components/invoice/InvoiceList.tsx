@@ -1,4 +1,4 @@
-import { Box, Container, Link, Typography } from "@mui/material";
+import { Box, Button, Container, Link, Typography } from "@mui/material";
 import { InvoiceItem } from "@/types/invoice";
 import { getSelectItem } from "@/utils/shared/select";
 import Table, { TableColumn, TableRow } from "@/components/common/Table";
@@ -7,10 +7,14 @@ import { invoceServices } from "@/const/invoice";
 export default function InvoiceList({
   items,
   isLoading,
+  onEditInvoice,
+  onGuaranteeInvoice,
   className = "",
 }: {
   items: InvoiceItem[];
   isLoading: boolean;
+  onEditInvoice: (item: InvoiceItem) => void;
+  onGuaranteeInvoice: (item: InvoiceItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -20,6 +24,7 @@ export default function InvoiceList({
     { property: "service", label: "サービス" },
     { property: "amount", label: "金額" },
     { property: "companyName", label: "採用企業" },
+    { property: "actions", label: "" },
   ] as const satisfies TableColumn<(keyof InvoiceItem)[number]>[];
 
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
@@ -43,13 +48,26 @@ export default function InvoiceList({
         )}
       </Typography>
     ),
-    service: (
-      <Box className="inline-block rounded border border-current px-2 py-1 text-[var(--myturn-sub-text)]">
-        {getSelectItem(invoceServices, item.service)?.label}インターン採用
-      </Box>
-    ),
+    service:
+      getSelectItem(invoceServices, item.service)?.label + "インターン採用",
     amount: item.isDeposit ? "—" : item.amount.toLocaleString("en") + "円",
     companyName: item.companyName,
+    actions: (
+      <Box className="flex items-center justify-center gap-2">
+        <Button
+          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+          onClick={() => onEditInvoice(item)}
+        >
+          編集
+        </Button>
+        <Button
+          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+          onClick={() => onGuaranteeInvoice(item)}
+        >
+          早期退職保証
+        </Button>
+      </Box>
+    ),
   }));
 
   return (

@@ -3,21 +3,39 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@apollo/client";
 import {
+  Alert,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Link,
   MenuItem,
   Pagination,
   PaginationItem,
+  Snackbar,
   Typography,
 } from "@mui/material";
+import TextField from "@/components/common/form/TextField";
 import { periods } from "@/const/date";
 import { useInvoices } from "@/hooks/useInvoices";
 import { useInvoicesStatistics } from "@/hooks/useInvoicesStatistics";
 import {
+  EditInvoiceFormData,
+  editInvoiceSchema,
+} from "@/schemas/invoice/edit-amount";
+import {
   InvoiceFilterFormData,
   invoiceFilterFormSchema,
 } from "@/schemas/invoice/filter";
+import {
+  GUARANTEE_COMPANY_INVOICE,
+  UPDATE_COMPANY_INVOICE,
+} from "@/server/graphql/invoice/mutations";
+import { InvoiceItem } from "@/types/invoice";
 import {
   convertFormDataToUrlParams,
   ConvertUrlParamEntry,
@@ -39,6 +57,85 @@ export default function PageBody() {
     periods[0].value,
   );
 
+  const [editingInvoice, setEditingInvoice] = useState<InvoiceItem | null>(
+    null,
+  );
+
+  const [guaranteeingInvoice, setGuaranteeingInvoice] =
+    useState<InvoiceItem | null>(null);
+
+  const [toast, setToast] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+
+  const [updateCompanyInvoice, { loading: isUpdatingCompanyInvoice }] =
+    useMutation(UPDATE_COMPANY_INVOICE, {
+      onCompleted() {
+        setToast({
+          open: true,
+          message: "請求金額を更新しました",
+          severity: "success",
+        });
+        setEditingInvoice(null);
+        refetch();
+      },
+      onError(error) {
+        setToast({
+          open: true,
+          message: error.message || "更新中にエラーが発生しました",
+          severity: "error",
+        });
+      },
+    });
+
+  const [guaranteeCompanyInvoice, { loading: isGuaranteeingCompanyInvoice }] =
+    useMutation(GUARANTEE_COMPANY_INVOICE, {
+      onCompleted() {
+        setToast({
+          open: true,
+          message: "採用デポジットを作成しました",
+          severity: "success",
+        });
+        setGuaranteeingInvoice(null);
+        refetch();
+      },
+      onError(error) {
+        setToast({
+          open: true,
+          message: error.message || "作成中にエラーが発生しました",
+          severity: "error",
+        });
+      },
+    });
+
+  const openEditInvoiceDialog = (item: InvoiceItem) => {
+    invoiceEditMethods.reset({ amount: item.amount });
+    setEditingInvoice(item);
+  };
+
+  const onInvoiceEditSubmit = (data: EditInvoiceFormData) => {
+    if (!editingInvoice) return;
+    updateCompanyInvoice({
+      variables: {
+        input: {
+          id: editingInvoice.id,
+          amount: data.amount,
+        },
+      },
+    });
+  };
+
+  const onGuaranteeInvoiceConfirm = () => {
+    if (!guaranteeingInvoice) return;
+    guaranteeCompanyInvoice({
+      variables: {
+        invoiceId: guaranteeingInvoice.id,
+      },
+    });
+  };
+
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
@@ -58,7 +155,12 @@ export default function PageBody() {
     defaultValues: initialFormData,
   });
 
-  const { invoices, totalCount, totalPages, loading } = useInvoices(
+  const invoiceEditMethods = useForm<EditInvoiceFormData>({
+    resolver: zodResolver(editInvoiceSchema),
+    defaultValues: { amount: 0 },
+  });
+
+  const { invoices, totalCount, totalPages, loading, refetch } = useInvoices(
     initialFormData,
     page,
     limit,
@@ -135,6 +237,8 @@ export default function PageBody() {
           <InvoiceList
             items={invoices}
             isLoading={loading}
+            onEditInvoice={openEditInvoiceDialog}
+            onGuaranteeInvoice={setGuaranteeingInvoice}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">
@@ -161,6 +265,101 @@ export default function PageBody() {
           </Box>
         </Box>
       </Box>
+
+      {/* 請求金額編集ダイアログ */}
+      <Dialog
+        open={editingInvoice !== null}
+        onClose={() => setEditingInvoice(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="pb-0 pt-6 font-semibold">
+          請求金額の編集
+        </DialogTitle>
+        <FormProvider {...invoiceEditMethods}>
+          <form onSubmit={invoiceEditMethods.handleSubmit(onInvoiceEditSubmit)}>
+            <DialogContent className="flex flex-col gap-4 pt-4">
+              {editingInvoice && (
+                <Typography className="text-[var(--myturn-sub-text)]">
+                  採用企業：{editingInvoice.companyName}
+                </Typography>
+              )}
+              <TextField name="amount" label="請求金額" type="number" />
+            </DialogContent>
+            <DialogActions className="gap-2 px-6 pb-6">
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={() => setEditingInvoice(null)}
+                className="px-3 py-1"
+              >
+                キャンセル
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUpdatingCompanyInvoice}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+              >
+                {isUpdatingCompanyInvoice ? "保存中..." : "保存する"}
+              </Button>
+            </DialogActions>
+          </form>
+        </FormProvider>
+      </Dialog>
+
+      {/* 早期退職保証確認ダイアログ */}
+      <Dialog
+        open={guaranteeingInvoice !== null}
+        onClose={() => setGuaranteeingInvoice(null)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="pb-0 pt-6 font-semibold">
+          早期退職保証
+        </DialogTitle>
+        <DialogContent className="flex flex-col gap-4 pt-4">
+          {guaranteeingInvoice && (
+            <Typography className="text-[var(--myturn-sub-text)]">
+              採用企業：{guaranteeingInvoice.companyName}
+            </Typography>
+          )}
+          <Typography>採用デポジットを作成します。よろしいですか？</Typography>
+        </DialogContent>
+        <DialogActions className="gap-2 px-6 pb-6">
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() => setGuaranteeingInvoice(null)}
+            className="px-3 py-1"
+          >
+            キャンセル
+          </Button>
+          <Button
+            type="button"
+            disabled={isGuaranteeingCompanyInvoice}
+            onClick={onGuaranteeInvoiceConfirm}
+            className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+          >
+            {isGuaranteeingCompanyInvoice ? "作成中..." : "作成する"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* トースト通知 */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={5000}
+        onClose={() => setToast((t) => ({ ...t, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setToast((t) => ({ ...t, open: false }))}
+          severity={toast.severity}
+          sx={{ width: "100%" }}
+        >
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

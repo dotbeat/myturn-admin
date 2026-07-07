@@ -21,5 +21,6 @@ export type AcceptTicket = {
   usedCount: number;
   expiredAt: Date;
   amount: number;
+  service: InvoiceService | "";
   createdAt: Date;
 };
