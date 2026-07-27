@@ -95,14 +95,14 @@ export default function ScoutList({ items, isLoading, className }: Props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>画像</TableCell>
-            <TableCell>氏名</TableCell>
-            <TableCell>企業名</TableCell>
-            <TableCell>業界</TableCell>
-            <TableCell>職種</TableCell>
-            <TableCell>求人タイトル</TableCell>
-            <TableCell>スカウト日</TableCell>
-            <TableCell>ステータス</TableCell>
+            <TableCell className="pr-0 text-base">画像</TableCell>
+            <TableCell className="text-base">氏名</TableCell>
+            <TableCell className="text-base">企業名</TableCell>
+            <TableCell className="text-base">業界</TableCell>
+            <TableCell className="text-base">職種</TableCell>
+            <TableCell className="text-base">求人タイトル</TableCell>
+            <TableCell className="text-base">スカウト日</TableCell>
+            <TableCell className="text-base">ステータス</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -112,25 +112,32 @@ export default function ScoutList({ items, isLoading, className }: Props) {
               statusConfig.PENDING;
             return (
               <TableRow key={item.id}>
-                <TableCell>
+                <TableCell className="pr-0">
                   <Avatar src={item.userAvatar} sx={{ width: 40, height: 40 }}>
                     {item.userName?.charAt(0)}
                   </Avatar>
                 </TableCell>
-                <TableCell>
-                  <Link href={`/users/${item.userId}`} underline="hover">
+                <TableCell className="text-base">
+                  <Link href={`/users/${item.userId}`} className="underline">
                     {item.userName}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  <Link href={`/companies/${item.companyId}`} underline="hover">
+                <TableCell className="text-base">
+                  <Link
+                    href={`/companies/${item.companyId}`}
+                    className="underline"
+                  >
                     {item.companyName}
                   </Link>
                 </TableCell>
-                <TableCell>{item.industry || "-"}</TableCell>
-                <TableCell>{item.jobType || "-"}</TableCell>
-                <TableCell>{item.jobTitle}</TableCell>
-                <TableCell>
+                <TableCell className="text-base">
+                  {item.industry || "-"}
+                </TableCell>
+                <TableCell className="text-base">
+                  {item.jobType || "-"}
+                </TableCell>
+                <TableCell className="text-base">{item.jobTitle}</TableCell>
+                <TableCell className="text-base">
                   {new Date(item.createdAt).toLocaleDateString("ja")}
                 </TableCell>
                 <TableCell>
