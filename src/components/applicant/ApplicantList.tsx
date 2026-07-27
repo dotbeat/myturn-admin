@@ -62,7 +62,7 @@ export default function ApplicantList({
             title={`${item.user.lastName} ${item.user.firstName}`}
             className="line-clamp-2 text-wrap underline"
           >
-            {item.user.lastName} {item.id}
+            {item.user.lastName} {item.user.firstName}
           </Link>
           {item.user.deletedAt && <Typography>(退会済)</Typography>}
         </Box>
