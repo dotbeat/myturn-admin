@@ -31,6 +31,7 @@ export default function ApplicantList({
     { property: "industry", label: "業界" },
     { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
     { property: "entryDate", label: "応募日" },
+    { property: "isScouted", label: "応募属性" },
     { property: "status", label: "ステータス" },
     { property: "interviewScheduledAt", label: "1回目面談日" },
     { property: "secondInterviewScheduledAt", label: "2回目面談日" },
@@ -61,7 +62,7 @@ export default function ApplicantList({
             title={`${item.user.lastName} ${item.user.firstName}`}
             className="line-clamp-2 text-wrap underline"
           >
-            {item.user.lastName} {item.user.firstName}
+            {item.user.lastName} {item.id}
           </Link>
           {item.user.deletedAt && <Typography>(退会済)</Typography>}
         </Box>
@@ -95,6 +96,7 @@ export default function ApplicantList({
       </Typography>
     ),
     entryDate: new Date(item.createdAt)?.toLocaleDateString("ja") ?? "—",
+    isScouted: item.isScouted ? "スカウト承諾" : "自由応募",
     status: applyStatusIndex[item.status]?.label ?? "—",
     interviewScheduledAt: item.interviewScheduledAt
       ? new Date(item.interviewScheduledAt)?.toLocaleDateString("ja")

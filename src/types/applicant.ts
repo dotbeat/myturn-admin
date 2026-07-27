@@ -31,4 +31,5 @@ export type ApplicantItem = {
   interviewScheduledAt: string | null;
   secondInterviewScheduledAt: string | null;
   jobOfferScheduledAt: string | null;
+  isScouted: boolean;
 };
