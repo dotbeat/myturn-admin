@@ -92,7 +92,7 @@ export default function ScoutList({ items, isLoading, className }: Props) {
 
   return (
     <TableContainer className={className}>
-      <Table>
+      <Table className="text-nowrap">
         <TableHead>
           <TableRow>
             <TableCell className="pr-0 text-base">画像</TableCell>
@@ -136,7 +136,9 @@ export default function ScoutList({ items, isLoading, className }: Props) {
                 <TableCell className="text-base">
                   {item.jobType || "-"}
                 </TableCell>
-                <TableCell className="text-base">{item.jobTitle}</TableCell>
+                <TableCell className="min-w-80 text-wrap text-base">
+                  {item.jobTitle}
+                </TableCell>
                 <TableCell className="text-base">
                   {new Date(item.createdAt).toLocaleDateString("ja")}
                 </TableCell>

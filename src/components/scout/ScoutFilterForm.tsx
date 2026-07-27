@@ -1,6 +1,6 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
-import { industriesAndEmpty } from "@/const/job";
+import { industriesAndEmpty, jobTypesAndEmpty } from "@/const/job";
 import FilterGroup from "@/components/common/filter/FilterGroup";
 import FilterItem from "@/components/common/filter/FilterItem";
 import SelectMini from "@/components/common/form/SelectMini";
@@ -28,23 +28,33 @@ export default function ScoutFilterForm({ isLoading }: Props) {
             <TextFieldMini type="date" name="scoutDateEnd" />
           </Box>
         </FilterItem>
+        <FilterItem label="氏名">
+          <TextFieldMini name="userName" className="w-36" />
+        </FilterItem>
         <FilterItem label="企業名">
           <TextFieldMini name="companyName" className="w-36" />
+        </FilterItem>
+        <FilterItem label="業界">
+          <SelectMini
+            name="industry"
+            items={industriesAndEmpty("")}
+            className="w-32"
+          />
+        </FilterItem>
+        <FilterItem label="職種">
+          <SelectMini
+            name="jobType"
+            items={jobTypesAndEmpty("")}
+            className="w-32"
+          />
         </FilterItem>
         <FilterItem label="求人タイトル">
           <TextFieldMini name="jobTitle" className="w-36" />
         </FilterItem>
+        <FilterItem label="ステータス">
+          <SelectMini name="status" items={scoutStatuses} className="w-24" />
+        </FilterItem>
       </FilterGroup>
-      <FilterItem label="業界">
-        <SelectMini
-          name="industry"
-          items={industriesAndEmpty("")}
-          className="w-32"
-        />
-      </FilterItem>
-      <FilterItem label="ステータス">
-        <SelectMini name="status" items={scoutStatuses} className="w-24" />
-      </FilterItem>
       <Button
         type="submit"
         disabled={isLoading}

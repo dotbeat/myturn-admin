@@ -2086,9 +2086,11 @@ export type ScoutFilterInput = {
   companyName?: InputMaybe<Scalars["String"]["input"]>;
   industry?: InputMaybe<Scalars["String"]["input"]>;
   jobTitle?: InputMaybe<Scalars["String"]["input"]>;
+  jobType?: InputMaybe<Scalars["String"]["input"]>;
   scoutDateEnd?: InputMaybe<Scalars["String"]["input"]>;
   scoutDateStart?: InputMaybe<Scalars["String"]["input"]>;
   status?: InputMaybe<Scalars["String"]["input"]>;
+  userName?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ScoutForAdminType = {

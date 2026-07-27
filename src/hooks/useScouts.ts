@@ -52,9 +52,11 @@ export function useScouts(
       filter: {
         scoutDateStart: filter.scoutDateStart || undefined,
         scoutDateEnd: filter.scoutDateEnd || undefined,
+        userName: filter.userName || undefined,
         companyName: filter.companyName || undefined,
-        jobTitle: filter.jobTitle || undefined,
         industry: filter.industry || undefined,
+        jobType: filter.jobType || undefined,
+        jobTitle: filter.jobTitle || undefined,
         status: filter.status || undefined,
       },
       page,

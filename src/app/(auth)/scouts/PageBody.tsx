@@ -45,9 +45,11 @@ export default function PageBody() {
   const initialFormData: ScoutFilterFormData = {
     scoutDateStart: paramsConverter.toString("scoutDateStart"),
     scoutDateEnd: paramsConverter.toString("scoutDateEnd"),
+    userName: paramsConverter.toString("userName"),
     companyName: paramsConverter.toString("companyName"),
-    jobTitle: paramsConverter.toString("jobTitle"),
     industry: paramsConverter.toString("industry"),
+    jobType: paramsConverter.toString("jobType"),
+    jobTitle: paramsConverter.toString("jobTitle"),
     status: paramsConverter.toString("status"),
   };
 
