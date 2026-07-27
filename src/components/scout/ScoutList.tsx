@@ -10,7 +10,6 @@ import {
   Link,
   Avatar,
 } from "@mui/material";
-import { format } from "date-fns";
 
 type ScoutItem = {
   id: string;
@@ -132,7 +131,7 @@ export default function ScoutList({ items, isLoading, className }: Props) {
                 <TableCell>{item.jobType || "-"}</TableCell>
                 <TableCell>{item.jobTitle}</TableCell>
                 <TableCell>
-                  {format(new Date(item.createdAt), "yyyy/MM/dd")}
+                  {new Date(item.createdAt).toLocaleDateString("ja")}
                 </TableCell>
                 <TableCell>
                   <Chip
