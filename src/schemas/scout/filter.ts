@@ -5,9 +5,11 @@ export const scoutFilterFormSchema = z
   .object({
     scoutDateStart: ruleDateNullable(),
     scoutDateEnd: ruleDateNullable(),
+    userName: z.string().trim(),
     companyName: z.string().trim(),
-    jobTitle: z.string().trim(),
     industry: z.string(),
+    jobType: z.string(),
+    jobTitle: z.string().trim(),
     status: z.string(),
   })
   .superRefine(({ scoutDateStart: start, scoutDateEnd: end }, ctx) => {
