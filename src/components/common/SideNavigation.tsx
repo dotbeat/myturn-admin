@@ -41,6 +41,9 @@ export default function SideNavigation({
           <SideNavigationItem href="/messages" label="メッセージ" />
         </ListItem>
         <ListItem className="p-0">
+          <SideNavigationItem href="/company-reminders" label="企業への催促" />
+        </ListItem>
+        <ListItem className="p-0">
           <SideNavigationItem href="/invoices" label="請求" />
         </ListItem>
         <ListItem className="p-0">
