@@ -7,15 +7,15 @@
   --foreground: #ffffff;
   --myturn-main: rgb(0, 205, 104);
   --myturn-main-opacity: rgba(0, 205, 104, 0.15);
-  --myturn-accent: #ff395c;
   --myturn-main-text: #32312e;
   --myturn-sub-text: #6f6d68;
   --myturn-support-middle: #cccac4;
   --myturn-background: #ededed;
   --myturn-border: #f4f4f4;
+  --myturn-accent: #ff395c;
+  --myturn-info: #185fa5;
+  --myturn-info-light: #e6f1fb;
   --myturn-orange: #f47907;
-  --myturn-purple: #9746ff;
-  --myturn-purple-light: #e0c7ff;
   --myturn-gray: #79747e;
 }
 

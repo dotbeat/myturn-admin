@@ -29,6 +29,9 @@ export default function Page() {
         <Link href="/messages" className="underline">
           メッセージ
         </Link>
+        <Link href="/company-reminders" className="underline">
+          企業への催促
+        </Link>
         <Link href="/invoices" className="underline">
           請求
         </Link>

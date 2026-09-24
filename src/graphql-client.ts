@@ -247,6 +247,39 @@ export type CompanyMemberType = {
   title?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type CompanyReminderTargetsType = {
+  __typename?: "CompanyReminderTargetsType";
+  company: ReminderTargetCompanyType;
+  users: Array<ReminderTargetUserType>;
+};
+
+export type CompanyReminderType = {
+  __typename?: "CompanyReminderType";
+  body: Scalars["String"]["output"];
+  companyId: Scalars["Int"]["output"];
+  createdAt: Scalars["DateTime"]["output"];
+  errorMessage?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["Int"]["output"];
+  isSuccess: Scalars["Boolean"]["output"];
+  subject: Scalars["String"]["output"];
+  templateName: Scalars["String"]["output"];
+  /** 基準未満で同送した学生数 */
+  underThresholdCount: Scalars["Int"]["output"];
+  users: Array<CompanyReminderUserType>;
+};
+
+export type CompanyReminderUserType = {
+  __typename?: "CompanyReminderUserType";
+  delayType: ReminderDelayType;
+  elapsedDays: Scalars["Int"]["output"];
+  entryId: Scalars["Int"]["output"];
+  id: Scalars["Int"]["output"];
+  isOverdue: Scalars["Boolean"]["output"];
+  jobTitle: Scalars["String"]["output"];
+  userId: Scalars["Int"]["output"];
+  userName: Scalars["String"]["output"];
+};
+
 export type CompanySearchResultType = {
   __typename?: "CompanySearchResultType";
   hasNextPage: Scalars["Boolean"]["output"];
@@ -750,6 +783,14 @@ export type GetCompanyInvoicesStatisticsInput = {
   periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
 };
 
+export type GetCompanyReminderTargetsInput = {
+  companyId: Scalars["Int"]["input"];
+};
+
+export type GetCompanyRemindersInput = {
+  companyId: Scalars["Int"]["input"];
+};
+
 export type GetCompanyUnreadMessagesInput = {
   companyId: Scalars["Int"]["input"];
 };
@@ -794,6 +835,13 @@ export type GetRecentJobsInput = {
 export type GetRecommendJobsByUserIdInput = {
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   userId: Scalars["Int"]["input"];
+};
+
+export type GetReminderCandidateCompaniesInput = {
+  /** 企業名の部分一致（指定時は基準超過がなくても対象の学生がいる企業を返す） */
+  keyword?: InputMaybe<Scalars["String"]["input"]>;
+  /** 基準超過のある企業のみに絞るか（デフォルトtrue。falseの場合は未対応の新着応募がある全企業） */
+  onlyOverdue?: InputMaybe<Scalars["Boolean"]["input"]>;
 };
 
 export type GetReviewingEntriesInput = {
@@ -1343,6 +1391,7 @@ export type Mutation = {
   resetPassword: ResetPasswordResponse;
   saveDraftJob: JobType;
   sendCompanyMessage: Message;
+  sendCompanyReminder: CompanyReminderType;
   sendJobOffer: Entry;
   sendMessage: Message;
   updateCompany: CompanyType;
@@ -1507,6 +1556,10 @@ export type MutationSaveDraftJobArgs = {
 
 export type MutationSendCompanyMessageArgs = {
   input: SendMessageInput;
+};
+
+export type MutationSendCompanyReminderArgs = {
+  input: SendCompanyReminderInput;
 };
 
 export type MutationSendJobOfferArgs = {
@@ -1728,6 +1781,8 @@ export type Query = {
   getCompanyInvoices: CompanyInvoicesResultType;
   getCompanyInvoicesStatistics: CompanyInvoicesStatisticsResultType;
   getCompanyJobsWithEntries: CompanyJobsWithSimpleEntriesType;
+  getCompanyReminderTargets: CompanyReminderTargetsType;
+  getCompanyReminders: Array<CompanyReminderType>;
   getCompanyUnreadCount: CompanyUnreadCount;
   getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
   getEntriesStatistics: EntriesStatisticsResultType;
@@ -1746,6 +1801,7 @@ export type Query = {
   getPendingEntries: PendingEntriesType;
   getPickJobScoringWeights: Array<PickJobScoringWeightType>;
   getRecommendJobsByUserId: Array<JobWithCompanyType>;
+  getReminderCandidateCompanies: Array<ReminderCandidateCompanyType>;
   getReviewingEntries: ReviewingEntriesType;
   getStaleEntries: StaleEntriesType;
   getStaleEntriesForAutoReject: StaleEntriesForAutoRejectType;
@@ -1824,6 +1880,14 @@ export type QueryGetCompanyInvoicesStatisticsArgs = {
   input: GetCompanyInvoicesStatisticsInput;
 };
 
+export type QueryGetCompanyReminderTargetsArgs = {
+  input: GetCompanyReminderTargetsInput;
+};
+
+export type QueryGetCompanyRemindersArgs = {
+  input: GetCompanyRemindersInput;
+};
+
 export type QueryGetCompanyUnreadMessagesArgs = {
   input: GetCompanyUnreadMessagesInput;
 };
@@ -1862,6 +1926,10 @@ export type QueryGetPendingEntriesArgs = {
 
 export type QueryGetRecommendJobsByUserIdArgs = {
   input: GetRecommendJobsByUserIdInput;
+};
+
+export type QueryGetReminderCandidateCompaniesArgs = {
+  input?: InputMaybe<GetReminderCandidateCompaniesInput>;
 };
 
 export type QueryGetReviewingEntriesArgs = {
@@ -1965,6 +2033,51 @@ export type QueryUsersWithIncompleteProfileArgs = {
 export type RecalculateResultType = {
   __typename?: "RecalculateResultType";
   updatedCount: Scalars["Int"]["output"];
+};
+
+export type ReminderCandidateCompanyType = {
+  __typename?: "ReminderCandidateCompanyType";
+  email: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+  /** 基準超過の学生数 */
+  overdueCount: Scalars["Int"]["output"];
+  /** 基準未満（待ち）の学生数 */
+  waitingCount: Scalars["Int"]["output"];
+};
+
+/** 企業催促の対象となる遅延の種類 */
+export enum ReminderDelayType {
+  Interview = "INTERVIEW",
+  Offered = "OFFERED",
+  Pending = "PENDING",
+  Reviewing = "REVIEWING",
+}
+
+export type ReminderTargetCompanyType = {
+  __typename?: "ReminderTargetCompanyType";
+  email: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type ReminderTargetUserType = {
+  __typename?: "ReminderTargetUserType";
+  delayType: ReminderDelayType;
+  /** 経過日数（当日は0） */
+  elapsedDays: Scalars["Int"]["output"];
+  entryId: Scalars["Int"]["output"];
+  /** 基準超過か */
+  isOverdue: Scalars["Boolean"]["output"];
+  jobTitle: Scalars["String"]["output"];
+  /** 現在の遅延に対する最終催促日時 */
+  lastRemindedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  /** 最終催促時に基準超過だったか（false: 同送済み） */
+  lastRemindedIsOverdue?: Maybe<Scalars["Boolean"]["output"]>;
+  /** 基準日数 */
+  thresholdDays: Scalars["Int"]["output"];
+  userId: Scalars["Int"]["output"];
+  userName: Scalars["String"]["output"];
 };
 
 export type RemoveFavoriteInput = {
@@ -2308,6 +2421,17 @@ export type SearchUsersInput = {
   scoutCountMin?: InputMaybe<Scalars["Int"]["input"]>;
   scoutedCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
   university?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type SendCompanyReminderInput = {
+  /** 送信する本文（編集後の内容） */
+  body: Scalars["String"]["input"];
+  companyId: Scalars["Int"]["input"];
+  /** 催促対象として選択したエントリーID */
+  entryIds: Array<Scalars["Int"]["input"]>;
+  subject: Scalars["String"]["input"];
+  /** 使用したテンプレート名 */
+  templateName: Scalars["String"]["input"];
 };
 
 export type SendJobOfferInput = {
@@ -2839,6 +2963,99 @@ export type BatchDailyMutationVariables = Exact<{ [key: string]: never }>;
 export type BatchDailyMutation = {
   __typename?: "Mutation";
   batchDaily: boolean;
+};
+
+export type SendCompanyReminderMutationVariables = Exact<{
+  input: SendCompanyReminderInput;
+}>;
+
+export type SendCompanyReminderMutation = {
+  __typename?: "Mutation";
+  sendCompanyReminder: {
+    __typename?: "CompanyReminderType";
+    id: number;
+    isSuccess: boolean;
+    errorMessage?: string | null;
+    underThresholdCount: number;
+    createdAt: any;
+  };
+};
+
+export type GetReminderCandidateCompaniesQueryVariables = Exact<{
+  input?: InputMaybe<GetReminderCandidateCompaniesInput>;
+}>;
+
+export type GetReminderCandidateCompaniesQuery = {
+  __typename?: "Query";
+  getReminderCandidateCompanies: Array<{
+    __typename?: "ReminderCandidateCompanyType";
+    id: number;
+    name: string;
+    email: string;
+    overdueCount: number;
+    waitingCount: number;
+  }>;
+};
+
+export type GetCompanyReminderTargetsQueryVariables = Exact<{
+  input: GetCompanyReminderTargetsInput;
+}>;
+
+export type GetCompanyReminderTargetsQuery = {
+  __typename?: "Query";
+  getCompanyReminderTargets: {
+    __typename?: "CompanyReminderTargetsType";
+    company: {
+      __typename?: "ReminderTargetCompanyType";
+      id: number;
+      name: string;
+      email: string;
+    };
+    users: Array<{
+      __typename?: "ReminderTargetUserType";
+      entryId: number;
+      userId: number;
+      userName: string;
+      jobTitle: string;
+      delayType: ReminderDelayType;
+      thresholdDays: number;
+      elapsedDays: number;
+      isOverdue: boolean;
+      lastRemindedAt?: any | null;
+      lastRemindedIsOverdue?: boolean | null;
+    }>;
+  };
+};
+
+export type GetCompanyRemindersQueryVariables = Exact<{
+  input: GetCompanyRemindersInput;
+}>;
+
+export type GetCompanyRemindersQuery = {
+  __typename?: "Query";
+  getCompanyReminders: Array<{
+    __typename?: "CompanyReminderType";
+    id: number;
+    companyId: number;
+    templateName: string;
+    subject: string;
+    body: string;
+    isSuccess: boolean;
+    errorMessage?: string | null;
+    underThresholdCount: number;
+    createdAt: any;
+    users: Array<{
+      __typename?: "CompanyReminderUserType";
+      id: number;
+      entryId: number;
+      userId: number;
+      userName: string;
+      jobTitle: string;
+      delayType: ReminderDelayType;
+      elapsedDays: number;
+      isOverdue: boolean;
+    }>;
+  }>;
 };
 
 export type UpdateCompanyMutationVariables = Exact<{
@@ -3684,6 +3901,405 @@ export type BatchDailyMutationResult =
 export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
   BatchDailyMutation,
   BatchDailyMutationVariables
+>;
+export const SendCompanyReminderDocument = gql`
+  mutation SendCompanyReminder($input: SendCompanyReminderInput!) {
+    sendCompanyReminder(input: $input) {
+      id
+      isSuccess
+      errorMessage
+      underThresholdCount
+      createdAt
+    }
+  }
+`;
+export type SendCompanyReminderMutationFn = Apollo.MutationFunction<
+  SendCompanyReminderMutation,
+  SendCompanyReminderMutationVariables
+>;
+
+/**
+ * __useSendCompanyReminderMutation__
+ *
+ * To run a mutation, you first call `useSendCompanyReminderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendCompanyReminderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendCompanyReminderMutation, { data, loading, error }] = useSendCompanyReminderMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendCompanyReminderMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SendCompanyReminderMutation,
+    SendCompanyReminderMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SendCompanyReminderMutation,
+    SendCompanyReminderMutationVariables
+  >(SendCompanyReminderDocument, options);
+}
+export type SendCompanyReminderMutationHookResult = ReturnType<
+  typeof useSendCompanyReminderMutation
+>;
+export type SendCompanyReminderMutationResult =
+  Apollo.MutationResult<SendCompanyReminderMutation>;
+export type SendCompanyReminderMutationOptions = Apollo.BaseMutationOptions<
+  SendCompanyReminderMutation,
+  SendCompanyReminderMutationVariables
+>;
+export const GetReminderCandidateCompaniesDocument = gql`
+  query GetReminderCandidateCompanies(
+    $input: GetReminderCandidateCompaniesInput
+  ) {
+    getReminderCandidateCompanies(input: $input) {
+      id
+      name
+      email
+      overdueCount
+      waitingCount
+    }
+  }
+`;
+
+/**
+ * __useGetReminderCandidateCompaniesQuery__
+ *
+ * To run a query within a React component, call `useGetReminderCandidateCompaniesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReminderCandidateCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReminderCandidateCompaniesQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetReminderCandidateCompaniesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >(GetReminderCandidateCompaniesDocument, options);
+}
+export function useGetReminderCandidateCompaniesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >(GetReminderCandidateCompaniesDocument, options);
+}
+// @ts-ignore
+export function useGetReminderCandidateCompaniesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetReminderCandidateCompaniesQuery,
+  GetReminderCandidateCompaniesQueryVariables
+>;
+export function useGetReminderCandidateCompaniesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetReminderCandidateCompaniesQuery,
+        GetReminderCandidateCompaniesQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetReminderCandidateCompaniesQuery | undefined,
+  GetReminderCandidateCompaniesQueryVariables
+>;
+export function useGetReminderCandidateCompaniesSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetReminderCandidateCompaniesQuery,
+        GetReminderCandidateCompaniesQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetReminderCandidateCompaniesQuery,
+    GetReminderCandidateCompaniesQueryVariables
+  >(GetReminderCandidateCompaniesDocument, options);
+}
+export type GetReminderCandidateCompaniesQueryHookResult = ReturnType<
+  typeof useGetReminderCandidateCompaniesQuery
+>;
+export type GetReminderCandidateCompaniesLazyQueryHookResult = ReturnType<
+  typeof useGetReminderCandidateCompaniesLazyQuery
+>;
+export type GetReminderCandidateCompaniesSuspenseQueryHookResult = ReturnType<
+  typeof useGetReminderCandidateCompaniesSuspenseQuery
+>;
+export type GetReminderCandidateCompaniesQueryResult = Apollo.QueryResult<
+  GetReminderCandidateCompaniesQuery,
+  GetReminderCandidateCompaniesQueryVariables
+>;
+export const GetCompanyReminderTargetsDocument = gql`
+  query GetCompanyReminderTargets($input: GetCompanyReminderTargetsInput!) {
+    getCompanyReminderTargets(input: $input) {
+      company {
+        id
+        name
+        email
+      }
+      users {
+        entryId
+        userId
+        userName
+        jobTitle
+        delayType
+        thresholdDays
+        elapsedDays
+        isOverdue
+        lastRemindedAt
+        lastRemindedIsOverdue
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCompanyReminderTargetsQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyReminderTargetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyReminderTargetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyReminderTargetsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyReminderTargetsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  > &
+    (
+      | { variables: GetCompanyReminderTargetsQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  >(GetCompanyReminderTargetsDocument, options);
+}
+export function useGetCompanyReminderTargetsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  >(GetCompanyReminderTargetsDocument, options);
+}
+// @ts-ignore
+export function useGetCompanyReminderTargetsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyReminderTargetsQuery,
+  GetCompanyReminderTargetsQueryVariables
+>;
+export function useGetCompanyReminderTargetsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyReminderTargetsQuery,
+        GetCompanyReminderTargetsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyReminderTargetsQuery | undefined,
+  GetCompanyReminderTargetsQueryVariables
+>;
+export function useGetCompanyReminderTargetsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyReminderTargetsQuery,
+        GetCompanyReminderTargetsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetCompanyReminderTargetsQuery,
+    GetCompanyReminderTargetsQueryVariables
+  >(GetCompanyReminderTargetsDocument, options);
+}
+export type GetCompanyReminderTargetsQueryHookResult = ReturnType<
+  typeof useGetCompanyReminderTargetsQuery
+>;
+export type GetCompanyReminderTargetsLazyQueryHookResult = ReturnType<
+  typeof useGetCompanyReminderTargetsLazyQuery
+>;
+export type GetCompanyReminderTargetsSuspenseQueryHookResult = ReturnType<
+  typeof useGetCompanyReminderTargetsSuspenseQuery
+>;
+export type GetCompanyReminderTargetsQueryResult = Apollo.QueryResult<
+  GetCompanyReminderTargetsQuery,
+  GetCompanyReminderTargetsQueryVariables
+>;
+export const GetCompanyRemindersDocument = gql`
+  query GetCompanyReminders($input: GetCompanyRemindersInput!) {
+    getCompanyReminders(input: $input) {
+      id
+      companyId
+      templateName
+      subject
+      body
+      isSuccess
+      errorMessage
+      underThresholdCount
+      createdAt
+      users {
+        id
+        entryId
+        userId
+        userName
+        jobTitle
+        delayType
+        elapsedDays
+        isOverdue
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCompanyRemindersQuery__
+ *
+ * To run a query within a React component, call `useGetCompanyRemindersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCompanyRemindersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCompanyRemindersQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCompanyRemindersQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  > &
+    (
+      | { variables: GetCompanyRemindersQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    ),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  >(GetCompanyRemindersDocument, options);
+}
+export function useGetCompanyRemindersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  >(GetCompanyRemindersDocument, options);
+}
+// @ts-ignore
+export function useGetCompanyRemindersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyRemindersQuery,
+  GetCompanyRemindersQueryVariables
+>;
+export function useGetCompanyRemindersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyRemindersQuery,
+        GetCompanyRemindersQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetCompanyRemindersQuery | undefined,
+  GetCompanyRemindersQueryVariables
+>;
+export function useGetCompanyRemindersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetCompanyRemindersQuery,
+        GetCompanyRemindersQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetCompanyRemindersQuery,
+    GetCompanyRemindersQueryVariables
+  >(GetCompanyRemindersDocument, options);
+}
+export type GetCompanyRemindersQueryHookResult = ReturnType<
+  typeof useGetCompanyRemindersQuery
+>;
+export type GetCompanyRemindersLazyQueryHookResult = ReturnType<
+  typeof useGetCompanyRemindersLazyQuery
+>;
+export type GetCompanyRemindersSuspenseQueryHookResult = ReturnType<
+  typeof useGetCompanyRemindersSuspenseQuery
+>;
+export type GetCompanyRemindersQueryResult = Apollo.QueryResult<
+  GetCompanyRemindersQuery,
+  GetCompanyRemindersQueryVariables
 >;
 export const UpdateCompanyDocument = gql`
   mutation UpdateCompany($input: UpdateCompanyInput!) {
