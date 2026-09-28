@@ -66,7 +66,7 @@ export default function JobList({
         href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${item.id}`}
         target="_blank"
         title={`(求人ID：${item.id}) ${item.title}`}
-        className="line-clamp-3 w-72 text-wrap text-left hover:underline"
+        className="line-clamp-3 w-72 text-wrap text-left underline"
       >
         {item.title}
       </Link>
