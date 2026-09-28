@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Link, Typography } from "@mui/material";
 import { industries, jobTypes } from "@/const/job";
 import { JobItem } from "@/types/job";
 import { getSelectItem } from "@/utils/shared/select";
@@ -40,7 +40,11 @@ export default function JobList({
   const rows: TableRow<TableColumn["property"]>[] = items.map((item) => ({
     id: item.id,
     jobHeader: (
-      <Box className="h-12 w-20 object-cover">
+      <Link
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${item.id}`}
+        target="_blank"
+        className="inline-block h-12 w-20 object-cover hover:opacity-80"
+      >
         {item.jobHeader ? (
           <img
             src={item.jobHeader}
@@ -55,15 +59,17 @@ export default function JobList({
             />
           </Box>
         )}
-      </Box>
+      </Link>
     ),
     title: (
-      <Typography
+      <Link
+        href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${item.id}`}
+        target="_blank"
         title={`(求人ID：${item.id}) ${item.title}`}
-        className="line-clamp-3 w-72 text-wrap text-left"
+        className="line-clamp-3 w-72 text-wrap text-left hover:underline"
       >
         {item.title}
-      </Typography>
+      </Link>
     ),
     companyName:
       !item.companyDeletedAt ||
