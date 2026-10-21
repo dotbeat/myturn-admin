@@ -43,6 +43,18 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       ),
     );
   if (networkError) console.error(`[Network error]: ${networkError}`);
+
+  // 未ログイン・セッション切れ・許可メールアドレスから削除された場合はログイン画面へ遷移する
+  const isUnauthorized = graphQLErrors?.some(
+    ({ extensions }) => extensions?.code === "UNAUTHORIZED",
+  );
+  if (
+    isUnauthorized &&
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/login"
+  ) {
+    window.location.assign("/login");
+  }
 });
 
 // リクエストタイプに基づいてリンクを分割

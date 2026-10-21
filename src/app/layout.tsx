@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ApolloProvider } from "@/lib/ApolloProvider";
+import { AdminUserProvider } from "@/lib/AdminUserProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,7 +30,9 @@ export default function RootLayout({
     <html lang="ja">
       <body className="flex min-h-dvh flex-col overflow-x-hidden">
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ApolloProvider>{children}</ApolloProvider>
+          <ApolloProvider>
+            <AdminUserProvider>{children}</AdminUserProvider>
+          </ApolloProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
