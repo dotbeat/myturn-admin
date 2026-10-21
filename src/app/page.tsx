@@ -53,6 +53,9 @@ export default function Page() {
         <Link href="/line-notifications" className="underline">
           LINE通知メッセージ設定
         </Link>
+        <Link href="/admin-users" className="underline">
+          管理者アカウント
+        </Link>
       </Stack>
     </Box>
   );
