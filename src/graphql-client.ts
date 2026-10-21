@@ -49,6 +49,22 @@ export type AdditionalScoutTicketsResultType = {
   totalPages: Scalars["Int"]["output"];
 };
 
+export type AdminAllowedEmailType = {
+  __typename?: "AdminAllowedEmailType";
+  createdAt: Scalars["DateTime"]["output"];
+  email: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  /** 初回登録時に付与する権限 */
+  initialRole: AdminRole;
+  /** 管理者アカウントが登録済みか */
+  isRegistered: Scalars["Boolean"]["output"];
+};
+
+export type AdminLoginWithGoogleInput = {
+  /** Googleログインで取得したIDトークン */
+  idToken: Scalars["String"]["input"];
+};
+
 export type AdminMessage = {
   __typename?: "AdminMessage";
   company?: Maybe<AdminMessageCompany>;
@@ -100,6 +116,26 @@ export type AdminMessagesResult = {
   page: Scalars["Int"]["output"];
   totalCount: Scalars["Int"]["output"];
   totalPages: Scalars["Int"]["output"];
+};
+
+/** 管理画面アカウントの権限（SUPER_ADMIN: 最上位, MODERATOR: モデレータ, VIEWER: 閲覧のみ） */
+export enum AdminRole {
+  Moderator = "MODERATOR",
+  SuperAdmin = "SUPER_ADMIN",
+  Viewer = "VIEWER",
+}
+
+export type AdminUserType = {
+  __typename?: "AdminUserType";
+  avatarUrl?: Maybe<Scalars["String"]["output"]>;
+  createdAt: Scalars["DateTime"]["output"];
+  email: Scalars["String"]["output"];
+  id: Scalars["Int"]["output"];
+  /** メールアドレスが許可リストに含まれているか（false: ログイン不可） */
+  isAllowed: Scalars["Boolean"]["output"];
+  lastLoggedInAt: Scalars["DateTime"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  role: AdminRole;
 };
 
 export type ApplicantInfo = {
@@ -359,6 +395,12 @@ export type CreateAdditionalScoutTicketInput = {
   totalCount: Scalars["Int"]["input"];
 };
 
+export type CreateAdminAllowedEmailInput = {
+  email: Scalars["String"]["input"];
+  /** 初回登録時に付与する権限 */
+  initialRole: AdminRole;
+};
+
 export type CreateCompanyAcceptTicketInput = {
   amount: Scalars["Int"]["input"];
   companyId: Scalars["Int"]["input"];
@@ -493,6 +535,14 @@ export type CreateUserWithLineInput = {
   avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
   lineAccountId: Scalars["String"]["input"];
+};
+
+export type DeleteAdminAllowedEmailInput = {
+  id: Scalars["Int"]["input"];
+};
+
+export type DeleteAdminUserInput = {
+  id: Scalars["Int"]["input"];
 };
 
 export type DeleteCompanyAcceptTicketInput = {
@@ -1350,12 +1400,15 @@ export type Mutation = {
   /** スカウトを承諾 */
   acceptScout: Scout;
   addFavorite: FavoriteType;
+  adminLoginWithGoogle: AdminUserType;
+  adminLogout: LogoutResponse;
   autoUpdateEntryStatus: Entry;
   batchDaily: Scalars["Boolean"]["output"];
   companyLogin: CompanyLoginResponse;
   companyLogout: CompanyLogoutResponse;
   /** スカウトチケットを追加付与（管理者用） */
   createAdditionalScoutTicket: ScoutTicketAdditionalType;
+  createAdminAllowedEmail: AdminAllowedEmailType;
   createCompany: CompanyType;
   createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
@@ -1366,6 +1419,8 @@ export type Mutation = {
   createScouts: Array<Scout>;
   createUser: UserType;
   createUserAcceptReport: UserAcceptReportType;
+  deleteAdminAllowedEmail: Scalars["Boolean"]["output"];
+  deleteAdminUser: Scalars["Boolean"]["output"];
   deleteCompany: Scalars["Boolean"]["output"];
   deleteCompanyAcceptTicket: CompanyAcceptTicketType;
   deleteCompanyInvoice: Scalars["Boolean"]["output"];
@@ -1394,6 +1449,7 @@ export type Mutation = {
   sendCompanyReminder: CompanyReminderType;
   sendJobOffer: Entry;
   sendMessage: Message;
+  updateAdminUserRole: AdminUserType;
   updateCompany: CompanyType;
   updateCompanyAcceptTicket: CompanyAcceptTicketType;
   updateCompanyInvoice: CompanyInvoiceType;
@@ -1433,6 +1489,10 @@ export type MutationAddFavoriteArgs = {
   input: AddFavoriteInput;
 };
 
+export type MutationAdminLoginWithGoogleArgs = {
+  input: AdminLoginWithGoogleInput;
+};
+
 export type MutationAutoUpdateEntryStatusArgs = {
   input: AutoUpdateEntryStatusInput;
 };
@@ -1443,6 +1503,10 @@ export type MutationCompanyLoginArgs = {
 
 export type MutationCreateAdditionalScoutTicketArgs = {
   input: CreateAdditionalScoutTicketInput;
+};
+
+export type MutationCreateAdminAllowedEmailArgs = {
+  input: CreateAdminAllowedEmailInput;
 };
 
 export type MutationCreateCompanyArgs = {
@@ -1480,6 +1544,14 @@ export type MutationCreateUserArgs = {
 export type MutationCreateUserAcceptReportArgs = {
   id: Scalars["Int"]["input"];
   input: CreateUserAcceptReportInput;
+};
+
+export type MutationDeleteAdminAllowedEmailArgs = {
+  input: DeleteAdminAllowedEmailInput;
+};
+
+export type MutationDeleteAdminUserArgs = {
+  input: DeleteAdminUserInput;
 };
 
 export type MutationDeleteCompanyAcceptTicketArgs = {
@@ -1568,6 +1640,10 @@ export type MutationSendJobOfferArgs = {
 
 export type MutationSendMessageArgs = {
   input: SendMessageInput;
+};
+
+export type MutationUpdateAdminUserRoleArgs = {
+  input: UpdateAdminUserRoleInput;
 };
 
 export type MutationUpdateCompanyArgs = {
@@ -1762,6 +1838,7 @@ export type PickJobScoringWeightType = {
 
 export type Query = {
   __typename?: "Query";
+  adminMe: AdminUserType;
   checkUserJobEntry: EntryCheck;
   companies: Array<CompanyType>;
   company?: Maybe<CompanyWithJobsType>;
@@ -1771,7 +1848,9 @@ export type Query = {
   companyScoutTicket: ScoutTicketType;
   /** 追加スカウトチケット一覧（管理者用） */
   getAdditionalScoutTickets: AdditionalScoutTicketsResultType;
+  getAdminAllowedEmails: Array<AdminAllowedEmailType>;
   getAdminMessages: AdminMessagesResult;
+  getAdminUsers: Array<AdminUserType>;
   getAllCompanyIds: Array<CompanyIdInfoType>;
   getAllUserIds: Array<UserType>;
   getCompanies: CompanySearchResultType;
@@ -2561,6 +2640,11 @@ export type UnreadMessageInfo = {
   isRead: Scalars["Boolean"]["output"];
 };
 
+export type UpdateAdminUserRoleInput = {
+  id: Scalars["Int"]["input"];
+  role: AdminRole;
+};
+
 export type UpdateCompanyAcceptTicketInput = {
   amount?: InputMaybe<Scalars["Int"]["input"]>;
   count?: InputMaybe<Scalars["Int"]["input"]>;
@@ -2956,6 +3040,109 @@ export type VerifyPasswordResetTokenInput = {
 export type VerifyPasswordResetTokenResponse = {
   __typename?: "VerifyPasswordResetTokenResponse";
   isValid: Scalars["Boolean"]["output"];
+};
+
+export type AdminLoginWithGoogleMutationVariables = Exact<{
+  input: AdminLoginWithGoogleInput;
+}>;
+
+export type AdminLoginWithGoogleMutation = {
+  __typename?: "Mutation";
+  adminLoginWithGoogle: { __typename?: "AdminUserType"; id: number };
+};
+
+export type AdminLogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type AdminLogoutMutation = {
+  __typename?: "Mutation";
+  adminLogout: { __typename?: "LogoutResponse"; message: string };
+};
+
+export type UpdateAdminUserRoleMutationVariables = Exact<{
+  input: UpdateAdminUserRoleInput;
+}>;
+
+export type UpdateAdminUserRoleMutation = {
+  __typename?: "Mutation";
+  updateAdminUserRole: {
+    __typename?: "AdminUserType";
+    id: number;
+    role: AdminRole;
+  };
+};
+
+export type DeleteAdminUserMutationVariables = Exact<{
+  input: DeleteAdminUserInput;
+}>;
+
+export type DeleteAdminUserMutation = {
+  __typename?: "Mutation";
+  deleteAdminUser: boolean;
+};
+
+export type CreateAdminAllowedEmailMutationVariables = Exact<{
+  input: CreateAdminAllowedEmailInput;
+}>;
+
+export type CreateAdminAllowedEmailMutation = {
+  __typename?: "Mutation";
+  createAdminAllowedEmail: { __typename?: "AdminAllowedEmailType"; id: number };
+};
+
+export type DeleteAdminAllowedEmailMutationVariables = Exact<{
+  input: DeleteAdminAllowedEmailInput;
+}>;
+
+export type DeleteAdminAllowedEmailMutation = {
+  __typename?: "Mutation";
+  deleteAdminAllowedEmail: boolean;
+};
+
+export type AdminMeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AdminMeQuery = {
+  __typename?: "Query";
+  adminMe: {
+    __typename?: "AdminUserType";
+    id: number;
+    email: string;
+    name?: string | null;
+    avatarUrl?: string | null;
+    role: AdminRole;
+  };
+};
+
+export type GetAdminUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAdminUsersQuery = {
+  __typename?: "Query";
+  getAdminUsers: Array<{
+    __typename?: "AdminUserType";
+    id: number;
+    email: string;
+    name?: string | null;
+    avatarUrl?: string | null;
+    role: AdminRole;
+    isAllowed: boolean;
+    lastLoggedInAt: any;
+    createdAt: any;
+  }>;
+};
+
+export type GetAdminAllowedEmailsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetAdminAllowedEmailsQuery = {
+  __typename?: "Query";
+  getAdminAllowedEmails: Array<{
+    __typename?: "AdminAllowedEmailType";
+    id: number;
+    email: string;
+    initialRole: AdminRole;
+    isRegistered: boolean;
+    createdAt: any;
+  }>;
 };
 
 export type BatchDailyMutationVariables = Exact<{ [key: string]: never }>;
@@ -3855,6 +4042,595 @@ export type GetUserQuery = {
   } | null;
 };
 
+export const AdminLoginWithGoogleDocument = gql`
+  mutation AdminLoginWithGoogle($input: AdminLoginWithGoogleInput!) {
+    adminLoginWithGoogle(input: $input) {
+      id
+    }
+  }
+`;
+export type AdminLoginWithGoogleMutationFn = Apollo.MutationFunction<
+  AdminLoginWithGoogleMutation,
+  AdminLoginWithGoogleMutationVariables
+>;
+
+/**
+ * __useAdminLoginWithGoogleMutation__
+ *
+ * To run a mutation, you first call `useAdminLoginWithGoogleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAdminLoginWithGoogleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [adminLoginWithGoogleMutation, { data, loading, error }] = useAdminLoginWithGoogleMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAdminLoginWithGoogleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AdminLoginWithGoogleMutation,
+    AdminLoginWithGoogleMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    AdminLoginWithGoogleMutation,
+    AdminLoginWithGoogleMutationVariables
+  >(AdminLoginWithGoogleDocument, options);
+}
+export type AdminLoginWithGoogleMutationHookResult = ReturnType<
+  typeof useAdminLoginWithGoogleMutation
+>;
+export type AdminLoginWithGoogleMutationResult =
+  Apollo.MutationResult<AdminLoginWithGoogleMutation>;
+export type AdminLoginWithGoogleMutationOptions = Apollo.BaseMutationOptions<
+  AdminLoginWithGoogleMutation,
+  AdminLoginWithGoogleMutationVariables
+>;
+export const AdminLogoutDocument = gql`
+  mutation AdminLogout {
+    adminLogout {
+      message
+    }
+  }
+`;
+export type AdminLogoutMutationFn = Apollo.MutationFunction<
+  AdminLogoutMutation,
+  AdminLogoutMutationVariables
+>;
+
+/**
+ * __useAdminLogoutMutation__
+ *
+ * To run a mutation, you first call `useAdminLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAdminLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [adminLogoutMutation, { data, loading, error }] = useAdminLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAdminLogoutMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AdminLogoutMutation,
+    AdminLogoutMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AdminLogoutMutation, AdminLogoutMutationVariables>(
+    AdminLogoutDocument,
+    options,
+  );
+}
+export type AdminLogoutMutationHookResult = ReturnType<
+  typeof useAdminLogoutMutation
+>;
+export type AdminLogoutMutationResult =
+  Apollo.MutationResult<AdminLogoutMutation>;
+export type AdminLogoutMutationOptions = Apollo.BaseMutationOptions<
+  AdminLogoutMutation,
+  AdminLogoutMutationVariables
+>;
+export const UpdateAdminUserRoleDocument = gql`
+  mutation UpdateAdminUserRole($input: UpdateAdminUserRoleInput!) {
+    updateAdminUserRole(input: $input) {
+      id
+      role
+    }
+  }
+`;
+export type UpdateAdminUserRoleMutationFn = Apollo.MutationFunction<
+  UpdateAdminUserRoleMutation,
+  UpdateAdminUserRoleMutationVariables
+>;
+
+/**
+ * __useUpdateAdminUserRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateAdminUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAdminUserRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAdminUserRoleMutation, { data, loading, error }] = useUpdateAdminUserRoleMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateAdminUserRoleMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAdminUserRoleMutation,
+    UpdateAdminUserRoleMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateAdminUserRoleMutation,
+    UpdateAdminUserRoleMutationVariables
+  >(UpdateAdminUserRoleDocument, options);
+}
+export type UpdateAdminUserRoleMutationHookResult = ReturnType<
+  typeof useUpdateAdminUserRoleMutation
+>;
+export type UpdateAdminUserRoleMutationResult =
+  Apollo.MutationResult<UpdateAdminUserRoleMutation>;
+export type UpdateAdminUserRoleMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAdminUserRoleMutation,
+  UpdateAdminUserRoleMutationVariables
+>;
+export const DeleteAdminUserDocument = gql`
+  mutation DeleteAdminUser($input: DeleteAdminUserInput!) {
+    deleteAdminUser(input: $input)
+  }
+`;
+export type DeleteAdminUserMutationFn = Apollo.MutationFunction<
+  DeleteAdminUserMutation,
+  DeleteAdminUserMutationVariables
+>;
+
+/**
+ * __useDeleteAdminUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteAdminUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAdminUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAdminUserMutation, { data, loading, error }] = useDeleteAdminUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteAdminUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteAdminUserMutation,
+    DeleteAdminUserMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteAdminUserMutation,
+    DeleteAdminUserMutationVariables
+  >(DeleteAdminUserDocument, options);
+}
+export type DeleteAdminUserMutationHookResult = ReturnType<
+  typeof useDeleteAdminUserMutation
+>;
+export type DeleteAdminUserMutationResult =
+  Apollo.MutationResult<DeleteAdminUserMutation>;
+export type DeleteAdminUserMutationOptions = Apollo.BaseMutationOptions<
+  DeleteAdminUserMutation,
+  DeleteAdminUserMutationVariables
+>;
+export const CreateAdminAllowedEmailDocument = gql`
+  mutation CreateAdminAllowedEmail($input: CreateAdminAllowedEmailInput!) {
+    createAdminAllowedEmail(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateAdminAllowedEmailMutationFn = Apollo.MutationFunction<
+  CreateAdminAllowedEmailMutation,
+  CreateAdminAllowedEmailMutationVariables
+>;
+
+/**
+ * __useCreateAdminAllowedEmailMutation__
+ *
+ * To run a mutation, you first call `useCreateAdminAllowedEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAdminAllowedEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAdminAllowedEmailMutation, { data, loading, error }] = useCreateAdminAllowedEmailMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAdminAllowedEmailMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAdminAllowedEmailMutation,
+    CreateAdminAllowedEmailMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateAdminAllowedEmailMutation,
+    CreateAdminAllowedEmailMutationVariables
+  >(CreateAdminAllowedEmailDocument, options);
+}
+export type CreateAdminAllowedEmailMutationHookResult = ReturnType<
+  typeof useCreateAdminAllowedEmailMutation
+>;
+export type CreateAdminAllowedEmailMutationResult =
+  Apollo.MutationResult<CreateAdminAllowedEmailMutation>;
+export type CreateAdminAllowedEmailMutationOptions = Apollo.BaseMutationOptions<
+  CreateAdminAllowedEmailMutation,
+  CreateAdminAllowedEmailMutationVariables
+>;
+export const DeleteAdminAllowedEmailDocument = gql`
+  mutation DeleteAdminAllowedEmail($input: DeleteAdminAllowedEmailInput!) {
+    deleteAdminAllowedEmail(input: $input)
+  }
+`;
+export type DeleteAdminAllowedEmailMutationFn = Apollo.MutationFunction<
+  DeleteAdminAllowedEmailMutation,
+  DeleteAdminAllowedEmailMutationVariables
+>;
+
+/**
+ * __useDeleteAdminAllowedEmailMutation__
+ *
+ * To run a mutation, you first call `useDeleteAdminAllowedEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAdminAllowedEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAdminAllowedEmailMutation, { data, loading, error }] = useDeleteAdminAllowedEmailMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteAdminAllowedEmailMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteAdminAllowedEmailMutation,
+    DeleteAdminAllowedEmailMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DeleteAdminAllowedEmailMutation,
+    DeleteAdminAllowedEmailMutationVariables
+  >(DeleteAdminAllowedEmailDocument, options);
+}
+export type DeleteAdminAllowedEmailMutationHookResult = ReturnType<
+  typeof useDeleteAdminAllowedEmailMutation
+>;
+export type DeleteAdminAllowedEmailMutationResult =
+  Apollo.MutationResult<DeleteAdminAllowedEmailMutation>;
+export type DeleteAdminAllowedEmailMutationOptions = Apollo.BaseMutationOptions<
+  DeleteAdminAllowedEmailMutation,
+  DeleteAdminAllowedEmailMutationVariables
+>;
+export const AdminMeDocument = gql`
+  query AdminMe {
+    adminMe {
+      id
+      email
+      name
+      avatarUrl
+      role
+    }
+  }
+`;
+
+/**
+ * __useAdminMeQuery__
+ *
+ * To run a query within a React component, call `useAdminMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdminMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdminMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAdminMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<AdminMeQuery, AdminMeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AdminMeQuery, AdminMeQueryVariables>(
+    AdminMeDocument,
+    options,
+  );
+}
+export function useAdminMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AdminMeQuery,
+    AdminMeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<AdminMeQuery, AdminMeQueryVariables>(
+    AdminMeDocument,
+    options,
+  );
+}
+// @ts-ignore
+export function useAdminMeSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    AdminMeQuery,
+    AdminMeQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<AdminMeQuery, AdminMeQueryVariables>;
+export function useAdminMeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<AdminMeQuery, AdminMeQueryVariables>,
+): Apollo.UseSuspenseQueryResult<
+  AdminMeQuery | undefined,
+  AdminMeQueryVariables
+>;
+export function useAdminMeSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<AdminMeQuery, AdminMeQueryVariables>,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<AdminMeQuery, AdminMeQueryVariables>(
+    AdminMeDocument,
+    options,
+  );
+}
+export type AdminMeQueryHookResult = ReturnType<typeof useAdminMeQuery>;
+export type AdminMeLazyQueryHookResult = ReturnType<typeof useAdminMeLazyQuery>;
+export type AdminMeSuspenseQueryHookResult = ReturnType<
+  typeof useAdminMeSuspenseQuery
+>;
+export type AdminMeQueryResult = Apollo.QueryResult<
+  AdminMeQuery,
+  AdminMeQueryVariables
+>;
+export const GetAdminUsersDocument = gql`
+  query GetAdminUsers {
+    getAdminUsers {
+      id
+      email
+      name
+      avatarUrl
+      role
+      isAllowed
+      lastLoggedInAt
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetAdminUsersQuery__
+ *
+ * To run a query within a React component, call `useGetAdminUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAdminUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAdminUsersQuery,
+    GetAdminUsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAdminUsersQuery, GetAdminUsersQueryVariables>(
+    GetAdminUsersDocument,
+    options,
+  );
+}
+export function useGetAdminUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAdminUsersQuery,
+    GetAdminUsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAdminUsersQuery, GetAdminUsersQueryVariables>(
+    GetAdminUsersDocument,
+    options,
+  );
+}
+// @ts-ignore
+export function useGetAdminUsersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAdminUsersQuery,
+    GetAdminUsersQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminUsersQuery,
+  GetAdminUsersQueryVariables
+>;
+export function useGetAdminUsersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminUsersQuery,
+        GetAdminUsersQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminUsersQuery | undefined,
+  GetAdminUsersQueryVariables
+>;
+export function useGetAdminUsersSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminUsersQuery,
+        GetAdminUsersQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAdminUsersQuery,
+    GetAdminUsersQueryVariables
+  >(GetAdminUsersDocument, options);
+}
+export type GetAdminUsersQueryHookResult = ReturnType<
+  typeof useGetAdminUsersQuery
+>;
+export type GetAdminUsersLazyQueryHookResult = ReturnType<
+  typeof useGetAdminUsersLazyQuery
+>;
+export type GetAdminUsersSuspenseQueryHookResult = ReturnType<
+  typeof useGetAdminUsersSuspenseQuery
+>;
+export type GetAdminUsersQueryResult = Apollo.QueryResult<
+  GetAdminUsersQuery,
+  GetAdminUsersQueryVariables
+>;
+export const GetAdminAllowedEmailsDocument = gql`
+  query GetAdminAllowedEmails {
+    getAdminAllowedEmails {
+      id
+      email
+      initialRole
+      isRegistered
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetAdminAllowedEmailsQuery__
+ *
+ * To run a query within a React component, call `useGetAdminAllowedEmailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminAllowedEmailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminAllowedEmailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAdminAllowedEmailsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >(GetAdminAllowedEmailsDocument, options);
+}
+export function useGetAdminAllowedEmailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >(GetAdminAllowedEmailsDocument, options);
+}
+// @ts-ignore
+export function useGetAdminAllowedEmailsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminAllowedEmailsQuery,
+  GetAdminAllowedEmailsQueryVariables
+>;
+export function useGetAdminAllowedEmailsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminAllowedEmailsQuery,
+        GetAdminAllowedEmailsQueryVariables
+      >,
+): Apollo.UseSuspenseQueryResult<
+  GetAdminAllowedEmailsQuery | undefined,
+  GetAdminAllowedEmailsQueryVariables
+>;
+export function useGetAdminAllowedEmailsSuspenseQuery(
+  baseOptions?:
+    | Apollo.SkipToken
+    | Apollo.SuspenseQueryHookOptions<
+        GetAdminAllowedEmailsQuery,
+        GetAdminAllowedEmailsQueryVariables
+      >,
+) {
+  const options =
+    baseOptions === Apollo.skipToken
+      ? baseOptions
+      : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    GetAdminAllowedEmailsQuery,
+    GetAdminAllowedEmailsQueryVariables
+  >(GetAdminAllowedEmailsDocument, options);
+}
+export type GetAdminAllowedEmailsQueryHookResult = ReturnType<
+  typeof useGetAdminAllowedEmailsQuery
+>;
+export type GetAdminAllowedEmailsLazyQueryHookResult = ReturnType<
+  typeof useGetAdminAllowedEmailsLazyQuery
+>;
+export type GetAdminAllowedEmailsSuspenseQueryHookResult = ReturnType<
+  typeof useGetAdminAllowedEmailsSuspenseQuery
+>;
+export type GetAdminAllowedEmailsQueryResult = Apollo.QueryResult<
+  GetAdminAllowedEmailsQuery,
+  GetAdminAllowedEmailsQueryVariables
+>;
 export const BatchDailyDocument = gql`
   mutation BatchDaily {
     batchDaily
