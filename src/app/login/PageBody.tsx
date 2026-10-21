@@ -56,12 +56,12 @@ export default function PageBody() {
         strategy="afterInteractive"
         onReady={renderGoogleButton}
       />
-      <Box className="flex w-full max-w-sm flex-col items-center rounded-lg bg-[var(--background)] px-8 py-10 shadow-sm">
+      <Box className="flex w-full max-w-md flex-col items-center bg-[var(--background)] px-8 py-10 shadow-sm">
         <Box className="mb-8 flex items-center gap-1 text-[var(--myturn-main-text)]">
           <Logo width={109} />
           <Typography className="text-lg font-semibold">管理</Typography>
         </Box>
-        <Typography className="mb-6 text-center text-sm text-[var(--myturn-sub-text)]">
+        <Typography className="mb-8 text-center text-sm">
           許可されたGoogleアカウントでログインしてください
         </Typography>
         <Box ref={buttonRef} className="flex h-11 justify-center" />
