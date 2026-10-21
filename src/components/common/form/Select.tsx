@@ -37,7 +37,7 @@ export default function Select({
   return (
     <FormControl className={`space-y-1 ${className}`}>
       {label && (
-        <label htmlFor={name} className="inline-block text-sm font-semibold">
+        <label htmlFor={inputId} className="inline-block text-sm font-semibold">
           {label}
           {required && <span className="text-[var(--myturn-accent)]"> *</span>}
         </label>

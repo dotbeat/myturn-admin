@@ -157,13 +157,14 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
         </Typography>
         <FormProvider {...methods}>
           <form
-            className="flex flex-wrap items-start gap-4"
+            className="flex flex-wrap items-end gap-4"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <TextField
               name="email"
               label="メールアドレス"
               type="email"
+              autoComplete="email"
               placeholder="example@gmail.com"
               className="w-80"
             />
