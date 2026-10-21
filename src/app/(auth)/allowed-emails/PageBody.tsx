@@ -142,7 +142,12 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <PageTitle className="mb-1">許可メールアドレス設定</PageTitle>
+      <Box className="mb-8 flex items-center justify-between gap-4">
+        <PageTitle>許可メールアドレス設定</PageTitle>
+        <Button href="/admin-users" className="-mx-3 rounded-md px-4 py-2">
+          管理者アカウント一覧へ
+        </Button>
+      </Box>
       <Typography
         variant="body2"
         className="mb-8 text-[var(--myturn-sub-text)]"

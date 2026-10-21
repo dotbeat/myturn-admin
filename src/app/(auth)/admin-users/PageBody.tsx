@@ -123,14 +123,11 @@ export default function PageBody() {
 
   return (
     <Box className="flex-1 px-8 py-6">
-      <Box className="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <Box className="mb-8 flex items-center justify-between gap-4">
         <PageTitle>管理者アカウント</PageTitle>
         {isSystemAdmin && (
-          <Button
-            href="/allowed-emails"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
-          >
-            許可メールアドレス設定
+          <Button href="/allowed-emails" className="-mx-3 rounded-md px-4 py-2">
+            許可メールアドレス設定へ
           </Button>
         )}
       </Box>
