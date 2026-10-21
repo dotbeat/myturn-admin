@@ -41,7 +41,7 @@ type AdminUserItem = GetAdminUsersQuery["getAdminUsers"][number];
 const headCellClass = "p-2 text-base text-[var(--myturn-sub-text)]";
 
 export default function PageBody() {
-  const { adminUser: me, isSuperAdmin } = useAdminUser();
+  const { adminUser: me, isSystemAdmin } = useAdminUser();
   const [toast, setToast] = useState<{
     open: boolean;
     message: string;
@@ -125,7 +125,7 @@ export default function PageBody() {
     <Box className="flex-1 px-8 py-6">
       <Box className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <PageTitle>管理者アカウント</PageTitle>
-        {isSuperAdmin && (
+        {isSystemAdmin && (
           <Button
             href="/allowed-emails"
             className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
@@ -163,7 +163,7 @@ export default function PageBody() {
               <TableCell align="center" className={headCellClass}>
                 登録日
               </TableCell>
-              {isSuperAdmin && <TableCell className={headCellClass} />}
+              {isSystemAdmin && <TableCell className={headCellClass} />}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -215,7 +215,7 @@ export default function PageBody() {
                   <TableCell align="center" className="p-2 text-base">
                     {new Date(adminUser.createdAt).toLocaleDateString("ja")}
                   </TableCell>
-                  {isSuperAdmin && (
+                  {isSystemAdmin && (
                     <TableCell align="center" className="p-2">
                       {!isMe && (
                         <Box className="flex items-center justify-center gap-2">

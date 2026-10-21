@@ -11,8 +11,8 @@ export type AdminUser = AdminMeQuery["adminMe"];
 type AdminUserContextValue = {
   adminUser: AdminUser | null;
   isLoading: boolean;
-  /** 最上位管理者か（管理者アカウント・許可メールアドレスの管理が可能） */
-  isSuperAdmin: boolean;
+  /** システム管理者か（管理者アカウント・許可メールアドレスの管理が可能） */
+  isSystemAdmin: boolean;
   /** データの更新が可能か（閲覧のみ権限ではない） */
   canEdit: boolean;
 };
@@ -20,7 +20,7 @@ type AdminUserContextValue = {
 const AdminUserContext = createContext<AdminUserContextValue>({
   adminUser: null,
   isLoading: true,
-  isSuperAdmin: false,
+  isSystemAdmin: false,
   canEdit: false,
 });
 
@@ -40,8 +40,8 @@ export function AdminUserProvider({ children }: { children: ReactNode }) {
       value={{
         adminUser,
         isLoading: loading,
-        isSuperAdmin: role === AdminRole.SuperAdmin,
-        canEdit: role === AdminRole.SuperAdmin || role === AdminRole.Moderator,
+        isSystemAdmin: role === AdminRole.SystemAdmin,
+        canEdit: role === AdminRole.SystemAdmin || role === AdminRole.Moderator,
       }}
     >
       {children}

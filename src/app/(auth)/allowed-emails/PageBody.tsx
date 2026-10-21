@@ -47,7 +47,7 @@ const defaultFormValues: CreateAllowedEmailFormData = {
 };
 
 export default function PageBody() {
-  const { adminUser: me, isSuperAdmin, isLoading } = useAdminUser();
+  const { adminUser: me, isSystemAdmin, isLoading } = useAdminUser();
 
   if (isLoading) {
     return (
@@ -57,13 +57,11 @@ export default function PageBody() {
     );
   }
 
-  if (!isSuperAdmin) {
+  if (!isSystemAdmin) {
     return (
       <Box className="flex-1 px-8 py-6">
         <PageTitle className="mb-8">許可メールアドレス設定</PageTitle>
-        <Typography>
-          このページは最上位権限の管理者のみ表示できます。
-        </Typography>
+        <Typography>このページはシステム管理者のみ表示できます。</Typography>
       </Box>
     );
   }

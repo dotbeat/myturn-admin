@@ -10,7 +10,7 @@ export default function SideNavigation({
 }: {
   className?: string;
 }) {
-  const { isSuperAdmin } = useAdminUser();
+  const { isSystemAdmin } = useAdminUser();
 
   return (
     <Box
@@ -84,7 +84,7 @@ export default function SideNavigation({
         <ListItem className="p-0">
           <SideNavigationItem href="/admin-users" label="管理者アカウント" />
         </ListItem>
-        {isSuperAdmin && (
+        {isSystemAdmin && (
           <ListItem className="p-0">
             <SideNavigationItem
               href="/allowed-emails"

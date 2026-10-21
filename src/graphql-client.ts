@@ -118,10 +118,10 @@ export type AdminMessagesResult = {
   totalPages: Scalars["Int"]["output"];
 };
 
-/** 管理画面アカウントの権限（SUPER_ADMIN: 最上位, MODERATOR: モデレータ, VIEWER: 閲覧のみ） */
+/** 管理画面アカウントの権限（SYSTEM_ADMIN: システム管理者, MODERATOR: モデレータ, VIEWER: 閲覧のみ） */
 export enum AdminRole {
   Moderator = "MODERATOR",
-  SuperAdmin = "SUPER_ADMIN",
+  SystemAdmin = "SYSTEM_ADMIN",
   Viewer = "VIEWER",
 }
 

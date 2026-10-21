@@ -3,7 +3,7 @@ import { AdminRole } from "@/graphql-client";
 
 // 管理画面アカウントの権限
 export const adminRoleItems: SelectItem<AdminRole>[] = [
-  { value: AdminRole.SuperAdmin, label: "最上位" },
+  { value: AdminRole.SystemAdmin, label: "システム管理者" },
   { value: AdminRole.Moderator, label: "モデレータ" },
   { value: AdminRole.Viewer, label: "閲覧のみ" },
 ];
