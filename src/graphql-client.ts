@@ -3119,7 +3119,6 @@ export type GetAdminUsersQuery = {
   getAdminUsers: Array<{
     __typename?: "AdminUserType";
     id: number;
-    email: string;
     name?: string | null;
     avatarUrl?: string | null;
     role: AdminRole;
@@ -4428,7 +4427,6 @@ export const GetAdminUsersDocument = gql`
   query GetAdminUsers {
     getAdminUsers {
       id
-      email
       name
       avatarUrl
       role

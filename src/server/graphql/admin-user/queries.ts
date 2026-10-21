@@ -18,7 +18,6 @@ export const GET_ADMIN_USERS = gql`
   query GetAdminUsers {
     getAdminUsers {
       id
-      email
       name
       avatarUrl
       role

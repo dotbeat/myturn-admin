@@ -149,9 +149,6 @@ export default function PageBody() {
                 名前
               </TableCell>
               <TableCell align="center" className={headCellClass}>
-                メールアドレス
-              </TableCell>
-              <TableCell align="center" className={headCellClass}>
                 権限
               </TableCell>
               <TableCell align="center" className={headCellClass}>
@@ -175,7 +172,7 @@ export default function PageBody() {
                     <Avatar
                       src={adminUser.avatarUrl ?? ""}
                       size={40}
-                      name={adminUser.name ?? adminUser.email}
+                      name={adminUser.name ?? undefined}
                       className="mx-auto"
                     />
                   </TableCell>
@@ -189,9 +186,6 @@ export default function PageBody() {
                         (あなた)
                       </Typography>
                     )}
-                  </TableCell>
-                  <TableCell align="center" className="p-2 text-base">
-                    {adminUser.email}
                   </TableCell>
                   <TableCell align="center" className="p-2 text-base">
                     {getAdminRoleLabel(adminUser.role)}
@@ -262,7 +256,7 @@ export default function PageBody() {
             <DialogContent className="flex flex-col gap-4">
               {editingAdminUser && (
                 <Typography className="text-[var(--myturn-sub-text)]">
-                  {editingAdminUser.name ?? ""}（{editingAdminUser.email}）
+                  {editingAdminUser.name ?? "-"}
                 </Typography>
               )}
               <Select name="role" label="権限" items={adminRoleItems} />
@@ -301,8 +295,8 @@ export default function PageBody() {
         <DialogContent className="pt-4">
           {deletingAdminUser && (
             <Typography className="mb-2">
-              {deletingAdminUser.name ?? ""}（{deletingAdminUser.email}
-              ）を削除しますか？
+              {deletingAdminUser.name ?? "この管理者アカウント"}
+              を削除しますか？
             </Typography>
           )}
           <Typography className="text-sm text-[var(--myturn-sub-text)]">
