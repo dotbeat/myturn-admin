@@ -31,8 +31,10 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
 import ApplicantList from "@/components/applicant/ApplicantList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -175,6 +177,7 @@ export default function PageBody() {
             items={applicants}
             isLoading={loading}
             refetch={refetch}
+            readOnly={!canEdit}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">

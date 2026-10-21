@@ -35,8 +35,10 @@ import {
 import { PICK_JOB_WEIGHT_METADATA } from "@/utils/frontend/hot-job";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -107,7 +109,7 @@ export default function PageBody() {
     {
       onCompleted: (data: any) => {
         showToast(
-          `再計算完了: ${data.recalculatePickJobs.updatedCount}件更新`,
+          `再計算完了: ${data.recalculatePickJobsForAdmin.updatedCount}件更新`,
           "success",
         );
         refetchPickJobs();
@@ -184,6 +186,7 @@ export default function PageBody() {
                       <TextField
                         name={`weights.${i}.weight`}
                         type="number"
+                        disabled={!canEdit}
                         className="w-24"
                         inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
@@ -202,13 +205,15 @@ export default function PageBody() {
               </Typography>
             )}
 
-            <Button
-              type="submit"
-              disabled={isUpdating || !isWeightSumValid}
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)] disabled:bg-[var(--myturn-support-middle)]"
-            >
-              {isUpdating ? "更新中..." : "設定を更新する"}
-            </Button>
+            {canEdit && (
+              <Button
+                type="submit"
+                disabled={isUpdating || !isWeightSumValid}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)] disabled:bg-[var(--myturn-support-middle)]"
+              >
+                {isUpdating ? "更新中..." : "設定を更新する"}
+              </Button>
+            )}
           </form>
         </FormProvider>
 
@@ -249,14 +254,16 @@ export default function PageBody() {
               </TableBody>
             </Table>
           )}
-          <Button
-            type="button"
-            disabled={isRecalculating}
-            className="rounded-full border border-[var(--myturn-sub-text)] px-4 py-3"
-            onClick={() => recalculate()}
-          >
-            {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="button"
+              disabled={isRecalculating}
+              className="rounded-full border border-[var(--myturn-sub-text)] px-4 py-3"
+              onClick={() => recalculate()}
+            >
+              {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}
+            </Button>
+          )}
         </Box>
       </Box>
 

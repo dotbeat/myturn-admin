@@ -50,8 +50,10 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import CompanyFilterForm from "@/components/company/CompanyFilterForm";
 import CompanyList from "@/components/company/CompanyList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -257,7 +259,9 @@ export default function PageBody() {
           <CompanyList
             items={companies}
             isLoading={loading}
-            onEditAgentPlanAmount={openAgentPlanAmountDialog}
+            onEditAgentPlanAmount={
+              canEdit ? openAgentPlanAmountDialog : undefined
+            }
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">

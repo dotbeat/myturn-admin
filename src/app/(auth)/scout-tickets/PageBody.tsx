@@ -38,6 +38,7 @@ import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import TextField from "@/components/common/form/TextField";
 import Select from "@/components/common/form/Select";
 import PageTitle from "@/components/common/PageTitle";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type CompanyOption = { id: number; name: string };
 
@@ -70,6 +71,7 @@ function getPreviewExpiredAt(): string {
 }
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const searchParams = useSearchParams();
   const router = useRouter();
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
@@ -182,61 +184,63 @@ export default function PageBody() {
       <PageTitle className="mb-8">追加スカウトチケット管理</PageTitle>
 
       {/* 付与フォーム */}
-      <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
-        <Typography className="mb-2 font-semibold">
-          スカウトチケットを付与する
-        </Typography>
-        <FormProvider {...createMethods}>
-          <form
-            className="flex flex-wrap items-end gap-4"
-            onSubmit={createMethods.handleSubmit(onCreateSubmit)}
-          >
-            <Box className="flex items-end gap-2">
-              <TextField
-                name="companyId"
-                label="企業ID"
-                type="number"
-                className="w-24"
-              />
-              <Button
-                type="button"
-                variant="outlined"
-                onClick={() => {
-                  setCompanySearch("");
-                  setCompanyDialogOpen(true);
-                }}
-                className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
-              >
-                企業選択
-              </Button>
-            </Box>
-            <Select
-              name="totalCount"
-              label="追加数"
-              items={ALLOWED_TOTAL_COUNTS.map((c) => ({
-                value: c,
-                label: `${c}通`,
-              }))}
-              className="w-28"
-            />
-            <Box>
-              <Typography className="text-sm">
-                料金：{priceDisplay ? `${priceDisplay}円` : "—"}
-              </Typography>
-              <Typography className="text-sm">
-                有効期限：付与日から{VALIDITY_DAYS}日 ({previewExpiredAt})
-              </Typography>
-            </Box>
-            <Button
-              type="submit"
-              disabled={isCreating}
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+      {canEdit && (
+        <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
+          <Typography className="mb-2 font-semibold">
+            スカウトチケットを付与する
+          </Typography>
+          <FormProvider {...createMethods}>
+            <form
+              className="flex flex-wrap items-end gap-4"
+              onSubmit={createMethods.handleSubmit(onCreateSubmit)}
             >
-              {isCreating ? "付与中..." : "付与する"}
-            </Button>
-          </form>
-        </FormProvider>
-      </Box>
+              <Box className="flex items-end gap-2">
+                <TextField
+                  name="companyId"
+                  label="企業ID"
+                  type="number"
+                  className="w-24"
+                />
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => {
+                    setCompanySearch("");
+                    setCompanyDialogOpen(true);
+                  }}
+                  className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
+                >
+                  企業選択
+                </Button>
+              </Box>
+              <Select
+                name="totalCount"
+                label="追加数"
+                items={ALLOWED_TOTAL_COUNTS.map((c) => ({
+                  value: c,
+                  label: `${c}通`,
+                }))}
+                className="w-28"
+              />
+              <Box>
+                <Typography className="text-sm">
+                  料金：{priceDisplay ? `${priceDisplay}円` : "—"}
+                </Typography>
+                <Typography className="text-sm">
+                  有効期限：付与日から{VALIDITY_DAYS}日 ({previewExpiredAt})
+                </Typography>
+              </Box>
+              <Button
+                type="submit"
+                disabled={isCreating}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+              >
+                {isCreating ? "付与中..." : "付与する"}
+              </Button>
+            </form>
+          </FormProvider>
+        </Box>
+      )}
 
       {/* 一覧 */}
       <Box className="mt-8">

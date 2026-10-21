@@ -39,6 +39,7 @@ import PopUp from "@/components/common/PopUp";
 import RadioGroup from "@/components/common/form/RadioGroup";
 import JobFilterForm from "@/components/job/JobFilterForm";
 import JobList from "@/components/job/JobList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 import { UpdateJobIsAgentPlanOnlyMutation } from "@/graphql-client";
 
 const agentPlanOnlyItems = [
@@ -52,6 +53,7 @@ const editJobAgentPlanOnlySchema = z.object({
 type EditJobAgentPlanOnlyFormData = z.infer<typeof editJobAgentPlanOnlySchema>;
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -229,6 +231,7 @@ export default function PageBody() {
             isLoading={loading}
             onEditAgentPlanOnly={openAgentPlanDialog}
             onStatusUpdated={refetchJobs}
+            readOnly={!canEdit}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">

@@ -23,6 +23,7 @@ import {
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import ScheduleInput from "@/components/common/ScheduleInput";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 import { useQuery, useMutation } from "@apollo/client";
 import {
@@ -190,6 +191,7 @@ const createDefaultValues = (): LineNotificationEditFormData => ({
 });
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -332,6 +334,7 @@ export default function PageBody() {
                     key={notification.key}
                     notification={notification}
                     formIndex={index}
+                    disabled={!canEdit}
                   />
                 );
               })}
@@ -362,6 +365,7 @@ export default function PageBody() {
                     key={notification.key}
                     notification={notification}
                     formIndex={index}
+                    disabled={!canEdit}
                   />
                 );
               })}
@@ -374,15 +378,17 @@ export default function PageBody() {
             </Typography>
           )}
 
-          <Box>
-            <Button
-              type="submit"
-              disabled={isUpdating}
-              className="rounded-full bg-[var(--myturn-main)] px-6 py-3 text-[var(--foreground)] disabled:opacity-50"
-            >
-              {isUpdating ? "更新中..." : "すべての設定を保存する"}
-            </Button>
-          </Box>
+          {canEdit && (
+            <Box>
+              <Button
+                type="submit"
+                disabled={isUpdating}
+                className="rounded-full bg-[var(--myturn-main)] px-6 py-3 text-[var(--foreground)] disabled:opacity-50"
+              >
+                {isUpdating ? "更新中..." : "すべての設定を保存する"}
+              </Button>
+            </Box>
+          )}
         </form>
       </FormProvider>
 
@@ -407,9 +413,11 @@ export default function PageBody() {
 function NotificationCard({
   notification,
   formIndex,
+  disabled,
 }: {
   notification: NotificationTypeInfo;
   formIndex: number;
+  disabled: boolean;
 }) {
   const { control: isEnabledControl } =
     useFormContext<LineNotificationEditFormData>();
@@ -430,6 +438,7 @@ function NotificationCard({
                 checked={field.value}
                 onChange={(e) => field.onChange(e.target.checked)}
                 size="small"
+                disabled={disabled}
               />
             )}
           />
@@ -446,6 +455,7 @@ function NotificationCard({
           name={`notifications.${formIndex}.message`}
           label="メッセージ"
           rows={6}
+          disabled={disabled}
           placeholder="{候補者名}さんへのメッセージを入力してください..."
         />
       </Box>
@@ -463,7 +473,10 @@ function NotificationCard({
             送信タイミング
           </Typography>
           <Box className="rounded border border-[var(--myturn-border)] bg-[var(--myturn-background)] p-2">
-            <ScheduleInput name={`notifications.${formIndex}.schedule`} />
+            <ScheduleInput
+              name={`notifications.${formIndex}.schedule`}
+              disabled={disabled}
+            />
           </Box>
         </Box>
       )}

@@ -26,6 +26,7 @@ import { blobToDataUrl } from "@/utils/frontend/file";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import File from "@/components/common/form/File";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type EditingMagazineItem = {
   id: number;
@@ -39,6 +40,7 @@ type EditingMagazineItem = {
 };
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
 
   // 取得した保存済みサムネイル画像のURL
@@ -248,6 +250,7 @@ export default function PageBody() {
                       />
                       <TextField
                         name={`articles.${i}.title`}
+                        disabled={!canEdit}
                         className="w-72"
                         inputClass="valid:border-[var(--myturn-support-middle)]"
                       />
@@ -256,6 +259,7 @@ export default function PageBody() {
                       <TextField
                         name={`articles.${i}.description`}
                         rows={3}
+                        disabled={!canEdit}
                         className="w-64"
                         inputClass="valid:border-[var(--myturn-support-middle)]"
                       />
@@ -263,22 +267,25 @@ export default function PageBody() {
                     <TableCell className="p-2">
                       <TextField
                         name={`articles.${i}.category`}
+                        disabled={!canEdit}
                         className="w-28"
                         inputClass="valid:border-[var(--myturn-support-middle)]"
                       />
                     </TableCell>
                     <TableCell className="p-2">
                       <Box>
-                        <File
-                          name={`articles.${i}.thumbnail`}
-                          accept="image/*"
-                          buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
-                          onChangeFiles={({ file }) =>
-                            changeOneOfThumbnail(article.articleId, file)
-                          }
-                        >
-                          ファイルを選択
-                        </File>
+                        {canEdit && (
+                          <File
+                            name={`articles.${i}.thumbnail`}
+                            accept="image/*"
+                            buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
+                            onChangeFiles={({ file }) =>
+                              changeOneOfThumbnail(article.articleId, file)
+                            }
+                          >
+                            ファイルを選択
+                          </File>
+                        )}
                         {/* 入力画像のプレビュー */}
                         {thumbnails[article.articleId] && (
                           <Box className="mt-2 max-w-40">
@@ -306,6 +313,7 @@ export default function PageBody() {
                       <TextField
                         type="url"
                         name={`articles.${i}.articleUrl`}
+                        disabled={!canEdit}
                         className="w-48"
                         inputClass="valid:border-[var(--myturn-support-middle)]"
                       />
@@ -320,12 +328,14 @@ export default function PageBody() {
               {error}
             </Typography>
           )}
-          <Button
-            type="submit"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
-          >
-            {isUpdating ? "更新中..." : "更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="submit"
+              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
+            >
+              {isUpdating ? "更新中..." : "更新する"}
+            </Button>
+          )}
         </form>
       </FormProvider>
 

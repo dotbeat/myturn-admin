@@ -26,7 +26,13 @@ const DAYS_OF_WEEK = [
 
 const DAY_OF_MONTH_SLOTS = [0, 1, 2] as const;
 
-export default function ScheduleInput({ name }: { name: string }) {
+export default function ScheduleInput({
+  name,
+  disabled = false,
+}: {
+  name: string;
+  disabled?: boolean;
+}) {
   const {
     control,
     register,
@@ -69,16 +75,19 @@ export default function ScheduleInput({ name }: { name: string }) {
               <FormControlLabel
                 value="daily"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎日"
               />
               <FormControlLabel
                 value="weekly"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎週"
               />
               <FormControlLabel
                 value="monthly"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎月"
               />
             </RadioGroup>
@@ -104,6 +113,7 @@ export default function ScheduleInput({ name }: { name: string }) {
                     control={
                       <Checkbox
                         size="small"
+                        disabled={disabled}
                         checked={(value as number[]).includes(day.value)}
                         onChange={(e) => {
                           const next = e.target.checked
@@ -142,6 +152,7 @@ export default function ScheduleInput({ name }: { name: string }) {
                       <input
                         type="number"
                         {...register(`${name}.dayOfMonth.${i}`)}
+                        disabled={disabled}
                         min={1}
                         max={31}
                         className={numberInputClass(!!slotError)}
@@ -179,6 +190,7 @@ export default function ScheduleInput({ name }: { name: string }) {
             <input
               type="number"
               {...register(`${name}.hour`)}
+              disabled={disabled}
               min={0}
               max={23}
               className={numberInputClass(!!hourError)}
@@ -187,6 +199,7 @@ export default function ScheduleInput({ name }: { name: string }) {
             <input
               type="number"
               {...register(`${name}.minute`)}
+              disabled={disabled}
               min={0}
               max={59}
               className={numberInputClass(!!minuteError)}

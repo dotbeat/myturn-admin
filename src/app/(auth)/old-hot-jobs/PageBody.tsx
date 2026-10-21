@@ -24,12 +24,14 @@ import { UPDATE_OLD_HOT_JOBS } from "@/server/graphql/old-hot-job/mutations";
 import { GET_JOBS_BY_OLD_HOT_LIST } from "@/server/graphql/job/queries";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type EditingOldHotJobItem = {
   jobId: number;
 };
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
 
   // トースト通知の状態
@@ -166,6 +168,7 @@ export default function PageBody() {
                       <TextField
                         name={`oldHotJobs.${i}.jobId`}
                         type="number"
+                        disabled={!canEdit}
                         className="w-32"
                         inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
@@ -180,12 +183,14 @@ export default function PageBody() {
               {error}
             </Typography>
           )}
-          <Button
-            type="submit"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
-          >
-            {isUpdating ? "更新中..." : "更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="submit"
+              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
+            >
+              {isUpdating ? "更新中..." : "更新する"}
+            </Button>
+          )}
         </form>
       </FormProvider>
 

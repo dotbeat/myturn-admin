@@ -14,6 +14,7 @@ export default function JobOfferStatus({
   className = "",
   onChange,
   onStatusUpdated,
+  readOnly = false,
 }: {
   id?: number;
   status: JobStatus;
@@ -21,6 +22,8 @@ export default function JobOfferStatus({
   onChange?: (newStatus: JobStatus) => void;
   companyId?: number;
   onStatusUpdated?: () => Promise<void>;
+  /** trueの場合はステータスの表示のみ（変更不可） */
+  readOnly?: boolean;
 }) {
   const [statusInfo, setStatusInfo] = useState(jobOfferStatusIndex[status]);
 
@@ -165,6 +168,15 @@ export default function JobOfferStatus({
 
     onChange?.(newStatus);
   };
+
+  if (readOnly) {
+    return (
+      <Box className={`flex items-center gap-1 px-2 py-1 ${className}`}>
+        <Box className={`h-4 w-4 rounded-full ${statusInfo.colorClass}`} />
+        <Typography className="shrink-0">{statusInfo.label}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>

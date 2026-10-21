@@ -49,10 +49,12 @@ import { get1YearLaterFormatted } from "@/utils/shared/date";
 import TextField from "@/components/common/form/TextField";
 import PageTitle from "@/components/common/PageTitle";
 import { invoceServices } from "@/const/invoice";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type CompanyOption = { id: number; name: string };
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -254,62 +256,64 @@ export default function PageBody() {
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-8">企業の採用デポジット管理</PageTitle>
       {/* 採用デポジット作成フォーム */}
-      <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
-        <Typography className="mb-2 font-semibold">
-          採用デポジット（前払いの成果報酬）を追加する
-        </Typography>
-        <FormProvider {...ticketMethods}>
-          <form
-            className="flex flex-wrap items-end gap-4"
-            onSubmit={ticketMethods.handleSubmit(onTicketSubmit)}
-          >
-            <Box className="flex items-end gap-2">
+      {canEdit && (
+        <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
+          <Typography className="mb-2 font-semibold">
+            採用デポジット（前払いの成果報酬）を追加する
+          </Typography>
+          <FormProvider {...ticketMethods}>
+            <form
+              className="flex flex-wrap items-end gap-4"
+              onSubmit={ticketMethods.handleSubmit(onTicketSubmit)}
+            >
+              <Box className="flex items-end gap-2">
+                <TextField
+                  name="companyId"
+                  label="企業ID"
+                  type="number"
+                  className="w-24"
+                />
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => {
+                    setCompanySearch("");
+                    setCompanyDialogOpen(true);
+                  }}
+                  className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
+                >
+                  企業選択
+                </Button>
+              </Box>
               <TextField
-                name="companyId"
-                label="企業ID"
+                name="count"
+                label="採用デポジット追加数"
                 type="number"
-                className="w-24"
+                className="w-36"
+              />
+              <TextField
+                name="amount"
+                label="請求金額"
+                type="number"
+                className="w-40"
+              />
+              <TextField
+                name="expiredAt"
+                label="有効期限"
+                type="date"
+                className="w-44"
               />
               <Button
-                type="button"
-                variant="outlined"
-                onClick={() => {
-                  setCompanySearch("");
-                  setCompanyDialogOpen(true);
-                }}
-                className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
+                type="submit"
+                disabled={isCreating}
+                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
               >
-                企業選択
+                {isCreating ? "作成中..." : "作成する"}
               </Button>
-            </Box>
-            <TextField
-              name="count"
-              label="採用デポジット追加数"
-              type="number"
-              className="w-36"
-            />
-            <TextField
-              name="amount"
-              label="請求金額"
-              type="number"
-              className="w-40"
-            />
-            <TextField
-              name="expiredAt"
-              label="有効期限"
-              type="date"
-              className="w-44"
-            />
-            <Button
-              type="submit"
-              disabled={isCreating}
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
-            >
-              {isCreating ? "作成中..." : "作成する"}
-            </Button>
-          </form>
-        </FormProvider>
-      </Box>
+            </form>
+          </FormProvider>
+        </Box>
+      )}
 
       {/* 採用デポジット一覧 */}
       <Box className="mt-8">
@@ -362,7 +366,9 @@ export default function PageBody() {
                 >
                   対象職種
                 </TableCell>
-                <TableCell className="p-2 text-base text-[var(--myturn-sub-text)]" />
+                {canEdit && (
+                  <TableCell className="p-2 text-base text-[var(--myturn-sub-text)]" />
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -390,22 +396,24 @@ export default function PageBody() {
                     {invoceServices.find((s) => s.value === ticket.service)
                       ?.label ?? ""}
                   </TableCell>
-                  <TableCell align="center" className="p-2">
-                    <Box className="flex items-center justify-center gap-2">
-                      <Button
-                        className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
-                        onClick={() => openEditDialog(ticket)}
-                      >
-                        編集
-                      </Button>
-                      <Button
-                        className="rounded-md border border-red-500 px-2 py-1 text-red-500"
-                        onClick={() => setDeletingTicket(ticket)}
-                      >
-                        削除
-                      </Button>
-                    </Box>
-                  </TableCell>
+                  {canEdit && (
+                    <TableCell align="center" className="p-2">
+                      <Box className="flex items-center justify-center gap-2">
+                        <Button
+                          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+                          onClick={() => openEditDialog(ticket)}
+                        >
+                          編集
+                        </Button>
+                        <Button
+                          className="rounded-md border border-red-500 px-2 py-1 text-red-500"
+                          onClick={() => setDeletingTicket(ticket)}
+                        >
+                          削除
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>

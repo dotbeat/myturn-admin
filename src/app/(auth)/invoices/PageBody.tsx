@@ -48,8 +48,10 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import InvoiceFilterForm from "@/components/invoice/InvoiceFilterForm";
 import InvoiceList from "@/components/invoice/InvoiceList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -237,8 +239,8 @@ export default function PageBody() {
           <InvoiceList
             items={invoices}
             isLoading={loading}
-            onEditInvoice={openEditInvoiceDialog}
-            onGuaranteeInvoice={setGuaranteeingInvoice}
+            onEditInvoice={canEdit ? openEditInvoiceDialog : undefined}
+            onGuaranteeInvoice={canEdit ? setGuaranteeingInvoice : undefined}
             className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
           />
           <Box className="flex justify-center">

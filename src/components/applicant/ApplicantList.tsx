@@ -13,11 +13,14 @@ export default function ApplicantList({
   items,
   isLoading,
   refetch,
+  readOnly = false,
   className = "",
 }: {
   items: ApplicantItem[];
   isLoading: boolean;
   refetch: () => void;
+  /** trueの場合は編集ボタンを表示しない */
+  readOnly?: boolean;
   className?: string;
 }) {
   // 編集ダイアログで編集中の応募情報
@@ -37,7 +40,7 @@ export default function ApplicantList({
     { property: "secondInterviewScheduledAt", label: "2回目面談日" },
     { property: "joinDate", label: "入社予定日" },
     { property: "joinDateByApplicant", label: "(学生報告)入社予定日" },
-    { property: "edit", label: "" },
+    ...(readOnly ? [] : [{ property: "edit", label: "" } as const]),
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
   const before3years = new Date();

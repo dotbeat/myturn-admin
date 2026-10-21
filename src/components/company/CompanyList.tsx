@@ -13,7 +13,8 @@ export default function CompanyList({
 }: {
   items: CompanyItem[];
   isLoading: boolean;
-  onEditAgentPlanAmount: (item: CompanyItem) => void;
+  /** 未指定の場合は編集ボタンを表示しない */
+  onEditAgentPlanAmount?: (item: CompanyItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -76,12 +77,14 @@ export default function CompanyList({
         <Typography className="min-w-20 text-start">
           {(item.agentPlanAmount ?? 250000).toLocaleString()}円
         </Typography>
-        <Button
-          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
-          onClick={() => onEditAgentPlanAmount(item)}
-        >
-          編集
-        </Button>
+        {onEditAgentPlanAmount && (
+          <Button
+            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+            onClick={() => onEditAgentPlanAmount(item)}
+          >
+            編集
+          </Button>
+        )}
       </Box>
     ),
   }));

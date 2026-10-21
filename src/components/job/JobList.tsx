@@ -11,12 +11,15 @@ export default function JobList({
   isLoading,
   onEditAgentPlanOnly,
   onStatusUpdated,
+  readOnly = false,
   className = "",
 }: {
   items: JobItem[];
   isLoading: boolean;
   onEditAgentPlanOnly: (item: JobItem) => void;
   onStatusUpdated?: () => Promise<void>;
+  /** trueの場合はステータス・エージェントプラン限定の変更を不可にする */
+  readOnly?: boolean;
   className?: string;
 }) {
   const columns = [
@@ -97,6 +100,7 @@ export default function JobList({
         id={item.id}
         status={item.status}
         onStatusUpdated={onStatusUpdated}
+        readOnly={readOnly}
       />
     ),
     pvCount: item.pv,
@@ -108,12 +112,14 @@ export default function JobList({
         <Typography className="min-w-12 text-start">
           {item.isAgentPlanOnly ? "はい" : "いいえ"}
         </Typography>
-        <Button
-          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
-          onClick={() => onEditAgentPlanOnly(item)}
-        >
-          編集
-        </Button>
+        {!readOnly && (
+          <Button
+            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+            onClick={() => onEditAgentPlanOnly(item)}
+          >
+            編集
+          </Button>
+        )}
       </Box>
     ),
   }));

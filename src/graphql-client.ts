@@ -1412,6 +1412,7 @@ export type Mutation = {
   createCompany: CompanyType;
   createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
+  createCompanyInvoicesForAdmin: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
   createMessageTemplate: MessageTemplateType;
@@ -1438,7 +1439,9 @@ export type Mutation = {
   markMessageAsRead: Scalars["Boolean"]["output"];
   markNotificationAsRead: Scalars["Boolean"]["output"];
   recalculateHotJobs: RecalculateResultType;
+  recalculateHotJobsForAdmin: RecalculateResultType;
   recalculatePickJobs: RecalculateResultType;
+  recalculatePickJobsForAdmin: RecalculateResultType;
   removeFavorite: Scalars["Boolean"]["output"];
   requestCompanyPasswordReset: RequestCompanyPasswordResetResponse;
   requestPasswordReset: RequestPasswordResetResponse;
@@ -1452,6 +1455,7 @@ export type Mutation = {
   updateAdminUserRole: AdminUserType;
   updateCompany: CompanyType;
   updateCompanyAcceptTicket: CompanyAcceptTicketType;
+  updateCompanyAgentPlanAmount: CompanyType;
   updateCompanyInvoice: CompanyInvoiceType;
   updateEntriesStatus: Array<Entry>;
   updateEntry: Entry;
@@ -1464,6 +1468,7 @@ export type Mutation = {
   updateJobOfferAcceptance: Entry;
   updateJobPv: JobType;
   updateJobStatus: JobType;
+  updateJobStatusForAdmin: JobType;
   updateJobsStatus: Scalars["Int"]["output"];
   updateLineNotificationSettings: UpdateLineNotificationSettingsResult;
   updateMagazines: Array<MagazineType>;
@@ -1518,6 +1523,10 @@ export type MutationCreateCompanyAcceptTicketArgs = {
 };
 
 export type MutationCreateCompanyInvoicesArgs = {
+  entryIds: Array<Scalars["Int"]["input"]>;
+};
+
+export type MutationCreateCompanyInvoicesForAdminArgs = {
   entryIds: Array<Scalars["Int"]["input"]>;
 };
 
@@ -1654,6 +1663,10 @@ export type MutationUpdateCompanyAcceptTicketArgs = {
   input: UpdateCompanyAcceptTicketInput;
 };
 
+export type MutationUpdateCompanyAgentPlanAmountArgs = {
+  input: UpdateCompanyAgentPlanAmountInput;
+};
+
 export type MutationUpdateCompanyInvoiceArgs = {
   input: UpdateCompanyInvoiceInput;
 };
@@ -1699,6 +1712,10 @@ export type MutationUpdateJobPvArgs = {
 };
 
 export type MutationUpdateJobStatusArgs = {
+  input: UpdateJobStatusInput;
+};
+
+export type MutationUpdateJobStatusForAdminArgs = {
   input: UpdateJobStatusInput;
 };
 
@@ -2652,6 +2669,11 @@ export type UpdateCompanyAcceptTicketInput = {
   id: Scalars["Int"]["input"];
 };
 
+export type UpdateCompanyAgentPlanAmountInput = {
+  agentPlanAmount: Scalars["Int"]["input"];
+  id: Scalars["Int"]["input"];
+};
+
 export type UpdateCompanyInput = {
   about?: InputMaybe<Scalars["String"]["input"]>;
   agentPlanAmount?: InputMaybe<Scalars["Int"]["input"]>;
@@ -3244,13 +3266,13 @@ export type GetCompanyRemindersQuery = {
   }>;
 };
 
-export type UpdateCompanyMutationVariables = Exact<{
-  input: UpdateCompanyInput;
+export type UpdateCompanyAgentPlanAmountMutationVariables = Exact<{
+  input: UpdateCompanyAgentPlanAmountInput;
 }>;
 
-export type UpdateCompanyMutation = {
+export type UpdateCompanyAgentPlanAmountMutation = {
   __typename?: "Mutation";
-  updateCompany: {
+  updateCompanyAgentPlanAmount: {
     __typename?: "CompanyType";
     id: number;
     agentPlanAmount?: number | null;
@@ -3301,13 +3323,13 @@ export type DeleteCompanyAcceptTicketMutation = {
   };
 };
 
-export type CreateCompanyInvoicesMutationVariables = Exact<{
+export type CreateCompanyInvoicesForAdminMutationVariables = Exact<{
   entryIds: Array<Scalars["Int"]["input"]> | Scalars["Int"]["input"];
 }>;
 
-export type CreateCompanyInvoicesMutation = {
+export type CreateCompanyInvoicesForAdminMutation = {
   __typename?: "Mutation";
-  createCompanyInvoices: Array<{
+  createCompanyInvoicesForAdmin: Array<{
     __typename?: "CompanyInvoiceType";
     id: number;
   }>;
@@ -3503,13 +3525,13 @@ export type UpdateHotJobScoringWeightsMutation = {
   }>;
 };
 
-export type RecalculateHotJobsMutationVariables = Exact<{
+export type RecalculateHotJobsForAdminMutationVariables = Exact<{
   [key: string]: never;
 }>;
 
-export type RecalculateHotJobsMutation = {
+export type RecalculateHotJobsForAdminMutation = {
   __typename?: "Mutation";
-  recalculateHotJobs: {
+  recalculateHotJobsForAdmin: {
     __typename?: "RecalculateResultType";
     updatedCount: number;
   };
@@ -3626,13 +3648,13 @@ export type UpdateJobIsAgentPlanOnlyMutation = {
   };
 };
 
-export type UpdateJobStatusMutationVariables = Exact<{
+export type UpdateJobStatusForAdminMutationVariables = Exact<{
   input: UpdateJobStatusInput;
 }>;
 
-export type UpdateJobStatusMutation = {
+export type UpdateJobStatusForAdminMutation = {
   __typename?: "Mutation";
-  updateJobStatus: {
+  updateJobStatusForAdmin: {
     __typename?: "JobType";
     id: number;
     title: string;
@@ -3875,13 +3897,13 @@ export type UpdatePickJobScoringWeightsMutation = {
   }>;
 };
 
-export type RecalculatePickJobsMutationVariables = Exact<{
+export type RecalculatePickJobsForAdminMutationVariables = Exact<{
   [key: string]: never;
 }>;
 
-export type RecalculatePickJobsMutation = {
+export type RecalculatePickJobsForAdminMutation = {
   __typename?: "Mutation";
-  recalculatePickJobs: {
+  recalculatePickJobsForAdmin: {
     __typename?: "RecalculateResultType";
     updatedCount: number;
   };
@@ -5075,57 +5097,60 @@ export type GetCompanyRemindersQueryResult = Apollo.QueryResult<
   GetCompanyRemindersQuery,
   GetCompanyRemindersQueryVariables
 >;
-export const UpdateCompanyDocument = gql`
-  mutation UpdateCompany($input: UpdateCompanyInput!) {
-    updateCompany(input: $input) {
+export const UpdateCompanyAgentPlanAmountDocument = gql`
+  mutation UpdateCompanyAgentPlanAmount(
+    $input: UpdateCompanyAgentPlanAmountInput!
+  ) {
+    updateCompanyAgentPlanAmount(input: $input) {
       id
       agentPlanAmount
     }
   }
 `;
-export type UpdateCompanyMutationFn = Apollo.MutationFunction<
-  UpdateCompanyMutation,
-  UpdateCompanyMutationVariables
+export type UpdateCompanyAgentPlanAmountMutationFn = Apollo.MutationFunction<
+  UpdateCompanyAgentPlanAmountMutation,
+  UpdateCompanyAgentPlanAmountMutationVariables
 >;
 
 /**
- * __useUpdateCompanyMutation__
+ * __useUpdateCompanyAgentPlanAmountMutation__
  *
- * To run a mutation, you first call `useUpdateCompanyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateCompanyAgentPlanAmountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCompanyAgentPlanAmountMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateCompanyMutation, { data, loading, error }] = useUpdateCompanyMutation({
+ * const [updateCompanyAgentPlanAmountMutation, { data, loading, error }] = useUpdateCompanyAgentPlanAmountMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateCompanyMutation(
+export function useUpdateCompanyAgentPlanAmountMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyMutation,
-    UpdateCompanyMutationVariables
+    UpdateCompanyAgentPlanAmountMutation,
+    UpdateCompanyAgentPlanAmountMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    UpdateCompanyMutation,
-    UpdateCompanyMutationVariables
-  >(UpdateCompanyDocument, options);
+    UpdateCompanyAgentPlanAmountMutation,
+    UpdateCompanyAgentPlanAmountMutationVariables
+  >(UpdateCompanyAgentPlanAmountDocument, options);
 }
-export type UpdateCompanyMutationHookResult = ReturnType<
-  typeof useUpdateCompanyMutation
+export type UpdateCompanyAgentPlanAmountMutationHookResult = ReturnType<
+  typeof useUpdateCompanyAgentPlanAmountMutation
 >;
-export type UpdateCompanyMutationResult =
-  Apollo.MutationResult<UpdateCompanyMutation>;
-export type UpdateCompanyMutationOptions = Apollo.BaseMutationOptions<
-  UpdateCompanyMutation,
-  UpdateCompanyMutationVariables
->;
+export type UpdateCompanyAgentPlanAmountMutationResult =
+  Apollo.MutationResult<UpdateCompanyAgentPlanAmountMutation>;
+export type UpdateCompanyAgentPlanAmountMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCompanyAgentPlanAmountMutation,
+    UpdateCompanyAgentPlanAmountMutationVariables
+  >;
 export const CreateCompanyAcceptTicketDocument = gql`
   mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
     createCompanyAcceptTicket(input: $input) {
@@ -5287,56 +5312,57 @@ export type DeleteCompanyAcceptTicketMutationOptions =
     DeleteCompanyAcceptTicketMutation,
     DeleteCompanyAcceptTicketMutationVariables
   >;
-export const CreateCompanyInvoicesDocument = gql`
-  mutation CreateCompanyInvoices($entryIds: [Int!]!) {
-    createCompanyInvoices(entryIds: $entryIds) {
+export const CreateCompanyInvoicesForAdminDocument = gql`
+  mutation CreateCompanyInvoicesForAdmin($entryIds: [Int!]!) {
+    createCompanyInvoicesForAdmin(entryIds: $entryIds) {
       id
     }
   }
 `;
-export type CreateCompanyInvoicesMutationFn = Apollo.MutationFunction<
-  CreateCompanyInvoicesMutation,
-  CreateCompanyInvoicesMutationVariables
+export type CreateCompanyInvoicesForAdminMutationFn = Apollo.MutationFunction<
+  CreateCompanyInvoicesForAdminMutation,
+  CreateCompanyInvoicesForAdminMutationVariables
 >;
 
 /**
- * __useCreateCompanyInvoicesMutation__
+ * __useCreateCompanyInvoicesForAdminMutation__
  *
- * To run a mutation, you first call `useCreateCompanyInvoicesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCompanyInvoicesMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateCompanyInvoicesForAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCompanyInvoicesForAdminMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createCompanyInvoicesMutation, { data, loading, error }] = useCreateCompanyInvoicesMutation({
+ * const [createCompanyInvoicesForAdminMutation, { data, loading, error }] = useCreateCompanyInvoicesForAdminMutation({
  *   variables: {
  *      entryIds: // value for 'entryIds'
  *   },
  * });
  */
-export function useCreateCompanyInvoicesMutation(
+export function useCreateCompanyInvoicesForAdminMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    CreateCompanyInvoicesMutation,
-    CreateCompanyInvoicesMutationVariables
+    CreateCompanyInvoicesForAdminMutation,
+    CreateCompanyInvoicesForAdminMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    CreateCompanyInvoicesMutation,
-    CreateCompanyInvoicesMutationVariables
-  >(CreateCompanyInvoicesDocument, options);
+    CreateCompanyInvoicesForAdminMutation,
+    CreateCompanyInvoicesForAdminMutationVariables
+  >(CreateCompanyInvoicesForAdminDocument, options);
 }
-export type CreateCompanyInvoicesMutationHookResult = ReturnType<
-  typeof useCreateCompanyInvoicesMutation
+export type CreateCompanyInvoicesForAdminMutationHookResult = ReturnType<
+  typeof useCreateCompanyInvoicesForAdminMutation
 >;
-export type CreateCompanyInvoicesMutationResult =
-  Apollo.MutationResult<CreateCompanyInvoicesMutation>;
-export type CreateCompanyInvoicesMutationOptions = Apollo.BaseMutationOptions<
-  CreateCompanyInvoicesMutation,
-  CreateCompanyInvoicesMutationVariables
->;
+export type CreateCompanyInvoicesForAdminMutationResult =
+  Apollo.MutationResult<CreateCompanyInvoicesForAdminMutation>;
+export type CreateCompanyInvoicesForAdminMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateCompanyInvoicesForAdminMutation,
+    CreateCompanyInvoicesForAdminMutationVariables
+  >;
 export const DeleteCompanyInvoiceDocument = gql`
   mutation DeleteCompanyInvoice($entryId: Int!) {
     deleteCompanyInvoice(entryId: $entryId)
@@ -6183,55 +6209,56 @@ export type UpdateHotJobScoringWeightsMutationOptions =
     UpdateHotJobScoringWeightsMutation,
     UpdateHotJobScoringWeightsMutationVariables
   >;
-export const RecalculateHotJobsDocument = gql`
-  mutation RecalculateHotJobs {
-    recalculateHotJobs {
+export const RecalculateHotJobsForAdminDocument = gql`
+  mutation RecalculateHotJobsForAdmin {
+    recalculateHotJobsForAdmin {
       updatedCount
     }
   }
 `;
-export type RecalculateHotJobsMutationFn = Apollo.MutationFunction<
-  RecalculateHotJobsMutation,
-  RecalculateHotJobsMutationVariables
+export type RecalculateHotJobsForAdminMutationFn = Apollo.MutationFunction<
+  RecalculateHotJobsForAdminMutation,
+  RecalculateHotJobsForAdminMutationVariables
 >;
 
 /**
- * __useRecalculateHotJobsMutation__
+ * __useRecalculateHotJobsForAdminMutation__
  *
- * To run a mutation, you first call `useRecalculateHotJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRecalculateHotJobsMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRecalculateHotJobsForAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecalculateHotJobsForAdminMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [recalculateHotJobsMutation, { data, loading, error }] = useRecalculateHotJobsMutation({
+ * const [recalculateHotJobsForAdminMutation, { data, loading, error }] = useRecalculateHotJobsForAdminMutation({
  *   variables: {
  *   },
  * });
  */
-export function useRecalculateHotJobsMutation(
+export function useRecalculateHotJobsForAdminMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    RecalculateHotJobsMutation,
-    RecalculateHotJobsMutationVariables
+    RecalculateHotJobsForAdminMutation,
+    RecalculateHotJobsForAdminMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    RecalculateHotJobsMutation,
-    RecalculateHotJobsMutationVariables
-  >(RecalculateHotJobsDocument, options);
+    RecalculateHotJobsForAdminMutation,
+    RecalculateHotJobsForAdminMutationVariables
+  >(RecalculateHotJobsForAdminDocument, options);
 }
-export type RecalculateHotJobsMutationHookResult = ReturnType<
-  typeof useRecalculateHotJobsMutation
+export type RecalculateHotJobsForAdminMutationHookResult = ReturnType<
+  typeof useRecalculateHotJobsForAdminMutation
 >;
-export type RecalculateHotJobsMutationResult =
-  Apollo.MutationResult<RecalculateHotJobsMutation>;
-export type RecalculateHotJobsMutationOptions = Apollo.BaseMutationOptions<
-  RecalculateHotJobsMutation,
-  RecalculateHotJobsMutationVariables
->;
+export type RecalculateHotJobsForAdminMutationResult =
+  Apollo.MutationResult<RecalculateHotJobsForAdminMutation>;
+export type RecalculateHotJobsForAdminMutationOptions =
+  Apollo.BaseMutationOptions<
+    RecalculateHotJobsForAdminMutation,
+    RecalculateHotJobsForAdminMutationVariables
+  >;
 export const GetHotJobScoringWeightsDocument = gql`
   query GetHotJobScoringWeights {
     getHotJobScoringWeights {
@@ -6818,9 +6845,9 @@ export type UpdateJobIsAgentPlanOnlyMutationOptions =
     UpdateJobIsAgentPlanOnlyMutation,
     UpdateJobIsAgentPlanOnlyMutationVariables
   >;
-export const UpdateJobStatusDocument = gql`
-  mutation UpdateJobStatus($input: UpdateJobStatusInput!) {
-    updateJobStatus(input: $input) {
+export const UpdateJobStatusForAdminDocument = gql`
+  mutation UpdateJobStatusForAdmin($input: UpdateJobStatusInput!) {
+    updateJobStatusForAdmin(input: $input) {
       id
       title
       status
@@ -6828,48 +6855,48 @@ export const UpdateJobStatusDocument = gql`
     }
   }
 `;
-export type UpdateJobStatusMutationFn = Apollo.MutationFunction<
-  UpdateJobStatusMutation,
-  UpdateJobStatusMutationVariables
+export type UpdateJobStatusForAdminMutationFn = Apollo.MutationFunction<
+  UpdateJobStatusForAdminMutation,
+  UpdateJobStatusForAdminMutationVariables
 >;
 
 /**
- * __useUpdateJobStatusMutation__
+ * __useUpdateJobStatusForAdminMutation__
  *
- * To run a mutation, you first call `useUpdateJobStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateJobStatusMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateJobStatusForAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJobStatusForAdminMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateJobStatusMutation, { data, loading, error }] = useUpdateJobStatusMutation({
+ * const [updateJobStatusForAdminMutation, { data, loading, error }] = useUpdateJobStatusForAdminMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateJobStatusMutation(
+export function useUpdateJobStatusForAdminMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    UpdateJobStatusMutation,
-    UpdateJobStatusMutationVariables
+    UpdateJobStatusForAdminMutation,
+    UpdateJobStatusForAdminMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    UpdateJobStatusMutation,
-    UpdateJobStatusMutationVariables
-  >(UpdateJobStatusDocument, options);
+    UpdateJobStatusForAdminMutation,
+    UpdateJobStatusForAdminMutationVariables
+  >(UpdateJobStatusForAdminDocument, options);
 }
-export type UpdateJobStatusMutationHookResult = ReturnType<
-  typeof useUpdateJobStatusMutation
+export type UpdateJobStatusForAdminMutationHookResult = ReturnType<
+  typeof useUpdateJobStatusForAdminMutation
 >;
-export type UpdateJobStatusMutationResult =
-  Apollo.MutationResult<UpdateJobStatusMutation>;
-export type UpdateJobStatusMutationOptions = Apollo.BaseMutationOptions<
-  UpdateJobStatusMutation,
-  UpdateJobStatusMutationVariables
+export type UpdateJobStatusForAdminMutationResult =
+  Apollo.MutationResult<UpdateJobStatusForAdminMutation>;
+export type UpdateJobStatusForAdminMutationOptions = Apollo.BaseMutationOptions<
+  UpdateJobStatusForAdminMutation,
+  UpdateJobStatusForAdminMutationVariables
 >;
 export const SearchJobsWithStatsDocument = gql`
   query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
@@ -7919,55 +7946,56 @@ export type UpdatePickJobScoringWeightsMutationOptions =
     UpdatePickJobScoringWeightsMutation,
     UpdatePickJobScoringWeightsMutationVariables
   >;
-export const RecalculatePickJobsDocument = gql`
-  mutation RecalculatePickJobs {
-    recalculatePickJobs {
+export const RecalculatePickJobsForAdminDocument = gql`
+  mutation RecalculatePickJobsForAdmin {
+    recalculatePickJobsForAdmin {
       updatedCount
     }
   }
 `;
-export type RecalculatePickJobsMutationFn = Apollo.MutationFunction<
-  RecalculatePickJobsMutation,
-  RecalculatePickJobsMutationVariables
+export type RecalculatePickJobsForAdminMutationFn = Apollo.MutationFunction<
+  RecalculatePickJobsForAdminMutation,
+  RecalculatePickJobsForAdminMutationVariables
 >;
 
 /**
- * __useRecalculatePickJobsMutation__
+ * __useRecalculatePickJobsForAdminMutation__
  *
- * To run a mutation, you first call `useRecalculatePickJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRecalculatePickJobsMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRecalculatePickJobsForAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRecalculatePickJobsForAdminMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [recalculatePickJobsMutation, { data, loading, error }] = useRecalculatePickJobsMutation({
+ * const [recalculatePickJobsForAdminMutation, { data, loading, error }] = useRecalculatePickJobsForAdminMutation({
  *   variables: {
  *   },
  * });
  */
-export function useRecalculatePickJobsMutation(
+export function useRecalculatePickJobsForAdminMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    RecalculatePickJobsMutation,
-    RecalculatePickJobsMutationVariables
+    RecalculatePickJobsForAdminMutation,
+    RecalculatePickJobsForAdminMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    RecalculatePickJobsMutation,
-    RecalculatePickJobsMutationVariables
-  >(RecalculatePickJobsDocument, options);
+    RecalculatePickJobsForAdminMutation,
+    RecalculatePickJobsForAdminMutationVariables
+  >(RecalculatePickJobsForAdminDocument, options);
 }
-export type RecalculatePickJobsMutationHookResult = ReturnType<
-  typeof useRecalculatePickJobsMutation
+export type RecalculatePickJobsForAdminMutationHookResult = ReturnType<
+  typeof useRecalculatePickJobsForAdminMutation
 >;
-export type RecalculatePickJobsMutationResult =
-  Apollo.MutationResult<RecalculatePickJobsMutation>;
-export type RecalculatePickJobsMutationOptions = Apollo.BaseMutationOptions<
-  RecalculatePickJobsMutation,
-  RecalculatePickJobsMutationVariables
->;
+export type RecalculatePickJobsForAdminMutationResult =
+  Apollo.MutationResult<RecalculatePickJobsForAdminMutation>;
+export type RecalculatePickJobsForAdminMutationOptions =
+  Apollo.BaseMutationOptions<
+    RecalculatePickJobsForAdminMutation,
+    RecalculatePickJobsForAdminMutationVariables
+  >;
 export const GetPickJobScoringWeightsDocument = gql`
   query GetPickJobScoringWeights {
     getPickJobScoringWeights {
