@@ -1413,6 +1413,7 @@ export type Mutation = {
   createCompanyAcceptTicket: CompanyAcceptTicketType;
   createCompanyInvoices: Array<CompanyInvoiceType>;
   createCompanyInvoicesForAdmin: Array<CompanyInvoiceType>;
+  createCompanyInvoicesForUser: Array<CompanyInvoiceType>;
   createEntry: Entry;
   createJob: JobType;
   createMessageTemplate: MessageTemplateType;
@@ -1435,6 +1436,7 @@ export type Mutation = {
   loginOrCreateWithLine: LoginOrCreateWithLineResponse;
   logout: LogoutResponse;
   markAllNotificationsAsRead: Scalars["Boolean"]["output"];
+  markCompanyMessageAsRead: Scalars["Boolean"]["output"];
   markEntryAsChecked: Array<Entry>;
   markMessageAsRead: Scalars["Boolean"]["output"];
   markNotificationAsRead: Scalars["Boolean"]["output"];
@@ -1530,6 +1532,10 @@ export type MutationCreateCompanyInvoicesForAdminArgs = {
   entryIds: Array<Scalars["Int"]["input"]>;
 };
 
+export type MutationCreateCompanyInvoicesForUserArgs = {
+  entryIds: Array<Scalars["Int"]["input"]>;
+};
+
 export type MutationCreateEntryArgs = {
   input: CreateEntryInput;
 };
@@ -1597,6 +1603,10 @@ export type MutationLoginArgs = {
 
 export type MutationLoginOrCreateWithLineArgs = {
   input: CreateUserWithLineInput;
+};
+
+export type MutationMarkCompanyMessageAsReadArgs = {
+  input: MarkMessageAsReadInput;
 };
 
 export type MutationMarkEntryAsCheckedArgs = {
@@ -1906,6 +1916,7 @@ export type Query = {
   getUnreadNotificationCount: NotificationCount;
   getUserAcceptReports: Array<UserAcceptReportType>;
   getUserEntries: UserEntriesType;
+  getUserEntryById: EntryWithDetailsType;
   getUserJobOffers: UserEntriesType;
   getUserMessages: Array<EntryWithLastMessage>;
   getUserNotifications: Array<Notification>;
@@ -2050,6 +2061,10 @@ export type QueryGetUserAcceptReportsArgs = {
 
 export type QueryGetUserEntriesArgs = {
   input: GetUserEntriesInput;
+};
+
+export type QueryGetUserEntryByIdArgs = {
+  input: GetEntryByIdInput;
 };
 
 export type QueryGetUserStatisticsArgs = {
@@ -2617,9 +2632,14 @@ export type StartDateReminderUserType = {
 
 export type Subscription = {
   __typename?: "Subscription";
+  companyMessageAdded: MessageNotification;
   entryAdded: EntryNotification;
   messageAdded: MessageNotification;
   scoutSent: ScoutNotification;
+};
+
+export type SubscriptionCompanyMessageAddedArgs = {
+  entryId: Scalars["Int"]["input"];
 };
 
 export type SubscriptionEntryAddedArgs = {
@@ -2676,7 +2696,6 @@ export type UpdateCompanyAgentPlanAmountInput = {
 
 export type UpdateCompanyInput = {
   about?: InputMaybe<Scalars["String"]["input"]>;
-  agentPlanAmount?: InputMaybe<Scalars["Int"]["input"]>;
   businessContent?: InputMaybe<Scalars["String"]["input"]>;
   capital?: InputMaybe<Scalars["Int"]["input"]>;
   city?: InputMaybe<Scalars["String"]["input"]>;
@@ -2696,7 +2715,6 @@ export type UpdateCompanyInput = {
   initialScoutedMessage?: InputMaybe<Scalars["String"]["input"]>;
   isInitialMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
   isInitialScoutedMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isOfficial?: InputMaybe<Scalars["Boolean"]["input"]>;
   jobType?: InputMaybe<Scalars["String"]["input"]>;
   members?: InputMaybe<Array<CompanyMemberInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
