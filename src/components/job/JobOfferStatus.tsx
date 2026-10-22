@@ -200,7 +200,7 @@ export default function JobOfferStatus({
         {jobOfferStatuses.map((statusItem) => (
           <Button
             key={statusItem}
-            className="flex w-full items-center gap-4 px-4 py-3 disabled:opacity-30 [&:not(:disabled)]:hover:bg-stone-300/30"
+            className="flex w-full items-center gap-4 px-4 py-3 not-disabled:hover:bg-stone-300/30 disabled:opacity-30"
             onClick={() => handleStatusChange(statusItem)}
           >
             <Box

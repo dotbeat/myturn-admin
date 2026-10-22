@@ -137,10 +137,7 @@ export default function PageBody() {
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-1">(仮)注目の求人一覧管理（重み設定）</PageTitle>
-      <Typography
-        variant="body2"
-        className="mb-8 text-[var(--myturn-sub-text)]"
-      >
+      <Typography variant="body2" className="mb-8 text-(--myturn-sub-text)">
         myturnトップページで表示される注目の求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
       </Typography>
 
@@ -148,7 +145,7 @@ export default function PageBody() {
         <FormProvider {...methods}>
           <form
             method="POST"
-            className="w-2xl flex flex-col items-start gap-4"
+            className="flex w-2xl flex-col items-start gap-4"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <Typography variant="body1" className="font-semibold">
@@ -156,8 +153,8 @@ export default function PageBody() {
               <span
                 className={
                   isWeightSumValid
-                    ? "text-[var(--myturn-main)]"
-                    : "text-[var(--myturn-accent)]"
+                    ? "text-(--myturn-main)"
+                    : "text-(--myturn-accent)"
                 }
               >
                 {totalPercent.toFixed(1).replace(".0", "")}%{" "}
@@ -165,9 +162,9 @@ export default function PageBody() {
               </span>
             </Typography>
 
-            <Table className="bg-[var(--background)]">
+            <Table className="bg-(--background)">
               <TableHead>
-                <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+                <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                   <TableCell className="p-2 pl-4">指標名</TableCell>
                   <TableCell className="p-2">重み (%)</TableCell>
                   <TableCell className="p-2 pr-4">説明</TableCell>
@@ -177,7 +174,7 @@ export default function PageBody() {
                 {fields.map((field, i) => (
                   <TableRow
                     key={field.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">
                       {PICK_JOB_WEIGHT_METADATA[field.indicator].label}
@@ -188,7 +185,7 @@ export default function PageBody() {
                         type="number"
                         disabled={!canEdit}
                         className="w-24"
-                        inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        inputClass="valid:border-(--myturn-support-middle) [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </TableCell>
                     <TableCell className="p-2 text-sm">
@@ -200,7 +197,7 @@ export default function PageBody() {
             </Table>
 
             {error && (
-              <Typography className="text-[var(--myturn-accent)]">
+              <Typography className="text-(--myturn-accent)">
                 {error}
               </Typography>
             )}
@@ -209,7 +206,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdating || !isWeightSumValid}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)] disabled:bg-[var(--myturn-support-middle)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground) disabled:bg-(--myturn-support-middle)"
               >
                 {isUpdating ? "更新中..." : "設定を更新する"}
               </Button>
@@ -217,26 +214,26 @@ export default function PageBody() {
           </form>
         </FormProvider>
 
-        <Box className="min-w-64 max-w-2xl">
+        <Box className="max-w-2xl min-w-64">
           <Box className="mb-4 flex items-center gap-2">
             <Typography variant="body1" className="font-semibold">
               現在の注目の求人一覧
             </Typography>
-            <Typography className="text-sm text-[var(--myturn-sub-text)]">
+            <Typography className="text-sm text-(--myturn-sub-text)">
               (上位30位)
             </Typography>
           </Box>
           {pickJobs.length === 0 ? (
             <Typography
               variant="body2"
-              className="mb-4 text-[var(--myturn-sub-text)]"
+              className="mb-4 text-(--myturn-sub-text)"
             >
               設定済みの求人はありません
             </Typography>
           ) : (
-            <Table className="mb-4 bg-[var(--background)]">
+            <Table className="mb-4 bg-(--background)">
               <TableHead>
-                <TableRow className="border border-[var(--myturn-support-middle)]">
+                <TableRow className="border border-(--myturn-support-middle)">
                   <TableCell className="p-2 text-sm">ID</TableCell>
                   <TableCell className="p-2 text-sm">求人タイトル</TableCell>
                 </TableRow>
@@ -245,7 +242,7 @@ export default function PageBody() {
                 {pickJobs.map((job) => (
                   <TableRow
                     key={job.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 text-sm">{job.id}</TableCell>
                     <TableCell className="p-2 text-sm">{job.title}</TableCell>
@@ -258,7 +255,7 @@ export default function PageBody() {
             <Button
               type="button"
               disabled={isRecalculating}
-              className="rounded-full border border-[var(--myturn-sub-text)] px-4 py-3"
+              className="rounded-full border border-(--myturn-sub-text) px-4 py-3"
               onClick={() => recalculate()}
             >
               {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}

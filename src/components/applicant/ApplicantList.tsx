@@ -32,7 +32,7 @@ export default function ApplicantList({
     { property: "companyName", label: "企業名" },
     { property: "jobType", label: "職種" },
     { property: "industry", label: "業界" },
-    { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
+    { property: "jobTitle", label: "求人タイトル", headCellClass: "w-76" },
     { property: "entryDate", label: "応募日" },
     { property: "isScouted", label: "応募属性" },
     { property: "status", label: "ステータス" },
@@ -94,7 +94,7 @@ export default function ApplicantList({
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",
     jobTitle: (
-      <Typography className="line-clamp-3 w-72 text-wrap text-left">
+      <Typography className="line-clamp-3 w-72 text-left text-wrap">
         {item.job.title}
       </Typography>
     ),
@@ -115,7 +115,7 @@ export default function ApplicantList({
       : "—",
     edit: (
       <Button
-        className="mr-2 text-nowrap rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+        className="mr-2 rounded-md border border-(--myturn-sub-text) px-2 py-1 text-nowrap"
         onClick={() => setEditingItem(item)}
       >
         編集
@@ -128,7 +128,7 @@ export default function ApplicantList({
       <Table
         columns={columns}
         rows={rows}
-        className="text-nowrap py-2 [word-break:break-word]"
+        className="py-2 text-nowrap [word-break:break-word]"
       />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">

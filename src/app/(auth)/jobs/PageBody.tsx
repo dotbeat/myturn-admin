@@ -176,7 +176,7 @@ export default function PageBody() {
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-8">求人管理</PageTitle>
-      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
+      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-(--background) py-2 pr-2 pl-8">
         <IndicateItem label="合計求人数" count={allJobCount} className="py-4" />
         <IndicateItem
           label="新規掲載数"
@@ -191,7 +191,7 @@ export default function PageBody() {
         <IndicateItem label="掲載終了数" count={closedCount} className="py-4" />
         <PopUp
           id="period-filter"
-          className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
+          className="flex min-w-24 items-center justify-between gap-2 self-start rounded-sm border border-current px-2 py-1"
           menuClass="p-2"
           activator={() => (
             <>
@@ -218,7 +218,7 @@ export default function PageBody() {
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
           <form
-            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            className="flex flex-col gap-6 rounded-lg bg-(--background) px-4 py-6"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <JobFilterForm isLoading={loading} />
@@ -234,7 +234,7 @@ export default function PageBody() {
             onEditAgentPlanOnly={openAgentPlanDialog}
             onStatusUpdated={refetchJobs}
             readOnly={!canEdit}
-            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
+            className="mb-4 overflow-x-auto rounded-lg bg-(--background)"
           />
           <Box className="flex justify-center">
             <Pagination
@@ -268,7 +268,7 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           エージェントプラン設定の編集
         </DialogTitle>
         <FormProvider {...agentPlanEditMethods}>
@@ -277,7 +277,7 @@ export default function PageBody() {
           >
             <DialogContent className="flex flex-col gap-4 pt-4">
               {editingJob && (
-                <Typography className="text-[var(--myturn-sub-text)]">
+                <Typography className="text-(--myturn-sub-text)">
                   求人：{editingJob.title}
                 </Typography>
               )}
@@ -299,7 +299,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdatingJobAgentPlanOnly}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isUpdatingJobAgentPlanOnly ? "保存中..." : "保存する"}
               </Button>

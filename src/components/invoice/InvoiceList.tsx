@@ -37,12 +37,12 @@ export default function InvoiceList({
       ? new Date(item.paymentLimitDate).toLocaleDateString("ja")
       : "—",
     content: (
-      <Typography className="line-clamp-3 w-[15rem] text-wrap text-left">
+      <Typography className="line-clamp-3 w-60 text-left text-wrap">
         {item.isDeposit ? "採用デポジット消費：" : "採用成果報酬："}
         {item.applicantName ? (
           <Link
             href={`/users/${item.userId}`}
-            className="text-[var(--myturn-main)] underline"
+            className="text-(--myturn-main) underline"
           >
             {item.applicantName}
           </Link>
@@ -59,7 +59,7 @@ export default function InvoiceList({
       <Box className="flex items-center justify-center gap-2">
         {onEditInvoice && (
           <Button
-            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+            className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
             onClick={() => onEditInvoice(item)}
           >
             編集
@@ -67,7 +67,7 @@ export default function InvoiceList({
         )}
         {onGuaranteeInvoice && (
           <Button
-            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+            className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
             onClick={() => onGuaranteeInvoice(item)}
           >
             早期退職保証
@@ -79,7 +79,7 @@ export default function InvoiceList({
 
   return (
     <Box className={className}>
-      <Table columns={columns} rows={rows} className="text-nowrap py-2" />
+      <Table columns={columns} rows={rows} className="py-2 text-nowrap" />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">読み込み中です</Typography>

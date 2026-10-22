@@ -149,9 +149,9 @@ export default function PageBody() {
           className="flex flex-col items-start gap-6"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <Table className="max-w-64 bg-[var(--background)]">
+          <Table className="max-w-64 bg-(--background)">
             <TableHead>
-              <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+              <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                 <TableCell className="p-2"></TableCell>
                 <TableCell className="p-2">求人ID</TableCell>
               </TableRow>
@@ -161,7 +161,7 @@ export default function PageBody() {
                 return (
                   <TableRow
                     key={oldHotJob.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">{i + 1}</TableCell>
                     <TableCell className="p-2">
@@ -170,7 +170,7 @@ export default function PageBody() {
                         type="number"
                         disabled={!canEdit}
                         className="w-32"
-                        inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        inputClass="valid:border-(--myturn-support-middle) [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </TableCell>
                   </TableRow>
@@ -179,14 +179,12 @@ export default function PageBody() {
             </TableBody>
           </Table>
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
           {canEdit && (
             <Button
               type="submit"
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
+              className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground)"
             >
               {isUpdating ? "更新中..." : "更新する"}
             </Button>

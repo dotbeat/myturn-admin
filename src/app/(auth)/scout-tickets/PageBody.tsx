@@ -185,7 +185,7 @@ export default function PageBody() {
 
       {/* 付与フォーム */}
       {canEdit && (
-        <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
+        <Box className="mb-8 rounded-lg bg-(--background) px-6 py-6">
           <Typography className="mb-2 font-semibold">
             スカウトチケットを付与する
           </Typography>
@@ -233,7 +233,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isCreating}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isCreating ? "付与中..." : "付与する"}
               </Button>
@@ -247,8 +247,8 @@ export default function PageBody() {
         <Typography className="mb-2 px-4 text-lg font-semibold">
           スカウトチケット付与(有料分)一覧 {ticketsTotalCount} 件
         </Typography>
-        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-          <Table className="max-w-5xl border-separate text-nowrap py-2">
+        <Box className="mb-4 overflow-x-auto rounded-lg bg-(--background)">
+          <Table className="max-w-5xl border-separate py-2 text-nowrap">
             <TableHead>
               <TableRow className="text-nowrap">
                 {[
@@ -262,7 +262,7 @@ export default function PageBody() {
                   <TableCell
                     key={h}
                     align="center"
-                    className="p-2 text-base text-[var(--myturn-sub-text)]"
+                    className="p-2 text-base text-(--myturn-sub-text)"
                   >
                     {h}
                   </TableCell>
@@ -354,7 +354,7 @@ export default function PageBody() {
             placeholder="企業名またはIDで検索"
             value={companySearch}
             onChange={(e) => setCompanySearch(e.target.value)}
-            className="mb-4 w-full border border-[var(--myturn-support-middle)] px-2 py-1"
+            className="mb-4 w-full border border-(--myturn-support-middle) px-2 py-1"
             autoFocus
           />
           <Table size="small">
@@ -380,7 +380,7 @@ export default function PageBody() {
                     <TableCell>{c.name}</TableCell>
                     <TableCell>
                       <Button
-                        className="border border-[var(--myturn-sub-text)] px-2 py-1"
+                        className="border border-(--myturn-sub-text) px-2 py-1"
                         onClick={() => {
                           createMethods.setValue("companyId", c.id, {
                             shouldValidate: true,

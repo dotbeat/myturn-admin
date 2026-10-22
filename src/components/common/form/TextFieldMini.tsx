@@ -78,7 +78,7 @@ export default function TextFieldMini({
           autoFocus={autoFocus}
           disabled={disabled}
           {...register(name)}
-          className={`w-full rounded-md border px-1 py-1 text-xs shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
+          className={`w-full rounded-md border px-1 py-1 text-xs shadow-xs outline-hidden placeholder:text-(--myturn-support-middle) ${disabled ? "bg-(--myturn-background)" : ""} ${error ? "border-(--myturn-accent) ring-1 ring-(--myturn-accent)" : "border-(--myturn-support-middle) focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"} ${inputClass}`}
           onInput={onInput}
         />
       </Box>

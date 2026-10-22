@@ -14,7 +14,7 @@ export default function SideNavigation({
 
   return (
     <Box
-      className={`bg-[var(--myturn-main-text)] px-2 py-4 text-[var(--foreground)] ${className}`}
+      className={`bg-(--myturn-main-text) px-2 py-4 text-(--foreground) ${className}`}
     >
       <Button
         href="/"

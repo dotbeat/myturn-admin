@@ -38,7 +38,7 @@ import Select from "@/components/common/form/Select";
 
 type AdminUserItem = GetAdminUsersQuery["getAdminUsers"][number];
 
-const headCellClass = "p-2 text-base text-[var(--myturn-sub-text)]";
+const headCellClass = "p-2 text-base text-(--myturn-sub-text)";
 
 export default function PageBody() {
   const { adminUser: me, isSystemAdmin } = useAdminUser();
@@ -135,8 +135,8 @@ export default function PageBody() {
       <Typography className="mb-2 px-4 text-lg font-semibold">
         管理者アカウント一覧 {adminUsers.length} 件
       </Typography>
-      <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-        <Table className="border-separate text-nowrap py-2">
+      <Box className="mb-4 overflow-x-auto rounded-lg bg-(--background)">
+        <Table className="border-separate py-2 text-nowrap">
           <TableHead>
             <TableRow>
               <TableCell align="center" className={headCellClass}>
@@ -178,7 +178,7 @@ export default function PageBody() {
                     {isMe && (
                       <Typography
                         component="span"
-                        className="ml-1 text-sm text-[var(--myturn-sub-text)]"
+                        className="ml-1 text-sm text-(--myturn-sub-text)"
                       >
                         (あなた)
                       </Typography>
@@ -194,7 +194,7 @@ export default function PageBody() {
                       <Typography
                         component="span"
                         title="メールアドレスが許可リストに含まれていないため、ログインできません"
-                        className="text-[var(--myturn-accent)]"
+                        className="text-(--myturn-accent)"
                       >
                         不可（許可リスト外）
                       </Typography>
@@ -211,7 +211,7 @@ export default function PageBody() {
                       {!isMe && (
                         <Box className="flex items-center justify-center gap-2">
                           <Button
-                            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+                            className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
                             onClick={() => openRoleDialog(adminUser)}
                           >
                             権限変更
@@ -245,14 +245,14 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           権限を変更
         </DialogTitle>
         <FormProvider {...roleMethods}>
           <form onSubmit={roleMethods.handleSubmit(onRoleSubmit)}>
             <DialogContent className="flex flex-col gap-4">
               {editingAdminUser && (
-                <Typography className="text-[var(--myturn-sub-text)]">
+                <Typography className="text-(--myturn-sub-text)">
                   {editingAdminUser.name ?? "-"}
                 </Typography>
               )}
@@ -270,7 +270,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isUpdating ? "変更中..." : "変更する"}
               </Button>
@@ -286,7 +286,7 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           管理者アカウントを削除
         </DialogTitle>
         <DialogContent className="pt-4">
@@ -296,7 +296,7 @@ export default function PageBody() {
               を削除しますか？
             </Typography>
           )}
-          <Typography className="text-sm text-[var(--myturn-sub-text)]">
+          <Typography className="text-sm text-(--myturn-sub-text)">
             メールアドレスも許可リストから削除され、ログインできなくなります。
           </Typography>
         </DialogContent>
@@ -317,7 +317,7 @@ export default function PageBody() {
                 variables: { input: { id: deletingAdminUser.id } },
               })
             }
-            className="rounded-full bg-red-500 px-4 py-2 text-[var(--foreground)]"
+            className="rounded-full bg-red-500 px-4 py-2 text-(--foreground)"
           >
             {isDeleting ? "削除中..." : "削除する"}
           </Button>

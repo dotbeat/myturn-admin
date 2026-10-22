@@ -59,7 +59,7 @@ export default function File({
         />
       </Button>
       {error?.message && (
-        <Typography variant="body2" className="text-[var(--myturn-accent)]">
+        <Typography variant="body2" className="text-(--myturn-accent)">
           {error.message}
         </Typography>
       )}

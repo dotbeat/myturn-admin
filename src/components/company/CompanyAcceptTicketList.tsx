@@ -31,7 +31,7 @@ export default function CompanyAcceptTicketList({
         src={item.iconImageUrl}
         size={64}
         alt={`${item.name}のロゴ`}
-        className="-my-1 mx-auto border border-[var(--myturn-border)]"
+        className="mx-auto -my-1 border border-(--myturn-border)"
         imageClass="object-contain"
       />
     ),
@@ -54,7 +54,7 @@ export default function CompanyAcceptTicketList({
 
   return (
     <Box className={className}>
-      <Table columns={columns} rows={rows} className="text-nowrap py-2" />
+      <Table columns={columns} rows={rows} className="py-2 text-nowrap" />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">読み込み中です</Typography>

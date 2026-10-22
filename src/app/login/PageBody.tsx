@@ -56,8 +56,8 @@ export default function PageBody() {
         strategy="afterInteractive"
         onReady={renderGoogleButton}
       />
-      <Box className="flex w-full max-w-md flex-col items-center bg-[var(--background)] px-8 py-10 shadow-sm">
-        <Box className="mb-8 flex items-center gap-1 text-[var(--myturn-main-text)]">
+      <Box className="flex w-full max-w-md flex-col items-center bg-(--background) px-8 py-10 shadow-xs">
+        <Box className="mb-8 flex items-center gap-1 text-(--myturn-main-text)">
           <Logo width={109} />
           <Typography className="text-lg font-semibold">管理</Typography>
         </Box>
@@ -66,12 +66,12 @@ export default function PageBody() {
         </Typography>
         <Box ref={buttonRef} className="flex h-11 justify-center" />
         {loading && (
-          <Typography className="mt-4 text-sm text-[var(--myturn-sub-text)]">
+          <Typography className="mt-4 text-sm text-(--myturn-sub-text)">
             ログインしています...
           </Typography>
         )}
         {error && (
-          <Typography className="mt-4 text-center text-sm text-[var(--myturn-accent)]">
+          <Typography className="mt-4 text-center text-sm text-(--myturn-accent)">
             {error}
           </Typography>
         )}

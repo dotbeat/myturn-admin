@@ -293,12 +293,9 @@ export default function PageBody() {
   };
 
   return (
-    <Box className="flex-1 px-8 pb-12 pt-6">
+    <Box className="flex-1 px-8 pt-6 pb-12">
       <PageTitle className="mb-1">LINE通知メッセージ設定</PageTitle>
-      <Typography
-        variant="body2"
-        className="mb-8 text-[var(--myturn-sub-text)]"
-      >
+      <Typography variant="body2" className="mb-8 text-(--myturn-sub-text)">
         使用可能なプレースホルダー ...{" "}
         {"{候補者名} {企業名} {求人名} {面談日時}"}
       </Typography>
@@ -314,10 +311,7 @@ export default function PageBody() {
               <Typography className="mb-1 text-lg font-bold">
                 トランザクション通知
               </Typography>
-              <Typography
-                variant="body2"
-                className="text-[var(--myturn-sub-text)]"
-              >
+              <Typography variant="body2" className="text-(--myturn-sub-text)">
                 特定のイベント発生時に自動的に送信される通知です。送信タイミングはシステムにより固定されています。
               </Typography>
               <Divider className="mt-3" />
@@ -345,10 +339,7 @@ export default function PageBody() {
               <Typography className="mb-1 text-lg font-bold">
                 スケジュール通知
               </Typography>
-              <Typography
-                variant="body2"
-                className="text-[var(--myturn-sub-text)]"
-              >
+              <Typography variant="body2" className="text-(--myturn-sub-text)">
                 定期的なスケジュールで送信される通知です。通知ごとに送信タイミングを設定できます。
               </Typography>
               <Divider className="mt-3" />
@@ -371,9 +362,7 @@ export default function PageBody() {
           </Box>
 
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
 
           {canEdit && (
@@ -381,7 +370,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="rounded-full bg-[var(--myturn-main)] px-6 py-3 text-[var(--foreground)] disabled:opacity-50"
+                className="rounded-full bg-(--myturn-main) px-6 py-3 text-(--foreground) disabled:opacity-50"
               >
                 {isUpdating ? "更新中..." : "すべての設定を保存する"}
               </Button>
@@ -421,7 +410,7 @@ function NotificationCard({
     useFormContext<LineNotificationEditFormData>();
 
   return (
-    <Box className="space-y-2 rounded-lg border border-[var(--myturn-border)] bg-[var(--background)] p-3">
+    <Box className="space-y-2 rounded-lg border border-(--myturn-border) bg-(--background) p-3">
       <Box className="p-2">
         {/* ヘッダー */}
         <Box className="mb-1 flex items-center justify-between">
@@ -441,10 +430,7 @@ function NotificationCard({
             )}
           />
         </Box>
-        <Typography
-          variant="body2"
-          className="mb-2 text-[var(--myturn-sub-text)]"
-        >
+        <Typography variant="body2" className="mb-2 text-(--myturn-sub-text)">
           {notification.description}
         </Typography>
 
@@ -460,8 +446,8 @@ function NotificationCard({
 
       {/* 送信タイミング */}
       {notification.notificationType === "transaction" ? (
-        <Box className="rounded bg-[var(--myturn-background)] p-2">
-          <Typography variant="body2" className="text-[var(--myturn-sub-text)]">
+        <Box className="rounded-sm bg-(--myturn-background) p-2">
+          <Typography variant="body2" className="text-(--myturn-sub-text)">
             送信タイミング：{notification.timingDescription}
           </Typography>
         </Box>
@@ -470,7 +456,7 @@ function NotificationCard({
           <Typography className="px-2 text-sm font-semibold">
             送信タイミング
           </Typography>
-          <Box className="rounded border border-[var(--myturn-border)] bg-[var(--myturn-background)] p-2">
+          <Box className="rounded-sm border border-(--myturn-border) bg-(--myturn-background) p-2">
             <ScheduleInput
               name={`notifications.${formIndex}.schedule`}
               disabled={disabled}

@@ -161,14 +161,14 @@ export default function ApplicantEditDialog({
   return (
     <>
       <Dialog open={item !== null} onClose={onClose} maxWidth="xs" fullWidth>
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           応募情報を編集
         </DialogTitle>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <DialogContent className="flex flex-col items-start gap-4">
               {item && (
-                <Box className="mb-2 rounded bg-[var(--background)] text-[var(--myturn-sub-text)]">
+                <Box className="mb-2 rounded-sm bg-(--background) text-(--myturn-sub-text)">
                   <Typography>
                     応募者：{item.user.lastName} {item.user.firstName}
                   </Typography>
@@ -214,7 +214,7 @@ export default function ApplicantEditDialog({
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isUpdating ? "保存中..." : "保存する"}
               </Button>

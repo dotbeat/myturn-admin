@@ -39,7 +39,7 @@ import Select from "@/components/common/form/Select";
 type AllowedEmailItem =
   GetAdminAllowedEmailsQuery["getAdminAllowedEmails"][number];
 
-const headCellClass = "p-2 text-base text-[var(--myturn-sub-text)]";
+const headCellClass = "p-2 text-base text-(--myturn-sub-text)";
 
 const defaultFormValues: CreateAllowedEmailFormData = {
   email: "",
@@ -148,15 +148,12 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
           管理者アカウント一覧へ
         </Button>
       </Box>
-      <Typography
-        variant="body2"
-        className="mb-8 text-[var(--myturn-sub-text)]"
-      >
+      <Typography variant="body2" className="mb-8 text-(--myturn-sub-text)">
         ここに設定したメールアドレスのGoogleアカウントでのみ、管理画面への登録・ログインができます。
       </Typography>
 
       {/* 許可メールアドレス追加フォーム */}
-      <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
+      <Box className="mb-8 rounded-lg bg-(--background) px-6 py-6">
         <Typography className="mb-2 font-semibold">
           許可メールアドレスを追加する
         </Typography>
@@ -182,16 +179,13 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
             <Button
               type="submit"
               disabled={isCreating}
-              className="mt-7 rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+              className="mt-7 rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
             >
               {isCreating ? "追加中..." : "追加する"}
             </Button>
           </form>
         </FormProvider>
-        <Typography
-          variant="body2"
-          className="mt-2 text-[var(--myturn-sub-text)]"
-        >
+        <Typography variant="body2" className="mt-2 text-(--myturn-sub-text)">
           登録後の権限は管理者アカウント画面から変更できます。
         </Typography>
       </Box>
@@ -200,8 +194,8 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
       <Typography className="mb-2 px-4 text-lg font-semibold">
         許可メールアドレス一覧 {allowedEmails.length} 件
       </Typography>
-      <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-        <Table className="border-separate text-nowrap py-2">
+      <Box className="mb-4 overflow-x-auto rounded-lg bg-(--background)">
+        <Table className="border-separate py-2 text-nowrap">
           <TableHead>
             <TableRow>
               <TableCell align="center" className={headCellClass}>
@@ -238,7 +232,7 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
                   </TableCell>
                   <TableCell align="center" className="p-2">
                     {isMine ? (
-                      <Typography className="text-sm text-[var(--myturn-sub-text)]">
+                      <Typography className="text-sm text-(--myturn-sub-text)">
                         自身のメールアドレスは削除できません
                       </Typography>
                     ) : (
@@ -269,7 +263,7 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           許可メールアドレスを削除
         </DialogTitle>
         <DialogContent className="pt-4">
@@ -279,7 +273,7 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
             </Typography>
           )}
           {deletingAllowedEmail?.isRegistered && (
-            <Typography className="text-sm text-[var(--myturn-sub-text)]">
+            <Typography className="text-sm text-(--myturn-sub-text)">
               登録済みのアカウントは削除されませんが、ログインできなくなります。
             </Typography>
           )}
@@ -301,7 +295,7 @@ function AllowedEmailSettings({ myEmail }: { myEmail: string }) {
                 variables: { input: { id: deletingAllowedEmail.id } },
               })
             }
-            className="rounded-full bg-red-500 px-4 py-2 text-[var(--foreground)]"
+            className="rounded-full bg-red-500 px-4 py-2 text-(--foreground)"
           >
             {isDeleting ? "削除中..." : "削除する"}
           </Button>

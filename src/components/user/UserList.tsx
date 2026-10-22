@@ -43,7 +43,7 @@ export default function UserList({
         size={64}
         href={`/users/${item.id}`}
         name={item.lastName + item.firstName}
-        className="-my-1 border border-[var(--myturn-border)]"
+        className="-my-1 border border-(--myturn-border)"
       />
     ),
     name:
@@ -66,7 +66,7 @@ export default function UserList({
       item.university && item.faculty ? (
         <Typography
           title={`${item.university} ${item.faculty}`}
-          className="line-clamp-3 w-44 text-wrap text-left"
+          className="line-clamp-3 w-44 text-left text-wrap"
         >
           {item.university} {item.faculty}
         </Typography>
@@ -96,7 +96,7 @@ export default function UserList({
       <Table
         columns={columns}
         rows={rows}
-        className="text-nowrap py-2 [word-break:break-word]"
+        className="py-2 text-nowrap [word-break:break-word]"
       />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">

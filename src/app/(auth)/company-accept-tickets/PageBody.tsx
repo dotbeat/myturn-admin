@@ -257,7 +257,7 @@ export default function PageBody() {
       <PageTitle className="mb-8">企業の採用デポジット管理</PageTitle>
       {/* 採用デポジット作成フォーム */}
       {canEdit && (
-        <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
+        <Box className="mb-8 rounded-lg bg-(--background) px-6 py-6">
           <Typography className="mb-2 font-semibold">
             採用デポジット（前払いの成果報酬）を追加する
           </Typography>
@@ -306,7 +306,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isCreating}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isCreating ? "作成中..." : "作成する"}
               </Button>
@@ -320,54 +320,54 @@ export default function PageBody() {
         <Typography className="mb-2 px-4 text-lg font-semibold">
           採用デポジット一覧 {ticketsTotalCount} 件
         </Typography>
-        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-          <Table className="max-w-5xl border-separate text-nowrap py-2">
+        <Box className="mb-4 overflow-x-auto rounded-lg bg-(--background)">
+          <Table className="max-w-5xl border-separate py-2 text-nowrap">
             <TableHead>
               <TableRow className="text-nowrap">
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   企業名
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   追加した数
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   消費した数
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   有効期限
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   請求金額
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   チャージ日
                 </TableCell>
                 <TableCell
                   align="center"
-                  className="p-2 text-base text-[var(--myturn-sub-text)]"
+                  className="p-2 text-base text-(--myturn-sub-text)"
                 >
                   対象職種
                 </TableCell>
                 {canEdit && (
-                  <TableCell className="p-2 text-base text-[var(--myturn-sub-text)]" />
+                  <TableCell className="p-2 text-base text-(--myturn-sub-text)" />
                 )}
               </TableRow>
             </TableHead>
@@ -400,7 +400,7 @@ export default function PageBody() {
                     <TableCell align="center" className="p-2">
                       <Box className="flex items-center justify-center gap-2">
                         <Button
-                          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+                          className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
                           onClick={() => openEditDialog(ticket)}
                         >
                           編集
@@ -468,7 +468,7 @@ export default function PageBody() {
             placeholder="企業名またはIDで検索"
             value={companySearch}
             onChange={(e) => setCompanySearch(e.target.value)}
-            className="mb-4 w-full border border-[var(--myturn-support-middle)] px-2 py-1"
+            className="mb-4 w-full border border-(--myturn-support-middle) px-2 py-1"
             autoFocus
           />
           <Table size="small">
@@ -494,7 +494,7 @@ export default function PageBody() {
                     <TableCell>{c.name}</TableCell>
                     <TableCell>
                       <Button
-                        className="border border-[var(--myturn-sub-text)] px-2 py-1"
+                        className="border border-(--myturn-sub-text) px-2 py-1"
                         onClick={() => {
                           ticketMethods.setValue("companyId", c.id, {
                             shouldValidate: true,
@@ -519,14 +519,14 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           採用デポジットを編集
         </DialogTitle>
         <FormProvider {...editMethods}>
           <form onSubmit={editMethods.handleSubmit(onEditSubmit)}>
             <DialogContent className="flex flex-col gap-4">
               {editingTicket && (
-                <Box className="mb-2 rounded bg-[var(--background)] text-[var(--myturn-sub-text)]">
+                <Box className="mb-2 rounded-sm bg-(--background) text-(--myturn-sub-text)">
                   <Typography>企業名：{editingTicket.companyName}</Typography>
                   <Typography>
                     チャージ日：
@@ -565,7 +565,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isUpdating ? "保存中..." : "保存する"}
               </Button>
@@ -581,7 +581,7 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           採用デポジットを削除しますか？
         </DialogTitle>
         <DialogContent className="pt-4">

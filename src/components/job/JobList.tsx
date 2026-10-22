@@ -55,10 +55,10 @@ export default function JobList({
             className="h-full w-full object-cover"
           />
         ) : (
-          <Box className="flex h-full w-full flex-col items-center justify-center bg-[var(--myturn-background)] p-1">
+          <Box className="flex h-full w-full flex-col items-center justify-center bg-(--myturn-background) p-1">
             <ImageFillIcon
               size={44}
-              className="text-[var(--myturn-support-middle)]"
+              className="text-(--myturn-support-middle)"
             />
           </Box>
         )}
@@ -69,7 +69,7 @@ export default function JobList({
         href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${item.id}`}
         target="_blank"
         title={`(求人ID：${item.id}) ${item.title}`}
-        className="line-clamp-3 w-72 text-wrap text-left underline"
+        className="line-clamp-3 w-72 text-left text-wrap underline"
       >
         {item.title}
       </Link>
@@ -114,7 +114,7 @@ export default function JobList({
         </Typography>
         {!readOnly && (
           <Button
-            className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+            className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
             onClick={() => onEditAgentPlanOnly(item)}
           >
             編集
@@ -129,7 +129,7 @@ export default function JobList({
       <Table
         columns={columns}
         rows={rows}
-        className="text-nowrap py-2 [word-break:break-word]"
+        className="py-2 text-nowrap [word-break:break-word]"
       />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">

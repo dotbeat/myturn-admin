@@ -11,7 +11,7 @@ export default function UserProfileItem({
 }) {
   return (
     <Box className={`[word-break:break-word] ${className}`}>
-      <Typography className="mb-1 text-lg font-semibold text-[var(--myturn-sub-text)]">
+      <Typography className="mb-1 text-lg font-semibold text-(--myturn-sub-text)">
         {headline}
       </Typography>
       {children}

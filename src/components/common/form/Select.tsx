@@ -39,15 +39,15 @@ export default function Select({
       {label && (
         <label htmlFor={inputId} className="inline-block text-sm font-semibold">
           {label}
-          {required && <span className="text-[var(--myturn-accent)]"> *</span>}
+          {required && <span className="text-(--myturn-accent)"> *</span>}
         </label>
       )}
-      <Box className="relative text-[var(--myturn-sub-text)]">
+      <Box className="relative text-(--myturn-sub-text)">
         <select
           id={inputId}
           {...register(name)}
           disabled={disabled}
-          className={`peer w-full appearance-none rounded-md border bg-[var(--background)] py-2.5 pl-3 pr-7 placeholder:text-[var(--myturn-support-middle)] disabled:opacity-60 ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"}`}
+          className={`peer w-full appearance-none rounded-md border bg-(--background) py-2.5 pr-7 pl-3 placeholder:text-(--myturn-support-middle) disabled:opacity-60 ${error ? "border-(--myturn-accent) ring-1 ring-(--myturn-accent)" : "border-(--myturn-support-middle) focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"}`}
         >
           {groups?.map((group, i) => (
             <optgroup key={i} label={group.label}>
@@ -64,15 +64,15 @@ export default function Select({
             </option>
           ))}
         </select>
-        <Box className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 peer-disabled:opacity-40">
+        <Box className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 peer-disabled:opacity-40">
           <ArrowDownNarrowIcon
             size={16}
-            className={error ? "text-[var(--myturn-accent)]" : ""}
+            className={error ? "text-(--myturn-accent)" : ""}
           />
         </Box>
       </Box>
       {error?.message && (
-        <Typography variant="body2" className="text-[var(--myturn-accent)]">
+        <Typography variant="body2" className="text-(--myturn-accent)">
           {error.message}
         </Typography>
       )}

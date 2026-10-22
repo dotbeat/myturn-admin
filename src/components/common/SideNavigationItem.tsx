@@ -13,7 +13,7 @@ export default function SideNavigationItem({
 )) {
   return (
     <Button
-      className={`w-full justify-start text-nowrap px-4 py-3 text-base font-semibold hover:bg-stone-300/30 ${className}`}
+      className={`w-full justify-start px-4 py-3 text-base font-semibold text-nowrap hover:bg-stone-300/30 ${className}`}
       href={href}
       onClick={onClick}
     >

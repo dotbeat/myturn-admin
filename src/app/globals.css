@@ -1,6 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+  Tailwind CSS v3と同じスタイルの優先順位・見た目を保つための読み込み方
+  - MUIのスタイルはAppRouterCacheProviderのenableCssLayerで`@layer mui`に入る。
+    v3ではTailwindのスタイルがレイヤー外に出力されMUIより常に優先されていたため、
+    preflightはmuiより後のレイヤーに、ユーティリティはレイヤーなしで読み込む
+    （v4のユーティリティは:where()で詳細度が低いため、preflightと同じくレイヤー外にすると負けてしまう）。
+  - v4のpreflightはMUIのスタイルを打ち消してしまうため、v3のpreflightを使う（tailwind-preflight-v3.css参照）。
+*/
+@layer theme, mui, base;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./tailwind-preflight-v3.css" layer(base);
+@import "tailwindcss/utilities.css";
 
 :root {
   --background: #ffffff;

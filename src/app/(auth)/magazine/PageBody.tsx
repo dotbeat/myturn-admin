@@ -223,9 +223,9 @@ export default function PageBody() {
           className="flex flex-col items-center gap-6"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <Table className="bg-[var(--background)]">
+          <Table className="bg-(--background)">
             <TableHead>
-              <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+              <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                 <TableCell className="p-2"></TableCell>
                 <TableCell className="p-2">タイトル</TableCell>
                 <TableCell className="p-2">説明</TableCell>
@@ -239,7 +239,7 @@ export default function PageBody() {
                 return (
                   <TableRow
                     key={article.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">{i + 1}</TableCell>
                     <TableCell className="p-2">
@@ -252,7 +252,7 @@ export default function PageBody() {
                         name={`articles.${i}.title`}
                         disabled={!canEdit}
                         className="w-72"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
@@ -261,7 +261,7 @@ export default function PageBody() {
                         rows={3}
                         disabled={!canEdit}
                         className="w-64"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
@@ -269,7 +269,7 @@ export default function PageBody() {
                         name={`articles.${i}.category`}
                         disabled={!canEdit}
                         className="w-28"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
@@ -278,7 +278,7 @@ export default function PageBody() {
                           <File
                             name={`articles.${i}.thumbnail`}
                             accept="image/*"
-                            buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
+                            buttonClass="text-nowrap rounded-md border border-(--myturn-sub-text) bg-(--myturn-background) px-2 py-1 text-sm"
                             onChangeFiles={({ file }) =>
                               changeOneOfThumbnail(article.articleId, file)
                             }
@@ -315,7 +315,7 @@ export default function PageBody() {
                         name={`articles.${i}.articleUrl`}
                         disabled={!canEdit}
                         className="w-48"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                   </TableRow>
@@ -324,14 +324,12 @@ export default function PageBody() {
             </TableBody>
           </Table>
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
           {canEdit && (
             <Button
               type="submit"
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
+              className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground)"
             >
               {isUpdating ? "更新中..." : "更新する"}
             </Button>

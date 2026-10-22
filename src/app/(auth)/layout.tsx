@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <SideNavigation className="fixed left-0 top-0 h-dvh w-52 overflow-x-hidden" />
+      <SideNavigation className="fixed top-0 left-0 h-dvh w-52 overflow-x-hidden" />
       <Box className="flex flex-1 flex-col pl-52">{children}</Box>
     </>
   );
