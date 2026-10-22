@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
 import type { JobStatus } from "@/types/job";
 import { jobOfferStatuses, jobOfferStatusIndex } from "@/utils/shared/job";
@@ -26,6 +26,12 @@ export default function JobOfferStatus({
   readOnly?: boolean;
 }) {
   const [statusInfo, setStatusInfo] = useState(jobOfferStatusIndex[status]);
+  // 親から渡されるstatusが変わったら表示を追従させる
+  const [prevStatus, setPrevStatus] = useState(status);
+  if (status !== prevStatus) {
+    setPrevStatus(status);
+    setStatusInfo(jobOfferStatusIndex[status]);
+  }
 
   const [updateJobStatus] = useMutation(UPDATE_JOB_STATUS, {
     onCompleted: async () => {
@@ -66,10 +72,6 @@ export default function JobOfferStatus({
       severity,
     });
   };
-
-  useEffect(() => {
-    setStatusInfo(jobOfferStatusIndex[status]);
-  }, [status]);
 
   const handleStatusChange = async (newStatus: JobStatus) => {
     if (id) {

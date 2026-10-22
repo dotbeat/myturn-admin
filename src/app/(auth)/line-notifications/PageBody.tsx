@@ -226,9 +226,7 @@ export default function PageBody() {
           if (setting.schedule) {
             updated.notifications[index].schedule = {
               scheduleType: setting.schedule.scheduleType as
-                | "daily"
-                | "weekly"
-                | "monthly",
+                "daily" | "weekly" | "monthly",
               dayOfWeek: setting.schedule.dayOfWeek ?? [],
               dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
               hour: setting.schedule.hour ?? 0,

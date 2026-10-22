@@ -9,8 +9,7 @@ export default function SideNavigationItem({
   label?: string;
   className?: string;
 } & (
-  | { href: string; onClick?: never }
-  | { href?: never; onClick: () => void }
+  { href: string; onClick?: never } | { href?: never; onClick: () => void }
 )) {
   return (
     <Button

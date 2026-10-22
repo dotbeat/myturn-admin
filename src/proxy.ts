@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // APIが発行する管理者用のセッションCookie（検証はAPI側で行う）
 const ADMIN_SESSION_COOKIE = "admin-jwt";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const isLoginPage = req.nextUrl.pathname === "/login";
 
   if (!isLoginPage && !req.cookies.has(ADMIN_SESSION_COOKIE)) {

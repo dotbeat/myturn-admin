@@ -98,7 +98,9 @@ export default function PageBody() {
         Object.fromEntries(newParams),
       )
     ) {
-      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+      window.location.assign(
+        `${window.location.pathname}${newParams.size ? "?" : ""}${newParams.toString()}`,
+      );
     }
   };
 
