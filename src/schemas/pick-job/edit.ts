@@ -13,7 +13,7 @@ export type PickJobIndicator = (typeof PICK_JOB_INDICATORS)[number];
 const pickJobWeightItemSchema = z.object({
   indicator: z.enum(PICK_JOB_INDICATORS),
   weight: z.coerce
-    .number({ message: "半角数字で入力してください" })
+    .number<number>({ message: "半角数字で入力してください" })
     .min(0, { message: "0以上で入力してください" })
     .max(100, { message: "100以下で入力してください" }),
 });

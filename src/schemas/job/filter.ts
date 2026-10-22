@@ -14,14 +14,14 @@ export const jobFilterFormSchema = z
     closeDateEnd: ruleDateNullable(), // 終了日(終了)
     jobType: z.string(), // 職種
     industry: z.string(), // 業界
-    pvCountMin: z.coerce.number().min(0), // PV数(最小)
-    pvCountMax: z.coerce.number().min(0), // PV数(最大)
-    favoriteCountMin: z.coerce.number().min(0), // お気に入り数(最小)
-    favoriteCountMax: z.coerce.number().min(0), // お気に入り数(最大)
-    entryCountMin: z.coerce.number().min(0), // 応募数(最小)
-    entryCountMax: z.coerce.number().min(0), // 応募数(最大)
-    acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
-    acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
+    pvCountMin: z.coerce.number<number>().min(0), // PV数(最小)
+    pvCountMax: z.coerce.number<number>().min(0), // PV数(最大)
+    favoriteCountMin: z.coerce.number<number>().min(0), // お気に入り数(最小)
+    favoriteCountMax: z.coerce.number<number>().min(0), // お気に入り数(最大)
+    entryCountMin: z.coerce.number<number>().min(0), // 応募数(最小)
+    entryCountMax: z.coerce.number<number>().min(0), // 応募数(最大)
+    acceptCountMin: z.coerce.number<number>().min(0), // 採用数(最小)
+    acceptCountMax: z.coerce.number<number>().min(0), // 採用数(最大)
   })
   .superRefine(({ openDateStart: start, openDateEnd: end }, ctx) => {
     if (start != null && end != null && start > end) {

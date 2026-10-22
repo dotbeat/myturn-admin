@@ -12,7 +12,7 @@ export type HotJobIndicator = (typeof HOT_JOB_INDICATORS)[number];
 const hotJobWeightItemSchema = z.object({
   indicator: z.enum(HOT_JOB_INDICATORS),
   weight: z.coerce
-    .number({ message: "半角数字で入力してください" })
+    .number<number>({ message: "半角数字で入力してください" })
     .min(0, { message: "0以上で入力してください" })
     .max(100, { message: "100以下で入力してください" }),
 });

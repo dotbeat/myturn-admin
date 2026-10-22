@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const oldPickJobItemSchema = z.object({
   jobId: z.coerce
-    .number({ message: "半角数字のみを入力してください" })
+    .number<number>({ message: "半角数字のみを入力してください" })
     .min(1, { message: "1以上を入力してください" }),
 });
 

@@ -10,14 +10,14 @@ export const companyFilterFormSchema = z
     leaveDateStart: ruleDateNullable(), // 退会日(開始)
     leaveDateEnd: ruleDateNullable(), // 退会日(終了)
     industry: z.string(), // 業界
-    jobCountMin: z.coerce.number().min(0), // 掲載数(最小)
-    jobCountMax: z.coerce.number().min(0), // 掲載数(最大)
-    entryCountMin: z.coerce.number().min(0), // 応募数(最小)
-    entryCountMax: z.coerce.number().min(0), // 応募数(最大)
-    offerCountMin: z.coerce.number().min(0), // 内定数(最小)
-    offerCountMax: z.coerce.number().min(0), // 内定数(最大)
-    acceptCountMin: z.coerce.number().min(0), // 採用数(最小)
-    acceptCountMax: z.coerce.number().min(0), // 採用数(最大)
+    jobCountMin: z.coerce.number<number>().min(0), // 掲載数(最小)
+    jobCountMax: z.coerce.number<number>().min(0), // 掲載数(最大)
+    entryCountMin: z.coerce.number<number>().min(0), // 応募数(最小)
+    entryCountMax: z.coerce.number<number>().min(0), // 応募数(最大)
+    offerCountMin: z.coerce.number<number>().min(0), // 内定数(最小)
+    offerCountMax: z.coerce.number<number>().min(0), // 内定数(最大)
+    acceptCountMin: z.coerce.number<number>().min(0), // 採用数(最小)
+    acceptCountMax: z.coerce.number<number>().min(0), // 採用数(最大)
   })
   .superRefine(({ registerDateStart: start, registerDateEnd: end }, ctx) => {
     if (start != null && end != null && start > end) {
