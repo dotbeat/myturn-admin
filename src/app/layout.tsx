@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { ApolloProvider } from "@/lib/ApolloProvider";
 import { AdminUserProvider } from "@/lib/AdminUserProvider";
 import "./globals.css";
