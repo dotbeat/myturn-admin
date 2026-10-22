@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -15,7 +15,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { MagazineType } from "@/graphql-client";
+import { GetMagazineQuery } from "@/graphql-client";
 import {
   MagazineEditFormData,
   magazineEditFormSchema,
@@ -43,10 +43,6 @@ export default function PageBody() {
   const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
 
-  // 取得した保存済みサムネイル画像のURL
-  const [thumbnailSrcs, setThumbnailSrcs] = useState<Record<number, string>>(
-    {},
-  );
   // 入力中のサムネイル画像
   const [thumbnails, setThumbnails] = useState<
     Record<number, { dataUrl: string; type: string }>
@@ -118,36 +114,34 @@ export default function PageBody() {
   });
 
   // Magazineデータ取得
-  useQuery(GET_MAGAZINE, {
+  const { data: magazineData } = useQuery<GetMagazineQuery>(GET_MAGAZINE, {
     fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      const fetchedMagazine: Pick<
-        MagazineType,
-        | "id"
-        | "title"
-        | "description"
-        | "category"
-        | "thumbnailUrl"
-        | "articleUrl"
-      >[] = data.magazines;
-      const initThumbnailSrcs: Record<number, string> = {};
-      fetchedMagazine.forEach((article) => {
-        initThumbnailSrcs[article.id] = article.thumbnailUrl;
-      });
-      setThumbnailSrcs(initThumbnailSrcs);
-
-      const articles = fetchedMagazine.map((item) => ({
-        articleId: item.id,
-        title: item.title,
-        description: item.description,
-        category: item.category,
-        thumbnail: null,
-        articleUrl: item.articleUrl,
-      }));
-      initFormArticles.splice(0, articles.length, ...articles);
-      methods.setValue("articles", initFormArticles);
-    },
   });
+
+  // 取得した保存済みサムネイル画像のURL
+  const thumbnailSrcs = useMemo(() => {
+    const srcs: Record<number, string> = {};
+    magazineData?.magazines.forEach((article) => {
+      srcs[article.id] = article.thumbnailUrl;
+    });
+    return srcs;
+  }, [magazineData]);
+
+  // 取得した記事をフォームの初期値に反映する
+  useEffect(() => {
+    if (!magazineData) return;
+    const articles = magazineData.magazines.map((item) => ({
+      articleId: item.id,
+      title: item.title,
+      description: item.description,
+      category: item.category,
+      thumbnail: null,
+      articleUrl: item.articleUrl,
+    }));
+    initFormArticles.splice(0, articles.length, ...articles);
+    methods.setValue("articles", initFormArticles);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [magazineData]);
 
   const changeOneOfThumbnail = async (articleId: number, file: File | null) => {
     const editingThumbnails = { ...thumbnails };

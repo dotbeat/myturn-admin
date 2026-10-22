@@ -1,7 +1,6 @@
 "use client";
-
 import { useState, useMemo } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_ADMIN_MESSAGES } from "../../../server/graphql/message/queries";
 import { AdminMessage, AdminMessagesResult } from "../../../types/message";
 

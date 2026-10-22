@@ -5,7 +5,8 @@ import type { JobStatus } from "@/types/job";
 import { jobOfferStatuses, jobOfferStatusIndex } from "@/utils/shared/job";
 import Menu from "@/components/common/Menu";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
-import { useMutation, ApolloError } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { UPDATE_JOB_STATUS } from "@/server/graphql/job/mutations";
 
 export default function JobOfferStatus({
@@ -98,10 +99,10 @@ export default function JobOfferStatus({
         // GraphQLエラーメッセージを抽出
         let errorMessage = "ステータスの更新に失敗しました";
 
-        if (error instanceof ApolloError) {
-          if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+        if (CombinedGraphQLErrors.is(error)) {
+          if (error.errors.length > 0) {
             // GraphQLエラーからメッセージを取得
-            const graphQLError = error.graphQLErrors[0];
+            const graphQLError = error.errors[0];
             if (graphQLError.message) {
               errorMessage = graphQLError.message;
 

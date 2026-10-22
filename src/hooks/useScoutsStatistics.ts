@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 
 const GET_SCOUTS_STATISTICS = gql`
@@ -11,7 +11,9 @@ const GET_SCOUTS_STATISTICS = gql`
 `;
 
 export function useScoutsStatistics(period: string) {
-  const { data, loading, error, refetch } = useQuery(GET_SCOUTS_STATISTICS, {
+  const { data, loading, error, refetch } = useQuery<{
+    scoutsStatistics?: { totalScoutCount?: number; acceptedCount?: number };
+  }>(GET_SCOUTS_STATISTICS, {
     variables: { period },
   });
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -33,6 +33,7 @@ import {
 import { GET_ADDITIONAL_SCOUT_TICKETS } from "@/server/graphql/scout/queries";
 import { CREATE_ADDITIONAL_SCOUT_TICKET } from "@/server/graphql/scout/mutations";
 import { GET_ALL_COMPANIES } from "@/server/graphql/company/queries";
+import { GetAllCompaniesQuery } from "@/graphql-client";
 import { AdditionalScoutTicket } from "@/types/scout-ticket";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import TextField from "@/components/common/form/TextField";
@@ -78,7 +79,6 @@ export default function PageBody() {
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
 
-  const [companyOptions, setCompanyOptions] = useState<CompanyOption[]>([]);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
   const [toast, setToast] = useState<{
@@ -87,12 +87,11 @@ export default function PageBody() {
     severity: "success" | "error";
   }>({ open: false, message: "", severity: "success" });
 
-  useQuery(GET_ALL_COMPANIES, {
-    fetchPolicy: "no-cache",
-    onCompleted(data) {
-      setCompanyOptions(data.companies ?? []);
-    },
-  });
+  const { data: companiesData } = useQuery<GetAllCompaniesQuery>(
+    GET_ALL_COMPANIES,
+    { fetchPolicy: "no-cache" },
+  );
+  const companyOptions: CompanyOption[] = companiesData?.companies ?? [];
 
   const {
     loading: ticketsLoading,

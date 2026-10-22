@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { SetContextLink } from "@apollo/client/link/context";
 import { apiUrl } from "@/lib/apolloClient";
 
 export const createApolloClient = async () => {
-  const httpLink = createHttpLink({ uri: apiUrl, credentials: "include" });
+  const httpLink = new HttpLink({ uri: apiUrl, credentials: "include" });
 
   // Next.jsのheadersを取得
   const headersList = await headers();
@@ -17,14 +17,12 @@ export const createApolloClient = async () => {
   }
 
   // 認証情報をヘッダーに追加
-  const authLink = setContext(
-    (_: unknown, { headers }: { headers?: Record<string, string> }) => ({
-      headers: {
-        ...headers,
-        ...(cookie ? { cookie } : {}),
-      },
-    }),
-  );
+  const authLink = new SetContextLink(({ headers }) => ({
+    headers: {
+      ...headers,
+      ...(cookie ? { cookie } : {}),
+    },
+  }));
 
   return new ApolloClient({
     link: authLink.concat(httpLink),

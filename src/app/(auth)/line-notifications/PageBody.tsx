@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -25,7 +25,7 @@ import TextField from "@/components/common/form/TextField";
 import ScheduleInput from "@/components/common/ScheduleInput";
 import { useAdminUser } from "@/lib/AdminUserProvider";
 
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   GetLineNotificationSettingsQuery,
   UpdateLineNotificationSettingsMutation,
@@ -212,32 +212,33 @@ export default function PageBody() {
     defaultValues: createDefaultValues(),
   });
 
-  useQuery<GetLineNotificationSettingsQuery>(GET_LINE_NOTIFICATION_SETTINGS, {
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      const updated = createDefaultValues();
-      data.getLineNotificationSettings.forEach((setting) => {
-        const index = NOTIFICATION_TYPES.findIndex(
-          (n) => n.key === setting.key,
-        );
-        if (index !== -1) {
-          updated.notifications[index].isEnabled = setting.isEnabled;
-          updated.notifications[index].message = setting.message;
-          if (setting.schedule) {
-            updated.notifications[index].schedule = {
-              scheduleType: setting.schedule.scheduleType as
-                "daily" | "weekly" | "monthly",
-              dayOfWeek: setting.schedule.dayOfWeek ?? [],
-              dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
-              hour: setting.schedule.hour ?? 0,
-              minute: setting.schedule.minute ?? 0,
-            };
-          }
+  const { data: settingsData } = useQuery<GetLineNotificationSettingsQuery>(
+    GET_LINE_NOTIFICATION_SETTINGS,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した設定をフォームに反映する
+  useEffect(() => {
+    if (!settingsData) return;
+    const updated = createDefaultValues();
+    settingsData.getLineNotificationSettings.forEach((setting) => {
+      const index = NOTIFICATION_TYPES.findIndex((n) => n.key === setting.key);
+      if (index !== -1) {
+        updated.notifications[index].isEnabled = setting.isEnabled;
+        updated.notifications[index].message = setting.message;
+        if (setting.schedule) {
+          updated.notifications[index].schedule = {
+            scheduleType: setting.schedule.scheduleType as
+              "daily" | "weekly" | "monthly",
+            dayOfWeek: setting.schedule.dayOfWeek ?? [],
+            dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
+            hour: setting.schedule.hour ?? 0,
+            minute: setting.schedule.minute ?? 0,
+          };
         }
-      });
-      methods.reset(updated);
-    },
-  });
+      }
+    });
+    methods.reset(updated);
+  }, [settingsData, methods]);
 
   const [updateLineNotificationSettings, { loading: isUpdating }] =
     useMutation<UpdateLineNotificationSettingsMutation>(

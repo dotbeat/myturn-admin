@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useWatch,
 } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -28,6 +28,10 @@ import {
   UPDATE_PICK_JOB_SCORING_WEIGHTS,
   RECALCULATE_PICK_JOBS,
 } from "@/server/graphql/pick-job/mutations";
+import {
+  GetPickJobScoringWeightsQuery,
+  GetJobsByPickListQuery,
+} from "@/graphql-client";
 import {
   GET_PICK_JOB_SCORING_WEIGHTS,
   GET_JOBS_BY_PICK_LIST,
@@ -70,28 +74,32 @@ export default function PageBody() {
     0,
   );
 
-  const { data: pickJobsData, refetch: refetchPickJobs } = useQuery(
-    GET_JOBS_BY_PICK_LIST,
-    { fetchPolicy: "network-only" },
-  );
+  const { data: pickJobsData, refetch: refetchPickJobs } =
+    useQuery<GetJobsByPickListQuery>(GET_JOBS_BY_PICK_LIST, {
+      fetchPolicy: "network-only",
+    });
   const pickJobs: { id: number; title: string }[] =
     pickJobsData?.getJobsByPickList ?? [];
 
-  useQuery(GET_PICK_JOB_SCORING_WEIGHTS, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: any) => {
-      const sorted = [...data.getPickJobScoringWeights].sort(
-        (a: any, b: any) => a.displayOrder - b.displayOrder,
-      );
-      methods.setValue(
-        "weights",
-        sorted.map((w: any) => ({
-          indicator: w.indicator,
-          weight: w.weight,
-        })),
-      );
-    },
-  });
+  const { data: weightsData } = useQuery<GetPickJobScoringWeightsQuery>(
+    GET_PICK_JOB_SCORING_WEIGHTS,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した重み設定をフォームの初期値に反映する
+  useEffect(() => {
+    if (!weightsData) return;
+    const sorted = [...weightsData.getPickJobScoringWeights].sort(
+      (a, b) => a.displayOrder - b.displayOrder,
+    );
+    methods.setValue(
+      "weights",
+      sorted.map((w) => ({
+        indicator:
+          w.indicator as PickJobWeightFormData["weights"][number]["indicator"],
+        weight: w.weight,
+      })),
+    );
+  }, [weightsData, methods]);
 
   const [updateWeights, { loading: isUpdating }] = useMutation(
     UPDATE_PICK_JOB_SCORING_WEIGHTS,

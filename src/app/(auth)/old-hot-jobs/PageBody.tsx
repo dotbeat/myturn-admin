@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -93,16 +93,20 @@ export default function PageBody() {
   });
 
   // 人気求人データ取得
-  useQuery(GET_JOBS_BY_OLD_HOT_LIST, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: GetJobsByOldHotListQuery) => {
-      const oldHotList = data.getJobsByOldHotList.map((job) => ({
-        jobId: job.id,
-      }));
-      initFormOldHotJobs.splice(0, oldHotList.length, ...oldHotList);
-      methods.setValue("oldHotJobs", initFormOldHotJobs);
-    },
-  });
+  const { data: oldHotJobsData } = useQuery<GetJobsByOldHotListQuery>(
+    GET_JOBS_BY_OLD_HOT_LIST,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した求人をフォームの初期値に反映する
+  useEffect(() => {
+    if (!oldHotJobsData) return;
+    const oldHotList = oldHotJobsData.getJobsByOldHotList.map((job) => ({
+      jobId: job.id,
+    }));
+    initFormOldHotJobs.splice(0, oldHotList.length, ...oldHotList);
+    methods.setValue("oldHotJobs", initFormOldHotJobs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [oldHotJobsData]);
 
   // フォームデータをGraphQLミューテーションの入力形式に変換する関数
   const convertFormDataToUpdateInput = async (data: OldHotJobEditFormData) => {

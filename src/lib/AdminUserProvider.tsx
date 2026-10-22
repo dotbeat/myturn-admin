@@ -1,8 +1,7 @@
 "use client";
-
 import { createContext, ReactNode, useContext } from "react";
 import { usePathname } from "next/navigation";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { AdminMeQuery, AdminRole } from "@/graphql-client";
 import { ADMIN_ME } from "@/server/graphql/admin-user/queries";
 

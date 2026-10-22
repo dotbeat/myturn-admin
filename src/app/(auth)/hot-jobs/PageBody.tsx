@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useWatch,
 } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -28,6 +28,10 @@ import {
   UPDATE_HOT_JOB_SCORING_WEIGHTS,
   RECALCULATE_HOT_JOBS,
 } from "@/server/graphql/hot-job/mutations";
+import {
+  GetHotJobScoringWeightsQuery,
+  GetJobsByHotListQuery,
+} from "@/graphql-client";
 import {
   GET_HOT_JOB_SCORING_WEIGHTS,
   GET_JOBS_BY_HOT_LIST,
@@ -70,28 +74,32 @@ export default function PageBody() {
     0,
   );
 
-  const { data: hotJobsData, refetch: refetchHotJobs } = useQuery(
-    GET_JOBS_BY_HOT_LIST,
-    { fetchPolicy: "network-only" },
-  );
+  const { data: hotJobsData, refetch: refetchHotJobs } =
+    useQuery<GetJobsByHotListQuery>(GET_JOBS_BY_HOT_LIST, {
+      fetchPolicy: "network-only",
+    });
   const hotJobs: { id: number; title: string }[] =
     hotJobsData?.getJobsByHotList ?? [];
 
-  useQuery(GET_HOT_JOB_SCORING_WEIGHTS, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: any) => {
-      const sorted = [...data.getHotJobScoringWeights].sort(
-        (a: any, b: any) => a.displayOrder - b.displayOrder,
-      );
-      methods.setValue(
-        "weights",
-        sorted.map((w: any) => ({
-          indicator: w.indicator,
-          weight: w.weight,
-        })),
-      );
-    },
-  });
+  const { data: weightsData } = useQuery<GetHotJobScoringWeightsQuery>(
+    GET_HOT_JOB_SCORING_WEIGHTS,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した重み設定をフォームの初期値に反映する
+  useEffect(() => {
+    if (!weightsData) return;
+    const sorted = [...weightsData.getHotJobScoringWeights].sort(
+      (a, b) => a.displayOrder - b.displayOrder,
+    );
+    methods.setValue(
+      "weights",
+      sorted.map((w) => ({
+        indicator:
+          w.indicator as HotJobWeightFormData["weights"][number]["indicator"],
+        weight: w.weight,
+      })),
+    );
+  }, [weightsData, methods]);
 
   const [updateWeights, { loading: isUpdating }] = useMutation(
     UPDATE_HOT_JOB_SCORING_WEIGHTS,

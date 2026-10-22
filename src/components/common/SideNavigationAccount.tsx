@@ -1,5 +1,5 @@
 "use client";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Box, Typography } from "@mui/material";
 import { ADMIN_LOGOUT } from "@/server/graphql/admin-user/mutations";
 import { useAdminUser } from "@/lib/AdminUserProvider";

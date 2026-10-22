@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -25,7 +25,10 @@ import {
   TextField as MuiTextField,
   Typography,
 } from "@mui/material";
-import { GetCompanyAcceptTicketsQuery } from "@/graphql-client";
+import {
+  GetAllCompaniesQuery,
+  GetCompanyAcceptTicketsQuery,
+} from "@/graphql-client";
 import {
   CreateTicketFormData,
   createTicketSchema,
@@ -64,7 +67,6 @@ export default function PageBody() {
   const limit = paramsConverter.toNumber("limit", 30);
 
   // ---- 採用デポジット作成フォーム ----
-  const [companyOptions, setCompanyOptions] = useState<CompanyOption[]>([]);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
   const [toast, setToast] = useState<{
@@ -73,12 +75,11 @@ export default function PageBody() {
     severity: "success" | "error";
   }>({ open: false, message: "", severity: "success" });
 
-  useQuery(GET_ALL_COMPANIES, {
-    fetchPolicy: "no-cache",
-    onCompleted(data) {
-      setCompanyOptions(data.companies ?? []);
-    },
-  });
+  const { data: companiesData } = useQuery<GetAllCompaniesQuery>(
+    GET_ALL_COMPANIES,
+    { fetchPolicy: "no-cache" },
+  );
+  const companyOptions: CompanyOption[] = companiesData?.companies ?? [];
 
   const {
     loading: ticketsLoading,

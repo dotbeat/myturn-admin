@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useRef, useState } from "react";
 import Script from "next/script";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Box, Typography } from "@mui/material";
 import { AdminLoginWithGoogleMutation } from "@/graphql-client";
 import { ADMIN_LOGIN_WITH_GOOGLE } from "@/server/graphql/admin-user/mutations";
