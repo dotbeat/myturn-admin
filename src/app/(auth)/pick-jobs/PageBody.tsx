@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useWatch,
 } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -29,14 +29,20 @@ import {
   RECALCULATE_PICK_JOBS,
 } from "@/server/graphql/pick-job/mutations";
 import {
+  GetPickJobScoringWeightsQuery,
+  GetJobsByPickListQuery,
+} from "@/graphql-client";
+import {
   GET_PICK_JOB_SCORING_WEIGHTS,
   GET_JOBS_BY_PICK_LIST,
 } from "@/server/graphql/pick-job/queries";
 import { PICK_JOB_WEIGHT_METADATA } from "@/utils/frontend/hot-job";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -68,28 +74,32 @@ export default function PageBody() {
     0,
   );
 
-  const { data: pickJobsData, refetch: refetchPickJobs } = useQuery(
-    GET_JOBS_BY_PICK_LIST,
-    { fetchPolicy: "network-only" },
-  );
+  const { data: pickJobsData, refetch: refetchPickJobs } =
+    useQuery<GetJobsByPickListQuery>(GET_JOBS_BY_PICK_LIST, {
+      fetchPolicy: "network-only",
+    });
   const pickJobs: { id: number; title: string }[] =
     pickJobsData?.getJobsByPickList ?? [];
 
-  useQuery(GET_PICK_JOB_SCORING_WEIGHTS, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: any) => {
-      const sorted = [...data.getPickJobScoringWeights].sort(
-        (a: any, b: any) => a.displayOrder - b.displayOrder,
-      );
-      methods.setValue(
-        "weights",
-        sorted.map((w: any) => ({
-          indicator: w.indicator,
-          weight: w.weight,
-        })),
-      );
-    },
-  });
+  const { data: weightsData } = useQuery<GetPickJobScoringWeightsQuery>(
+    GET_PICK_JOB_SCORING_WEIGHTS,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した重み設定をフォームの初期値に反映する
+  useEffect(() => {
+    if (!weightsData) return;
+    const sorted = [...weightsData.getPickJobScoringWeights].sort(
+      (a, b) => a.displayOrder - b.displayOrder,
+    );
+    methods.setValue(
+      "weights",
+      sorted.map((w) => ({
+        indicator:
+          w.indicator as PickJobWeightFormData["weights"][number]["indicator"],
+        weight: w.weight,
+      })),
+    );
+  }, [weightsData, methods]);
 
   const [updateWeights, { loading: isUpdating }] = useMutation(
     UPDATE_PICK_JOB_SCORING_WEIGHTS,
@@ -107,7 +117,7 @@ export default function PageBody() {
     {
       onCompleted: (data: any) => {
         showToast(
-          `再計算完了: ${data.recalculatePickJobs.updatedCount}件更新`,
+          `再計算完了: ${data.recalculatePickJobsForAdmin.updatedCount}件更新`,
           "success",
         );
         refetchPickJobs();
@@ -135,10 +145,7 @@ export default function PageBody() {
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-1">(仮)注目の求人一覧管理（重み設定）</PageTitle>
-      <Typography
-        variant="body2"
-        className="mb-8 text-[var(--myturn-sub-text)]"
-      >
+      <Typography variant="body2" className="mb-8 text-(--myturn-sub-text)">
         myturnトップページで表示される注目の求人ランキングのアルゴリズムを管理します。一覧は1時間おきに更新されます。
       </Typography>
 
@@ -146,7 +153,7 @@ export default function PageBody() {
         <FormProvider {...methods}>
           <form
             method="POST"
-            className="w-2xl flex flex-col items-start gap-4"
+            className="flex w-2xl flex-col items-start gap-4"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <Typography variant="body1" className="font-semibold">
@@ -154,8 +161,8 @@ export default function PageBody() {
               <span
                 className={
                   isWeightSumValid
-                    ? "text-[var(--myturn-main)]"
-                    : "text-[var(--myturn-accent)]"
+                    ? "text-(--myturn-main)"
+                    : "text-(--myturn-accent)"
                 }
               >
                 {totalPercent.toFixed(1).replace(".0", "")}%{" "}
@@ -163,9 +170,9 @@ export default function PageBody() {
               </span>
             </Typography>
 
-            <Table className="bg-[var(--background)]">
+            <Table className="bg-(--background)">
               <TableHead>
-                <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+                <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                   <TableCell className="p-2 pl-4">指標名</TableCell>
                   <TableCell className="p-2">重み (%)</TableCell>
                   <TableCell className="p-2 pr-4">説明</TableCell>
@@ -175,7 +182,7 @@ export default function PageBody() {
                 {fields.map((field, i) => (
                   <TableRow
                     key={field.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">
                       {PICK_JOB_WEIGHT_METADATA[field.indicator].label}
@@ -184,8 +191,9 @@ export default function PageBody() {
                       <TextField
                         name={`weights.${i}.weight`}
                         type="number"
+                        disabled={!canEdit}
                         className="w-24"
-                        inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        inputClass="valid:border-(--myturn-support-middle) [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </TableCell>
                     <TableCell className="p-2 text-sm">
@@ -197,41 +205,43 @@ export default function PageBody() {
             </Table>
 
             {error && (
-              <Typography className="text-[var(--myturn-accent)]">
+              <Typography className="text-(--myturn-accent)">
                 {error}
               </Typography>
             )}
 
-            <Button
-              type="submit"
-              disabled={isUpdating || !isWeightSumValid}
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)] disabled:bg-[var(--myturn-support-middle)]"
-            >
-              {isUpdating ? "更新中..." : "設定を更新する"}
-            </Button>
+            {canEdit && (
+              <Button
+                type="submit"
+                disabled={isUpdating || !isWeightSumValid}
+                className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground) disabled:bg-(--myturn-support-middle)"
+              >
+                {isUpdating ? "更新中..." : "設定を更新する"}
+              </Button>
+            )}
           </form>
         </FormProvider>
 
-        <Box className="min-w-64 max-w-2xl">
+        <Box className="max-w-2xl min-w-64">
           <Box className="mb-4 flex items-center gap-2">
             <Typography variant="body1" className="font-semibold">
               現在の注目の求人一覧
             </Typography>
-            <Typography className="text-sm text-[var(--myturn-sub-text)]">
+            <Typography className="text-sm text-(--myturn-sub-text)">
               (上位30位)
             </Typography>
           </Box>
           {pickJobs.length === 0 ? (
             <Typography
               variant="body2"
-              className="mb-4 text-[var(--myturn-sub-text)]"
+              className="mb-4 text-(--myturn-sub-text)"
             >
               設定済みの求人はありません
             </Typography>
           ) : (
-            <Table className="mb-4 bg-[var(--background)]">
+            <Table className="mb-4 bg-(--background)">
               <TableHead>
-                <TableRow className="border border-[var(--myturn-support-middle)]">
+                <TableRow className="border border-(--myturn-support-middle)">
                   <TableCell className="p-2 text-sm">ID</TableCell>
                   <TableCell className="p-2 text-sm">求人タイトル</TableCell>
                 </TableRow>
@@ -240,7 +250,7 @@ export default function PageBody() {
                 {pickJobs.map((job) => (
                   <TableRow
                     key={job.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 text-sm">{job.id}</TableCell>
                     <TableCell className="p-2 text-sm">{job.title}</TableCell>
@@ -249,14 +259,16 @@ export default function PageBody() {
               </TableBody>
             </Table>
           )}
-          <Button
-            type="button"
-            disabled={isRecalculating}
-            className="rounded-full border border-[var(--myturn-sub-text)] px-4 py-3"
-            onClick={() => recalculate()}
-          >
-            {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="button"
+              disabled={isRecalculating}
+              className="rounded-full border border-(--myturn-sub-text) px-4 py-3"
+              onClick={() => recalculate()}
+            >
+              {isRecalculating ? "更新中..." : "今すぐ一覧を更新する"}
+            </Button>
+          )}
         </Box>
       </Box>
 

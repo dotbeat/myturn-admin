@@ -60,7 +60,7 @@ export default function PopUp({
         }}
         slotProps={{
           paper: {
-            className: `rounded-lg border border-[var(--myturn-support-middle)] shadow-md shadow-gray-700/10 ${menuClass}`,
+            className: `rounded-lg border border-(--myturn-support-middle) shadow-md shadow-gray-700/10 ${menuClass}`,
           },
           list: { "aria-labelledby": `${id}-activator` },
         }}

@@ -31,8 +31,10 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import ApplicantFilterForm from "@/components/applicant/ApplicantFilterForm";
 import ApplicantList from "@/components/applicant/ApplicantList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -96,14 +98,16 @@ export default function PageBody() {
         Object.fromEntries(newParams),
       )
     ) {
-      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+      window.location.assign(
+        `${window.location.pathname}${newParams.size ? "?" : ""}${newParams.toString()}`,
+      );
     }
   };
 
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-8">応募者管理</PageTitle>
-      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
+      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-(--background) py-2 pr-2 pl-8">
         <IndicateItem
           label="合計応募数"
           count={allApplicantCount}
@@ -134,7 +138,7 @@ export default function PageBody() {
         />
         <PopUp
           id="period-filter"
-          className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
+          className="flex min-w-24 items-center justify-between gap-2 self-start rounded-sm border border-current px-2 py-1"
           menuClass="p-2"
           activator={() => (
             <>
@@ -161,7 +165,7 @@ export default function PageBody() {
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
           <form
-            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            className="flex flex-col gap-6 rounded-lg bg-(--background) px-4 py-6"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <ApplicantFilterForm isLoading={loading} />
@@ -175,7 +179,8 @@ export default function PageBody() {
             items={applicants}
             isLoading={loading}
             refetch={refetch}
-            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
+            readOnly={!canEdit}
+            className="mb-4 overflow-x-auto rounded-lg bg-(--background)"
           />
           <Box className="flex justify-center">
             <Pagination

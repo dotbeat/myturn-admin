@@ -1,7 +1,6 @@
 "use client";
-
 import { useState, useMemo } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_ADMIN_MESSAGES } from "../../../server/graphql/message/queries";
 import { AdminMessage, AdminMessagesResult } from "../../../types/message";
 
@@ -126,7 +125,7 @@ export default function MessagesPage() {
         </h1>
 
         {/* フィルター */}
-        <div className="mb-6 rounded-lg bg-white p-4 shadow">
+        <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -134,7 +133,7 @@ export default function MessagesPage() {
               </label>
               <input
                 type="text"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 placeholder="メッセージ内容、ユーザー名、求人名で検索"
                 defaultValue={filters.search || ""}
                 onBlur={(e) =>
@@ -148,7 +147,7 @@ export default function MessagesPage() {
               </label>
               <input
                 type="number"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 placeholder="企業IDで絞り込み"
                 defaultValue={filters.companyId || ""}
                 onBlur={(e) =>
@@ -167,7 +166,7 @@ export default function MessagesPage() {
               </label>
               <input
                 type="number"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 placeholder="ユーザーIDで絞り込み"
                 defaultValue={filters.userId || ""}
                 onBlur={(e) =>
@@ -186,7 +185,7 @@ export default function MessagesPage() {
               </label>
               <input
                 type="number"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
                 placeholder="求人IDで絞り込み"
                 defaultValue={filters.jobId || ""}
                 onBlur={(e) =>
@@ -216,7 +215,7 @@ export default function MessagesPage() {
 
       <div className="flex min-h-0 flex-1 gap-6">
         {/* 応募一覧 */}
-        <div className="flex w-1/3 flex-col rounded-lg bg-white shadow">
+        <div className="flex w-1/3 flex-col rounded-lg bg-white shadow-sm">
           <div className="border-b border-gray-200 px-6 py-4">
             <h2 className="text-lg font-medium text-gray-900">
               応募一覧 ({sortedGroups.length}件)
@@ -274,7 +273,7 @@ export default function MessagesPage() {
         </div>
 
         {/* チャット表示 */}
-        <div className="flex flex-1 flex-col break-words rounded-lg bg-white shadow">
+        <div className="flex flex-1 flex-col rounded-lg bg-white wrap-break-word shadow-sm">
           {selectedGroup ? (
             <>
               <div className="border-b border-gray-200 px-6 py-4">
@@ -319,13 +318,13 @@ export default function MessagesPage() {
                           {message.type}
                         </span>
                         {!message.isRead && (
-                          <span className="rounded bg-red-200 px-1 py-0.5 text-xs text-red-800">
+                          <span className="rounded-sm bg-red-200 px-1 py-0.5 text-xs text-red-800">
                             未読
                           </span>
                         )}
                       </div>
 
-                      <p className="whitespace-pre-wrap text-sm">
+                      <p className="text-sm whitespace-pre-wrap">
                         {message.content}
                       </p>
 

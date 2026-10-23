@@ -1,12 +1,13 @@
 import {
   ApolloClient,
+  ApolloLink,
+  CombinedGraphQLErrors,
+  HttpLink,
   InMemoryCache,
-  createHttpLink,
-  split,
 } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
+import { ErrorLink } from "@apollo/client/link/error";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { getMainDefinition } from "@apollo/client/utilities";
+import { OperationTypeNode } from "graphql";
 import { createClient } from "graphql-ws";
 
 // 環境変数からGraphQLエンドポイントを取得、デフォルトはローカル開発用
@@ -16,7 +17,7 @@ export const apiUrl =
 // WebSocketのURLを構築（HTTPSの場合はWSSを使用）
 const wsUrl = apiUrl.replace(/^http/, "ws");
 
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: apiUrl,
   credentials: "include",
 });
@@ -35,28 +36,37 @@ const wsLink =
     : null;
 
 // エラーハンドリングの設定
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.forEach(({ message, locations, path }) =>
-      console.error(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      ),
-    );
-  if (networkError) console.error(`[Network error]: ${networkError}`);
+const errorLink = new ErrorLink(({ error }) => {
+  if (!CombinedGraphQLErrors.is(error)) {
+    console.error(`[Network error]: ${error}`);
+    return;
+  }
+
+  error.errors.forEach(({ message, locations, path }) =>
+    console.error(
+      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+    ),
+  );
+
+  // 未ログイン・セッション切れ・許可メールアドレスから削除された場合はログイン画面へ遷移する
+  const isUnauthorized = error.errors.some(
+    ({ extensions }) => extensions?.code === "UNAUTHORIZED",
+  );
+  if (
+    isUnauthorized &&
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/login"
+  ) {
+    window.location.assign("/login");
+  }
 });
 
 // リクエストタイプに基づいてリンクを分割
 // クエリとミューテーションはHTTP、サブスクリプションはWebSocketを使用
 const splitLink =
   typeof window !== "undefined" && wsLink
-    ? split(
-        ({ query }) => {
-          const definition = getMainDefinition(query);
-          return (
-            definition.kind === "OperationDefinition" &&
-            definition.operation === "subscription"
-          );
-        },
+    ? ApolloLink.split(
+        ({ operationType }) => operationType === OperationTypeNode.SUBSCRIPTION,
         wsLink,
         errorLink.concat(httpLink),
       )
@@ -68,6 +78,8 @@ export const client = new ApolloClient({
   defaultOptions: {
     watchQuery: {
       fetchPolicy: "network-only",
+      // Apollo Client 4で既定値がtrueになったため、refetch中にloadingにならない従来の挙動を維持する
+      notifyOnNetworkStatusChange: false,
     },
     query: {
       fetchPolicy: "network-only",

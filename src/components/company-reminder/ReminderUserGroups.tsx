@@ -25,9 +25,7 @@ export default function ReminderUserGroups({
 
   if (isLoading) {
     return (
-      <Typography
-        className={`text-sm text-[var(--myturn-sub-text)] ${className}`}
-      >
+      <Typography className={`text-sm text-(--myturn-sub-text) ${className}`}>
         読み込み中です
       </Typography>
     );
@@ -35,9 +33,7 @@ export default function ReminderUserGroups({
 
   if (groups.length === 0) {
     return (
-      <Typography
-        className={`text-sm text-[var(--myturn-sub-text)] ${className}`}
-      >
+      <Typography className={`text-sm text-(--myturn-sub-text) ${className}`}>
         対象の学生はいません
       </Typography>
     );
@@ -52,7 +48,7 @@ export default function ReminderUserGroups({
           <Box key={delayType}>
             <Typography className="text-sm font-semibold">
               {label}
-              <span className="ml-2 text-xs font-normal text-[var(--myturn-sub-text)]">
+              <span className="ml-2 text-xs font-normal text-(--myturn-sub-text)">
                 基準{thresholdDays}日
               </span>
             </Typography>
@@ -76,14 +72,12 @@ export default function ReminderUserGroups({
                       <Box className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
                         <span
                           className={
-                            user.isOverdue
-                              ? ""
-                              : "text-[var(--myturn-sub-text)]"
+                            user.isOverdue ? "" : "text-(--myturn-sub-text)"
                           }
                         >
                           {user.userName}
                         </span>
-                        <span className="text-xs text-[var(--myturn-sub-text)]">
+                        <span className="text-xs text-(--myturn-sub-text)">
                           {formatElapsedDays(user.elapsedDays)}
                         </span>
                         {user.isOverdue ? (

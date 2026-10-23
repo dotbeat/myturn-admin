@@ -1,15 +1,20 @@
+"use client";
 import { Box, Button, List, ListItem, Typography } from "@mui/material";
 import { Logo } from "@/icons/logo";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 import SideNavigationItem from "./SideNavigationItem";
+import SideNavigationAccount from "./SideNavigationAccount";
 
 export default function SideNavigation({
   className = "",
 }: {
   className?: string;
 }) {
+  const { isSystemAdmin } = useAdminUser();
+
   return (
     <Box
-      className={`bg-[var(--myturn-main-text)] px-2 py-4 text-[var(--foreground)] ${className}`}
+      className={`bg-(--myturn-main-text) px-2 py-4 text-(--foreground) ${className}`}
     >
       <Button
         href="/"
@@ -76,7 +81,19 @@ export default function SideNavigation({
         <ListItem className="p-0">
           <SideNavigationItem href="/line-notifications" label="LINE通知設定" />
         </ListItem>
+        <ListItem className="p-0">
+          <SideNavigationItem href="/admin-users" label="管理者アカウント" />
+        </ListItem>
+        {isSystemAdmin && (
+          <ListItem className="p-0">
+            <SideNavigationItem
+              href="/allowed-emails"
+              label="許可メールアドレス"
+            />
+          </ListItem>
+        )}
       </List>
+      <SideNavigationAccount className="mt-4 border-t border-stone-300/30 pt-4" />
     </Box>
   );
 }

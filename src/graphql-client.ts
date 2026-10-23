@@ -1,2049 +1,191 @@
-import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> =
   | T
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
-const defaultOptions = {} as const;
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  DateTime: { input: any; output: any };
+import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+export type AdminLoginWithGoogleInput = {
+  /** Googleログインで取得したIDトークン */
+  idToken: string;
 };
 
-export type AcceptScoutInput = {
-  isAccept: Scalars["Boolean"]["input"];
-  scoutId: Scalars["Int"]["input"];
-};
-
-export type AddFavoriteInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type AdditionalScoutTicketsResultType = {
-  __typename?: "AdditionalScoutTicketsResultType";
-  items: Array<ScoutTicketAdditionalType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type AdminMessage = {
-  __typename?: "AdminMessage";
-  company?: Maybe<AdminMessageCompany>;
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  entryId: Scalars["Int"]["output"];
-  entryUser: AdminMessageUser;
-  id: Scalars["Int"]["output"];
-  isRead: Scalars["Boolean"]["output"];
-  job: AdminMessageJob;
-  type: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  user?: Maybe<AdminMessageUser>;
-};
-
-export type AdminMessageCompany = {
-  __typename?: "AdminMessageCompany";
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-export type AdminMessageJob = {
-  __typename?: "AdminMessageJob";
-  company: AdminMessageCompany;
-  id: Scalars["Int"]["output"];
-  industry: Scalars["String"]["output"];
-  jobHeader: Scalars["String"]["output"];
-  jobType: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-};
-
-export type AdminMessageUser = {
-  __typename?: "AdminMessageUser";
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  faculty?: Maybe<Scalars["String"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  university?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type AdminMessagesResult = {
-  __typename?: "AdminMessagesResult";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<AdminMessage>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type ApplicantInfo = {
-  __typename?: "ApplicantInfo";
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  faculty?: Maybe<Scalars["String"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  university?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type AutoUpdateEntryStatusInput = {
-  id: Scalars["Int"]["input"];
-};
-
-export type CompaniesStatisticsResultType = {
-  __typename?: "CompaniesStatisticsResultType";
-  acceptedCount: Scalars["Int"]["output"];
-  leavedCount: Scalars["Int"]["output"];
-  postedCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type CompanyAcceptTicketType = {
-  __typename?: "CompanyAcceptTicketType";
-  amount: Scalars["Int"]["output"];
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  count: Scalars["Int"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  expiredAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  isGuaranteed: Scalars["Boolean"]["output"];
-  service: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usedCount: Scalars["Int"]["output"];
-};
-
-export type CompanyAcceptTicketsResultType = {
-  __typename?: "CompanyAcceptTicketsResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<CompanyAcceptTicketType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type CompanyIdInfoType = {
-  __typename?: "CompanyIdInfoType";
-  email: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-  notificationEmails?: Maybe<Array<Scalars["String"]["output"]>>;
-};
-
-export type CompanyInfo = {
-  __typename?: "CompanyInfo";
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  isOfficial: Scalars["Boolean"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-export type CompanyInvoiceType = {
-  __typename?: "CompanyInvoiceType";
-  acceptDate: Scalars["DateTime"]["output"];
-  amount: Scalars["Int"]["output"];
-  applicantDeletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  applicantName: Scalars["String"]["output"];
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isDeposit: Scalars["Boolean"]["output"];
-  paymentLimitDate?: Maybe<Scalars["DateTime"]["output"]>;
-  service: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type CompanyInvoicesResultType = {
-  __typename?: "CompanyInvoicesResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<CompanyInvoiceType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type CompanyInvoicesStatisticsResultType = {
-  __typename?: "CompanyInvoicesStatisticsResultType";
-  acceptedCount: Scalars["Int"]["output"];
-  generalCount: Scalars["Int"]["output"];
-  technicalCount: Scalars["Int"]["output"];
-  totalAmount: Scalars["Int"]["output"];
-};
-
-export type CompanyJobsWithSimpleEntriesType = {
-  __typename?: "CompanyJobsWithSimpleEntriesType";
-  companyId: Scalars["Int"]["output"];
-  jobs: Array<SimpleJobWithEntriesType>;
-};
-
-export type CompanyLoginInput = {
-  email: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-};
-
-export type CompanyLoginResponse = {
-  __typename?: "CompanyLoginResponse";
-  accessToken: Scalars["String"]["output"];
-  company: CompanyType;
-};
-
-export type CompanyLogoutResponse = {
-  __typename?: "CompanyLogoutResponse";
-  message: Scalars["String"]["output"];
-};
-
-export type CompanyMemberInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  position?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CompanyMemberType = {
-  __typename?: "CompanyMemberType";
-  description?: Maybe<Scalars["String"]["output"]>;
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  position?: Maybe<Scalars["String"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type CompanyReminderTargetsType = {
-  __typename?: "CompanyReminderTargetsType";
-  company: ReminderTargetCompanyType;
-  users: Array<ReminderTargetUserType>;
-};
-
-export type CompanyReminderType = {
-  __typename?: "CompanyReminderType";
-  body: Scalars["String"]["output"];
-  companyId: Scalars["Int"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  errorMessage?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  isSuccess: Scalars["Boolean"]["output"];
-  subject: Scalars["String"]["output"];
-  templateName: Scalars["String"]["output"];
-  /** 基準未満で同送した学生数 */
-  underThresholdCount: Scalars["Int"]["output"];
-  users: Array<CompanyReminderUserType>;
-};
-
-export type CompanyReminderUserType = {
-  __typename?: "CompanyReminderUserType";
-  delayType: ReminderDelayType;
-  elapsedDays: Scalars["Int"]["output"];
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isOverdue: Scalars["Boolean"]["output"];
-  jobTitle: Scalars["String"]["output"];
-  userId: Scalars["Int"]["output"];
-  userName: Scalars["String"]["output"];
-};
-
-export type CompanySearchResultType = {
-  __typename?: "CompanySearchResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<CompanyType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type CompanyType = {
-  __typename?: "CompanyType";
-  about?: Maybe<Scalars["String"]["output"]>;
-  acceptCount?: Maybe<Scalars["Int"]["output"]>;
-  agentPlanAmount?: Maybe<Scalars["Int"]["output"]>;
-  businessContent?: Maybe<Scalars["String"]["output"]>;
-  capital?: Maybe<Scalars["Int"]["output"]>;
-  city?: Maybe<Scalars["String"]["output"]>;
-  companyUrl: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  detailAddress?: Maybe<Scalars["String"]["output"]>;
-  email: Scalars["String"]["output"];
-  employeeCount?: Maybe<Scalars["Int"]["output"]>;
-  entryCount?: Maybe<Scalars["Int"]["output"]>;
-  headerImageUrl?: Maybe<Scalars["String"]["output"]>;
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  industry?: Maybe<Scalars["String"]["output"]>;
-  initialMessage?: Maybe<Scalars["String"]["output"]>;
-  initialScoutedMessage?: Maybe<Scalars["String"]["output"]>;
-  interviewCount?: Maybe<Scalars["Int"]["output"]>;
-  isInitialMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  isInitialScoutedMessageEnabled?: Maybe<Scalars["Boolean"]["output"]>;
-  isOfficial: Scalars["Boolean"]["output"];
-  isSuspension: Scalars["Boolean"]["output"];
-  jobCount?: Maybe<Scalars["Int"]["output"]>;
-  jobType?: Maybe<Scalars["String"]["output"]>;
-  members?: Maybe<Array<CompanyMemberType>>;
-  name: Scalars["String"]["output"];
-  notificationEmails?: Maybe<Array<Scalars["String"]["output"]>>;
-  offerCount?: Maybe<Scalars["Int"]["output"]>;
-  phoneNumber: Scalars["String"]["output"];
-  postalCode?: Maybe<Scalars["String"]["output"]>;
-  prefecture?: Maybe<Scalars["String"]["output"]>;
-  representative?: Maybe<Scalars["String"]["output"]>;
-  streetAddress?: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type CompanyUnreadCount = {
-  __typename?: "CompanyUnreadCount";
-  totalCompanyUnreadCount: Scalars["Int"]["output"];
-  totalUserUnreadCount: Scalars["Int"]["output"];
-};
-
-export type CompanyUnreadMessages = {
-  __typename?: "CompanyUnreadMessages";
-  applicant: ApplicantInfo;
-  entryId: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  jobTitle: Scalars["String"]["output"];
-  unreadCount: Scalars["Int"]["output"];
-  unreadMessages: Array<UnreadMessageInfo>;
-};
-
-export type CompanyWithJobsType = {
-  __typename?: "CompanyWithJobsType";
-  company: CompanyType;
-  jobs: Array<JobType>;
-  members: Array<CompanyMemberType>;
-};
+/** 管理画面アカウントの権限（SYSTEM_ADMIN: システム管理者, MODERATOR: モデレータ, VIEWER: 閲覧のみ） */
+export enum AdminRole {
+  Moderator = "MODERATOR",
+  SystemAdmin = "SYSTEM_ADMIN",
+  Viewer = "VIEWER",
+}
 
 export type CreateAdditionalScoutTicketInput = {
-  companyId: Scalars["Int"]["input"];
-  totalCount: Scalars["Int"]["input"];
+  companyId: number;
+  totalCount: number;
+};
+
+export type CreateAdminAllowedEmailInput = {
+  email: string;
+  /** 初回登録時に付与する権限 */
+  initialRole: AdminRole;
 };
 
 export type CreateCompanyAcceptTicketInput = {
-  amount: Scalars["Int"]["input"];
-  companyId: Scalars["Int"]["input"];
-  count: Scalars["Int"]["input"];
-  expiredAt: Scalars["DateTime"]["input"];
-  isGuaranteed?: InputMaybe<Scalars["Boolean"]["input"]>;
-  service?: InputMaybe<Scalars["String"]["input"]>;
+  amount: number;
+  companyId: number;
+  count: number;
+  expiredAt: any;
+  isGuaranteed?: boolean | null | undefined;
+  service?: string | null | undefined;
 };
 
-export type CreateCompanyInput = {
-  companyUrl: Scalars["String"]["input"];
-  email: Scalars["String"]["input"];
-  emailConfirmation: Scalars["String"]["input"];
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  name: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-  phoneNumber: Scalars["String"]["input"];
+export type DeleteAdminAllowedEmailInput = {
+  id: number;
 };
 
-export type CreateEntryInput = {
-  jobId: Scalars["Int"]["input"];
-  userId: Scalars["Int"]["input"];
-};
-
-export type CreateJobInput = {
-  access: Scalars["String"]["input"];
-  acquirableSkills: Array<Scalars["String"]["input"]>;
-  applicationProcess?: InputMaybe<Scalars["String"]["input"]>;
-  businessContent: Scalars["String"]["input"];
-  city: Scalars["String"]["input"];
-  companyAtmosphere: Scalars["String"]["input"];
-  companyId: Scalars["Int"]["input"];
-  detailAddress?: InputMaybe<Scalars["String"]["input"]>;
-  experienceGained: Scalars["String"]["input"];
-  features: Array<Scalars["String"]["input"]>;
-  goal: Scalars["String"]["input"];
-  headerImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  industry: Scalars["String"]["input"];
-  internJobDescription: Scalars["String"]["input"];
-  jobAtmosphereImage: Scalars["String"]["input"];
-  jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  jobHeader: Scalars["String"]["input"];
-  jobType: Scalars["String"]["input"];
-  members?: InputMaybe<Array<CreateMemberInput>>;
-  minWorkingDaysPerWeek: Scalars["Int"]["input"];
-  minWorkingHoursPerWeek: Scalars["Int"]["input"];
-  pastAcceptedCompany?: InputMaybe<Scalars["String"]["input"]>;
-  pastMemberUniversity?: InputMaybe<Scalars["String"]["input"]>;
-  period: Scalars["String"]["input"];
-  placeAtmosphereImage: Scalars["String"]["input"];
-  placeAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  postalCode: Scalars["String"]["input"];
-  prefecture: Scalars["String"]["input"];
-  preferences: Array<Scalars["String"]["input"]>;
-  programmingLanguages: Array<Scalars["String"]["input"]>;
-  requirements?: InputMaybe<Scalars["String"]["input"]>;
-  salary: Scalars["String"]["input"];
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  streetAddress: Scalars["String"]["input"];
-  title: Scalars["String"]["input"];
-  transportationFeeAmount: Scalars["String"]["input"];
-  usefulSkills: Array<Scalars["String"]["input"]>;
-  workConditions: Array<Scalars["String"]["input"]>;
-  workingHoursEnd: Scalars["String"]["input"];
-  workingHoursStart: Scalars["String"]["input"];
-};
-
-export type CreateMemberInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  position?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CreateMessageTemplateInput = {
-  content: Scalars["String"]["input"];
-  isScoutTemplate?: InputMaybe<Scalars["Boolean"]["input"]>;
-  title: Scalars["String"]["input"];
-};
-
-export type CreateScoutInput = {
-  content: Scalars["String"]["input"];
-  jobId?: InputMaybe<Scalars["Int"]["input"]>;
-  title: Scalars["String"]["input"];
-  userId: Scalars["Int"]["input"];
-};
-
-export type CreateScoutsInput = {
-  scouts: Array<CreateScoutInput>;
-};
-
-export type CreateUserAcceptReportInput = {
-  companyId: Scalars["Int"]["input"];
-  joinDate: Scalars["DateTime"]["input"];
-};
-
-export type CreateUserInput = {
-  availableDaysPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  availableDurationMonths?: InputMaybe<Scalars["Int"]["input"]>;
-  availableHoursPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
-  birthDate?: InputMaybe<Scalars["DateTime"]["input"]>;
-  department?: InputMaybe<Scalars["String"]["input"]>;
-  email: Scalars["String"]["input"];
-  faculty?: InputMaybe<Scalars["String"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  futureGoals?: InputMaybe<Scalars["String"]["input"]>;
-  gender?: InputMaybe<Scalars["String"]["input"]>;
-  grade?: InputMaybe<Scalars["String"]["input"]>;
-  graduationYear?: InputMaybe<Scalars["Int"]["input"]>;
-  interestedIndustries?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  interestedJobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  isAllowScout?: Scalars["Boolean"]["input"];
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  magazineNotification?: Scalars["Boolean"]["input"];
-  messageNotification?: Scalars["Boolean"]["input"];
-  password: Scalars["String"]["input"];
-  phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  selfPR?: InputMaybe<Scalars["String"]["input"]>;
-  university?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CreateUserWithLineInput = {
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  lineAccountId: Scalars["String"]["input"];
+export type DeleteAdminUserInput = {
+  id: number;
 };
 
 export type DeleteCompanyAcceptTicketInput = {
-  id: Scalars["Int"]["input"];
-};
-
-export type DeleteMessageTemplateInput = {
-  id: Scalars["Int"]["input"];
-};
-
-export type DispatchResult = {
-  __typename?: "DispatchResult";
-  dispatched: Array<DispatchedItem>;
-};
-
-export type DispatchedItem = {
-  __typename?: "DispatchedItem";
-  key: Scalars["String"]["output"];
-  sentCount: Scalars["Int"]["output"];
-};
-
-export type DuplicateJobInput = {
-  access: Scalars["String"]["input"];
-  acquirableSkills: Array<Scalars["String"]["input"]>;
-  applicationProcess?: InputMaybe<Scalars["String"]["input"]>;
-  businessContent: Scalars["String"]["input"];
-  city: Scalars["String"]["input"];
-  companyAtmosphere: Scalars["String"]["input"];
-  companyId: Scalars["Int"]["input"];
-  detailAddress?: InputMaybe<Scalars["String"]["input"]>;
-  experienceGained: Scalars["String"]["input"];
-  features: Array<Scalars["String"]["input"]>;
-  goal: Scalars["String"]["input"];
-  headerImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  industry: Scalars["String"]["input"];
-  internJobDescription: Scalars["String"]["input"];
-  jobAtmosphereImage: Scalars["String"]["input"];
-  jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  jobHeader: Scalars["String"]["input"];
-  jobType: Scalars["String"]["input"];
-  members?: InputMaybe<Array<CreateMemberInput>>;
-  minWorkingDaysPerWeek: Scalars["Int"]["input"];
-  minWorkingHoursPerWeek: Scalars["Int"]["input"];
-  pastAcceptedCompany?: InputMaybe<Scalars["String"]["input"]>;
-  pastMemberUniversity?: InputMaybe<Scalars["String"]["input"]>;
-  period: Scalars["String"]["input"];
-  placeAtmosphereImage: Scalars["String"]["input"];
-  placeAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  postalCode: Scalars["String"]["input"];
-  prefecture: Scalars["String"]["input"];
-  preferences: Array<Scalars["String"]["input"]>;
-  programmingLanguages: Array<Scalars["String"]["input"]>;
-  requirements?: InputMaybe<Scalars["String"]["input"]>;
-  salary: Scalars["String"]["input"];
-  sourceJobId: Scalars["Int"]["input"];
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  streetAddress: Scalars["String"]["input"];
-  title: Scalars["String"]["input"];
-  transportationFeeAmount: Scalars["String"]["input"];
-  usefulSkills: Array<Scalars["String"]["input"]>;
-  workConditions: Array<Scalars["String"]["input"]>;
-  workingHoursEnd: Scalars["String"]["input"];
-  workingHoursStart: Scalars["String"]["input"];
-};
-
-export type EntriesStatisticsResultType = {
-  __typename?: "EntriesStatisticsResultType";
-  acceptedCount: Scalars["Int"]["output"];
-  interviewCount: Scalars["Int"]["output"];
-  offeredCount: Scalars["Int"]["output"];
-  pendingCount: Scalars["Int"]["output"];
-  rejectedCount: Scalars["Int"]["output"];
-  reviewingCount: Scalars["Int"]["output"];
-  secondInterviewScheduledCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type Entry = {
-  __typename?: "Entry";
-  applicantNote?: Maybe<Scalars["String"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  isChecked: Scalars["Boolean"]["output"];
-  isJobOfferAccepted?: Maybe<Scalars["Boolean"]["output"]>;
-  isScouted: Scalars["Boolean"]["output"];
-  jobId: Scalars["Int"]["output"];
-  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type EntryCheck = {
-  __typename?: "EntryCheck";
-  hasApplied: Scalars["Boolean"]["output"];
-};
-
-export type EntryNotification = {
-  __typename?: "EntryNotification";
-  companyIconUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  entry: EntrySubscriptionType;
-  jobTitle: Scalars["String"]["output"];
-  userName?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type EntrySearchResultType = {
-  __typename?: "EntrySearchResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<EntryWithDetailsType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type EntrySubscriptionType = {
-  __typename?: "EntrySubscriptionType";
-  applicantNote?: Maybe<Scalars["String"]["output"]>;
-  createdAt: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  interviewScheduledAt?: Maybe<Scalars["String"]["output"]>;
-  isChecked: Scalars["Boolean"]["output"];
-  jobId: Scalars["Int"]["output"];
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["String"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type EntryType = {
-  __typename?: "EntryType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  isChecked: Scalars["Boolean"]["output"];
-  isScouted: Scalars["Boolean"]["output"];
-  jobId: Scalars["Int"]["output"];
-  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type EntryWithDetailsType = {
-  __typename?: "EntryWithDetailsType";
-  applicantNote?: Maybe<Scalars["String"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  id: Scalars["Int"]["output"];
-  interviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  isChecked: Scalars["Boolean"]["output"];
-  isJobOfferAccepted?: Maybe<Scalars["Boolean"]["output"]>;
-  isScouted: Scalars["Boolean"]["output"];
-  job: JobWithCompanyType;
-  jobId: Scalars["Int"]["output"];
-  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  joinDate?: Maybe<Scalars["DateTime"]["output"]>;
-  messages: Array<Message>;
-  scout?: Maybe<Scout>;
-  scoutId?: Maybe<Scalars["Float"]["output"]>;
-  secondInterviewScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  user: UserType;
-  userId: Scalars["Int"]["output"];
-};
-
-export type EntryWithJobType = {
-  __typename?: "EntryWithJobType";
-  entry: Entry;
-  job: JobType;
-};
-
-export type EntryWithLastMessage = {
-  __typename?: "EntryWithLastMessage";
-  company: CompanyInfo;
-  companyUnreadCount: Scalars["Int"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  entryId: Scalars["Int"]["output"];
-  isScouted: Scalars["Boolean"]["output"];
-  job: JobInfo;
-  jobId: Scalars["Int"]["output"];
-  lastMessage: Scalars["String"]["output"];
-  lastMessageAt: Scalars["DateTime"]["output"];
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  user?: Maybe<UserInfo>;
-  userId: Scalars["Int"]["output"];
-  userUnreadCount: Scalars["Int"]["output"];
-};
-
-export type EntryWithUserAndJob = {
-  __typename?: "EntryWithUserAndJob";
-  entry: Entry;
-  job: JobType;
-  user: UserType;
-};
-
-export type EntryWithUserAndJobType = {
-  __typename?: "EntryWithUserAndJobType";
-  entry: Entry;
-  job: JobWithCompanyType;
-  user: UserType;
-};
-
-export type EntryWithUserType = {
-  __typename?: "EntryWithUserType";
-  entry: EntryType;
-  user: UserType;
-};
-
-export type FavoriteType = {
-  __typename?: "FavoriteType";
-  createdAt: Scalars["DateTime"]["output"];
-  job?: Maybe<JobWithCompanyType>;
-  jobId: Scalars["Int"]["output"];
-  userId: Scalars["Int"]["output"];
+  id: number;
 };
 
 export type GetAdminMessagesInput = {
-  companyId?: InputMaybe<Scalars["Int"]["input"]>;
-  jobId?: InputMaybe<Scalars["Int"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
-  userId?: InputMaybe<Scalars["Int"]["input"]>;
+  companyId?: number | null | undefined;
+  jobId?: number | null | undefined;
+  limit?: number | null | undefined;
+  page?: number | null | undefined;
+  search?: string | null | undefined;
+  userId?: number | null | undefined;
 };
 
 export type GetCompaniesInput = {
-  acceptCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  acceptCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  includeDeleted?: InputMaybe<Scalars["Boolean"]["input"]>;
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  jobCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  jobCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  leaveDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  leaveDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  offerCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  offerCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  orderBy?: InputMaybe<Scalars["String"]["input"]>;
-  orderDirection?: InputMaybe<Scalars["String"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  registerDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  acceptCountMax?: number | null | undefined;
+  acceptCountMin?: number | null | undefined;
+  entryCountMax?: number | null | undefined;
+  entryCountMin?: number | null | undefined;
+  includeDeleted?: boolean | null | undefined;
+  industry?: string | null | undefined;
+  jobCountMax?: number | null | undefined;
+  jobCountMin?: number | null | undefined;
+  leaveDateEnd?: any;
+  leaveDateStart?: any;
+  limit?: number | null | undefined;
+  name?: string | null | undefined;
+  offerCountMax?: number | null | undefined;
+  offerCountMin?: number | null | undefined;
+  orderBy?: string | null | undefined;
+  orderDirection?: string | null | undefined;
+  page?: number | null | undefined;
+  prefecture?: string | null | undefined;
+  registerDateEnd?: any;
+  registerDateStart?: any;
 };
 
 export type GetCompaniesStatisticsInput = {
-  periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  periodEnd?: any;
+  periodStart?: any;
 };
 
 export type GetCompanyAcceptTicketsInput = {
-  companyId?: InputMaybe<Scalars["Int"]["input"]>;
-  expiredAtEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  expiredAtStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
+  companyId?: number | null | undefined;
+  expiredAtEnd?: any;
+  expiredAtStart?: any;
+  limit?: number | null | undefined;
+  page?: number | null | undefined;
 };
 
 export type GetCompanyInvoicesInput = {
-  acceptDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  acceptDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  applicantName?: InputMaybe<Scalars["String"]["input"]>;
-  companyId?: InputMaybe<Scalars["Int"]["input"]>;
-  companyName?: InputMaybe<Scalars["String"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  paymentLimitDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  paymentLimitDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  service?: InputMaybe<Scalars["String"]["input"]>;
+  acceptDateEnd?: any;
+  acceptDateStart?: any;
+  applicantName?: string | null | undefined;
+  companyId?: number | null | undefined;
+  companyName?: string | null | undefined;
+  limit?: number | null | undefined;
+  page?: number | null | undefined;
+  paymentLimitDateEnd?: any;
+  paymentLimitDateStart?: any;
+  service?: string | null | undefined;
 };
 
 export type GetCompanyInvoicesStatisticsInput = {
-  periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
+  periodEnd?: any;
+  periodStart?: any;
 };
 
 export type GetCompanyReminderTargetsInput = {
-  companyId: Scalars["Int"]["input"];
+  companyId: number;
 };
 
 export type GetCompanyRemindersInput = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type GetCompanyUnreadMessagesInput = {
-  companyId: Scalars["Int"]["input"];
+  companyId: number;
 };
 
 export type GetEntriesStatisticsInput = {
-  periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type GetEntryByIdInput = {
-  id: Scalars["Int"]["input"];
-};
-
-export type GetJobsByHotListInput = {
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type GetJobsByPickListInput = {
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
+  periodEnd?: any;
+  periodStart?: any;
 };
 
 export type GetJobsStatisticsInput = {
-  periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type GetNewEntriesWithoutMessagesInput = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type GetPendingEntriesInput = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type GetRecentJobsInput = {
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type GetRecommendJobsByUserIdInput = {
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  userId: Scalars["Int"]["input"];
+  periodEnd?: any;
+  periodStart?: any;
 };
 
 export type GetReminderCandidateCompaniesInput = {
   /** 企業名の部分一致（指定時は基準超過がなくても対象の学生がいる企業を返す） */
-  keyword?: InputMaybe<Scalars["String"]["input"]>;
+  keyword?: string | null | undefined;
   /** 基準超過のある企業のみに絞るか（デフォルトtrue。falseの場合は未対応の新着応募がある全企業） */
-  onlyOverdue?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-export type GetReviewingEntriesInput = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type GetStaleEntriesForAutoRejectInput = {
-  /** 最終更新からの経過日数 */
-  daysSinceUpdate?: Scalars["Int"]["input"];
-};
-
-export type GetStaleEntriesInput = {
-  companyId: Scalars["Int"]["input"];
-  status: Scalars["String"]["input"];
-};
-
-export type GetStartDateReminderEntriesInput = {
-  /** リマインダーのタイプ (BEFORE: 前日, AFTER: 翌日) */
-  reminderType: Scalars["String"]["input"];
-};
-
-export type GetUserAcceptReportsInput = {
-  userId: Scalars["Int"]["input"];
-};
-
-export type GetUserEntriesInput = {
-  userId: Scalars["Int"]["input"];
-};
-
-export type GetUserUnreadMessagesInput = {
-  userId: Scalars["Int"]["input"];
+  onlyOverdue?: boolean | null | undefined;
 };
 
 export type GetUsersStatisticsInput = {
-  periodEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  periodStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-export type GetUsersWithIncompleteProfileInput = {
-  /** Number of days since user creation */
-  daysSinceCreation: Scalars["Int"]["input"];
+  periodEnd?: any;
+  periodStart?: any;
 };
 
 export type HotJobScoringWeightItemInput = {
-  indicator: Scalars["String"]["input"];
-  weight: Scalars["Int"]["input"];
-};
-
-export type HotJobScoringWeightType = {
-  __typename?: "HotJobScoringWeightType";
-  createdAt: Scalars["DateTime"]["output"];
-  displayOrder: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  indicator: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  weight: Scalars["Int"]["output"];
-};
-
-export type InterviewReminderEntriesType = {
-  __typename?: "InterviewReminderEntriesType";
-  /** 面談リマインド対象のエントリー一覧 */
-  entries: Array<InterviewReminderEntryItem>;
-};
-
-export type InterviewReminderEntryItem = {
-  __typename?: "InterviewReminderEntryItem";
-  /** エントリー情報 */
-  entry: Entry;
-  /** 求人情報（企業情報含む） */
-  job: JobWithCompanyType;
-  /** リマインドステータス (same_day | previous_day | post_interview) */
-  reminderStatus: Scalars["String"]["output"];
-  /** ユーザー情報 */
-  user: UserType;
-};
-
-export type InterviewStatusReminderEntriesType = {
-  __typename?: "InterviewStatusReminderEntriesType";
-  entries: Array<InterviewStatusReminderEntry>;
-};
-
-export type InterviewStatusReminderEntry = {
-  __typename?: "InterviewStatusReminderEntry";
-  company: CompanyType;
-  entry: Entry;
-  job: JobWithCompanyType;
-  user: UserType;
-};
-
-export type JobInfo = {
-  __typename?: "JobInfo";
-  id: Scalars["Int"]["output"];
-  jobHeader: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-};
-
-export type JobMemberType = {
-  __typename?: "JobMemberType";
-  description?: Maybe<Scalars["String"]["output"]>;
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
-  position?: Maybe<Scalars["String"]["output"]>;
-  title?: Maybe<Scalars["String"]["output"]>;
-};
-
-export enum JobOrderBy {
-  IdAsc = "ID_ASC",
-  OpenedAtDesc = "OPENED_AT_DESC",
-  Popularity = "POPULARITY",
-}
-
-export type JobSearchResultType = {
-  __typename?: "JobSearchResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  isSearchResult: Scalars["Boolean"]["output"];
-  items: Array<JobWithCompanyType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-  vectorSearchCount: Scalars["Int"]["output"];
-};
-
-export type JobSearchWithStatsResultType = {
-  __typename?: "JobSearchWithStatsResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<JobWithStatsType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type JobType = {
-  __typename?: "JobType";
-  access: Scalars["String"]["output"];
-  acquirableSkills: Array<Scalars["String"]["output"]>;
-  applicationProcess?: Maybe<Scalars["String"]["output"]>;
-  businessContent: Scalars["String"]["output"];
-  city: Scalars["String"]["output"];
-  companyAtmosphere: Scalars["String"]["output"];
-  companyIconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  companyName?: Maybe<Scalars["String"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  detailAddress?: Maybe<Scalars["String"]["output"]>;
-  experienceGained: Scalars["String"]["output"];
-  features: Array<Scalars["String"]["output"]>;
-  goal: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  industry: Scalars["String"]["output"];
-  internJobDescription: Scalars["String"]["output"];
-  isAgentPlanOnly: Scalars["Boolean"]["output"];
-  isDeleted: Scalars["Boolean"]["output"];
-  jobAtmosphereImage: Scalars["String"]["output"];
-  jobHeader: Scalars["String"]["output"];
-  jobType: Scalars["String"]["output"];
-  minWorkingDaysPerWeek: Scalars["Int"]["output"];
-  minWorkingHoursPerWeek: Scalars["Int"]["output"];
-  openedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  pastAcceptedCompany?: Maybe<Scalars["String"]["output"]>;
-  pastMemberUniversity?: Maybe<Scalars["String"]["output"]>;
-  period: Scalars["String"]["output"];
-  placeAtmosphereImage: Scalars["String"]["output"];
-  postalCode: Scalars["String"]["output"];
-  prefecture: Scalars["String"]["output"];
-  preferences: Array<Scalars["String"]["output"]>;
-  programmingLanguages: Array<Scalars["String"]["output"]>;
-  pv: Scalars["Int"]["output"];
-  requirements?: Maybe<Scalars["String"]["output"]>;
-  salary: Scalars["String"]["output"];
-  status: Scalars["String"]["output"];
-  streetAddress: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  transportationFeeAmount: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usefulSkills: Array<Scalars["String"]["output"]>;
-  workConditions: Array<Scalars["String"]["output"]>;
-  workingHoursEnd: Scalars["String"]["output"];
-  workingHoursStart: Scalars["String"]["output"];
-};
-
-export type JobWithCompanyType = {
-  __typename?: "JobWithCompanyType";
-  access: Scalars["String"]["output"];
-  acquirableSkills: Array<Scalars["String"]["output"]>;
-  applicationProcess?: Maybe<Scalars["String"]["output"]>;
-  businessContent: Scalars["String"]["output"];
-  city: Scalars["String"]["output"];
-  company: CompanyType;
-  companyAbout?: Maybe<Scalars["String"]["output"]>;
-  companyAtmosphere: Scalars["String"]["output"];
-  companyBusinessContent?: Maybe<Scalars["String"]["output"]>;
-  companyDeletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  companyEmail: Scalars["String"]["output"];
-  companyHeaderImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyIconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  companyPhoneNumber: Scalars["String"]["output"];
-  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
-  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
-  companyUrl: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  detailAddress?: Maybe<Scalars["String"]["output"]>;
-  experienceGained: Scalars["String"]["output"];
-  features: Array<Scalars["String"]["output"]>;
-  goal: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  industry: Scalars["String"]["output"];
-  internJobDescription: Scalars["String"]["output"];
-  isAgentPlanOnly: Scalars["Boolean"]["output"];
-  isDeleted: Scalars["Boolean"]["output"];
-  jobAtmosphereImage: Scalars["String"]["output"];
-  jobHeader: Scalars["String"]["output"];
-  jobType: Scalars["String"]["output"];
-  members: Array<JobMemberType>;
-  minWorkingDaysPerWeek: Scalars["Int"]["output"];
-  minWorkingHoursPerWeek: Scalars["Int"]["output"];
-  openedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  pastAcceptedCompany?: Maybe<Scalars["String"]["output"]>;
-  pastMemberUniversity?: Maybe<Scalars["String"]["output"]>;
-  period: Scalars["String"]["output"];
-  placeAtmosphereImage: Scalars["String"]["output"];
-  postalCode: Scalars["String"]["output"];
-  prefecture: Scalars["String"]["output"];
-  preferences: Array<Scalars["String"]["output"]>;
-  programmingLanguages: Array<Scalars["String"]["output"]>;
-  pv: Scalars["Int"]["output"];
-  requirements?: Maybe<Scalars["String"]["output"]>;
-  salary: Scalars["String"]["output"];
-  status: Scalars["String"]["output"];
-  streetAddress: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  transportationFeeAmount: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usefulSkills: Array<Scalars["String"]["output"]>;
-  workConditions: Array<Scalars["String"]["output"]>;
-  workingHoursEnd: Scalars["String"]["output"];
-  workingHoursStart: Scalars["String"]["output"];
-};
-
-export type JobWithEntriesType = {
-  __typename?: "JobWithEntriesType";
-  entries: Array<EntryWithUserType>;
-  job: JobType;
-};
-
-export type JobWithStatsType = {
-  __typename?: "JobWithStatsType";
-  acceptCount: Scalars["Int"]["output"];
-  access: Scalars["String"]["output"];
-  acquirableSkills: Array<Scalars["String"]["output"]>;
-  applicationProcess?: Maybe<Scalars["String"]["output"]>;
-  businessContent: Scalars["String"]["output"];
-  city: Scalars["String"]["output"];
-  company: CompanyType;
-  companyAbout?: Maybe<Scalars["String"]["output"]>;
-  companyAtmosphere: Scalars["String"]["output"];
-  companyBusinessContent?: Maybe<Scalars["String"]["output"]>;
-  companyDeletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  companyEmail: Scalars["String"]["output"];
-  companyHeaderImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyIconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  companyPhoneNumber: Scalars["String"]["output"];
-  companyReplyRate?: Maybe<Scalars["Float"]["output"]>;
-  companyReplyTimeAverage?: Maybe<Scalars["Float"]["output"]>;
-  companyUrl: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  detailAddress?: Maybe<Scalars["String"]["output"]>;
-  entryCount: Scalars["Int"]["output"];
-  experienceGained: Scalars["String"]["output"];
-  favoriteCount: Scalars["Int"]["output"];
-  features: Array<Scalars["String"]["output"]>;
-  goal: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  industry: Scalars["String"]["output"];
-  internJobDescription: Scalars["String"]["output"];
-  isAgentPlanOnly: Scalars["Boolean"]["output"];
-  isDeleted: Scalars["Boolean"]["output"];
-  jobAtmosphereImage: Scalars["String"]["output"];
-  jobHeader: Scalars["String"]["output"];
-  jobType: Scalars["String"]["output"];
-  members: Array<JobMemberType>;
-  minWorkingDaysPerWeek: Scalars["Int"]["output"];
-  minWorkingHoursPerWeek: Scalars["Int"]["output"];
-  openedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  pastAcceptedCompany?: Maybe<Scalars["String"]["output"]>;
-  pastMemberUniversity?: Maybe<Scalars["String"]["output"]>;
-  period: Scalars["String"]["output"];
-  placeAtmosphereImage: Scalars["String"]["output"];
-  postalCode: Scalars["String"]["output"];
-  prefecture: Scalars["String"]["output"];
-  preferences: Array<Scalars["String"]["output"]>;
-  programmingLanguages: Array<Scalars["String"]["output"]>;
-  pv: Scalars["Int"]["output"];
-  requirements?: Maybe<Scalars["String"]["output"]>;
-  salary: Scalars["String"]["output"];
-  status: Scalars["String"]["output"];
-  streetAddress: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  transportationFeeAmount: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usefulSkills: Array<Scalars["String"]["output"]>;
-  workConditions: Array<Scalars["String"]["output"]>;
-  workingHoursEnd: Scalars["String"]["output"];
-  workingHoursStart: Scalars["String"]["output"];
-};
-
-export type JobsStatisticsResultType = {
-  __typename?: "JobsStatisticsResultType";
-  activeCount: Scalars["Int"]["output"];
-  closedCount: Scalars["Int"]["output"];
-  newPostedCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
+  indicator: string;
+  weight: number;
 };
 
 export type LineNotificationItemInput = {
-  isEnabled: Scalars["Boolean"]["input"];
-  key: Scalars["String"]["input"];
-  message: Scalars["String"]["input"];
-  schedule?: InputMaybe<LineNotificationScheduleInput>;
-};
-
-export type LineNotificationScheduleConfig = {
-  __typename?: "LineNotificationScheduleConfig";
-  dayOfMonth?: Maybe<Array<Maybe<Scalars["Int"]["output"]>>>;
-  dayOfWeek: Array<Scalars["Int"]["output"]>;
-  hour: Scalars["Int"]["output"];
-  minute: Scalars["Int"]["output"];
-  scheduleType: Scalars["String"]["output"];
+  isEnabled: boolean;
+  key: string;
+  message: string;
+  schedule?: LineNotificationScheduleInput | null | undefined;
 };
 
 export type LineNotificationScheduleInput = {
-  dayOfMonth?: InputMaybe<Array<InputMaybe<Scalars["Int"]["input"]>>>;
-  dayOfWeek?: InputMaybe<Array<Scalars["Int"]["input"]>>;
-  hour: Scalars["Int"]["input"];
-  minute: Scalars["Int"]["input"];
-  scheduleType: Scalars["String"]["input"];
-};
-
-export type LineNotificationSettingType = {
-  __typename?: "LineNotificationSettingType";
-  isEnabled: Scalars["Boolean"]["output"];
-  key: Scalars["String"]["output"];
-  message: Scalars["String"]["output"];
-  schedule?: Maybe<LineNotificationScheduleConfig>;
-};
-
-export type LineNotificationUserSettingType = {
-  __typename?: "LineNotificationUserSettingType";
-  id: Scalars["Int"]["output"];
-  isEnabled: Scalars["Boolean"]["output"];
-  notificationKey: Scalars["String"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type LoginInput = {
-  email: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-};
-
-export type LoginOrCreateWithLineResponse = {
-  __typename?: "LoginOrCreateWithLineResponse";
-  accessToken: Scalars["String"]["output"];
-  isCreated: Scalars["Boolean"]["output"];
-  user: UserType;
-};
-
-export type LoginResponse = {
-  __typename?: "LoginResponse";
-  accessToken: Scalars["String"]["output"];
-  user: UserType;
-};
-
-export type LogoutResponse = {
-  __typename?: "LogoutResponse";
-  message: Scalars["String"]["output"];
+  dayOfMonth?: Array<number | null | undefined> | null | undefined;
+  dayOfWeek?: Array<number> | null | undefined;
+  hour: number;
+  minute: number;
+  scheduleType: string;
 };
 
 export type MagazineItemInput = {
-  articleUrl: Scalars["String"]["input"];
-  category: Scalars["String"]["input"];
-  description: Scalars["String"]["input"];
-  id: Scalars["Int"]["input"];
-  thumbnailBase64?: InputMaybe<Scalars["String"]["input"]>;
-  thumbnailMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  thumbnailUrl: Scalars["String"]["input"];
-  title: Scalars["String"]["input"];
-};
-
-export type MagazineType = {
-  __typename?: "MagazineType";
-  articleUrl: Scalars["String"]["output"];
-  category: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  description: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  thumbnailUrl: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type MarkEntryAsCheckedInput = {
-  ids: Array<Scalars["Int"]["input"]>;
-};
-
-export type MarkMessageAsReadInput = {
-  messageId: Scalars["Int"]["input"];
-};
-
-export type MarkNotificationAsReadInput = {
-  notificationId: Scalars["Int"]["input"];
-};
-
-export type MeUserType = {
-  __typename?: "MeUserType";
-  availableDaysPerWeek?: Maybe<Scalars["Int"]["output"]>;
-  availableDurationMonths?: Maybe<Scalars["Int"]["output"]>;
-  availableHoursPerWeek?: Maybe<Scalars["Int"]["output"]>;
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  birthDate?: Maybe<Scalars["DateTime"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  department?: Maybe<Scalars["String"]["output"]>;
-  email: Scalars["String"]["output"];
-  faculty?: Maybe<Scalars["String"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  futureGoals?: Maybe<Scalars["String"]["output"]>;
-  gender?: Maybe<Scalars["String"]["output"]>;
-  grade?: Maybe<Scalars["String"]["output"]>;
-  graduationYear?: Maybe<Scalars["Int"]["output"]>;
-  id: Scalars["Int"]["output"];
-  interestedIndustries: Array<Scalars["String"]["output"]>;
-  interestedJobTypes: Array<Scalars["String"]["output"]>;
-  isAllowScout: Scalars["Boolean"]["output"];
-  lastLoggedInAt: Scalars["DateTime"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  lineAccountId?: Maybe<Scalars["String"]["output"]>;
-  lineNotification: Scalars["Boolean"]["output"];
-  magazineNotification: Scalars["Boolean"]["output"];
-  messageNotification: Scalars["Boolean"]["output"];
-  offeredEntryCount: Scalars["Int"]["output"];
-  phoneNumber?: Maybe<Scalars["String"]["output"]>;
-  prefecture?: Maybe<Scalars["String"]["output"]>;
-  selfPR?: Maybe<Scalars["String"]["output"]>;
-  university?: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type Message = {
-  __typename?: "Message";
-  companyId?: Maybe<Scalars["Int"]["output"]>;
-  content: Scalars["String"]["output"];
-  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isRead?: Maybe<Scalars["Boolean"]["output"]>;
-  type?: Maybe<Scalars["String"]["output"]>;
-  updatedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  userId?: Maybe<Scalars["Int"]["output"]>;
-};
-
-export type MessageNotification = {
-  __typename?: "MessageNotification";
-  companyIconUrl?: Maybe<Scalars["String"]["output"]>;
-  entryId: Scalars["Int"]["output"];
-  message: MessageSubscriptionType;
-};
-
-export type MessageSubscriptionType = {
-  __typename?: "MessageSubscriptionType";
-  companyId?: Maybe<Scalars["Int"]["output"]>;
-  content: Scalars["String"]["output"];
-  createdAt?: Maybe<Scalars["String"]["output"]>;
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isRead?: Maybe<Scalars["Boolean"]["output"]>;
-  type?: Maybe<Scalars["String"]["output"]>;
-  updatedAt?: Maybe<Scalars["String"]["output"]>;
-  userId?: Maybe<Scalars["Int"]["output"]>;
-};
-
-export type MessageTemplateType = {
-  __typename?: "MessageTemplateType";
-  companyId: Scalars["Int"]["output"];
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  id: Scalars["Int"]["output"];
-  isScoutTemplate?: Maybe<Scalars["Boolean"]["output"]>;
-  title: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type Mutation = {
-  __typename?: "Mutation";
-  /** スカウトを承諾 */
-  acceptScout: Scout;
-  addFavorite: FavoriteType;
-  autoUpdateEntryStatus: Entry;
-  batchDaily: Scalars["Boolean"]["output"];
-  companyLogin: CompanyLoginResponse;
-  companyLogout: CompanyLogoutResponse;
-  /** スカウトチケットを追加付与（管理者用） */
-  createAdditionalScoutTicket: ScoutTicketAdditionalType;
-  createCompany: CompanyType;
-  createCompanyAcceptTicket: CompanyAcceptTicketType;
-  createCompanyInvoices: Array<CompanyInvoiceType>;
-  createEntry: Entry;
-  createJob: JobType;
-  createMessageTemplate: MessageTemplateType;
-  /** スカウトを一括作成 */
-  createScouts: Array<Scout>;
-  createUser: UserType;
-  createUserAcceptReport: UserAcceptReportType;
-  deleteCompany: Scalars["Boolean"]["output"];
-  deleteCompanyAcceptTicket: CompanyAcceptTicketType;
-  deleteCompanyInvoice: Scalars["Boolean"]["output"];
-  deleteJob: JobType;
-  deleteMessageTemplate: Scalars["Boolean"]["output"];
-  deleteUserAccount: Scalars["Boolean"]["output"];
-  dispatchScheduledLineNotifications: DispatchResult;
-  duplicateJob: JobType;
-  guaranteeCompanyInvoice: CompanyAcceptTicketType;
-  login: LoginResponse;
-  loginOrCreateWithLine: LoginOrCreateWithLineResponse;
-  logout: LogoutResponse;
-  markAllNotificationsAsRead: Scalars["Boolean"]["output"];
-  markEntryAsChecked: Array<Entry>;
-  markMessageAsRead: Scalars["Boolean"]["output"];
-  markNotificationAsRead: Scalars["Boolean"]["output"];
-  recalculateHotJobs: RecalculateResultType;
-  recalculatePickJobs: RecalculateResultType;
-  removeFavorite: Scalars["Boolean"]["output"];
-  requestCompanyPasswordReset: RequestCompanyPasswordResetResponse;
-  requestPasswordReset: RequestPasswordResetResponse;
-  resetCompanyPassword: ResetCompanyPasswordResponse;
-  resetPassword: ResetPasswordResponse;
-  saveDraftJob: JobType;
-  sendCompanyMessage: Message;
-  sendCompanyReminder: CompanyReminderType;
-  sendJobOffer: Entry;
-  sendMessage: Message;
-  updateCompany: CompanyType;
-  updateCompanyAcceptTicket: CompanyAcceptTicketType;
-  updateCompanyInvoice: CompanyInvoiceType;
-  updateEntriesStatus: Array<Entry>;
-  updateEntry: Entry;
-  updateEntryApplicantNote: Entry;
-  updateEntryStatus: Entry;
-  updateHotJobScoringWeights: Array<HotJobScoringWeightType>;
-  updateInterviewSchedule: Entry;
-  updateJob: JobType;
-  updateJobIsAgentPlanOnly: JobType;
-  updateJobOfferAcceptance: Entry;
-  updateJobPv: JobType;
-  updateJobStatus: JobType;
-  updateJobsStatus: Scalars["Int"]["output"];
-  updateLineNotificationSettings: UpdateLineNotificationSettingsResult;
-  updateMagazines: Array<MagazineType>;
-  updateMessageTemplate: MessageTemplateType;
-  updateOldHotJobs: OldHotJobType;
-  updateOldPickJobs: OldPickJobType;
-  updatePickJobScoringWeights: Array<PickJobScoringWeightType>;
-  updateSecondInterviewSchedule: Entry;
-  updateUser: UserType;
-  updateUserEmail: UserType;
-  updateUserLineNotificationSettings: Array<LineNotificationUserSettingType>;
-  updateUserPassword: UserType;
-  uploadAvatar: Scalars["String"]["output"];
-  verifyCompanyPasswordResetToken: VerifyCompanyPasswordResetTokenResponse;
-  verifyPasswordResetToken: VerifyPasswordResetTokenResponse;
-};
-
-export type MutationAcceptScoutArgs = {
-  input: AcceptScoutInput;
-};
-
-export type MutationAddFavoriteArgs = {
-  input: AddFavoriteInput;
-};
-
-export type MutationAutoUpdateEntryStatusArgs = {
-  input: AutoUpdateEntryStatusInput;
-};
-
-export type MutationCompanyLoginArgs = {
-  companyLoginInput: CompanyLoginInput;
-};
-
-export type MutationCreateAdditionalScoutTicketArgs = {
-  input: CreateAdditionalScoutTicketInput;
-};
-
-export type MutationCreateCompanyArgs = {
-  input: CreateCompanyInput;
-};
-
-export type MutationCreateCompanyAcceptTicketArgs = {
-  input: CreateCompanyAcceptTicketInput;
-};
-
-export type MutationCreateCompanyInvoicesArgs = {
-  entryIds: Array<Scalars["Int"]["input"]>;
-};
-
-export type MutationCreateEntryArgs = {
-  input: CreateEntryInput;
-};
-
-export type MutationCreateJobArgs = {
-  input: CreateJobInput;
-};
-
-export type MutationCreateMessageTemplateArgs = {
-  input: CreateMessageTemplateInput;
-};
-
-export type MutationCreateScoutsArgs = {
-  input: CreateScoutsInput;
-};
-
-export type MutationCreateUserArgs = {
-  input: CreateUserInput;
-};
-
-export type MutationCreateUserAcceptReportArgs = {
-  id: Scalars["Int"]["input"];
-  input: CreateUserAcceptReportInput;
-};
-
-export type MutationDeleteCompanyAcceptTicketArgs = {
-  input: DeleteCompanyAcceptTicketInput;
-};
-
-export type MutationDeleteCompanyInvoiceArgs = {
-  entryId: Scalars["Int"]["input"];
-};
-
-export type MutationDeleteJobArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type MutationDeleteMessageTemplateArgs = {
-  input: DeleteMessageTemplateInput;
-};
-
-export type MutationDeleteUserAccountArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type MutationDuplicateJobArgs = {
-  input: DuplicateJobInput;
-};
-
-export type MutationGuaranteeCompanyInvoiceArgs = {
-  invoiceId: Scalars["Int"]["input"];
-};
-
-export type MutationLoginArgs = {
-  loginInput: LoginInput;
-};
-
-export type MutationLoginOrCreateWithLineArgs = {
-  input: CreateUserWithLineInput;
-};
-
-export type MutationMarkEntryAsCheckedArgs = {
-  input: MarkEntryAsCheckedInput;
-};
-
-export type MutationMarkMessageAsReadArgs = {
-  input: MarkMessageAsReadInput;
-};
-
-export type MutationMarkNotificationAsReadArgs = {
-  input: MarkNotificationAsReadInput;
-};
-
-export type MutationRemoveFavoriteArgs = {
-  input: RemoveFavoriteInput;
-};
-
-export type MutationRequestCompanyPasswordResetArgs = {
-  input: RequestCompanyPasswordResetInput;
-};
-
-export type MutationRequestPasswordResetArgs = {
-  input: RequestPasswordResetInput;
-};
-
-export type MutationResetCompanyPasswordArgs = {
-  input: ResetCompanyPasswordInput;
-};
-
-export type MutationResetPasswordArgs = {
-  input: ResetPasswordInput;
-};
-
-export type MutationSaveDraftJobArgs = {
-  input: SaveDraftJobInput;
-};
-
-export type MutationSendCompanyMessageArgs = {
-  input: SendMessageInput;
-};
-
-export type MutationSendCompanyReminderArgs = {
-  input: SendCompanyReminderInput;
-};
-
-export type MutationSendJobOfferArgs = {
-  input: SendJobOfferInput;
-};
-
-export type MutationSendMessageArgs = {
-  input: SendMessageInput;
-};
-
-export type MutationUpdateCompanyArgs = {
-  input: UpdateCompanyInput;
-};
-
-export type MutationUpdateCompanyAcceptTicketArgs = {
-  input: UpdateCompanyAcceptTicketInput;
-};
-
-export type MutationUpdateCompanyInvoiceArgs = {
-  input: UpdateCompanyInvoiceInput;
-};
-
-export type MutationUpdateEntriesStatusArgs = {
-  input: UpdateEntriesStatusInput;
-};
-
-export type MutationUpdateEntryArgs = {
-  input: UpdateEntryInput;
-};
-
-export type MutationUpdateEntryApplicantNoteArgs = {
-  input: UpdateEntryApplicantNoteInput;
-};
-
-export type MutationUpdateEntryStatusArgs = {
-  input: UpdateEntryStatusInput;
-};
-
-export type MutationUpdateHotJobScoringWeightsArgs = {
-  input: UpdateHotJobScoringWeightsInput;
-};
-
-export type MutationUpdateInterviewScheduleArgs = {
-  input: UpdateInterviewScheduleInput;
-};
-
-export type MutationUpdateJobArgs = {
-  input: UpdateJobInput;
-};
-
-export type MutationUpdateJobIsAgentPlanOnlyArgs = {
-  input: UpdateJobIsAgentPlanOnlyInput;
-};
-
-export type MutationUpdateJobOfferAcceptanceArgs = {
-  input: UpdateJobOfferAcceptanceInput;
-};
-
-export type MutationUpdateJobPvArgs = {
-  input: UpdateJobPvInput;
-};
-
-export type MutationUpdateJobStatusArgs = {
-  input: UpdateJobStatusInput;
-};
-
-export type MutationUpdateJobsStatusArgs = {
-  input: UpdateJobsStatusInput;
-};
-
-export type MutationUpdateLineNotificationSettingsArgs = {
-  input: UpdateLineNotificationSettingsInput;
-};
-
-export type MutationUpdateMagazinesArgs = {
-  input: UpdateMagazinesInput;
-};
-
-export type MutationUpdateMessageTemplateArgs = {
-  input: UpdateMessageTemplateInput;
-};
-
-export type MutationUpdateOldHotJobsArgs = {
-  input: UpdateOldHotJobsInput;
-};
-
-export type MutationUpdateOldPickJobsArgs = {
-  input: UpdateOldPickJobsInput;
-};
-
-export type MutationUpdatePickJobScoringWeightsArgs = {
-  input: UpdatePickJobScoringWeightsInput;
-};
-
-export type MutationUpdateSecondInterviewScheduleArgs = {
-  input: UpdateSecondInterviewScheduleInput;
-};
-
-export type MutationUpdateUserArgs = {
-  id: Scalars["Int"]["input"];
-  input: UpdateUserInput;
-};
-
-export type MutationUpdateUserEmailArgs = {
-  id: Scalars["Int"]["input"];
-  input: UpdateUserEmailInput;
-};
-
-export type MutationUpdateUserLineNotificationSettingsArgs = {
-  input: UpdateUserLineNotificationSettingsInput;
-  userId: Scalars["Int"]["input"];
-};
-
-export type MutationUpdateUserPasswordArgs = {
-  id: Scalars["Int"]["input"];
-  input: UpdateUserPasswordInput;
-};
-
-export type MutationUploadAvatarArgs = {
-  input: UploadAvatarInput;
-};
-
-export type MutationVerifyCompanyPasswordResetTokenArgs = {
-  input: VerifyCompanyPasswordResetTokenInput;
-};
-
-export type MutationVerifyPasswordResetTokenArgs = {
-  input: VerifyPasswordResetTokenInput;
-};
-
-export type NewEntriesWithoutMessagesType = {
-  __typename?: "NewEntriesWithoutMessagesType";
-  entries: Array<EntryWithUserAndJobType>;
-};
-
-export type Notification = {
-  __typename?: "Notification";
-  companyIconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId?: Maybe<Scalars["Int"]["output"]>;
-  content?: Maybe<Scalars["String"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  entryDeletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  entryId?: Maybe<Scalars["Int"]["output"]>;
-  id: Scalars["Int"]["output"];
-  isRead: Scalars["Boolean"]["output"];
-  messageId?: Maybe<Scalars["Int"]["output"]>;
-  type: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type NotificationCount = {
-  __typename?: "NotificationCount";
-  unreadCount: Scalars["Int"]["output"];
+  articleUrl: string;
+  category: string;
+  description: string;
+  id: number;
+  thumbnailBase64?: string | null | undefined;
+  thumbnailMimeType?: string | null | undefined;
+  thumbnailUrl: string;
+  title: string;
 };
 
 export type OldHotJobItemInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type OldHotJobType = {
-  __typename?: "OldHotJobType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
+  jobId: number;
 };
 
 export type OldPickJobItemInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type OldPickJobType = {
-  __typename?: "OldPickJobType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type PendingEntriesType = {
-  __typename?: "PendingEntriesType";
-  entries: Array<EntryWithUserAndJobType>;
+  jobId: number;
 };
 
 export type PickJobScoringWeightItemInput = {
-  indicator: Scalars["String"]["input"];
-  weight: Scalars["Int"]["input"];
-};
-
-export type PickJobScoringWeightType = {
-  __typename?: "PickJobScoringWeightType";
-  createdAt: Scalars["DateTime"]["output"];
-  displayOrder: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  indicator: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  weight: Scalars["Int"]["output"];
-};
-
-export type Query = {
-  __typename?: "Query";
-  checkUserJobEntry: EntryCheck;
-  companies: Array<CompanyType>;
-  company?: Maybe<CompanyWithJobsType>;
-  companyIds: Array<Scalars["Int"]["output"]>;
-  companyMe?: Maybe<CompanyType>;
-  /** 企業のスカウトチケット情報 */
-  companyScoutTicket: ScoutTicketType;
-  /** 追加スカウトチケット一覧（管理者用） */
-  getAdditionalScoutTickets: AdditionalScoutTicketsResultType;
-  getAdminMessages: AdminMessagesResult;
-  getAllCompanyIds: Array<CompanyIdInfoType>;
-  getAllUserIds: Array<UserType>;
-  getCompanies: CompanySearchResultType;
-  getCompaniesStatistics: CompaniesStatisticsResultType;
-  getCompanyAcceptTickets: CompanyAcceptTicketsResultType;
-  getCompanyEntries: Array<EntryWithLastMessage>;
-  getCompanyInvoices: CompanyInvoicesResultType;
-  getCompanyInvoicesStatistics: CompanyInvoicesStatisticsResultType;
-  getCompanyJobsWithEntries: CompanyJobsWithSimpleEntriesType;
-  getCompanyReminderTargets: CompanyReminderTargetsType;
-  getCompanyReminders: Array<CompanyReminderType>;
-  getCompanyUnreadCount: CompanyUnreadCount;
-  getCompanyUnreadMessages: Array<CompanyUnreadMessages>;
-  getEntriesStatistics: EntriesStatisticsResultType;
-  getEntryById: EntryWithDetailsType;
-  getHotJobScoringWeights: Array<HotJobScoringWeightType>;
-  getInterviewReminderEntries: InterviewReminderEntriesType;
-  getInterviewStatusReminderEntries: InterviewStatusReminderEntriesType;
-  getJobsByHotList: Array<JobWithCompanyType>;
-  getJobsByOldHotList: Array<JobWithCompanyType>;
-  getJobsByOldPickList: Array<JobWithCompanyType>;
-  getJobsByPickList: Array<JobWithCompanyType>;
-  getJobsStatistics: JobsStatisticsResultType;
-  getLineNotificationSettings: Array<LineNotificationSettingType>;
-  getMessages: Array<Message>;
-  getNewEntriesWithoutMessages: NewEntriesWithoutMessagesType;
-  getPendingEntries: PendingEntriesType;
-  getPickJobScoringWeights: Array<PickJobScoringWeightType>;
-  getRecommendJobsByUserId: Array<JobWithCompanyType>;
-  getReminderCandidateCompanies: Array<ReminderCandidateCompanyType>;
-  getReviewingEntries: ReviewingEntriesType;
-  getStaleEntries: StaleEntriesType;
-  getStaleEntriesForAutoReject: StaleEntriesForAutoRejectType;
-  getStartDateReminderEntries: StartDateReminderEntriesType;
-  getUncheckedEntriesCount: UncheckedEntriesCountType;
-  getUnreadNotificationCount: NotificationCount;
-  getUserAcceptReports: Array<UserAcceptReportType>;
-  getUserEntries: UserEntriesType;
-  getUserJobOffers: UserEntriesType;
-  getUserMessages: Array<EntryWithLastMessage>;
-  getUserNotifications: Array<Notification>;
-  getUserStatistics: UserStatisticsResultType;
-  getUserUnreadMessages: Array<UserUnreadMessages>;
-  getUsersStatistics: UsersStatisticsResultType;
-  isFavorite: Scalars["Boolean"]["output"];
-  job?: Maybe<JobWithCompanyType>;
-  jobIds: Array<Scalars["Int"]["output"]>;
-  jobs: Array<JobWithCompanyType>;
-  jobsByCompanyId: Array<JobWithCompanyType>;
-  jobsByCompanyIdWithStats: Array<JobWithStatsType>;
-  lineNotificationUserSettings: Array<LineNotificationUserSettingType>;
-  magazines: Array<MagazineType>;
-  me: MeUserType;
-  messageTemplates: Array<MessageTemplateType>;
-  /** 受信したスカウト一覧 */
-  receivedScouts: Array<ScoutWithEntryIds>;
-  recentJobs: Array<JobWithCompanyType>;
-  /** 管理者用スカウト一覧 */
-  scoutsForAdmin: ScoutsForAdminResultType;
-  /** スカウト統計情報 */
-  scoutsStatistics: ScoutsStatisticsType;
-  searchEntries: EntrySearchResultType;
-  searchJobs: JobSearchResultType;
-  searchJobsWithStats: JobSearchWithStatsResultType;
-  searchUsers: UserSearchResultType;
-  user?: Maybe<UserType>;
-  userByEmail?: Maybe<UserType>;
-  userFavorites: Array<FavoriteType>;
-  users: Array<UserType>;
-  usersWithIncompleteProfile: Array<UserType>;
-};
-
-export type QueryCheckUserJobEntryArgs = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type QueryCompanyArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryGetAdditionalScoutTicketsArgs = {
-  input: SearchAdditionalScoutTicketsInput;
-};
-
-export type QueryGetAdminMessagesArgs = {
-  input: GetAdminMessagesInput;
-};
-
-export type QueryGetCompaniesArgs = {
-  input: GetCompaniesInput;
-};
-
-export type QueryGetCompaniesStatisticsArgs = {
-  input: GetCompaniesStatisticsInput;
-};
-
-export type QueryGetCompanyAcceptTicketsArgs = {
-  input: GetCompanyAcceptTicketsInput;
-};
-
-export type QueryGetCompanyInvoicesArgs = {
-  input: GetCompanyInvoicesInput;
-};
-
-export type QueryGetCompanyInvoicesStatisticsArgs = {
-  input: GetCompanyInvoicesStatisticsInput;
-};
-
-export type QueryGetCompanyReminderTargetsArgs = {
-  input: GetCompanyReminderTargetsInput;
-};
-
-export type QueryGetCompanyRemindersArgs = {
-  input: GetCompanyRemindersInput;
-};
-
-export type QueryGetCompanyUnreadMessagesArgs = {
-  input: GetCompanyUnreadMessagesInput;
-};
-
-export type QueryGetEntriesStatisticsArgs = {
-  input: GetEntriesStatisticsInput;
-};
-
-export type QueryGetEntryByIdArgs = {
-  input: GetEntryByIdInput;
-};
-
-export type QueryGetJobsByHotListArgs = {
-  input?: InputMaybe<GetJobsByHotListInput>;
-};
-
-export type QueryGetJobsByPickListArgs = {
-  input?: InputMaybe<GetJobsByPickListInput>;
-};
-
-export type QueryGetJobsStatisticsArgs = {
-  input: GetJobsStatisticsInput;
-};
-
-export type QueryGetMessagesArgs = {
-  entryId: Scalars["Int"]["input"];
-};
-
-export type QueryGetNewEntriesWithoutMessagesArgs = {
-  input: GetNewEntriesWithoutMessagesInput;
-};
-
-export type QueryGetPendingEntriesArgs = {
-  input: GetPendingEntriesInput;
-};
-
-export type QueryGetRecommendJobsByUserIdArgs = {
-  input: GetRecommendJobsByUserIdInput;
-};
-
-export type QueryGetReminderCandidateCompaniesArgs = {
-  input?: InputMaybe<GetReminderCandidateCompaniesInput>;
-};
-
-export type QueryGetReviewingEntriesArgs = {
-  input: GetReviewingEntriesInput;
-};
-
-export type QueryGetStaleEntriesArgs = {
-  input: GetStaleEntriesInput;
-};
-
-export type QueryGetStaleEntriesForAutoRejectArgs = {
-  input: GetStaleEntriesForAutoRejectInput;
-};
-
-export type QueryGetStartDateReminderEntriesArgs = {
-  input: GetStartDateReminderEntriesInput;
-};
-
-export type QueryGetUserAcceptReportsArgs = {
-  input: GetUserAcceptReportsInput;
-};
-
-export type QueryGetUserEntriesArgs = {
-  input: GetUserEntriesInput;
-};
-
-export type QueryGetUserStatisticsArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryGetUserUnreadMessagesArgs = {
-  input: GetUserUnreadMessagesInput;
-};
-
-export type QueryGetUsersStatisticsArgs = {
-  input: GetUsersStatisticsInput;
-};
-
-export type QueryIsFavoriteArgs = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type QueryJobArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryJobsByCompanyIdArgs = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type QueryJobsByCompanyIdWithStatsArgs = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type QueryLineNotificationUserSettingsArgs = {
-  userId: Scalars["Int"]["input"];
-};
-
-export type QueryRecentJobsArgs = {
-  input?: InputMaybe<GetRecentJobsInput>;
-};
-
-export type QueryScoutsForAdminArgs = {
-  filter?: InputMaybe<ScoutFilterInput>;
-  limit?: InputMaybe<Scalars["Float"]["input"]>;
-  page?: InputMaybe<Scalars["Float"]["input"]>;
-};
-
-export type QueryScoutsStatisticsArgs = {
-  period?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type QuerySearchEntriesArgs = {
-  input: SearchEntriesInput;
-};
-
-export type QuerySearchJobsArgs = {
-  input: SearchJobsInput;
-};
-
-export type QuerySearchJobsWithStatsArgs = {
-  input: SearchJobsWithStatsInput;
-};
-
-export type QuerySearchUsersArgs = {
-  input: SearchUsersInput;
-};
-
-export type QueryUserArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryUserByEmailArgs = {
-  email: Scalars["String"]["input"];
-};
-
-export type QueryUsersWithIncompleteProfileArgs = {
-  input: GetUsersWithIncompleteProfileInput;
-};
-
-export type RecalculateResultType = {
-  __typename?: "RecalculateResultType";
-  updatedCount: Scalars["Int"]["output"];
-};
-
-export type ReminderCandidateCompanyType = {
-  __typename?: "ReminderCandidateCompanyType";
-  email: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-  /** 基準超過の学生数 */
-  overdueCount: Scalars["Int"]["output"];
-  /** 基準未満（待ち）の学生数 */
-  waitingCount: Scalars["Int"]["output"];
+  indicator: string;
+  weight: number;
 };
 
 /** 企業催促の対象となる遅延の種類 */
@@ -2054,681 +196,159 @@ export enum ReminderDelayType {
   Reviewing = "REVIEWING",
 }
 
-export type ReminderTargetCompanyType = {
-  __typename?: "ReminderTargetCompanyType";
-  email: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-export type ReminderTargetUserType = {
-  __typename?: "ReminderTargetUserType";
-  delayType: ReminderDelayType;
-  /** 経過日数（当日は0） */
-  elapsedDays: Scalars["Int"]["output"];
-  entryId: Scalars["Int"]["output"];
-  /** 基準超過か */
-  isOverdue: Scalars["Boolean"]["output"];
-  jobTitle: Scalars["String"]["output"];
-  /** 現在の遅延に対する最終催促日時 */
-  lastRemindedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  /** 最終催促時に基準超過だったか（false: 同送済み） */
-  lastRemindedIsOverdue?: Maybe<Scalars["Boolean"]["output"]>;
-  /** 基準日数 */
-  thresholdDays: Scalars["Int"]["output"];
-  userId: Scalars["Int"]["output"];
-  userName: Scalars["String"]["output"];
-};
-
-export type RemoveFavoriteInput = {
-  jobId: Scalars["Int"]["input"];
-};
-
-export type RequestCompanyPasswordResetInput = {
-  email: Scalars["String"]["input"];
-};
-
-export type RequestCompanyPasswordResetResponse = {
-  __typename?: "RequestCompanyPasswordResetResponse";
-  message: Scalars["String"]["output"];
-};
-
-export type RequestPasswordResetInput = {
-  email: Scalars["String"]["input"];
-};
-
-export type RequestPasswordResetResponse = {
-  __typename?: "RequestPasswordResetResponse";
-  message: Scalars["String"]["output"];
-};
-
-export type ResetCompanyPasswordInput = {
-  newPassword: Scalars["String"]["input"];
-  token: Scalars["String"]["input"];
-};
-
-export type ResetCompanyPasswordResponse = {
-  __typename?: "ResetCompanyPasswordResponse";
-  message: Scalars["String"]["output"];
-};
-
-export type ResetPasswordInput = {
-  newPassword: Scalars["String"]["input"];
-  token: Scalars["String"]["input"];
-};
-
-export type ResetPasswordResponse = {
-  __typename?: "ResetPasswordResponse";
-  message: Scalars["String"]["output"];
-};
-
-export type ReviewingEntriesType = {
-  __typename?: "ReviewingEntriesType";
-  entries: Array<EntryWithUserAndJobType>;
-};
-
-export type SaveDraftJobInput = {
-  access?: InputMaybe<Scalars["String"]["input"]>;
-  acquirableSkills?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  applicationProcess?: InputMaybe<Scalars["String"]["input"]>;
-  businessContent?: InputMaybe<Scalars["String"]["input"]>;
-  city?: InputMaybe<Scalars["String"]["input"]>;
-  companyAtmosphere?: InputMaybe<Scalars["String"]["input"]>;
-  companyId: Scalars["Int"]["input"];
-  detailAddress?: InputMaybe<Scalars["String"]["input"]>;
-  experienceGained?: InputMaybe<Scalars["String"]["input"]>;
-  features?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  goal?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  internJobDescription?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImage?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  jobHeader?: InputMaybe<Scalars["String"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  members?: InputMaybe<Array<CreateMemberInput>>;
-  minWorkingDaysPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  minWorkingHoursPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  pastAcceptedCompany?: InputMaybe<Scalars["String"]["input"]>;
-  pastMemberUniversity?: InputMaybe<Scalars["String"]["input"]>;
-  period?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImage?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  postalCode?: InputMaybe<Scalars["String"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  preferences?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  programmingLanguages?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  requirements?: InputMaybe<Scalars["String"]["input"]>;
-  salary?: InputMaybe<Scalars["String"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  streetAddress?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  transportationFeeAmount?: InputMaybe<Scalars["String"]["input"]>;
-  usefulSkills?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  workConditions?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  workingHoursEnd?: InputMaybe<Scalars["String"]["input"]>;
-  workingHoursStart?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type Scout = {
-  __typename?: "Scout";
-  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId?: Maybe<Scalars["Int"]["output"]>;
-  status: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type ScoutCompanyType = {
-  __typename?: "ScoutCompanyType";
-  id: Scalars["Int"]["output"];
-  industry?: Maybe<Scalars["String"]["output"]>;
-  name: Scalars["String"]["output"];
-};
-
-export type ScoutFilterInput = {
-  companyName?: InputMaybe<Scalars["String"]["input"]>;
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  jobTitle?: InputMaybe<Scalars["String"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  scoutDateEnd?: InputMaybe<Scalars["String"]["input"]>;
-  scoutDateStart?: InputMaybe<Scalars["String"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  userName?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type ScoutForAdminType = {
-  __typename?: "ScoutForAdminType";
-  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  company?: Maybe<ScoutCompanyType>;
-  companyId: Scalars["Int"]["output"];
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  job?: Maybe<ScoutJobType>;
-  jobId?: Maybe<Scalars["Int"]["output"]>;
-  status: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  user?: Maybe<ScoutUserType>;
-  userId: Scalars["Int"]["output"];
-};
-
-export type ScoutJobType = {
-  __typename?: "ScoutJobType";
-  id: Scalars["Int"]["output"];
-  jobType?: Maybe<Scalars["String"]["output"]>;
-  title: Scalars["String"]["output"];
-};
-
-export type ScoutNotification = {
-  __typename?: "ScoutNotification";
-  companyIconUrl?: Maybe<Scalars["String"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId?: Maybe<Scalars["Int"]["output"]>;
-  jobTitle?: Maybe<Scalars["String"]["output"]>;
-  title: Scalars["String"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type ScoutTicketAdditionalDetailType = {
-  __typename?: "ScoutTicketAdditionalDetailType";
-  expiredAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  remainingCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  usedCount: Scalars["Int"]["output"];
-};
-
-export type ScoutTicketAdditionalType = {
-  __typename?: "ScoutTicketAdditionalType";
-  companyId: Scalars["Int"]["output"];
-  companyName: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  expiredAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  remainingCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usedCount: Scalars["Int"]["output"];
-};
-
-export type ScoutTicketType = {
-  __typename?: "ScoutTicketType";
-  additionalRemainingCount: Scalars["Int"]["output"];
-  additionalTickets: Array<ScoutTicketAdditionalDetailType>;
-  companyId: Scalars["Int"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  remainingCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  usedCount: Scalars["Int"]["output"];
-  yearMonth: Scalars["Int"]["output"];
-};
-
-export type ScoutUserType = {
-  __typename?: "ScoutUserType";
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-export type ScoutWithEntryIds = {
-  __typename?: "ScoutWithEntryIds";
-  acceptedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  companyId: Scalars["Int"]["output"];
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  entryIds: Array<Scalars["Int"]["output"]>;
-  id: Scalars["Int"]["output"];
-  jobId?: Maybe<Scalars["Int"]["output"]>;
-  status: Scalars["String"]["output"];
-  title: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type ScoutsForAdminResultType = {
-  __typename?: "ScoutsForAdminResultType";
-  scouts: Array<ScoutForAdminType>;
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type ScoutsStatisticsType = {
-  __typename?: "ScoutsStatisticsType";
-  acceptedCount: Scalars["Int"]["output"];
-  totalScoutCount: Scalars["Int"]["output"];
-};
-
 export type SearchAdditionalScoutTicketsInput = {
-  companyName?: InputMaybe<Scalars["String"]["input"]>;
-  limit: Scalars["Int"]["input"];
-  page: Scalars["Int"]["input"];
+  companyName?: string | null | undefined;
+  limit: number;
+  page: number;
 };
 
 export type SearchEntriesInput = {
-  companyName?: InputMaybe<Scalars["String"]["input"]>;
-  entryDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  entryDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  interviewDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  interviewDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  jobTitle?: InputMaybe<Scalars["String"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  joinDateByApplicantEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  joinDateByApplicantStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  joinDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  joinDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  scoutedUserId?: InputMaybe<Scalars["Int"]["input"]>;
-  secondInterviewDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  secondInterviewDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type SearchJobsInput = {
-  acceptedIndustory?: InputMaybe<Scalars["String"]["input"]>;
-  industries?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  jobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  keywords?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  /** 都道府県とともに指定する市区町村 */
-  municipalities?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  /** 並び順。未指定時は既存挙動と同じ */
-  orderBy?: InputMaybe<JobOrderBy>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  prefectures?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  preferences?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  university?: InputMaybe<Scalars["String"]["input"]>;
+  companyName?: string | null | undefined;
+  entryDateEnd?: any;
+  entryDateStart?: any;
+  industry?: string | null | undefined;
+  interviewDateEnd?: any;
+  interviewDateStart?: any;
+  jobTitle?: string | null | undefined;
+  jobType?: string | null | undefined;
+  joinDateByApplicantEnd?: any;
+  joinDateByApplicantStart?: any;
+  joinDateEnd?: any;
+  joinDateStart?: any;
+  limit?: number | null | undefined;
+  name?: string | null | undefined;
+  page?: number | null | undefined;
+  scoutedUserId?: number | null | undefined;
+  secondInterviewDateEnd?: any;
+  secondInterviewDateStart?: any;
+  status?: string | null | undefined;
 };
 
 export type SearchJobsWithStatsInput = {
-  acceptCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  acceptCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  closeDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  closeDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  companyName?: InputMaybe<Scalars["String"]["input"]>;
-  entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  favoriteCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  favoriteCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  openDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  openDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  pvCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  pvCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  acceptCountMax?: number | null | undefined;
+  acceptCountMin?: number | null | undefined;
+  closeDateEnd?: any;
+  closeDateStart?: any;
+  companyName?: string | null | undefined;
+  entryCountMax?: number | null | undefined;
+  entryCountMin?: number | null | undefined;
+  favoriteCountMax?: number | null | undefined;
+  favoriteCountMin?: number | null | undefined;
+  industry?: string | null | undefined;
+  jobType?: string | null | undefined;
+  limit?: number | null | undefined;
+  openDateEnd?: any;
+  openDateStart?: any;
+  page?: number | null | undefined;
+  prefecture?: string | null | undefined;
+  pvCountMax?: number | null | undefined;
+  pvCountMin?: number | null | undefined;
+  status?: string | null | undefined;
+  title?: string | null | undefined;
 };
 
 export type SearchUsersInput = {
-  availableDaysPerWeekMax?: InputMaybe<Scalars["Int"]["input"]>;
-  availableDaysPerWeekMin?: InputMaybe<Scalars["Int"]["input"]>;
-  availableDurationMonthsMax?: InputMaybe<Scalars["Int"]["input"]>;
-  availableDurationMonthsMin?: InputMaybe<Scalars["Int"]["input"]>;
-  availableHoursPerWeekMax?: InputMaybe<Scalars["Int"]["input"]>;
-  availableHoursPerWeekMin?: InputMaybe<Scalars["Int"]["input"]>;
-  departments?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  enteredCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
-  entryCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  entryCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  faculty?: InputMaybe<Scalars["String"]["input"]>;
-  favoritedJobId?: InputMaybe<Scalars["Int"]["input"]>;
-  gender?: InputMaybe<Scalars["String"]["input"]>;
-  grades?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  interestedIndustries?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  interestedJobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  isAccepted?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isIncludeDeleted?: InputMaybe<Scalars["Boolean"]["input"]>;
+  availableDaysPerWeekMax?: number | null | undefined;
+  availableDaysPerWeekMin?: number | null | undefined;
+  availableDurationMonthsMax?: number | null | undefined;
+  availableDurationMonthsMin?: number | null | undefined;
+  availableHoursPerWeekMax?: number | null | undefined;
+  availableHoursPerWeekMin?: number | null | undefined;
+  departments?: Array<string> | null | undefined;
+  enteredCompanyId?: number | null | undefined;
+  entryCountMax?: number | null | undefined;
+  entryCountMin?: number | null | undefined;
+  faculty?: string | null | undefined;
+  favoritedJobId?: number | null | undefined;
+  gender?: string | null | undefined;
+  grades?: Array<string> | null | undefined;
+  interestedIndustries?: Array<string> | null | undefined;
+  interestedJobTypes?: Array<string> | null | undefined;
+  isAccepted?: boolean | null | undefined;
+  isIncludeDeleted?: boolean | null | undefined;
   /** スカウト情報を含めるか */
-  isIncludeScout?: InputMaybe<Scalars["Boolean"]["input"]>;
+  isIncludeScout?: boolean | null | undefined;
   /** 自社がスカウトした求職者のみを表示するか */
-  isOnlyScoutedByMe?: InputMaybe<Scalars["Boolean"]["input"]>;
-  lastLogInDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  lastLogInDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  leaveDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  leaveDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  prefectures?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  isOnlyScoutedByMe?: boolean | null | undefined;
+  lastLogInDateEnd?: any;
+  lastLogInDateStart?: any;
+  leaveDateEnd?: any;
+  leaveDateStart?: any;
+  limit?: number | null | undefined;
+  name?: string | null | undefined;
+  page?: number | null | undefined;
+  prefectures?: Array<string> | null | undefined;
   /** 名前など直接特定できる個人情報を除いたキーワード検索 */
-  privacyKeyword?: InputMaybe<Scalars["String"]["input"]>;
-  registerDateEnd?: InputMaybe<Scalars["DateTime"]["input"]>;
-  registerDateStart?: InputMaybe<Scalars["DateTime"]["input"]>;
-  scoutCountMax?: InputMaybe<Scalars["Int"]["input"]>;
-  scoutCountMin?: InputMaybe<Scalars["Int"]["input"]>;
-  scoutedCompanyId?: InputMaybe<Scalars["Int"]["input"]>;
-  university?: InputMaybe<Scalars["String"]["input"]>;
+  privacyKeyword?: string | null | undefined;
+  registerDateEnd?: any;
+  registerDateStart?: any;
+  scoutCountMax?: number | null | undefined;
+  scoutCountMin?: number | null | undefined;
+  scoutedCompanyId?: number | null | undefined;
+  university?: string | null | undefined;
 };
 
 export type SendCompanyReminderInput = {
   /** 送信する本文（編集後の内容） */
-  body: Scalars["String"]["input"];
-  companyId: Scalars["Int"]["input"];
+  body: string;
+  companyId: number;
   /** 催促対象として選択したエントリーID */
-  entryIds: Array<Scalars["Int"]["input"]>;
-  subject: Scalars["String"]["input"];
+  entryIds: Array<number>;
+  subject: string;
   /** 使用したテンプレート名 */
-  templateName: Scalars["String"]["input"];
+  templateName: string;
 };
 
-export type SendJobOfferInput = {
-  entryId: Scalars["Int"]["input"];
-  jobOfferScheduledAt: Scalars["String"]["input"];
-};
-
-export type SendMessageInput = {
-  companyId?: InputMaybe<Scalars["Int"]["input"]>;
-  content: Scalars["String"]["input"];
-  entryId: Scalars["Int"]["input"];
-  userId?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-export type SimpleJobWithEntriesType = {
-  __typename?: "SimpleJobWithEntriesType";
-  entries: Array<EntryWithUserType>;
-  job: JobType;
-};
-
-export type StaleEntriesForAutoRejectType = {
-  __typename?: "StaleEntriesForAutoRejectType";
-  entries: Array<StaleEntryForAutoRejectType>;
-};
-
-export type StaleEntriesType = {
-  __typename?: "StaleEntriesType";
-  entries: Array<EntryWithUserAndJob>;
-};
-
-export type StaleEntryForAutoRejectType = {
-  __typename?: "StaleEntryForAutoRejectType";
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type StartDateReminderCompanyType = {
-  __typename?: "StartDateReminderCompanyType";
-  email: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-  notificationEmails: Array<Scalars["String"]["output"]>;
-};
-
-export type StartDateReminderEntriesType = {
-  __typename?: "StartDateReminderEntriesType";
-  /** 入社予定日リマインダー対象のエントリー一覧 */
-  entries: Array<StartDateReminderEntryWithDetailsType>;
-};
-
-export type StartDateReminderEntryType = {
-  __typename?: "StartDateReminderEntryType";
-  createdAt: Scalars["DateTime"]["output"];
-  id: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  jobOfferScheduledAt?: Maybe<Scalars["DateTime"]["output"]>;
-  status: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Int"]["output"];
-};
-
-export type StartDateReminderEntryWithDetailsType = {
-  __typename?: "StartDateReminderEntryWithDetailsType";
-  company: StartDateReminderCompanyType;
-  entry: StartDateReminderEntryType;
-  job: StartDateReminderJobType;
-  user: StartDateReminderUserType;
-};
-
-export type StartDateReminderJobType = {
-  __typename?: "StartDateReminderJobType";
-  companyId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  title: Scalars["String"]["output"];
-};
-
-export type StartDateReminderUserType = {
-  __typename?: "StartDateReminderUserType";
-  email: Scalars["String"]["output"];
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type Subscription = {
-  __typename?: "Subscription";
-  entryAdded: EntryNotification;
-  messageAdded: MessageNotification;
-  scoutSent: ScoutNotification;
-};
-
-export type SubscriptionEntryAddedArgs = {
-  companyId: Scalars["Int"]["input"];
-};
-
-export type SubscriptionMessageAddedArgs = {
-  entryId: Scalars["Int"]["input"];
-};
-
-export type SubscriptionScoutSentArgs = {
-  userId: Scalars["Int"]["input"];
-};
-
-export type UncheckedEntriesCountType = {
-  __typename?: "UncheckedEntriesCountType";
-  count: Scalars["Int"]["output"];
-};
-
-export type UnreadMessage = {
-  __typename?: "UnreadMessage";
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isRead: Scalars["Boolean"]["output"];
-};
-
-export type UnreadMessageInfo = {
-  __typename?: "UnreadMessageInfo";
-  content: Scalars["String"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  entryId: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  isRead: Scalars["Boolean"]["output"];
+export type UpdateAdminUserRoleInput = {
+  id: number;
+  role: AdminRole;
 };
 
 export type UpdateCompanyAcceptTicketInput = {
-  amount?: InputMaybe<Scalars["Int"]["input"]>;
-  count?: InputMaybe<Scalars["Int"]["input"]>;
-  expiredAt?: InputMaybe<Scalars["DateTime"]["input"]>;
-  id: Scalars["Int"]["input"];
+  amount?: number | null | undefined;
+  count?: number | null | undefined;
+  expiredAt?: any;
+  id: number;
 };
 
-export type UpdateCompanyInput = {
-  about?: InputMaybe<Scalars["String"]["input"]>;
-  agentPlanAmount?: InputMaybe<Scalars["Int"]["input"]>;
-  businessContent?: InputMaybe<Scalars["String"]["input"]>;
-  capital?: InputMaybe<Scalars["Int"]["input"]>;
-  city?: InputMaybe<Scalars["String"]["input"]>;
-  companyUrl?: InputMaybe<Scalars["String"]["input"]>;
-  detailAddress?: InputMaybe<Scalars["String"]["input"]>;
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  employeeCount?: InputMaybe<Scalars["Int"]["input"]>;
-  headerImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  iconImageUrl?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  industry?: InputMaybe<Scalars["String"]["input"]>;
-  initialMessage?: InputMaybe<Scalars["String"]["input"]>;
-  initialScoutedMessage?: InputMaybe<Scalars["String"]["input"]>;
-  isInitialMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isInitialScoutedMessageEnabled?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isOfficial?: InputMaybe<Scalars["Boolean"]["input"]>;
-  jobType?: InputMaybe<Scalars["String"]["input"]>;
-  members?: InputMaybe<Array<CompanyMemberInput>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-  notificationEmails?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-  phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
-  postalCode?: InputMaybe<Scalars["String"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  representative?: InputMaybe<Scalars["String"]["input"]>;
-  streetAddress?: InputMaybe<Scalars["String"]["input"]>;
+export type UpdateCompanyAgentPlanAmountInput = {
+  agentPlanAmount: number;
+  id: number;
 };
 
 export type UpdateCompanyInvoiceInput = {
-  amount: Scalars["Int"]["input"];
-  id: Scalars["Int"]["input"];
-};
-
-export type UpdateEntriesStatusInput = {
-  ids: Array<Scalars["Int"]["input"]>;
-  status: Scalars["String"]["input"];
-};
-
-export type UpdateEntryApplicantNoteInput = {
-  applicantNote?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
+  amount: number;
+  id: number;
 };
 
 export type UpdateEntryInput = {
-  id: Scalars["Int"]["input"];
-  interviewScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
-  jobOfferScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
-  secondInterviewScheduledAt?: InputMaybe<Scalars["String"]["input"]>;
-  status?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type UpdateEntryStatusInput = {
-  id: Scalars["Int"]["input"];
-  status: Scalars["String"]["input"];
+  id: number;
+  interviewScheduledAt?: string | null | undefined;
+  jobOfferScheduledAt?: string | null | undefined;
+  secondInterviewScheduledAt?: string | null | undefined;
+  status?: string | null | undefined;
 };
 
 export type UpdateHotJobScoringWeightsInput = {
   weights: Array<HotJobScoringWeightItemInput>;
 };
 
-export type UpdateInterviewScheduleInput = {
-  id: Scalars["Int"]["input"];
-  interviewScheduledAt: Scalars["String"]["input"];
-};
-
-export type UpdateJobInput = {
-  access: Scalars["String"]["input"];
-  acquirableSkills: Array<Scalars["String"]["input"]>;
-  applicationProcess?: InputMaybe<Scalars["String"]["input"]>;
-  businessContent: Scalars["String"]["input"];
-  city: Scalars["String"]["input"];
-  companyAtmosphere: Scalars["String"]["input"];
-  detailAddress?: InputMaybe<Scalars["String"]["input"]>;
-  experienceGained: Scalars["String"]["input"];
-  features: Array<Scalars["String"]["input"]>;
-  goal: Scalars["String"]["input"];
-  headerImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  headerImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  industry: Scalars["String"]["input"];
-  internJobDescription: Scalars["String"]["input"];
-  jobAtmosphereImage: Scalars["String"]["input"];
-  jobAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  jobAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  jobHeader: Scalars["String"]["input"];
-  jobType: Scalars["String"]["input"];
-  members?: InputMaybe<Array<CreateMemberInput>>;
-  minWorkingDaysPerWeek: Scalars["Int"]["input"];
-  minWorkingHoursPerWeek: Scalars["Int"]["input"];
-  pastAcceptedCompany?: InputMaybe<Scalars["String"]["input"]>;
-  pastMemberUniversity?: InputMaybe<Scalars["String"]["input"]>;
-  period: Scalars["String"]["input"];
-  placeAtmosphereImage: Scalars["String"]["input"];
-  placeAtmosphereImageBase64?: InputMaybe<Scalars["String"]["input"]>;
-  placeAtmosphereImageMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  postalCode: Scalars["String"]["input"];
-  prefecture: Scalars["String"]["input"];
-  preferences: Array<Scalars["String"]["input"]>;
-  programmingLanguages: Array<Scalars["String"]["input"]>;
-  requirements?: InputMaybe<Scalars["String"]["input"]>;
-  salary: Scalars["String"]["input"];
-  status?: InputMaybe<Scalars["String"]["input"]>;
-  streetAddress: Scalars["String"]["input"];
-  title: Scalars["String"]["input"];
-  transportationFeeAmount: Scalars["String"]["input"];
-  usefulSkills: Array<Scalars["String"]["input"]>;
-  workConditions: Array<Scalars["String"]["input"]>;
-  workingHoursEnd: Scalars["String"]["input"];
-  workingHoursStart: Scalars["String"]["input"];
-};
-
 export type UpdateJobIsAgentPlanOnlyInput = {
-  id: Scalars["Int"]["input"];
-  isAgentPlanOnly: Scalars["Boolean"]["input"];
-};
-
-export type UpdateJobOfferAcceptanceInput = {
-  entryId: Scalars["Int"]["input"];
-  isAccepted: Scalars["Boolean"]["input"];
-};
-
-export type UpdateJobPvInput = {
-  id: Scalars["Int"]["input"];
-  userId?: InputMaybe<Scalars["Int"]["input"]>;
+  id: number;
+  isAgentPlanOnly: boolean;
 };
 
 export type UpdateJobStatusInput = {
-  id: Scalars["Int"]["input"];
-  status: Scalars["String"]["input"];
-};
-
-export type UpdateJobsStatusInput = {
-  ids: Array<Scalars["Int"]["input"]>;
-  status: Scalars["String"]["input"];
+  id: number;
+  status: string;
 };
 
 export type UpdateLineNotificationSettingsInput = {
   notifications: Array<LineNotificationItemInput>;
 };
 
-export type UpdateLineNotificationSettingsResult = {
-  __typename?: "UpdateLineNotificationSettingsResult";
-  success: Scalars["Boolean"]["output"];
-};
-
 export type UpdateMagazinesInput = {
   magazines: Array<MagazineItemInput>;
-};
-
-export type UpdateMessageTemplateInput = {
-  content: Scalars["String"]["input"];
-  id: Scalars["Int"]["input"];
-  isScoutTemplate?: InputMaybe<Scalars["Boolean"]["input"]>;
-  title: Scalars["String"]["input"];
 };
 
 export type UpdateOldHotJobsInput = {
@@ -2743,252 +363,112 @@ export type UpdatePickJobScoringWeightsInput = {
   weights: Array<PickJobScoringWeightItemInput>;
 };
 
-export type UpdateSecondInterviewScheduleInput = {
-  id: Scalars["Int"]["input"];
-  secondInterviewScheduledAt: Scalars["String"]["input"];
+export type AdminLoginWithGoogleMutationVariables = Exact<{
+  input: AdminLoginWithGoogleInput;
+}>;
+
+export type AdminLoginWithGoogleMutation = {
+  adminLoginWithGoogle: { id: number };
 };
 
-export type UpdateUserEmailInput = {
-  email: Scalars["String"]["input"];
+export type AdminLogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type AdminLogoutMutation = { adminLogout: { message: string } };
+
+export type UpdateAdminUserRoleMutationVariables = Exact<{
+  input: UpdateAdminUserRoleInput;
+}>;
+
+export type UpdateAdminUserRoleMutation = {
+  updateAdminUserRole: { id: number; role: AdminRole };
 };
 
-export type UpdateUserInput = {
-  availableDaysPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  availableDurationMonths?: InputMaybe<Scalars["Int"]["input"]>;
-  availableHoursPerWeek?: InputMaybe<Scalars["Int"]["input"]>;
-  avatarFileBase64?: InputMaybe<Scalars["String"]["input"]>;
-  avatarMimeType?: InputMaybe<Scalars["String"]["input"]>;
-  avatarUrl?: InputMaybe<Scalars["String"]["input"]>;
-  birthDate?: InputMaybe<Scalars["DateTime"]["input"]>;
-  department?: InputMaybe<Scalars["String"]["input"]>;
-  faculty?: InputMaybe<Scalars["String"]["input"]>;
-  firstName?: InputMaybe<Scalars["String"]["input"]>;
-  futureGoals?: InputMaybe<Scalars["String"]["input"]>;
-  gender?: InputMaybe<Scalars["String"]["input"]>;
-  grade?: InputMaybe<Scalars["String"]["input"]>;
-  graduationYear?: InputMaybe<Scalars["Int"]["input"]>;
-  interestedIndustries?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  interestedJobTypes?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  isAllowScout?: InputMaybe<Scalars["Boolean"]["input"]>;
-  lastName?: InputMaybe<Scalars["String"]["input"]>;
-  lineNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
-  magazineNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
-  messageNotification?: InputMaybe<Scalars["Boolean"]["input"]>;
-  phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
-  prefecture?: InputMaybe<Scalars["String"]["input"]>;
-  selfPR?: InputMaybe<Scalars["String"]["input"]>;
-  university?: InputMaybe<Scalars["String"]["input"]>;
+export type DeleteAdminUserMutationVariables = Exact<{
+  input: DeleteAdminUserInput;
+}>;
+
+export type DeleteAdminUserMutation = { deleteAdminUser: boolean };
+
+export type CreateAdminAllowedEmailMutationVariables = Exact<{
+  input: CreateAdminAllowedEmailInput;
+}>;
+
+export type CreateAdminAllowedEmailMutation = {
+  createAdminAllowedEmail: { id: number };
 };
 
-export type UpdateUserLineNotificationSettingsInput = {
-  settings: Array<UserLineNotificationSettingItemInput>;
+export type DeleteAdminAllowedEmailMutationVariables = Exact<{
+  input: DeleteAdminAllowedEmailInput;
+}>;
+
+export type DeleteAdminAllowedEmailMutation = {
+  deleteAdminAllowedEmail: boolean;
 };
 
-export type UpdateUserPasswordInput = {
-  currentPassword: Scalars["String"]["input"];
-  email: Scalars["String"]["input"];
-  newPassword: Scalars["String"]["input"];
+export type AdminMeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AdminMeQuery = {
+  adminMe: {
+    id: number;
+    email: string;
+    name: string | null;
+    avatarUrl: string | null;
+    role: AdminRole;
+  };
 };
 
-export type UploadAvatarInput = {
-  fileBase64: Scalars["String"]["input"];
-  fileName: Scalars["String"]["input"];
-  mimeType: Scalars["String"]["input"];
-  userId: Scalars["Int"]["input"];
+export type GetAdminUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAdminUsersQuery = {
+  getAdminUsers: Array<{
+    id: number;
+    name: string | null;
+    avatarUrl: string | null;
+    role: AdminRole;
+    isAllowed: boolean;
+    lastLoggedInAt: any;
+    createdAt: any;
+  }>;
 };
 
-export type UserAcceptReportType = {
-  __typename?: "UserAcceptReportType";
-  companyId: Scalars["Float"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  id: Scalars["Int"]["output"];
-  joinDate: Scalars["DateTime"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-  userId: Scalars["Float"]["output"];
-};
+export type GetAdminAllowedEmailsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
-export type UserEntriesType = {
-  __typename?: "UserEntriesType";
-  entries: Array<EntryWithJobType>;
-  userId: Scalars["Int"]["output"];
-};
-
-export type UserInfo = {
-  __typename?: "UserInfo";
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  faculty?: Maybe<Scalars["String"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  university?: Maybe<Scalars["String"]["output"]>;
-};
-
-export type UserLineNotificationSettingItemInput = {
-  isEnabled: Scalars["Boolean"]["input"];
-  notificationKey: Scalars["String"]["input"];
-};
-
-export type UserSearchResultType = {
-  __typename?: "UserSearchResultType";
-  hasNextPage: Scalars["Boolean"]["output"];
-  hasPreviousPage: Scalars["Boolean"]["output"];
-  items: Array<UserWithCountType>;
-  limit: Scalars["Int"]["output"];
-  page: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-  totalPages: Scalars["Int"]["output"];
-};
-
-export type UserStatisticsResultType = {
-  __typename?: "UserStatisticsResultType";
-  entriedJobCount: Scalars["Int"]["output"];
-  profileFillRate: Scalars["Int"]["output"];
-};
-
-export type UserType = {
-  __typename?: "UserType";
-  availableDaysPerWeek?: Maybe<Scalars["Int"]["output"]>;
-  availableDurationMonths?: Maybe<Scalars["Int"]["output"]>;
-  availableHoursPerWeek?: Maybe<Scalars["Int"]["output"]>;
-  avatarUrl?: Maybe<Scalars["String"]["output"]>;
-  birthDate?: Maybe<Scalars["DateTime"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  department?: Maybe<Scalars["String"]["output"]>;
-  email: Scalars["String"]["output"];
-  faculty?: Maybe<Scalars["String"]["output"]>;
-  firstName?: Maybe<Scalars["String"]["output"]>;
-  futureGoals?: Maybe<Scalars["String"]["output"]>;
-  gender?: Maybe<Scalars["String"]["output"]>;
-  grade?: Maybe<Scalars["String"]["output"]>;
-  graduationYear?: Maybe<Scalars["Int"]["output"]>;
-  id: Scalars["Int"]["output"];
-  interestedIndustries: Array<Scalars["String"]["output"]>;
-  interestedJobTypes: Array<Scalars["String"]["output"]>;
-  isAllowScout: Scalars["Boolean"]["output"];
-  lastLoggedInAt: Scalars["DateTime"]["output"];
-  lastName?: Maybe<Scalars["String"]["output"]>;
-  lineAccountId?: Maybe<Scalars["String"]["output"]>;
-  lineNotification: Scalars["Boolean"]["output"];
-  magazineNotification: Scalars["Boolean"]["output"];
-  messageNotification: Scalars["Boolean"]["output"];
-  phoneNumber?: Maybe<Scalars["String"]["output"]>;
-  prefecture?: Maybe<Scalars["String"]["output"]>;
-  selfPR?: Maybe<Scalars["String"]["output"]>;
-  university?: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type UserUnreadCompany = {
-  __typename?: "UserUnreadCompany";
-  iconImageUrl?: Maybe<Scalars["String"]["output"]>;
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-export type UserUnreadMessages = {
-  __typename?: "UserUnreadMessages";
-  company: UserUnreadCompany;
-  entryId: Scalars["Int"]["output"];
-  jobId: Scalars["Int"]["output"];
-  jobTitle: Scalars["String"]["output"];
-  unreadCount: Scalars["Int"]["output"];
-  unreadMessages: Array<UnreadMessage>;
-};
-
-export type UserWithCountType = {
-  __typename?: "UserWithCountType";
-  availableDaysPerWeek: Scalars["Int"]["output"];
-  availableDurationMonths: Scalars["Int"]["output"];
-  availableHoursPerWeek: Scalars["Int"]["output"];
-  avatarUrl: Scalars["String"]["output"];
-  birthDate?: Maybe<Scalars["DateTime"]["output"]>;
-  createdAt: Scalars["DateTime"]["output"];
-  deletedAt?: Maybe<Scalars["DateTime"]["output"]>;
-  department: Scalars["String"]["output"];
-  email: Scalars["String"]["output"];
-  entryCount: Scalars["Int"]["output"];
-  /** 指定企業への非スカウト応募数を取得 */
-  entryCountForTheCompany: Scalars["Int"]["output"];
-  faculty: Scalars["String"]["output"];
-  firstName: Scalars["String"]["output"];
-  futureGoals: Scalars["String"]["output"];
-  gender: Scalars["String"]["output"];
-  grade: Scalars["String"]["output"];
-  graduationYear: Scalars["Int"]["output"];
-  id: Scalars["Int"]["output"];
-  interestedIndustries: Array<Scalars["String"]["output"]>;
-  interestedJobTypes: Array<Scalars["String"]["output"]>;
-  isScoutByMe: Scalars["Boolean"]["output"];
-  lastLoggedInAt: Scalars["DateTime"]["output"];
-  lastName: Scalars["String"]["output"];
-  phoneNumber: Scalars["String"]["output"];
-  prefecture: Scalars["String"]["output"];
-  scoutCount: Scalars["Int"]["output"];
-  selfPR: Scalars["String"]["output"];
-  university: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
-};
-
-export type UsersStatisticsResultType = {
-  __typename?: "UsersStatisticsResultType";
-  acceptedCount: Scalars["Int"]["output"];
-  applicantCount: Scalars["Int"]["output"];
-  leavedCount: Scalars["Int"]["output"];
-  totalCount: Scalars["Int"]["output"];
-};
-
-export type VerifyCompanyPasswordResetTokenInput = {
-  token: Scalars["String"]["input"];
-};
-
-export type VerifyCompanyPasswordResetTokenResponse = {
-  __typename?: "VerifyCompanyPasswordResetTokenResponse";
-  isValid: Scalars["Boolean"]["output"];
-};
-
-export type VerifyPasswordResetTokenInput = {
-  token: Scalars["String"]["input"];
-};
-
-export type VerifyPasswordResetTokenResponse = {
-  __typename?: "VerifyPasswordResetTokenResponse";
-  isValid: Scalars["Boolean"]["output"];
+export type GetAdminAllowedEmailsQuery = {
+  getAdminAllowedEmails: Array<{
+    id: number;
+    email: string;
+    initialRole: AdminRole;
+    isRegistered: boolean;
+    createdAt: any;
+  }>;
 };
 
 export type BatchDailyMutationVariables = Exact<{ [key: string]: never }>;
 
-export type BatchDailyMutation = {
-  __typename?: "Mutation";
-  batchDaily: boolean;
-};
+export type BatchDailyMutation = { batchDaily: boolean };
 
 export type SendCompanyReminderMutationVariables = Exact<{
   input: SendCompanyReminderInput;
 }>;
 
 export type SendCompanyReminderMutation = {
-  __typename?: "Mutation";
   sendCompanyReminder: {
-    __typename?: "CompanyReminderType";
     id: number;
     isSuccess: boolean;
-    errorMessage?: string | null;
+    errorMessage: string | null;
     underThresholdCount: number;
     createdAt: any;
   };
 };
 
 export type GetReminderCandidateCompaniesQueryVariables = Exact<{
-  input?: InputMaybe<GetReminderCandidateCompaniesInput>;
+  input?: GetReminderCandidateCompaniesInput | null | undefined;
 }>;
 
 export type GetReminderCandidateCompaniesQuery = {
-  __typename?: "Query";
   getReminderCandidateCompanies: Array<{
-    __typename?: "ReminderCandidateCompanyType";
     id: number;
     name: string;
     email: string;
@@ -3002,17 +482,9 @@ export type GetCompanyReminderTargetsQueryVariables = Exact<{
 }>;
 
 export type GetCompanyReminderTargetsQuery = {
-  __typename?: "Query";
   getCompanyReminderTargets: {
-    __typename?: "CompanyReminderTargetsType";
-    company: {
-      __typename?: "ReminderTargetCompanyType";
-      id: number;
-      name: string;
-      email: string;
-    };
+    company: { id: number; name: string; email: string };
     users: Array<{
-      __typename?: "ReminderTargetUserType";
       entryId: number;
       userId: number;
       userName: string;
@@ -3021,8 +493,8 @@ export type GetCompanyReminderTargetsQuery = {
       thresholdDays: number;
       elapsedDays: number;
       isOverdue: boolean;
-      lastRemindedAt?: any | null;
-      lastRemindedIsOverdue?: boolean | null;
+      lastRemindedAt: any;
+      lastRemindedIsOverdue: boolean | null;
     }>;
   };
 };
@@ -3032,20 +504,17 @@ export type GetCompanyRemindersQueryVariables = Exact<{
 }>;
 
 export type GetCompanyRemindersQuery = {
-  __typename?: "Query";
   getCompanyReminders: Array<{
-    __typename?: "CompanyReminderType";
     id: number;
     companyId: number;
     templateName: string;
     subject: string;
     body: string;
     isSuccess: boolean;
-    errorMessage?: string | null;
+    errorMessage: string | null;
     underThresholdCount: number;
     createdAt: any;
     users: Array<{
-      __typename?: "CompanyReminderUserType";
       id: number;
       entryId: number;
       userId: number;
@@ -3058,17 +527,12 @@ export type GetCompanyRemindersQuery = {
   }>;
 };
 
-export type UpdateCompanyMutationVariables = Exact<{
-  input: UpdateCompanyInput;
+export type UpdateCompanyAgentPlanAmountMutationVariables = Exact<{
+  input: UpdateCompanyAgentPlanAmountInput;
 }>;
 
-export type UpdateCompanyMutation = {
-  __typename?: "Mutation";
-  updateCompany: {
-    __typename?: "CompanyType";
-    id: number;
-    agentPlanAmount?: number | null;
-  };
+export type UpdateCompanyAgentPlanAmountMutation = {
+  updateCompanyAgentPlanAmount: { id: number; agentPlanAmount: number | null };
 };
 
 export type CreateCompanyAcceptTicketMutationVariables = Exact<{
@@ -3076,9 +540,7 @@ export type CreateCompanyAcceptTicketMutationVariables = Exact<{
 }>;
 
 export type CreateCompanyAcceptTicketMutation = {
-  __typename?: "Mutation";
   createCompanyAcceptTicket: {
-    __typename?: "CompanyAcceptTicketType";
     id: number;
     companyId: number;
     count: number;
@@ -3093,9 +555,7 @@ export type UpdateCompanyAcceptTicketMutationVariables = Exact<{
 }>;
 
 export type UpdateCompanyAcceptTicketMutation = {
-  __typename?: "Mutation";
   updateCompanyAcceptTicket: {
-    __typename?: "CompanyAcceptTicketType";
     id: number;
     count: number;
     expiredAt: any;
@@ -3108,42 +568,29 @@ export type DeleteCompanyAcceptTicketMutationVariables = Exact<{
 }>;
 
 export type DeleteCompanyAcceptTicketMutation = {
-  __typename?: "Mutation";
-  deleteCompanyAcceptTicket: {
-    __typename?: "CompanyAcceptTicketType";
-    id: number;
-  };
+  deleteCompanyAcceptTicket: { id: number };
 };
 
-export type CreateCompanyInvoicesMutationVariables = Exact<{
-  entryIds: Array<Scalars["Int"]["input"]> | Scalars["Int"]["input"];
+export type CreateCompanyInvoicesForAdminMutationVariables = Exact<{
+  entryIds: Array<number> | number;
 }>;
 
-export type CreateCompanyInvoicesMutation = {
-  __typename?: "Mutation";
-  createCompanyInvoices: Array<{
-    __typename?: "CompanyInvoiceType";
-    id: number;
-  }>;
+export type CreateCompanyInvoicesForAdminMutation = {
+  createCompanyInvoicesForAdmin: Array<{ id: number }>;
 };
 
 export type DeleteCompanyInvoiceMutationVariables = Exact<{
-  entryId: Scalars["Int"]["input"];
+  entryId: number;
 }>;
 
-export type DeleteCompanyInvoiceMutation = {
-  __typename?: "Mutation";
-  deleteCompanyInvoice: boolean;
-};
+export type DeleteCompanyInvoiceMutation = { deleteCompanyInvoice: boolean };
 
 export type GetCompaniesQueryVariables = Exact<{
   input: GetCompaniesInput;
 }>;
 
 export type GetCompaniesQuery = {
-  __typename?: "Query";
   getCompanies: {
-    __typename?: "CompanySearchResultType";
     limit: number;
     page: number;
     totalCount: number;
@@ -3151,20 +598,19 @@ export type GetCompaniesQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "CompanyType";
       id: number;
       name: string;
-      industry?: string | null;
-      iconImageUrl?: string | null;
-      prefecture?: string | null;
+      industry: string | null;
+      iconImageUrl: string | null;
+      prefecture: string | null;
       createdAt: any;
-      deletedAt?: any | null;
-      jobCount?: number | null;
-      entryCount?: number | null;
-      interviewCount?: number | null;
-      offerCount?: number | null;
-      acceptCount?: number | null;
-      agentPlanAmount?: number | null;
+      deletedAt: any;
+      jobCount: number | null;
+      entryCount: number | null;
+      interviewCount: number | null;
+      offerCount: number | null;
+      acceptCount: number | null;
+      agentPlanAmount: number | null;
     }>;
   };
 };
@@ -3172,8 +618,7 @@ export type GetCompaniesQuery = {
 export type GetAllCompaniesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAllCompaniesQuery = {
-  __typename?: "Query";
-  companies: Array<{ __typename?: "CompanyType"; id: number; name: string }>;
+  companies: Array<{ id: number; name: string }>;
 };
 
 export type GetCompanyAcceptTicketsQueryVariables = Exact<{
@@ -3181,13 +626,10 @@ export type GetCompanyAcceptTicketsQueryVariables = Exact<{
 }>;
 
 export type GetCompanyAcceptTicketsQuery = {
-  __typename?: "Query";
   getCompanyAcceptTickets: {
-    __typename?: "CompanyAcceptTicketsResultType";
     totalCount: number;
     totalPages: number;
     items: Array<{
-      __typename?: "CompanyAcceptTicketType";
       id: number;
       companyId: number;
       companyName: string;
@@ -3206,9 +648,7 @@ export type GetCompaniesStatisticsQueryVariables = Exact<{
 }>;
 
 export type GetCompaniesStatisticsQuery = {
-  __typename?: "Query";
   getCompaniesStatistics: {
-    __typename?: "CompaniesStatisticsResultType";
     totalCount: number;
     postedCount: number;
     acceptedCount: number;
@@ -3221,13 +661,7 @@ export type UpdateEntryMutationVariables = Exact<{
 }>;
 
 export type UpdateEntryMutation = {
-  __typename?: "Mutation";
-  updateEntry: {
-    __typename?: "Entry";
-    id: number;
-    status: string;
-    updatedAt: any;
-  };
+  updateEntry: { id: number; status: string; updatedAt: any };
 };
 
 export type SearchEntriesQueryVariables = Exact<{
@@ -3235,9 +669,7 @@ export type SearchEntriesQueryVariables = Exact<{
 }>;
 
 export type SearchEntriesQuery = {
-  __typename?: "Query";
   searchEntries: {
-    __typename?: "EntrySearchResultType";
     limit: number;
     page: number;
     totalCount: number;
@@ -3245,38 +677,30 @@ export type SearchEntriesQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "EntryWithDetailsType";
       id: number;
       jobId: number;
       userId: number;
       createdAt: any;
       updatedAt: any;
       status: string;
-      joinDate?: any | null;
-      interviewScheduledAt?: any | null;
-      secondInterviewScheduledAt?: any | null;
-      jobOfferScheduledAt?: any | null;
+      joinDate: any;
+      interviewScheduledAt: any;
+      secondInterviewScheduledAt: any;
+      jobOfferScheduledAt: any;
       isScouted: boolean;
       job: {
-        __typename?: "JobWithCompanyType";
         id: number;
         title: string;
         jobType: string;
         industry: string;
-        company: {
-          __typename?: "CompanyType";
-          id: number;
-          name: string;
-          deletedAt?: any | null;
-        };
+        company: { id: number; name: string; deletedAt: any };
       };
       user: {
-        __typename?: "UserType";
         id: number;
-        firstName?: string | null;
-        lastName?: string | null;
-        avatarUrl?: string | null;
-        deletedAt?: any | null;
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+        deletedAt: any;
       };
     }>;
   };
@@ -3287,9 +711,7 @@ export type GetEntriesStatisticsQueryVariables = Exact<{
 }>;
 
 export type GetEntriesStatisticsQuery = {
-  __typename?: "Query";
   getEntriesStatistics: {
-    __typename?: "EntriesStatisticsResultType";
     totalCount: number;
     pendingCount: number;
     reviewingCount: number;
@@ -3306,9 +728,7 @@ export type UpdateHotJobScoringWeightsMutationVariables = Exact<{
 }>;
 
 export type UpdateHotJobScoringWeightsMutation = {
-  __typename?: "Mutation";
   updateHotJobScoringWeights: Array<{
-    __typename?: "HotJobScoringWeightType";
     id: number;
     indicator: string;
     weight: number;
@@ -3317,16 +737,12 @@ export type UpdateHotJobScoringWeightsMutation = {
   }>;
 };
 
-export type RecalculateHotJobsMutationVariables = Exact<{
+export type RecalculateHotJobsForAdminMutationVariables = Exact<{
   [key: string]: never;
 }>;
 
-export type RecalculateHotJobsMutation = {
-  __typename?: "Mutation";
-  recalculateHotJobs: {
-    __typename?: "RecalculateResultType";
-    updatedCount: number;
-  };
+export type RecalculateHotJobsForAdminMutation = {
+  recalculateHotJobsForAdmin: { updatedCount: number };
 };
 
 export type GetHotJobScoringWeightsQueryVariables = Exact<{
@@ -3334,9 +750,7 @@ export type GetHotJobScoringWeightsQueryVariables = Exact<{
 }>;
 
 export type GetHotJobScoringWeightsQuery = {
-  __typename?: "Query";
   getHotJobScoringWeights: Array<{
-    __typename?: "HotJobScoringWeightType";
     id: number;
     indicator: string;
     weight: number;
@@ -3348,12 +762,7 @@ export type GetHotJobScoringWeightsQuery = {
 export type GetJobsByHotListQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetJobsByHotListQuery = {
-  __typename?: "Query";
-  getJobsByHotList: Array<{
-    __typename?: "JobWithCompanyType";
-    id: number;
-    title: string;
-  }>;
+  getJobsByHotList: Array<{ id: number; title: string }>;
 };
 
 export type UpdateCompanyInvoiceMutationVariables = Exact<{
@@ -3361,25 +770,15 @@ export type UpdateCompanyInvoiceMutationVariables = Exact<{
 }>;
 
 export type UpdateCompanyInvoiceMutation = {
-  __typename?: "Mutation";
-  updateCompanyInvoice: {
-    __typename?: "CompanyInvoiceType";
-    id: number;
-    amount: number;
-  };
+  updateCompanyInvoice: { id: number; amount: number };
 };
 
 export type GuaranteeCompanyInvoiceMutationVariables = Exact<{
-  invoiceId: Scalars["Int"]["input"];
+  invoiceId: number;
 }>;
 
 export type GuaranteeCompanyInvoiceMutation = {
-  __typename?: "Mutation";
-  guaranteeCompanyInvoice: {
-    __typename?: "CompanyAcceptTicketType";
-    id: number;
-    amount: number;
-  };
+  guaranteeCompanyInvoice: { id: number; amount: number };
 };
 
 export type GetCompanyInvoicesQueryVariables = Exact<{
@@ -3387,9 +786,7 @@ export type GetCompanyInvoicesQueryVariables = Exact<{
 }>;
 
 export type GetCompanyInvoicesQuery = {
-  __typename?: "Query";
   getCompanyInvoices: {
-    __typename?: "CompanyInvoicesResultType";
     limit: number;
     page: number;
     totalCount: number;
@@ -3397,7 +794,6 @@ export type GetCompanyInvoicesQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "CompanyInvoiceType";
       id: number;
       companyName: string;
       entryId: number;
@@ -3405,7 +801,7 @@ export type GetCompanyInvoicesQuery = {
       isDeposit: boolean;
       applicantName: string;
       acceptDate: any;
-      paymentLimitDate?: any | null;
+      paymentLimitDate: any;
       service: string;
       amount: number;
     }>;
@@ -3417,9 +813,7 @@ export type GetCompanyInvoicesStatisticsQueryVariables = Exact<{
 }>;
 
 export type GetCompanyInvoicesStatisticsQuery = {
-  __typename?: "Query";
   getCompanyInvoicesStatistics: {
-    __typename?: "CompanyInvoicesStatisticsResultType";
     totalAmount: number;
     acceptedCount: number;
     generalCount: number;
@@ -3432,22 +826,15 @@ export type UpdateJobIsAgentPlanOnlyMutationVariables = Exact<{
 }>;
 
 export type UpdateJobIsAgentPlanOnlyMutation = {
-  __typename?: "Mutation";
-  updateJobIsAgentPlanOnly: {
-    __typename?: "JobType";
-    id: number;
-    isAgentPlanOnly: boolean;
-  };
+  updateJobIsAgentPlanOnly: { id: number; isAgentPlanOnly: boolean };
 };
 
-export type UpdateJobStatusMutationVariables = Exact<{
+export type UpdateJobStatusForAdminMutationVariables = Exact<{
   input: UpdateJobStatusInput;
 }>;
 
-export type UpdateJobStatusMutation = {
-  __typename?: "Mutation";
-  updateJobStatus: {
-    __typename?: "JobType";
+export type UpdateJobStatusForAdminMutation = {
+  updateJobStatusForAdmin: {
     id: number;
     title: string;
     status: string;
@@ -3460,9 +847,7 @@ export type SearchJobsWithStatsQueryVariables = Exact<{
 }>;
 
 export type SearchJobsWithStatsQuery = {
-  __typename?: "Query";
   searchJobsWithStats: {
-    __typename?: "JobSearchWithStatsResultType";
     limit: number;
     page: number;
     totalCount: number;
@@ -3470,20 +855,19 @@ export type SearchJobsWithStatsQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "JobWithStatsType";
       id: number;
       title: string;
       status: string;
       isAgentPlanOnly: boolean;
-      openedAt?: any | null;
+      openedAt: any;
       pv: number;
       jobHeader: string;
       prefecture: string;
       jobType: string;
       industry: string;
-      deletedAt?: any | null;
+      deletedAt: any;
       companyName: string;
-      companyDeletedAt?: any | null;
+      companyDeletedAt: any;
       favoriteCount: number;
       entryCount: number;
       acceptCount: number;
@@ -3496,9 +880,7 @@ export type GetJobsStatisticsQueryVariables = Exact<{
 }>;
 
 export type GetJobsStatisticsQuery = {
-  __typename?: "Query";
   getJobsStatistics: {
-    __typename?: "JobsStatisticsResultType";
     totalCount: number;
     newPostedCount: number;
     activeCount: number;
@@ -3509,8 +891,7 @@ export type GetJobsStatisticsQuery = {
 export type GetJobsByOldHotListQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetJobsByOldHotListQuery = {
-  __typename?: "Query";
-  getJobsByOldHotList: Array<{ __typename?: "JobWithCompanyType"; id: number }>;
+  getJobsByOldHotList: Array<{ id: number }>;
 };
 
 export type GetJobsByOldPickListQueryVariables = Exact<{
@@ -3518,11 +899,7 @@ export type GetJobsByOldPickListQueryVariables = Exact<{
 }>;
 
 export type GetJobsByOldPickListQuery = {
-  __typename?: "Query";
-  getJobsByOldPickList: Array<{
-    __typename?: "JobWithCompanyType";
-    id: number;
-  }>;
+  getJobsByOldPickList: Array<{ id: number }>;
 };
 
 export type UpdateLineNotificationSettingsMutationVariables = Exact<{
@@ -3530,7 +907,6 @@ export type UpdateLineNotificationSettingsMutationVariables = Exact<{
 }>;
 
 export type UpdateLineNotificationSettingsMutation = {
-  __typename?: "Mutation";
   updateLineNotificationSettings: {
     __typename: "UpdateLineNotificationSettingsResult";
   };
@@ -3541,17 +917,14 @@ export type GetLineNotificationSettingsQueryVariables = Exact<{
 }>;
 
 export type GetLineNotificationSettingsQuery = {
-  __typename?: "Query";
   getLineNotificationSettings: Array<{
-    __typename?: "LineNotificationSettingType";
     key: string;
     message: string;
     isEnabled: boolean;
-    schedule?: {
-      __typename?: "LineNotificationScheduleConfig";
+    schedule: {
       scheduleType: string;
       dayOfWeek: Array<number>;
-      dayOfMonth?: Array<number | null> | null;
+      dayOfMonth: Array<number | null> | null;
       hour: number;
       minute: number;
     } | null;
@@ -3563,9 +936,7 @@ export type UpdateMagazineMutationVariables = Exact<{
 }>;
 
 export type UpdateMagazineMutation = {
-  __typename?: "Mutation";
   updateMagazines: Array<{
-    __typename?: "MagazineType";
     id: number;
     title: string;
     description: string;
@@ -3578,9 +949,7 @@ export type UpdateMagazineMutation = {
 export type GetMagazineQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetMagazineQuery = {
-  __typename?: "Query";
   magazines: Array<{
-    __typename?: "MagazineType";
     id: number;
     title: string;
     description: string;
@@ -3595,9 +964,7 @@ export type GetAdminMessagesQueryVariables = Exact<{
 }>;
 
 export type GetAdminMessagesQuery = {
-  __typename?: "Query";
   getAdminMessages: {
-    __typename?: "AdminMessagesResult";
     totalCount: number;
     page: number;
     limit: number;
@@ -3605,7 +972,6 @@ export type GetAdminMessagesQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "AdminMessage";
       id: number;
       content: string;
       type: string;
@@ -3613,43 +979,30 @@ export type GetAdminMessagesQuery = {
       createdAt: any;
       updatedAt: any;
       entryId: number;
-      user?: {
-        __typename?: "AdminMessageUser";
+      user: {
         id: number;
-        firstName?: string | null;
-        lastName?: string | null;
-        avatarUrl?: string | null;
-        university?: string | null;
-        faculty?: string | null;
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+        university: string | null;
+        faculty: string | null;
       } | null;
-      company?: {
-        __typename?: "AdminMessageCompany";
-        id: number;
-        name: string;
-        iconImageUrl?: string | null;
-      } | null;
+      company: { id: number; name: string; iconImageUrl: string | null } | null;
       entryUser: {
-        __typename?: "AdminMessageUser";
         id: number;
-        firstName?: string | null;
-        lastName?: string | null;
-        avatarUrl?: string | null;
-        university?: string | null;
-        faculty?: string | null;
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+        university: string | null;
+        faculty: string | null;
       };
       job: {
-        __typename?: "AdminMessageJob";
         id: number;
         title: string;
         jobHeader: string;
         industry: string;
         jobType: string;
-        company: {
-          __typename?: "AdminMessageCompany";
-          id: number;
-          name: string;
-          iconImageUrl?: string | null;
-        };
+        company: { id: number; name: string; iconImageUrl: string | null };
       };
     }>;
   };
@@ -3660,7 +1013,6 @@ export type UpdateOldHotJobsMutationVariables = Exact<{
 }>;
 
 export type UpdateOldHotJobsMutation = {
-  __typename?: "Mutation";
   updateOldHotJobs: { __typename: "OldHotJobType" };
 };
 
@@ -3669,7 +1021,6 @@ export type UpdateOldPickJobsMutationVariables = Exact<{
 }>;
 
 export type UpdateOldPickJobsMutation = {
-  __typename?: "Mutation";
   updateOldPickJobs: { __typename: "OldPickJobType" };
 };
 
@@ -3678,9 +1029,7 @@ export type UpdatePickJobScoringWeightsMutationVariables = Exact<{
 }>;
 
 export type UpdatePickJobScoringWeightsMutation = {
-  __typename?: "Mutation";
   updatePickJobScoringWeights: Array<{
-    __typename?: "PickJobScoringWeightType";
     id: number;
     indicator: string;
     weight: number;
@@ -3689,16 +1038,12 @@ export type UpdatePickJobScoringWeightsMutation = {
   }>;
 };
 
-export type RecalculatePickJobsMutationVariables = Exact<{
+export type RecalculatePickJobsForAdminMutationVariables = Exact<{
   [key: string]: never;
 }>;
 
-export type RecalculatePickJobsMutation = {
-  __typename?: "Mutation";
-  recalculatePickJobs: {
-    __typename?: "RecalculateResultType";
-    updatedCount: number;
-  };
+export type RecalculatePickJobsForAdminMutation = {
+  recalculatePickJobsForAdmin: { updatedCount: number };
 };
 
 export type GetPickJobScoringWeightsQueryVariables = Exact<{
@@ -3706,9 +1051,7 @@ export type GetPickJobScoringWeightsQueryVariables = Exact<{
 }>;
 
 export type GetPickJobScoringWeightsQuery = {
-  __typename?: "Query";
   getPickJobScoringWeights: Array<{
-    __typename?: "PickJobScoringWeightType";
     id: number;
     indicator: string;
     weight: number;
@@ -3720,12 +1063,7 @@ export type GetPickJobScoringWeightsQuery = {
 export type GetJobsByPickListQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetJobsByPickListQuery = {
-  __typename?: "Query";
-  getJobsByPickList: Array<{
-    __typename?: "JobWithCompanyType";
-    id: number;
-    title: string;
-  }>;
+  getJobsByPickList: Array<{ id: number; title: string }>;
 };
 
 export type CreateAdditionalScoutTicketMutationVariables = Exact<{
@@ -3733,9 +1071,7 @@ export type CreateAdditionalScoutTicketMutationVariables = Exact<{
 }>;
 
 export type CreateAdditionalScoutTicketMutation = {
-  __typename?: "Mutation";
   createAdditionalScoutTicket: {
-    __typename?: "ScoutTicketAdditionalType";
     id: number;
     companyId: number;
     companyName: string;
@@ -3752,15 +1088,12 @@ export type GetAdditionalScoutTicketsQueryVariables = Exact<{
 }>;
 
 export type GetAdditionalScoutTicketsQuery = {
-  __typename?: "Query";
   getAdditionalScoutTickets: {
-    __typename?: "AdditionalScoutTicketsResultType";
     totalCount: number;
     totalPages: number;
     page: number;
     limit: number;
     items: Array<{
-      __typename?: "ScoutTicketAdditionalType";
       id: number;
       companyId: number;
       companyName: string;
@@ -3778,9 +1111,7 @@ export type SearchUsersQueryVariables = Exact<{
 }>;
 
 export type SearchUsersQuery = {
-  __typename?: "Query";
   searchUsers: {
-    __typename?: "UserSearchResultType";
     limit: number;
     page: number;
     totalCount: number;
@@ -3788,7 +1119,6 @@ export type SearchUsersQuery = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
     items: Array<{
-      __typename?: "UserWithCountType";
       id: number;
       avatarUrl: string;
       lastName: string;
@@ -3803,7 +1133,7 @@ export type SearchUsersQuery = {
       availableDurationMonths: number;
       entryCount: number;
       createdAt: any;
-      deletedAt?: any | null;
+      deletedAt: any;
     }>;
   };
 };
@@ -3813,9 +1143,7 @@ export type GetUsersStatisticsQueryVariables = Exact<{
 }>;
 
 export type GetUsersStatisticsQuery = {
-  __typename?: "Query";
   getUsersStatistics: {
-    __typename?: "UsersStatisticsResultType";
     totalCount: number;
     applicantCount: number;
     acceptedCount: number;
@@ -3824,4080 +1152,3668 @@ export type GetUsersStatisticsQuery = {
 };
 
 export type GetUserQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
+  id: number;
 }>;
 
 export type GetUserQuery = {
-  __typename?: "Query";
-  user?: {
-    __typename?: "UserType";
+  user: {
     id: number;
-    lastName?: string | null;
-    firstName?: string | null;
-    avatarUrl?: string | null;
-    university?: string | null;
-    faculty?: string | null;
-    department?: string | null;
-    gender?: string | null;
-    birthDate?: any | null;
-    prefecture?: string | null;
+    lastName: string | null;
+    firstName: string | null;
+    avatarUrl: string | null;
+    university: string | null;
+    faculty: string | null;
+    department: string | null;
+    gender: string | null;
+    birthDate: any;
+    prefecture: string | null;
     email: string;
-    phoneNumber?: string | null;
-    grade?: string | null;
-    graduationYear?: number | null;
-    availableDaysPerWeek?: number | null;
-    availableHoursPerWeek?: number | null;
-    availableDurationMonths?: number | null;
+    phoneNumber: string | null;
+    grade: string | null;
+    graduationYear: number | null;
+    availableDaysPerWeek: number | null;
+    availableHoursPerWeek: number | null;
+    availableDurationMonths: number | null;
     interestedIndustries: Array<string>;
     interestedJobTypes: Array<string>;
-    selfPR?: string | null;
-    futureGoals?: string | null;
+    selfPR: string | null;
+    futureGoals: string | null;
   } | null;
 };
 
-export const BatchDailyDocument = gql`
-  mutation BatchDaily {
-    batchDaily
-  }
-`;
-export type BatchDailyMutationFn = Apollo.MutationFunction<
-  BatchDailyMutation,
-  BatchDailyMutationVariables
+export const AdminLoginWithGoogleDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "AdminLoginWithGoogle" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "AdminLoginWithGoogleInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminLoginWithGoogle" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  AdminLoginWithGoogleMutation,
+  AdminLoginWithGoogleMutationVariables
 >;
-
-/**
- * __useBatchDailyMutation__
- *
- * To run a mutation, you first call `useBatchDailyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useBatchDailyMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [batchDailyMutation, { data, loading, error }] = useBatchDailyMutation({
- *   variables: {
- *   },
- * });
- */
-export function useBatchDailyMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    BatchDailyMutation,
-    BatchDailyMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<BatchDailyMutation, BatchDailyMutationVariables>(
-    BatchDailyDocument,
-    options,
-  );
-}
-export type BatchDailyMutationHookResult = ReturnType<
-  typeof useBatchDailyMutation
+export const AdminLogoutDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "AdminLogout" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminLogout" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminLogoutMutation, AdminLogoutMutationVariables>;
+export const UpdateAdminUserRoleDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateAdminUserRole" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateAdminUserRoleInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateAdminUserRole" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "role" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateAdminUserRoleMutation,
+  UpdateAdminUserRoleMutationVariables
 >;
-export type BatchDailyMutationResult =
-  Apollo.MutationResult<BatchDailyMutation>;
-export type BatchDailyMutationOptions = Apollo.BaseMutationOptions<
-  BatchDailyMutation,
-  BatchDailyMutationVariables
+export const DeleteAdminUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteAdminUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DeleteAdminUserInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteAdminUser" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteAdminUserMutation,
+  DeleteAdminUserMutationVariables
 >;
-export const SendCompanyReminderDocument = gql`
-  mutation SendCompanyReminder($input: SendCompanyReminderInput!) {
-    sendCompanyReminder(input: $input) {
-      id
-      isSuccess
-      errorMessage
-      underThresholdCount
-      createdAt
-    }
-  }
-`;
-export type SendCompanyReminderMutationFn = Apollo.MutationFunction<
+export const CreateAdminAllowedEmailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateAdminAllowedEmail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateAdminAllowedEmailInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createAdminAllowedEmail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CreateAdminAllowedEmailMutation,
+  CreateAdminAllowedEmailMutationVariables
+>;
+export const DeleteAdminAllowedEmailDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteAdminAllowedEmail" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DeleteAdminAllowedEmailInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteAdminAllowedEmail" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteAdminAllowedEmailMutation,
+  DeleteAdminAllowedEmailMutationVariables
+>;
+export const AdminMeDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AdminMe" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "adminMe" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "avatarUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "role" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AdminMeQuery, AdminMeQueryVariables>;
+export const GetAdminUsersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAdminUsers" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getAdminUsers" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "avatarUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "role" } },
+                { kind: "Field", name: { kind: "Name", value: "isAllowed" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "lastLoggedInAt" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetAdminUsersQuery, GetAdminUsersQueryVariables>;
+export const GetAdminAllowedEmailsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAdminAllowedEmails" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getAdminAllowedEmails" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "initialRole" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "isRegistered" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetAdminAllowedEmailsQuery,
+  GetAdminAllowedEmailsQueryVariables
+>;
+export const BatchDailyDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "BatchDaily" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "batchDaily" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BatchDailyMutation, BatchDailyMutationVariables>;
+export const SendCompanyReminderDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SendCompanyReminder" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SendCompanyReminderInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "sendCompanyReminder" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "isSuccess" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "errorMessage" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "underThresholdCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   SendCompanyReminderMutation,
   SendCompanyReminderMutationVariables
 >;
-
-/**
- * __useSendCompanyReminderMutation__
- *
- * To run a mutation, you first call `useSendCompanyReminderMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendCompanyReminderMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendCompanyReminderMutation, { data, loading, error }] = useSendCompanyReminderMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSendCompanyReminderMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    SendCompanyReminderMutation,
-    SendCompanyReminderMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    SendCompanyReminderMutation,
-    SendCompanyReminderMutationVariables
-  >(SendCompanyReminderDocument, options);
-}
-export type SendCompanyReminderMutationHookResult = ReturnType<
-  typeof useSendCompanyReminderMutation
->;
-export type SendCompanyReminderMutationResult =
-  Apollo.MutationResult<SendCompanyReminderMutation>;
-export type SendCompanyReminderMutationOptions = Apollo.BaseMutationOptions<
-  SendCompanyReminderMutation,
-  SendCompanyReminderMutationVariables
->;
-export const GetReminderCandidateCompaniesDocument = gql`
-  query GetReminderCandidateCompanies(
-    $input: GetReminderCandidateCompaniesInput
-  ) {
-    getReminderCandidateCompanies(input: $input) {
-      id
-      name
-      email
-      overdueCount
-      waitingCount
-    }
-  }
-`;
-
-/**
- * __useGetReminderCandidateCompaniesQuery__
- *
- * To run a query within a React component, call `useGetReminderCandidateCompaniesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReminderCandidateCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetReminderCandidateCompaniesQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetReminderCandidateCompaniesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >(GetReminderCandidateCompaniesDocument, options);
-}
-export function useGetReminderCandidateCompaniesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >(GetReminderCandidateCompaniesDocument, options);
-}
-// @ts-ignore
-export function useGetReminderCandidateCompaniesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetReminderCandidateCompaniesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetReminderCandidateCompanies" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "GetReminderCandidateCompaniesInput" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getReminderCandidateCompanies" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "overdueCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "waitingCount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetReminderCandidateCompaniesQuery,
   GetReminderCandidateCompaniesQueryVariables
 >;
-export function useGetReminderCandidateCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetReminderCandidateCompaniesQuery,
-        GetReminderCandidateCompaniesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetReminderCandidateCompaniesQuery | undefined,
-  GetReminderCandidateCompaniesQueryVariables
->;
-export function useGetReminderCandidateCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetReminderCandidateCompaniesQuery,
-        GetReminderCandidateCompaniesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetReminderCandidateCompaniesQuery,
-    GetReminderCandidateCompaniesQueryVariables
-  >(GetReminderCandidateCompaniesDocument, options);
-}
-export type GetReminderCandidateCompaniesQueryHookResult = ReturnType<
-  typeof useGetReminderCandidateCompaniesQuery
->;
-export type GetReminderCandidateCompaniesLazyQueryHookResult = ReturnType<
-  typeof useGetReminderCandidateCompaniesLazyQuery
->;
-export type GetReminderCandidateCompaniesSuspenseQueryHookResult = ReturnType<
-  typeof useGetReminderCandidateCompaniesSuspenseQuery
->;
-export type GetReminderCandidateCompaniesQueryResult = Apollo.QueryResult<
-  GetReminderCandidateCompaniesQuery,
-  GetReminderCandidateCompaniesQueryVariables
->;
-export const GetCompanyReminderTargetsDocument = gql`
-  query GetCompanyReminderTargets($input: GetCompanyReminderTargetsInput!) {
-    getCompanyReminderTargets(input: $input) {
-      company {
-        id
-        name
-        email
-      }
-      users {
-        entryId
-        userId
-        userName
-        jobTitle
-        delayType
-        thresholdDays
-        elapsedDays
-        isOverdue
-        lastRemindedAt
-        lastRemindedIsOverdue
-      }
-    }
-  }
-`;
-
-/**
- * __useGetCompanyReminderTargetsQuery__
- *
- * To run a query within a React component, call `useGetCompanyReminderTargetsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyReminderTargetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompanyReminderTargetsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompanyReminderTargetsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  > &
-    (
-      | { variables: GetCompanyReminderTargetsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  >(GetCompanyReminderTargetsDocument, options);
-}
-export function useGetCompanyReminderTargetsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  >(GetCompanyReminderTargetsDocument, options);
-}
-// @ts-ignore
-export function useGetCompanyReminderTargetsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompanyReminderTargetsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompanyReminderTargets" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompanyReminderTargetsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanyReminderTargets" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "company" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      { kind: "Field", name: { kind: "Name", value: "email" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "users" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobTitle" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "delayType" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "thresholdDays" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "elapsedDays" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isOverdue" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lastRemindedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lastRemindedIsOverdue" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompanyReminderTargetsQuery,
   GetCompanyReminderTargetsQueryVariables
 >;
-export function useGetCompanyReminderTargetsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyReminderTargetsQuery,
-        GetCompanyReminderTargetsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompanyReminderTargetsQuery | undefined,
-  GetCompanyReminderTargetsQueryVariables
->;
-export function useGetCompanyReminderTargetsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyReminderTargetsQuery,
-        GetCompanyReminderTargetsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompanyReminderTargetsQuery,
-    GetCompanyReminderTargetsQueryVariables
-  >(GetCompanyReminderTargetsDocument, options);
-}
-export type GetCompanyReminderTargetsQueryHookResult = ReturnType<
-  typeof useGetCompanyReminderTargetsQuery
->;
-export type GetCompanyReminderTargetsLazyQueryHookResult = ReturnType<
-  typeof useGetCompanyReminderTargetsLazyQuery
->;
-export type GetCompanyReminderTargetsSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompanyReminderTargetsSuspenseQuery
->;
-export type GetCompanyReminderTargetsQueryResult = Apollo.QueryResult<
-  GetCompanyReminderTargetsQuery,
-  GetCompanyReminderTargetsQueryVariables
->;
-export const GetCompanyRemindersDocument = gql`
-  query GetCompanyReminders($input: GetCompanyRemindersInput!) {
-    getCompanyReminders(input: $input) {
-      id
-      companyId
-      templateName
-      subject
-      body
-      isSuccess
-      errorMessage
-      underThresholdCount
-      createdAt
-      users {
-        id
-        entryId
-        userId
-        userName
-        jobTitle
-        delayType
-        elapsedDays
-        isOverdue
-      }
-    }
-  }
-`;
-
-/**
- * __useGetCompanyRemindersQuery__
- *
- * To run a query within a React component, call `useGetCompanyRemindersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyRemindersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompanyRemindersQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompanyRemindersQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  > &
-    (
-      | { variables: GetCompanyRemindersQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  >(GetCompanyRemindersDocument, options);
-}
-export function useGetCompanyRemindersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  >(GetCompanyRemindersDocument, options);
-}
-// @ts-ignore
-export function useGetCompanyRemindersSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompanyRemindersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompanyReminders" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompanyRemindersInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanyReminders" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "companyId" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "templateName" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "subject" } },
+                { kind: "Field", name: { kind: "Name", value: "body" } },
+                { kind: "Field", name: { kind: "Name", value: "isSuccess" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "errorMessage" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "underThresholdCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "users" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobTitle" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "delayType" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "elapsedDays" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isOverdue" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompanyRemindersQuery,
   GetCompanyRemindersQueryVariables
 >;
-export function useGetCompanyRemindersSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyRemindersQuery,
-        GetCompanyRemindersQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompanyRemindersQuery | undefined,
-  GetCompanyRemindersQueryVariables
+export const UpdateCompanyAgentPlanAmountDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateCompanyAgentPlanAmount" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: {
+                kind: "Name",
+                value: "UpdateCompanyAgentPlanAmountInput",
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateCompanyAgentPlanAmount" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "agentPlanAmount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateCompanyAgentPlanAmountMutation,
+  UpdateCompanyAgentPlanAmountMutationVariables
 >;
-export function useGetCompanyRemindersSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyRemindersQuery,
-        GetCompanyRemindersQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompanyRemindersQuery,
-    GetCompanyRemindersQueryVariables
-  >(GetCompanyRemindersDocument, options);
-}
-export type GetCompanyRemindersQueryHookResult = ReturnType<
-  typeof useGetCompanyRemindersQuery
->;
-export type GetCompanyRemindersLazyQueryHookResult = ReturnType<
-  typeof useGetCompanyRemindersLazyQuery
->;
-export type GetCompanyRemindersSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompanyRemindersSuspenseQuery
->;
-export type GetCompanyRemindersQueryResult = Apollo.QueryResult<
-  GetCompanyRemindersQuery,
-  GetCompanyRemindersQueryVariables
->;
-export const UpdateCompanyDocument = gql`
-  mutation UpdateCompany($input: UpdateCompanyInput!) {
-    updateCompany(input: $input) {
-      id
-      agentPlanAmount
-    }
-  }
-`;
-export type UpdateCompanyMutationFn = Apollo.MutationFunction<
-  UpdateCompanyMutation,
-  UpdateCompanyMutationVariables
->;
-
-/**
- * __useUpdateCompanyMutation__
- *
- * To run a mutation, you first call `useUpdateCompanyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCompanyMutation, { data, loading, error }] = useUpdateCompanyMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateCompanyMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyMutation,
-    UpdateCompanyMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateCompanyMutation,
-    UpdateCompanyMutationVariables
-  >(UpdateCompanyDocument, options);
-}
-export type UpdateCompanyMutationHookResult = ReturnType<
-  typeof useUpdateCompanyMutation
->;
-export type UpdateCompanyMutationResult =
-  Apollo.MutationResult<UpdateCompanyMutation>;
-export type UpdateCompanyMutationOptions = Apollo.BaseMutationOptions<
-  UpdateCompanyMutation,
-  UpdateCompanyMutationVariables
->;
-export const CreateCompanyAcceptTicketDocument = gql`
-  mutation CreateCompanyAcceptTicket($input: CreateCompanyAcceptTicketInput!) {
-    createCompanyAcceptTicket(input: $input) {
-      id
-      companyId
-      count
-      expiredAt
-      amount
-      createdAt
-    }
-  }
-`;
-export type CreateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+export const CreateCompanyAcceptTicketDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateCompanyAcceptTicket" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateCompanyAcceptTicketInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createCompanyAcceptTicket" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "companyId" } },
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                { kind: "Field", name: { kind: "Name", value: "expiredAt" } },
+                { kind: "Field", name: { kind: "Name", value: "amount" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   CreateCompanyAcceptTicketMutation,
   CreateCompanyAcceptTicketMutationVariables
 >;
-
-/**
- * __useCreateCompanyAcceptTicketMutation__
- *
- * To run a mutation, you first call `useCreateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCompanyAcceptTicketMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCompanyAcceptTicketMutation, { data, loading, error }] = useCreateCompanyAcceptTicketMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateCompanyAcceptTicketMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateCompanyAcceptTicketMutation,
-    CreateCompanyAcceptTicketMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateCompanyAcceptTicketMutation,
-    CreateCompanyAcceptTicketMutationVariables
-  >(CreateCompanyAcceptTicketDocument, options);
-}
-export type CreateCompanyAcceptTicketMutationHookResult = ReturnType<
-  typeof useCreateCompanyAcceptTicketMutation
->;
-export type CreateCompanyAcceptTicketMutationResult =
-  Apollo.MutationResult<CreateCompanyAcceptTicketMutation>;
-export type CreateCompanyAcceptTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    CreateCompanyAcceptTicketMutation,
-    CreateCompanyAcceptTicketMutationVariables
-  >;
-export const UpdateCompanyAcceptTicketDocument = gql`
-  mutation UpdateCompanyAcceptTicket($input: UpdateCompanyAcceptTicketInput!) {
-    updateCompanyAcceptTicket(input: $input) {
-      id
-      count
-      expiredAt
-      amount
-    }
-  }
-`;
-export type UpdateCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+export const UpdateCompanyAcceptTicketDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateCompanyAcceptTicket" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateCompanyAcceptTicketInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateCompanyAcceptTicket" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "count" } },
+                { kind: "Field", name: { kind: "Name", value: "expiredAt" } },
+                { kind: "Field", name: { kind: "Name", value: "amount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateCompanyAcceptTicketMutation,
   UpdateCompanyAcceptTicketMutationVariables
 >;
-
-/**
- * __useUpdateCompanyAcceptTicketMutation__
- *
- * To run a mutation, you first call `useUpdateCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyAcceptTicketMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCompanyAcceptTicketMutation, { data, loading, error }] = useUpdateCompanyAcceptTicketMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateCompanyAcceptTicketMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >(UpdateCompanyAcceptTicketDocument, options);
-}
-export type UpdateCompanyAcceptTicketMutationHookResult = ReturnType<
-  typeof useUpdateCompanyAcceptTicketMutation
->;
-export type UpdateCompanyAcceptTicketMutationResult =
-  Apollo.MutationResult<UpdateCompanyAcceptTicketMutation>;
-export type UpdateCompanyAcceptTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateCompanyAcceptTicketMutation,
-    UpdateCompanyAcceptTicketMutationVariables
-  >;
-export const DeleteCompanyAcceptTicketDocument = gql`
-  mutation DeleteCompanyAcceptTicket($input: DeleteCompanyAcceptTicketInput!) {
-    deleteCompanyAcceptTicket(input: $input) {
-      id
-    }
-  }
-`;
-export type DeleteCompanyAcceptTicketMutationFn = Apollo.MutationFunction<
+export const DeleteCompanyAcceptTicketDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteCompanyAcceptTicket" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DeleteCompanyAcceptTicketInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteCompanyAcceptTicket" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   DeleteCompanyAcceptTicketMutation,
   DeleteCompanyAcceptTicketMutationVariables
 >;
-
-/**
- * __useDeleteCompanyAcceptTicketMutation__
- *
- * To run a mutation, you first call `useDeleteCompanyAcceptTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteCompanyAcceptTicketMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteCompanyAcceptTicketMutation, { data, loading, error }] = useDeleteCompanyAcceptTicketMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useDeleteCompanyAcceptTicketMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteCompanyAcceptTicketMutation,
-    DeleteCompanyAcceptTicketMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    DeleteCompanyAcceptTicketMutation,
-    DeleteCompanyAcceptTicketMutationVariables
-  >(DeleteCompanyAcceptTicketDocument, options);
-}
-export type DeleteCompanyAcceptTicketMutationHookResult = ReturnType<
-  typeof useDeleteCompanyAcceptTicketMutation
+export const CreateCompanyInvoicesForAdminDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateCompanyInvoicesForAdmin" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "entryIds" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Int" },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createCompanyInvoicesForAdmin" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "entryIds" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "entryIds" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CreateCompanyInvoicesForAdminMutation,
+  CreateCompanyInvoicesForAdminMutationVariables
 >;
-export type DeleteCompanyAcceptTicketMutationResult =
-  Apollo.MutationResult<DeleteCompanyAcceptTicketMutation>;
-export type DeleteCompanyAcceptTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    DeleteCompanyAcceptTicketMutation,
-    DeleteCompanyAcceptTicketMutationVariables
-  >;
-export const CreateCompanyInvoicesDocument = gql`
-  mutation CreateCompanyInvoices($entryIds: [Int!]!) {
-    createCompanyInvoices(entryIds: $entryIds) {
-      id
-    }
-  }
-`;
-export type CreateCompanyInvoicesMutationFn = Apollo.MutationFunction<
-  CreateCompanyInvoicesMutation,
-  CreateCompanyInvoicesMutationVariables
->;
-
-/**
- * __useCreateCompanyInvoicesMutation__
- *
- * To run a mutation, you first call `useCreateCompanyInvoicesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCompanyInvoicesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCompanyInvoicesMutation, { data, loading, error }] = useCreateCompanyInvoicesMutation({
- *   variables: {
- *      entryIds: // value for 'entryIds'
- *   },
- * });
- */
-export function useCreateCompanyInvoicesMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateCompanyInvoicesMutation,
-    CreateCompanyInvoicesMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateCompanyInvoicesMutation,
-    CreateCompanyInvoicesMutationVariables
-  >(CreateCompanyInvoicesDocument, options);
-}
-export type CreateCompanyInvoicesMutationHookResult = ReturnType<
-  typeof useCreateCompanyInvoicesMutation
->;
-export type CreateCompanyInvoicesMutationResult =
-  Apollo.MutationResult<CreateCompanyInvoicesMutation>;
-export type CreateCompanyInvoicesMutationOptions = Apollo.BaseMutationOptions<
-  CreateCompanyInvoicesMutation,
-  CreateCompanyInvoicesMutationVariables
->;
-export const DeleteCompanyInvoiceDocument = gql`
-  mutation DeleteCompanyInvoice($entryId: Int!) {
-    deleteCompanyInvoice(entryId: $entryId)
-  }
-`;
-export type DeleteCompanyInvoiceMutationFn = Apollo.MutationFunction<
+export const DeleteCompanyInvoiceDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteCompanyInvoice" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "entryId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteCompanyInvoice" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "entryId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "entryId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   DeleteCompanyInvoiceMutation,
   DeleteCompanyInvoiceMutationVariables
 >;
-
-/**
- * __useDeleteCompanyInvoiceMutation__
- *
- * To run a mutation, you first call `useDeleteCompanyInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteCompanyInvoiceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteCompanyInvoiceMutation, { data, loading, error }] = useDeleteCompanyInvoiceMutation({
- *   variables: {
- *      entryId: // value for 'entryId'
- *   },
- * });
- */
-export function useDeleteCompanyInvoiceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteCompanyInvoiceMutation,
-    DeleteCompanyInvoiceMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    DeleteCompanyInvoiceMutation,
-    DeleteCompanyInvoiceMutationVariables
-  >(DeleteCompanyInvoiceDocument, options);
-}
-export type DeleteCompanyInvoiceMutationHookResult = ReturnType<
-  typeof useDeleteCompanyInvoiceMutation
->;
-export type DeleteCompanyInvoiceMutationResult =
-  Apollo.MutationResult<DeleteCompanyInvoiceMutation>;
-export type DeleteCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
-  DeleteCompanyInvoiceMutation,
-  DeleteCompanyInvoiceMutationVariables
->;
-export const GetCompaniesDocument = gql`
-  query getCompanies($input: GetCompaniesInput!) {
-    getCompanies(input: $input) {
-      items {
-        id
-        name
-        industry
-        iconImageUrl
-        prefecture
-        createdAt
-        deletedAt
-        jobCount
-        entryCount
-        interviewCount
-        offerCount
-        acceptCount
-        agentPlanAmount
-      }
-      limit
-      page
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useGetCompaniesQuery__
- *
- * To run a query within a React component, call `useGetCompaniesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompaniesQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompaniesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompaniesQuery,
-    GetCompaniesQueryVariables
-  > &
-    (
-      | { variables: GetCompaniesQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(
-    GetCompaniesDocument,
-    options,
-  );
-}
-export function useGetCompaniesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompaniesQuery,
-    GetCompaniesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(
-    GetCompaniesDocument,
-    options,
-  );
-}
-// @ts-ignore
-export function useGetCompaniesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompaniesQuery,
-    GetCompaniesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<GetCompaniesQuery, GetCompaniesQueryVariables>;
-export function useGetCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompaniesQuery,
-        GetCompaniesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompaniesQuery | undefined,
-  GetCompaniesQueryVariables
->;
-export function useGetCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompaniesQuery,
-        GetCompaniesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<GetCompaniesQuery, GetCompaniesQueryVariables>(
-    GetCompaniesDocument,
-    options,
-  );
-}
-export type GetCompaniesQueryHookResult = ReturnType<
-  typeof useGetCompaniesQuery
->;
-export type GetCompaniesLazyQueryHookResult = ReturnType<
-  typeof useGetCompaniesLazyQuery
->;
-export type GetCompaniesSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompaniesSuspenseQuery
->;
-export type GetCompaniesQueryResult = Apollo.QueryResult<
-  GetCompaniesQuery,
-  GetCompaniesQueryVariables
->;
-export const GetAllCompaniesDocument = gql`
-  query GetAllCompanies {
-    companies {
-      id
-      name
-    }
-  }
-`;
-
-/**
- * __useGetAllCompaniesQuery__
- *
- * To run a query within a React component, call `useGetAllCompaniesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllCompaniesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllCompaniesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetAllCompaniesQuery,
-    GetAllCompaniesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAllCompaniesQuery, GetAllCompaniesQueryVariables>(
-    GetAllCompaniesDocument,
-    options,
-  );
-}
-export function useGetAllCompaniesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAllCompaniesQuery,
-    GetAllCompaniesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAllCompaniesQuery,
-    GetAllCompaniesQueryVariables
-  >(GetAllCompaniesDocument, options);
-}
-// @ts-ignore
-export function useGetAllCompaniesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetAllCompaniesQuery,
-    GetAllCompaniesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompaniesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getCompanies" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompaniesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanies" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "industry" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "iconImageUrl" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "prefecture" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deletedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "interviewCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "offerCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "acceptCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "agentPlanAmount" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetCompaniesQuery, GetCompaniesQueryVariables>;
+export const GetAllCompaniesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAllCompanies" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "companies" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetAllCompaniesQuery,
   GetAllCompaniesQueryVariables
 >;
-export function useGetAllCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAllCompaniesQuery,
-        GetAllCompaniesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetAllCompaniesQuery | undefined,
-  GetAllCompaniesQueryVariables
->;
-export function useGetAllCompaniesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAllCompaniesQuery,
-        GetAllCompaniesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetAllCompaniesQuery,
-    GetAllCompaniesQueryVariables
-  >(GetAllCompaniesDocument, options);
-}
-export type GetAllCompaniesQueryHookResult = ReturnType<
-  typeof useGetAllCompaniesQuery
->;
-export type GetAllCompaniesLazyQueryHookResult = ReturnType<
-  typeof useGetAllCompaniesLazyQuery
->;
-export type GetAllCompaniesSuspenseQueryHookResult = ReturnType<
-  typeof useGetAllCompaniesSuspenseQuery
->;
-export type GetAllCompaniesQueryResult = Apollo.QueryResult<
-  GetAllCompaniesQuery,
-  GetAllCompaniesQueryVariables
->;
-export const GetCompanyAcceptTicketsDocument = gql`
-  query GetCompanyAcceptTickets($input: GetCompanyAcceptTicketsInput!) {
-    getCompanyAcceptTickets(input: $input) {
-      items {
-        id
-        companyId
-        companyName
-        count
-        usedCount
-        expiredAt
-        amount
-        service
-        createdAt
-      }
-      totalCount
-      totalPages
-    }
-  }
-`;
-
-/**
- * __useGetCompanyAcceptTicketsQuery__
- *
- * To run a query within a React component, call `useGetCompanyAcceptTicketsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyAcceptTicketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompanyAcceptTicketsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompanyAcceptTicketsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  > &
-    (
-      | { variables: GetCompanyAcceptTicketsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  >(GetCompanyAcceptTicketsDocument, options);
-}
-export function useGetCompanyAcceptTicketsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  >(GetCompanyAcceptTicketsDocument, options);
-}
-// @ts-ignore
-export function useGetCompanyAcceptTicketsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompanyAcceptTicketsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompanyAcceptTickets" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompanyAcceptTicketsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanyAcceptTickets" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyName" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "count" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "usedCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "expiredAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "amount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "service" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompanyAcceptTicketsQuery,
   GetCompanyAcceptTicketsQueryVariables
 >;
-export function useGetCompanyAcceptTicketsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyAcceptTicketsQuery,
-        GetCompanyAcceptTicketsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompanyAcceptTicketsQuery | undefined,
-  GetCompanyAcceptTicketsQueryVariables
->;
-export function useGetCompanyAcceptTicketsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyAcceptTicketsQuery,
-        GetCompanyAcceptTicketsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompanyAcceptTicketsQuery,
-    GetCompanyAcceptTicketsQueryVariables
-  >(GetCompanyAcceptTicketsDocument, options);
-}
-export type GetCompanyAcceptTicketsQueryHookResult = ReturnType<
-  typeof useGetCompanyAcceptTicketsQuery
->;
-export type GetCompanyAcceptTicketsLazyQueryHookResult = ReturnType<
-  typeof useGetCompanyAcceptTicketsLazyQuery
->;
-export type GetCompanyAcceptTicketsSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompanyAcceptTicketsSuspenseQuery
->;
-export type GetCompanyAcceptTicketsQueryResult = Apollo.QueryResult<
-  GetCompanyAcceptTicketsQuery,
-  GetCompanyAcceptTicketsQueryVariables
->;
-export const GetCompaniesStatisticsDocument = gql`
-  query GetCompaniesStatistics($input: GetCompaniesStatisticsInput!) {
-    getCompaniesStatistics(input: $input) {
-      totalCount
-      postedCount
-      acceptedCount
-      leavedCount
-    }
-  }
-`;
-
-/**
- * __useGetCompaniesStatisticsQuery__
- *
- * To run a query within a React component, call `useGetCompaniesStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompaniesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompaniesStatisticsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompaniesStatisticsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  > &
-    (
-      | { variables: GetCompaniesStatisticsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  >(GetCompaniesStatisticsDocument, options);
-}
-export function useGetCompaniesStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  >(GetCompaniesStatisticsDocument, options);
-}
-// @ts-ignore
-export function useGetCompaniesStatisticsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompaniesStatisticsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompaniesStatistics" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompaniesStatisticsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompaniesStatistics" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "postedCount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "acceptedCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "leavedCount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompaniesStatisticsQuery,
   GetCompaniesStatisticsQueryVariables
 >;
-export function useGetCompaniesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompaniesStatisticsQuery,
-        GetCompaniesStatisticsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompaniesStatisticsQuery | undefined,
-  GetCompaniesStatisticsQueryVariables
->;
-export function useGetCompaniesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompaniesStatisticsQuery,
-        GetCompaniesStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompaniesStatisticsQuery,
-    GetCompaniesStatisticsQueryVariables
-  >(GetCompaniesStatisticsDocument, options);
-}
-export type GetCompaniesStatisticsQueryHookResult = ReturnType<
-  typeof useGetCompaniesStatisticsQuery
->;
-export type GetCompaniesStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetCompaniesStatisticsLazyQuery
->;
-export type GetCompaniesStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompaniesStatisticsSuspenseQuery
->;
-export type GetCompaniesStatisticsQueryResult = Apollo.QueryResult<
-  GetCompaniesStatisticsQuery,
-  GetCompaniesStatisticsQueryVariables
->;
-export const UpdateEntryDocument = gql`
-  mutation UpdateEntry($input: UpdateEntryInput!) {
-    updateEntry(input: $input) {
-      id
-      status
-      updatedAt
-    }
-  }
-`;
-export type UpdateEntryMutationFn = Apollo.MutationFunction<
-  UpdateEntryMutation,
-  UpdateEntryMutationVariables
->;
-
-/**
- * __useUpdateEntryMutation__
- *
- * To run a mutation, you first call `useUpdateEntryMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateEntryMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateEntryMutation, { data, loading, error }] = useUpdateEntryMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateEntryMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateEntryMutation,
-    UpdateEntryMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<UpdateEntryMutation, UpdateEntryMutationVariables>(
-    UpdateEntryDocument,
-    options,
-  );
-}
-export type UpdateEntryMutationHookResult = ReturnType<
-  typeof useUpdateEntryMutation
->;
-export type UpdateEntryMutationResult =
-  Apollo.MutationResult<UpdateEntryMutation>;
-export type UpdateEntryMutationOptions = Apollo.BaseMutationOptions<
-  UpdateEntryMutation,
-  UpdateEntryMutationVariables
->;
-export const SearchEntriesDocument = gql`
-  query SearchEntries($input: SearchEntriesInput!) {
-    searchEntries(input: $input) {
-      items {
-        id
-        jobId
-        userId
-        createdAt
-        updatedAt
-        status
-        joinDate
-        interviewScheduledAt
-        secondInterviewScheduledAt
-        jobOfferScheduledAt
-        isScouted
-        job {
-          id
-          title
-          jobType
-          industry
-          company {
-            id
-            name
-            deletedAt
-          }
-        }
-        user {
-          id
-          firstName
-          lastName
-          avatarUrl
-          deletedAt
-        }
-      }
-      limit
-      page
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useSearchEntriesQuery__
- *
- * To run a query within a React component, call `useSearchEntriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchEntriesQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSearchEntriesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SearchEntriesQuery,
-    SearchEntriesQueryVariables
-  > &
-    (
-      | { variables: SearchEntriesQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<SearchEntriesQuery, SearchEntriesQueryVariables>(
-    SearchEntriesDocument,
-    options,
-  );
-}
-export function useSearchEntriesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SearchEntriesQuery,
-    SearchEntriesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<SearchEntriesQuery, SearchEntriesQueryVariables>(
-    SearchEntriesDocument,
-    options,
-  );
-}
-// @ts-ignore
-export function useSearchEntriesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    SearchEntriesQuery,
-    SearchEntriesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
-  SearchEntriesQuery,
-  SearchEntriesQueryVariables
->;
-export function useSearchEntriesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchEntriesQuery,
-        SearchEntriesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  SearchEntriesQuery | undefined,
-  SearchEntriesQueryVariables
->;
-export function useSearchEntriesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchEntriesQuery,
-        SearchEntriesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    SearchEntriesQuery,
-    SearchEntriesQueryVariables
-  >(SearchEntriesDocument, options);
-}
-export type SearchEntriesQueryHookResult = ReturnType<
-  typeof useSearchEntriesQuery
->;
-export type SearchEntriesLazyQueryHookResult = ReturnType<
-  typeof useSearchEntriesLazyQuery
->;
-export type SearchEntriesSuspenseQueryHookResult = ReturnType<
-  typeof useSearchEntriesSuspenseQuery
->;
-export type SearchEntriesQueryResult = Apollo.QueryResult<
-  SearchEntriesQuery,
-  SearchEntriesQueryVariables
->;
-export const GetEntriesStatisticsDocument = gql`
-  query GetEntriesStatistics($input: GetEntriesStatisticsInput!) {
-    getEntriesStatistics(input: $input) {
-      totalCount
-      pendingCount
-      reviewingCount
-      interviewCount
-      secondInterviewScheduledCount
-      offeredCount
-      acceptedCount
-      rejectedCount
-    }
-  }
-`;
-
-/**
- * __useGetEntriesStatisticsQuery__
- *
- * To run a query within a React component, call `useGetEntriesStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetEntriesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetEntriesStatisticsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetEntriesStatisticsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  > &
-    (
-      | { variables: GetEntriesStatisticsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  >(GetEntriesStatisticsDocument, options);
-}
-export function useGetEntriesStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  >(GetEntriesStatisticsDocument, options);
-}
-// @ts-ignore
-export function useGetEntriesStatisticsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const UpdateEntryDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateEntry" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateEntryInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateEntry" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateEntryMutation, UpdateEntryMutationVariables>;
+export const SearchEntriesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SearchEntries" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SearchEntriesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "searchEntries" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "jobId" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "joinDate" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "interviewScheduledAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: {
+                          kind: "Name",
+                          value: "secondInterviewScheduledAt",
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobOfferScheduledAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isScouted" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "job" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "jobType" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "industry" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "company" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "deletedAt" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "user" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "firstName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "lastName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "avatarUrl" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "deletedAt" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SearchEntriesQuery, SearchEntriesQueryVariables>;
+export const GetEntriesStatisticsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetEntriesStatistics" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetEntriesStatisticsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getEntriesStatistics" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "pendingCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "reviewingCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "interviewCount" },
+                },
+                {
+                  kind: "Field",
+                  name: {
+                    kind: "Name",
+                    value: "secondInterviewScheduledCount",
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "offeredCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "acceptedCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "rejectedCount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetEntriesStatisticsQuery,
   GetEntriesStatisticsQueryVariables
 >;
-export function useGetEntriesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetEntriesStatisticsQuery,
-        GetEntriesStatisticsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetEntriesStatisticsQuery | undefined,
-  GetEntriesStatisticsQueryVariables
->;
-export function useGetEntriesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetEntriesStatisticsQuery,
-        GetEntriesStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetEntriesStatisticsQuery,
-    GetEntriesStatisticsQueryVariables
-  >(GetEntriesStatisticsDocument, options);
-}
-export type GetEntriesStatisticsQueryHookResult = ReturnType<
-  typeof useGetEntriesStatisticsQuery
->;
-export type GetEntriesStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetEntriesStatisticsLazyQuery
->;
-export type GetEntriesStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetEntriesStatisticsSuspenseQuery
->;
-export type GetEntriesStatisticsQueryResult = Apollo.QueryResult<
-  GetEntriesStatisticsQuery,
-  GetEntriesStatisticsQueryVariables
->;
-export const UpdateHotJobScoringWeightsDocument = gql`
-  mutation UpdateHotJobScoringWeights(
-    $input: UpdateHotJobScoringWeightsInput!
-  ) {
-    updateHotJobScoringWeights(input: $input) {
-      id
-      indicator
-      weight
-      displayOrder
-      updatedAt
-    }
-  }
-`;
-export type UpdateHotJobScoringWeightsMutationFn = Apollo.MutationFunction<
+export const UpdateHotJobScoringWeightsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateHotJobScoringWeights" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateHotJobScoringWeightsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateHotJobScoringWeights" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "indicator" } },
+                { kind: "Field", name: { kind: "Name", value: "weight" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "displayOrder" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateHotJobScoringWeightsMutation,
   UpdateHotJobScoringWeightsMutationVariables
 >;
-
-/**
- * __useUpdateHotJobScoringWeightsMutation__
- *
- * To run a mutation, you first call `useUpdateHotJobScoringWeightsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateHotJobScoringWeightsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateHotJobScoringWeightsMutation, { data, loading, error }] = useUpdateHotJobScoringWeightsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateHotJobScoringWeightsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateHotJobScoringWeightsMutation,
-    UpdateHotJobScoringWeightsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateHotJobScoringWeightsMutation,
-    UpdateHotJobScoringWeightsMutationVariables
-  >(UpdateHotJobScoringWeightsDocument, options);
-}
-export type UpdateHotJobScoringWeightsMutationHookResult = ReturnType<
-  typeof useUpdateHotJobScoringWeightsMutation
+export const RecalculateHotJobsForAdminDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "RecalculateHotJobsForAdmin" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "recalculateHotJobsForAdmin" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "updatedCount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RecalculateHotJobsForAdminMutation,
+  RecalculateHotJobsForAdminMutationVariables
 >;
-export type UpdateHotJobScoringWeightsMutationResult =
-  Apollo.MutationResult<UpdateHotJobScoringWeightsMutation>;
-export type UpdateHotJobScoringWeightsMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateHotJobScoringWeightsMutation,
-    UpdateHotJobScoringWeightsMutationVariables
-  >;
-export const RecalculateHotJobsDocument = gql`
-  mutation RecalculateHotJobs {
-    recalculateHotJobs {
-      updatedCount
-    }
-  }
-`;
-export type RecalculateHotJobsMutationFn = Apollo.MutationFunction<
-  RecalculateHotJobsMutation,
-  RecalculateHotJobsMutationVariables
->;
-
-/**
- * __useRecalculateHotJobsMutation__
- *
- * To run a mutation, you first call `useRecalculateHotJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRecalculateHotJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [recalculateHotJobsMutation, { data, loading, error }] = useRecalculateHotJobsMutation({
- *   variables: {
- *   },
- * });
- */
-export function useRecalculateHotJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RecalculateHotJobsMutation,
-    RecalculateHotJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    RecalculateHotJobsMutation,
-    RecalculateHotJobsMutationVariables
-  >(RecalculateHotJobsDocument, options);
-}
-export type RecalculateHotJobsMutationHookResult = ReturnType<
-  typeof useRecalculateHotJobsMutation
->;
-export type RecalculateHotJobsMutationResult =
-  Apollo.MutationResult<RecalculateHotJobsMutation>;
-export type RecalculateHotJobsMutationOptions = Apollo.BaseMutationOptions<
-  RecalculateHotJobsMutation,
-  RecalculateHotJobsMutationVariables
->;
-export const GetHotJobScoringWeightsDocument = gql`
-  query GetHotJobScoringWeights {
-    getHotJobScoringWeights {
-      id
-      indicator
-      weight
-      displayOrder
-      updatedAt
-    }
-  }
-`;
-
-/**
- * __useGetHotJobScoringWeightsQuery__
- *
- * To run a query within a React component, call `useGetHotJobScoringWeightsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHotJobScoringWeightsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHotJobScoringWeightsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetHotJobScoringWeightsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >(GetHotJobScoringWeightsDocument, options);
-}
-export function useGetHotJobScoringWeightsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >(GetHotJobScoringWeightsDocument, options);
-}
-// @ts-ignore
-export function useGetHotJobScoringWeightsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetHotJobScoringWeightsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetHotJobScoringWeights" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getHotJobScoringWeights" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "indicator" } },
+                { kind: "Field", name: { kind: "Name", value: "weight" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "displayOrder" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetHotJobScoringWeightsQuery,
   GetHotJobScoringWeightsQueryVariables
 >;
-export function useGetHotJobScoringWeightsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetHotJobScoringWeightsQuery,
-        GetHotJobScoringWeightsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetHotJobScoringWeightsQuery | undefined,
-  GetHotJobScoringWeightsQueryVariables
->;
-export function useGetHotJobScoringWeightsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetHotJobScoringWeightsQuery,
-        GetHotJobScoringWeightsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetHotJobScoringWeightsQuery,
-    GetHotJobScoringWeightsQueryVariables
-  >(GetHotJobScoringWeightsDocument, options);
-}
-export type GetHotJobScoringWeightsQueryHookResult = ReturnType<
-  typeof useGetHotJobScoringWeightsQuery
->;
-export type GetHotJobScoringWeightsLazyQueryHookResult = ReturnType<
-  typeof useGetHotJobScoringWeightsLazyQuery
->;
-export type GetHotJobScoringWeightsSuspenseQueryHookResult = ReturnType<
-  typeof useGetHotJobScoringWeightsSuspenseQuery
->;
-export type GetHotJobScoringWeightsQueryResult = Apollo.QueryResult<
-  GetHotJobScoringWeightsQuery,
-  GetHotJobScoringWeightsQueryVariables
->;
-export const GetJobsByHotListDocument = gql`
-  query GetJobsByHotList {
-    getJobsByHotList {
-      id
-      title
-    }
-  }
-`;
-
-/**
- * __useGetJobsByHotListQuery__
- *
- * To run a query within a React component, call `useGetJobsByHotListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByHotListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByHotListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByHotListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetJobsByHotListQuery, GetJobsByHotListQueryVariables>(
-    GetJobsByHotListDocument,
-    options,
-  );
-}
-export function useGetJobsByHotListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >(GetJobsByHotListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetJobsByHotListDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobsByHotList" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getJobsByHotList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetJobsByHotListQuery,
   GetJobsByHotListQueryVariables
 >;
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByHotListQuery,
-        GetJobsByHotListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByHotListQuery | undefined,
-  GetJobsByHotListQueryVariables
->;
-export function useGetJobsByHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByHotListQuery,
-        GetJobsByHotListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByHotListQuery,
-    GetJobsByHotListQueryVariables
-  >(GetJobsByHotListDocument, options);
-}
-export type GetJobsByHotListQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListQuery
->;
-export type GetJobsByHotListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListLazyQuery
->;
-export type GetJobsByHotListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByHotListSuspenseQuery
->;
-export type GetJobsByHotListQueryResult = Apollo.QueryResult<
-  GetJobsByHotListQuery,
-  GetJobsByHotListQueryVariables
->;
-export const UpdateCompanyInvoiceDocument = gql`
-  mutation UpdateCompanyInvoice($input: UpdateCompanyInvoiceInput!) {
-    updateCompanyInvoice(input: $input) {
-      id
-      amount
-    }
-  }
-`;
-export type UpdateCompanyInvoiceMutationFn = Apollo.MutationFunction<
+export const UpdateCompanyInvoiceDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateCompanyInvoice" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateCompanyInvoiceInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateCompanyInvoice" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "amount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateCompanyInvoiceMutation,
   UpdateCompanyInvoiceMutationVariables
 >;
-
-/**
- * __useUpdateCompanyInvoiceMutation__
- *
- * To run a mutation, you first call `useUpdateCompanyInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCompanyInvoiceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCompanyInvoiceMutation, { data, loading, error }] = useUpdateCompanyInvoiceMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateCompanyInvoiceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateCompanyInvoiceMutation,
-    UpdateCompanyInvoiceMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateCompanyInvoiceMutation,
-    UpdateCompanyInvoiceMutationVariables
-  >(UpdateCompanyInvoiceDocument, options);
-}
-export type UpdateCompanyInvoiceMutationHookResult = ReturnType<
-  typeof useUpdateCompanyInvoiceMutation
->;
-export type UpdateCompanyInvoiceMutationResult =
-  Apollo.MutationResult<UpdateCompanyInvoiceMutation>;
-export type UpdateCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
-  UpdateCompanyInvoiceMutation,
-  UpdateCompanyInvoiceMutationVariables
->;
-export const GuaranteeCompanyInvoiceDocument = gql`
-  mutation GuaranteeCompanyInvoice($invoiceId: Int!) {
-    guaranteeCompanyInvoice(invoiceId: $invoiceId) {
-      id
-      amount
-    }
-  }
-`;
-export type GuaranteeCompanyInvoiceMutationFn = Apollo.MutationFunction<
+export const GuaranteeCompanyInvoiceDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "GuaranteeCompanyInvoice" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "invoiceId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "guaranteeCompanyInvoice" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "invoiceId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "invoiceId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "amount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GuaranteeCompanyInvoiceMutation,
   GuaranteeCompanyInvoiceMutationVariables
 >;
-
-/**
- * __useGuaranteeCompanyInvoiceMutation__
- *
- * To run a mutation, you first call `useGuaranteeCompanyInvoiceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useGuaranteeCompanyInvoiceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [guaranteeCompanyInvoiceMutation, { data, loading, error }] = useGuaranteeCompanyInvoiceMutation({
- *   variables: {
- *      invoiceId: // value for 'invoiceId'
- *   },
- * });
- */
-export function useGuaranteeCompanyInvoiceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    GuaranteeCompanyInvoiceMutation,
-    GuaranteeCompanyInvoiceMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    GuaranteeCompanyInvoiceMutation,
-    GuaranteeCompanyInvoiceMutationVariables
-  >(GuaranteeCompanyInvoiceDocument, options);
-}
-export type GuaranteeCompanyInvoiceMutationHookResult = ReturnType<
-  typeof useGuaranteeCompanyInvoiceMutation
->;
-export type GuaranteeCompanyInvoiceMutationResult =
-  Apollo.MutationResult<GuaranteeCompanyInvoiceMutation>;
-export type GuaranteeCompanyInvoiceMutationOptions = Apollo.BaseMutationOptions<
-  GuaranteeCompanyInvoiceMutation,
-  GuaranteeCompanyInvoiceMutationVariables
->;
-export const GetCompanyInvoicesDocument = gql`
-  query GetCompanyInvoices($input: GetCompanyInvoicesInput!) {
-    getCompanyInvoices(input: $input) {
-      items {
-        id
-        companyName
-        entryId
-        userId
-        isDeposit
-        applicantName
-        acceptDate
-        paymentLimitDate
-        service
-        amount
-      }
-      limit
-      page
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useGetCompanyInvoicesQuery__
- *
- * To run a query within a React component, call `useGetCompanyInvoicesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyInvoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompanyInvoicesQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompanyInvoicesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  > &
-    (
-      | { variables: GetCompanyInvoicesQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  >(GetCompanyInvoicesDocument, options);
-}
-export function useGetCompanyInvoicesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  >(GetCompanyInvoicesDocument, options);
-}
-// @ts-ignore
-export function useGetCompanyInvoicesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompanyInvoicesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompanyInvoices" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetCompanyInvoicesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanyInvoices" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "userId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isDeposit" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "applicantName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "acceptDate" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "paymentLimitDate" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "service" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "amount" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompanyInvoicesQuery,
   GetCompanyInvoicesQueryVariables
 >;
-export function useGetCompanyInvoicesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyInvoicesQuery,
-        GetCompanyInvoicesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompanyInvoicesQuery | undefined,
-  GetCompanyInvoicesQueryVariables
->;
-export function useGetCompanyInvoicesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyInvoicesQuery,
-        GetCompanyInvoicesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompanyInvoicesQuery,
-    GetCompanyInvoicesQueryVariables
-  >(GetCompanyInvoicesDocument, options);
-}
-export type GetCompanyInvoicesQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesQuery
->;
-export type GetCompanyInvoicesLazyQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesLazyQuery
->;
-export type GetCompanyInvoicesSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesSuspenseQuery
->;
-export type GetCompanyInvoicesQueryResult = Apollo.QueryResult<
-  GetCompanyInvoicesQuery,
-  GetCompanyInvoicesQueryVariables
->;
-export const GetCompanyInvoicesStatisticsDocument = gql`
-  query GetCompanyInvoicesStatistics(
-    $input: GetCompanyInvoicesStatisticsInput!
-  ) {
-    getCompanyInvoicesStatistics(input: $input) {
-      totalAmount
-      acceptedCount
-      generalCount
-      technicalCount
-    }
-  }
-`;
-
-/**
- * __useGetCompanyInvoicesStatisticsQuery__
- *
- * To run a query within a React component, call `useGetCompanyInvoicesStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCompanyInvoicesStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCompanyInvoicesStatisticsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetCompanyInvoicesStatisticsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  > &
-    (
-      | {
-          variables: GetCompanyInvoicesStatisticsQueryVariables;
-          skip?: boolean;
-        }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  >(GetCompanyInvoicesStatisticsDocument, options);
-}
-export function useGetCompanyInvoicesStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  >(GetCompanyInvoicesStatisticsDocument, options);
-}
-// @ts-ignore
-export function useGetCompanyInvoicesStatisticsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetCompanyInvoicesStatisticsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetCompanyInvoicesStatistics" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: {
+                kind: "Name",
+                value: "GetCompanyInvoicesStatisticsInput",
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getCompanyInvoicesStatistics" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "totalAmount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "acceptedCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "generalCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "technicalCount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetCompanyInvoicesStatisticsQuery,
   GetCompanyInvoicesStatisticsQueryVariables
 >;
-export function useGetCompanyInvoicesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyInvoicesStatisticsQuery,
-        GetCompanyInvoicesStatisticsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetCompanyInvoicesStatisticsQuery | undefined,
-  GetCompanyInvoicesStatisticsQueryVariables
->;
-export function useGetCompanyInvoicesStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetCompanyInvoicesStatisticsQuery,
-        GetCompanyInvoicesStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetCompanyInvoicesStatisticsQuery,
-    GetCompanyInvoicesStatisticsQueryVariables
-  >(GetCompanyInvoicesStatisticsDocument, options);
-}
-export type GetCompanyInvoicesStatisticsQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesStatisticsQuery
->;
-export type GetCompanyInvoicesStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesStatisticsLazyQuery
->;
-export type GetCompanyInvoicesStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetCompanyInvoicesStatisticsSuspenseQuery
->;
-export type GetCompanyInvoicesStatisticsQueryResult = Apollo.QueryResult<
-  GetCompanyInvoicesStatisticsQuery,
-  GetCompanyInvoicesStatisticsQueryVariables
->;
-export const UpdateJobIsAgentPlanOnlyDocument = gql`
-  mutation UpdateJobIsAgentPlanOnly($input: UpdateJobIsAgentPlanOnlyInput!) {
-    updateJobIsAgentPlanOnly(input: $input) {
-      id
-      isAgentPlanOnly
-    }
-  }
-`;
-export type UpdateJobIsAgentPlanOnlyMutationFn = Apollo.MutationFunction<
+export const UpdateJobIsAgentPlanOnlyDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateJobIsAgentPlanOnly" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateJobIsAgentPlanOnlyInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateJobIsAgentPlanOnly" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "isAgentPlanOnly" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateJobIsAgentPlanOnlyMutation,
   UpdateJobIsAgentPlanOnlyMutationVariables
 >;
-
-/**
- * __useUpdateJobIsAgentPlanOnlyMutation__
- *
- * To run a mutation, you first call `useUpdateJobIsAgentPlanOnlyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateJobIsAgentPlanOnlyMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateJobIsAgentPlanOnlyMutation, { data, loading, error }] = useUpdateJobIsAgentPlanOnlyMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateJobIsAgentPlanOnlyMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateJobIsAgentPlanOnlyMutation,
-    UpdateJobIsAgentPlanOnlyMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateJobIsAgentPlanOnlyMutation,
-    UpdateJobIsAgentPlanOnlyMutationVariables
-  >(UpdateJobIsAgentPlanOnlyDocument, options);
-}
-export type UpdateJobIsAgentPlanOnlyMutationHookResult = ReturnType<
-  typeof useUpdateJobIsAgentPlanOnlyMutation
+export const UpdateJobStatusForAdminDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateJobStatusForAdmin" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateJobStatusInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateJobStatusForAdmin" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "status" } },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateJobStatusForAdminMutation,
+  UpdateJobStatusForAdminMutationVariables
 >;
-export type UpdateJobIsAgentPlanOnlyMutationResult =
-  Apollo.MutationResult<UpdateJobIsAgentPlanOnlyMutation>;
-export type UpdateJobIsAgentPlanOnlyMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateJobIsAgentPlanOnlyMutation,
-    UpdateJobIsAgentPlanOnlyMutationVariables
-  >;
-export const UpdateJobStatusDocument = gql`
-  mutation UpdateJobStatus($input: UpdateJobStatusInput!) {
-    updateJobStatus(input: $input) {
-      id
-      title
-      status
-      updatedAt
-    }
-  }
-`;
-export type UpdateJobStatusMutationFn = Apollo.MutationFunction<
-  UpdateJobStatusMutation,
-  UpdateJobStatusMutationVariables
->;
-
-/**
- * __useUpdateJobStatusMutation__
- *
- * To run a mutation, you first call `useUpdateJobStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateJobStatusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateJobStatusMutation, { data, loading, error }] = useUpdateJobStatusMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateJobStatusMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateJobStatusMutation,
-    UpdateJobStatusMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateJobStatusMutation,
-    UpdateJobStatusMutationVariables
-  >(UpdateJobStatusDocument, options);
-}
-export type UpdateJobStatusMutationHookResult = ReturnType<
-  typeof useUpdateJobStatusMutation
->;
-export type UpdateJobStatusMutationResult =
-  Apollo.MutationResult<UpdateJobStatusMutation>;
-export type UpdateJobStatusMutationOptions = Apollo.BaseMutationOptions<
-  UpdateJobStatusMutation,
-  UpdateJobStatusMutationVariables
->;
-export const SearchJobsWithStatsDocument = gql`
-  query searchJobsWithStats($input: SearchJobsWithStatsInput!) {
-    searchJobsWithStats(input: $input) {
-      items {
-        id
-        title
-        status
-        isAgentPlanOnly
-        openedAt
-        pv
-        jobHeader
-        prefecture
-        jobType
-        industry
-        deletedAt
-        companyName
-        companyDeletedAt
-        favoriteCount
-        entryCount
-        acceptCount
-      }
-      limit
-      page
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useSearchJobsWithStatsQuery__
- *
- * To run a query within a React component, call `useSearchJobsWithStatsQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchJobsWithStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchJobsWithStatsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSearchJobsWithStatsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  > &
-    (
-      | { variables: SearchJobsWithStatsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  >(SearchJobsWithStatsDocument, options);
-}
-export function useSearchJobsWithStatsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  >(SearchJobsWithStatsDocument, options);
-}
-// @ts-ignore
-export function useSearchJobsWithStatsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const SearchJobsWithStatsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "searchJobsWithStats" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SearchJobsWithStatsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "searchJobsWithStats" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "title" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "status" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isAgentPlanOnly" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "openedAt" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "pv" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobHeader" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "prefecture" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobType" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "industry" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deletedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyDeletedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "favoriteCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "acceptCount" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   SearchJobsWithStatsQuery,
   SearchJobsWithStatsQueryVariables
 >;
-export function useSearchJobsWithStatsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchJobsWithStatsQuery,
-        SearchJobsWithStatsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  SearchJobsWithStatsQuery | undefined,
-  SearchJobsWithStatsQueryVariables
->;
-export function useSearchJobsWithStatsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchJobsWithStatsQuery,
-        SearchJobsWithStatsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    SearchJobsWithStatsQuery,
-    SearchJobsWithStatsQueryVariables
-  >(SearchJobsWithStatsDocument, options);
-}
-export type SearchJobsWithStatsQueryHookResult = ReturnType<
-  typeof useSearchJobsWithStatsQuery
->;
-export type SearchJobsWithStatsLazyQueryHookResult = ReturnType<
-  typeof useSearchJobsWithStatsLazyQuery
->;
-export type SearchJobsWithStatsSuspenseQueryHookResult = ReturnType<
-  typeof useSearchJobsWithStatsSuspenseQuery
->;
-export type SearchJobsWithStatsQueryResult = Apollo.QueryResult<
-  SearchJobsWithStatsQuery,
-  SearchJobsWithStatsQueryVariables
->;
-export const GetJobsStatisticsDocument = gql`
-  query GetJobsStatistics($input: GetJobsStatisticsInput!) {
-    getJobsStatistics(input: $input) {
-      totalCount
-      newPostedCount
-      activeCount
-      closedCount
-    }
-  }
-`;
-
-/**
- * __useGetJobsStatisticsQuery__
- *
- * To run a query within a React component, call `useGetJobsStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsStatisticsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetJobsStatisticsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  > &
-    (
-      | { variables: GetJobsStatisticsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  >(GetJobsStatisticsDocument, options);
-}
-export function useGetJobsStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  >(GetJobsStatisticsDocument, options);
-}
-// @ts-ignore
-export function useGetJobsStatisticsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetJobsStatisticsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobsStatistics" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetJobsStatisticsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getJobsStatistics" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "newPostedCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "activeCount" } },
+                { kind: "Field", name: { kind: "Name", value: "closedCount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetJobsStatisticsQuery,
   GetJobsStatisticsQueryVariables
 >;
-export function useGetJobsStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsStatisticsQuery,
-        GetJobsStatisticsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsStatisticsQuery | undefined,
-  GetJobsStatisticsQueryVariables
->;
-export function useGetJobsStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsStatisticsQuery,
-        GetJobsStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsStatisticsQuery,
-    GetJobsStatisticsQueryVariables
-  >(GetJobsStatisticsDocument, options);
-}
-export type GetJobsStatisticsQueryHookResult = ReturnType<
-  typeof useGetJobsStatisticsQuery
->;
-export type GetJobsStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetJobsStatisticsLazyQuery
->;
-export type GetJobsStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsStatisticsSuspenseQuery
->;
-export type GetJobsStatisticsQueryResult = Apollo.QueryResult<
-  GetJobsStatisticsQuery,
-  GetJobsStatisticsQueryVariables
->;
-export const GetJobsByOldHotListDocument = gql`
-  query GetJobsByOldHotList {
-    getJobsByOldHotList {
-      id
-    }
-  }
-`;
-
-/**
- * __useGetJobsByOldHotListQuery__
- *
- * To run a query within a React component, call `useGetJobsByOldHotListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByOldHotListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByOldHotListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByOldHotListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >(GetJobsByOldHotListDocument, options);
-}
-export function useGetJobsByOldHotListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >(GetJobsByOldHotListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByOldHotListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetJobsByOldHotListDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobsByOldHotList" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getJobsByOldHotList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetJobsByOldHotListQuery,
   GetJobsByOldHotListQueryVariables
 >;
-export function useGetJobsByOldHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByOldHotListQuery,
-        GetJobsByOldHotListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByOldHotListQuery | undefined,
-  GetJobsByOldHotListQueryVariables
->;
-export function useGetJobsByOldHotListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByOldHotListQuery,
-        GetJobsByOldHotListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByOldHotListQuery,
-    GetJobsByOldHotListQueryVariables
-  >(GetJobsByOldHotListDocument, options);
-}
-export type GetJobsByOldHotListQueryHookResult = ReturnType<
-  typeof useGetJobsByOldHotListQuery
->;
-export type GetJobsByOldHotListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByOldHotListLazyQuery
->;
-export type GetJobsByOldHotListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByOldHotListSuspenseQuery
->;
-export type GetJobsByOldHotListQueryResult = Apollo.QueryResult<
-  GetJobsByOldHotListQuery,
-  GetJobsByOldHotListQueryVariables
->;
-export const GetJobsByOldPickListDocument = gql`
-  query GetJobsByOldPickList {
-    getJobsByOldPickList {
-      id
-    }
-  }
-`;
-
-/**
- * __useGetJobsByOldPickListQuery__
- *
- * To run a query within a React component, call `useGetJobsByOldPickListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByOldPickListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByOldPickListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByOldPickListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >(GetJobsByOldPickListDocument, options);
-}
-export function useGetJobsByOldPickListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >(GetJobsByOldPickListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByOldPickListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetJobsByOldPickListDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobsByOldPickList" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getJobsByOldPickList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetJobsByOldPickListQuery,
   GetJobsByOldPickListQueryVariables
 >;
-export function useGetJobsByOldPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByOldPickListQuery,
-        GetJobsByOldPickListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByOldPickListQuery | undefined,
-  GetJobsByOldPickListQueryVariables
->;
-export function useGetJobsByOldPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByOldPickListQuery,
-        GetJobsByOldPickListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByOldPickListQuery,
-    GetJobsByOldPickListQueryVariables
-  >(GetJobsByOldPickListDocument, options);
-}
-export type GetJobsByOldPickListQueryHookResult = ReturnType<
-  typeof useGetJobsByOldPickListQuery
->;
-export type GetJobsByOldPickListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByOldPickListLazyQuery
->;
-export type GetJobsByOldPickListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByOldPickListSuspenseQuery
->;
-export type GetJobsByOldPickListQueryResult = Apollo.QueryResult<
-  GetJobsByOldPickListQuery,
-  GetJobsByOldPickListQueryVariables
->;
-export const UpdateLineNotificationSettingsDocument = gql`
-  mutation UpdateLineNotificationSettings(
-    $input: UpdateLineNotificationSettingsInput!
-  ) {
-    updateLineNotificationSettings(input: $input) {
-      __typename
-    }
-  }
-`;
-export type UpdateLineNotificationSettingsMutationFn = Apollo.MutationFunction<
+export const UpdateLineNotificationSettingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateLineNotificationSettings" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: {
+                kind: "Name",
+                value: "UpdateLineNotificationSettingsInput",
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateLineNotificationSettings" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateLineNotificationSettingsMutation,
   UpdateLineNotificationSettingsMutationVariables
 >;
-
-/**
- * __useUpdateLineNotificationSettingsMutation__
- *
- * To run a mutation, you first call `useUpdateLineNotificationSettingsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateLineNotificationSettingsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateLineNotificationSettingsMutation, { data, loading, error }] = useUpdateLineNotificationSettingsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateLineNotificationSettingsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateLineNotificationSettingsMutation,
-    UpdateLineNotificationSettingsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateLineNotificationSettingsMutation,
-    UpdateLineNotificationSettingsMutationVariables
-  >(UpdateLineNotificationSettingsDocument, options);
-}
-export type UpdateLineNotificationSettingsMutationHookResult = ReturnType<
-  typeof useUpdateLineNotificationSettingsMutation
->;
-export type UpdateLineNotificationSettingsMutationResult =
-  Apollo.MutationResult<UpdateLineNotificationSettingsMutation>;
-export type UpdateLineNotificationSettingsMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdateLineNotificationSettingsMutation,
-    UpdateLineNotificationSettingsMutationVariables
-  >;
-export const GetLineNotificationSettingsDocument = gql`
-  query GetLineNotificationSettings {
-    getLineNotificationSettings {
-      key
-      message
-      isEnabled
-      schedule {
-        scheduleType
-        dayOfWeek
-        dayOfMonth
-        hour
-        minute
-      }
-    }
-  }
-`;
-
-/**
- * __useGetLineNotificationSettingsQuery__
- *
- * To run a query within a React component, call `useGetLineNotificationSettingsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLineNotificationSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLineNotificationSettingsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetLineNotificationSettingsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >(GetLineNotificationSettingsDocument, options);
-}
-export function useGetLineNotificationSettingsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >(GetLineNotificationSettingsDocument, options);
-}
-// @ts-ignore
-export function useGetLineNotificationSettingsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetLineNotificationSettingsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetLineNotificationSettings" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getLineNotificationSettings" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "key" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                { kind: "Field", name: { kind: "Name", value: "isEnabled" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "schedule" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "scheduleType" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "dayOfWeek" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "dayOfMonth" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "hour" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "minute" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetLineNotificationSettingsQuery,
   GetLineNotificationSettingsQueryVariables
 >;
-export function useGetLineNotificationSettingsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetLineNotificationSettingsQuery,
-        GetLineNotificationSettingsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetLineNotificationSettingsQuery | undefined,
-  GetLineNotificationSettingsQueryVariables
->;
-export function useGetLineNotificationSettingsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetLineNotificationSettingsQuery,
-        GetLineNotificationSettingsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetLineNotificationSettingsQuery,
-    GetLineNotificationSettingsQueryVariables
-  >(GetLineNotificationSettingsDocument, options);
-}
-export type GetLineNotificationSettingsQueryHookResult = ReturnType<
-  typeof useGetLineNotificationSettingsQuery
->;
-export type GetLineNotificationSettingsLazyQueryHookResult = ReturnType<
-  typeof useGetLineNotificationSettingsLazyQuery
->;
-export type GetLineNotificationSettingsSuspenseQueryHookResult = ReturnType<
-  typeof useGetLineNotificationSettingsSuspenseQuery
->;
-export type GetLineNotificationSettingsQueryResult = Apollo.QueryResult<
-  GetLineNotificationSettingsQuery,
-  GetLineNotificationSettingsQueryVariables
->;
-export const UpdateMagazineDocument = gql`
-  mutation UpdateMagazine($input: UpdateMagazinesInput!) {
-    updateMagazines(input: $input) {
-      id
-      title
-      description
-      category
-      thumbnailUrl
-      articleUrl
-    }
-  }
-`;
-export type UpdateMagazineMutationFn = Apollo.MutationFunction<
+export const UpdateMagazineDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateMagazine" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateMagazinesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateMagazines" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "category" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "thumbnailUrl" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "articleUrl" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateMagazineMutation,
   UpdateMagazineMutationVariables
 >;
-
-/**
- * __useUpdateMagazineMutation__
- *
- * To run a mutation, you first call `useUpdateMagazineMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateMagazineMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateMagazineMutation, { data, loading, error }] = useUpdateMagazineMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateMagazineMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateMagazineMutation,
-    UpdateMagazineMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateMagazineMutation,
-    UpdateMagazineMutationVariables
-  >(UpdateMagazineDocument, options);
-}
-export type UpdateMagazineMutationHookResult = ReturnType<
-  typeof useUpdateMagazineMutation
->;
-export type UpdateMagazineMutationResult =
-  Apollo.MutationResult<UpdateMagazineMutation>;
-export type UpdateMagazineMutationOptions = Apollo.BaseMutationOptions<
-  UpdateMagazineMutation,
-  UpdateMagazineMutationVariables
->;
-export const GetMagazineDocument = gql`
-  query GetMagazine {
-    magazines {
-      id
-      title
-      description
-      category
-      thumbnailUrl
-      articleUrl
-    }
-  }
-`;
-
-/**
- * __useGetMagazineQuery__
- *
- * To run a query within a React component, call `useGetMagazineQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMagazineQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMagazineQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetMagazineQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetMagazineQuery,
-    GetMagazineQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetMagazineQuery, GetMagazineQueryVariables>(
-    GetMagazineDocument,
-    options,
-  );
-}
-export function useGetMagazineLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetMagazineQuery,
-    GetMagazineQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetMagazineQuery, GetMagazineQueryVariables>(
-    GetMagazineDocument,
-    options,
-  );
-}
-// @ts-ignore
-export function useGetMagazineSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetMagazineQuery,
-    GetMagazineQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<GetMagazineQuery, GetMagazineQueryVariables>;
-export function useGetMagazineSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetMagazineQuery,
-        GetMagazineQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetMagazineQuery | undefined,
-  GetMagazineQueryVariables
->;
-export function useGetMagazineSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetMagazineQuery,
-        GetMagazineQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<GetMagazineQuery, GetMagazineQueryVariables>(
-    GetMagazineDocument,
-    options,
-  );
-}
-export type GetMagazineQueryHookResult = ReturnType<typeof useGetMagazineQuery>;
-export type GetMagazineLazyQueryHookResult = ReturnType<
-  typeof useGetMagazineLazyQuery
->;
-export type GetMagazineSuspenseQueryHookResult = ReturnType<
-  typeof useGetMagazineSuspenseQuery
->;
-export type GetMagazineQueryResult = Apollo.QueryResult<
-  GetMagazineQuery,
-  GetMagazineQueryVariables
->;
-export const GetAdminMessagesDocument = gql`
-  query GetAdminMessages($input: GetAdminMessagesInput!) {
-    getAdminMessages(input: $input) {
-      items {
-        id
-        content
-        type
-        isRead
-        createdAt
-        updatedAt
-        entryId
-        user {
-          id
-          firstName
-          lastName
-          avatarUrl
-          university
-          faculty
-        }
-        company {
-          id
-          name
-          iconImageUrl
-        }
-        entryUser {
-          id
-          firstName
-          lastName
-          avatarUrl
-          university
-          faculty
-        }
-        job {
-          id
-          title
-          jobHeader
-          industry
-          jobType
-          company {
-            id
-            name
-            iconImageUrl
-          }
-        }
-      }
-      totalCount
-      page
-      limit
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useGetAdminMessagesQuery__
- *
- * To run a query within a React component, call `useGetAdminMessagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAdminMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAdminMessagesQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetAdminMessagesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAdminMessagesQuery,
-    GetAdminMessagesQueryVariables
-  > &
-    (
-      | { variables: GetAdminMessagesQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetAdminMessagesQuery, GetAdminMessagesQueryVariables>(
-    GetAdminMessagesDocument,
-    options,
-  );
-}
-export function useGetAdminMessagesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAdminMessagesQuery,
-    GetAdminMessagesQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAdminMessagesQuery,
-    GetAdminMessagesQueryVariables
-  >(GetAdminMessagesDocument, options);
-}
-// @ts-ignore
-export function useGetAdminMessagesSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetAdminMessagesQuery,
-    GetAdminMessagesQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetMagazineDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetMagazine" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "magazines" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                { kind: "Field", name: { kind: "Name", value: "category" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "thumbnailUrl" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "articleUrl" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetMagazineQuery, GetMagazineQueryVariables>;
+export const GetAdminMessagesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAdminMessages" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetAdminMessagesInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getAdminMessages" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "content" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "isRead" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updatedAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "user" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "firstName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "lastName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "avatarUrl" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "university" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "faculty" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "company" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "name" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "iconImageUrl" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryUser" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "firstName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "lastName" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "avatarUrl" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "university" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "faculty" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "job" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "jobHeader" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "industry" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "jobType" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "company" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "name" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "iconImageUrl",
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetAdminMessagesQuery,
   GetAdminMessagesQueryVariables
 >;
-export function useGetAdminMessagesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAdminMessagesQuery,
-        GetAdminMessagesQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetAdminMessagesQuery | undefined,
-  GetAdminMessagesQueryVariables
->;
-export function useGetAdminMessagesSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAdminMessagesQuery,
-        GetAdminMessagesQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetAdminMessagesQuery,
-    GetAdminMessagesQueryVariables
-  >(GetAdminMessagesDocument, options);
-}
-export type GetAdminMessagesQueryHookResult = ReturnType<
-  typeof useGetAdminMessagesQuery
->;
-export type GetAdminMessagesLazyQueryHookResult = ReturnType<
-  typeof useGetAdminMessagesLazyQuery
->;
-export type GetAdminMessagesSuspenseQueryHookResult = ReturnType<
-  typeof useGetAdminMessagesSuspenseQuery
->;
-export type GetAdminMessagesQueryResult = Apollo.QueryResult<
-  GetAdminMessagesQuery,
-  GetAdminMessagesQueryVariables
->;
-export const UpdateOldHotJobsDocument = gql`
-  mutation UpdateOldHotJobs($input: UpdateOldHotJobsInput!) {
-    updateOldHotJobs(input: $input) {
-      __typename
-    }
-  }
-`;
-export type UpdateOldHotJobsMutationFn = Apollo.MutationFunction<
+export const UpdateOldHotJobsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateOldHotJobs" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateOldHotJobsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateOldHotJobs" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateOldHotJobsMutation,
   UpdateOldHotJobsMutationVariables
 >;
-
-/**
- * __useUpdateOldHotJobsMutation__
- *
- * To run a mutation, you first call `useUpdateOldHotJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateOldHotJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateOldHotJobsMutation, { data, loading, error }] = useUpdateOldHotJobsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateOldHotJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateOldHotJobsMutation,
-    UpdateOldHotJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateOldHotJobsMutation,
-    UpdateOldHotJobsMutationVariables
-  >(UpdateOldHotJobsDocument, options);
-}
-export type UpdateOldHotJobsMutationHookResult = ReturnType<
-  typeof useUpdateOldHotJobsMutation
->;
-export type UpdateOldHotJobsMutationResult =
-  Apollo.MutationResult<UpdateOldHotJobsMutation>;
-export type UpdateOldHotJobsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateOldHotJobsMutation,
-  UpdateOldHotJobsMutationVariables
->;
-export const UpdateOldPickJobsDocument = gql`
-  mutation UpdateOldPickJobs($input: UpdateOldPickJobsInput!) {
-    updateOldPickJobs(input: $input) {
-      __typename
-    }
-  }
-`;
-export type UpdateOldPickJobsMutationFn = Apollo.MutationFunction<
+export const UpdateOldPickJobsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateOldPickJobs" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateOldPickJobsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateOldPickJobs" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdateOldPickJobsMutation,
   UpdateOldPickJobsMutationVariables
 >;
-
-/**
- * __useUpdateOldPickJobsMutation__
- *
- * To run a mutation, you first call `useUpdateOldPickJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateOldPickJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateOldPickJobsMutation, { data, loading, error }] = useUpdateOldPickJobsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateOldPickJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateOldPickJobsMutation,
-    UpdateOldPickJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateOldPickJobsMutation,
-    UpdateOldPickJobsMutationVariables
-  >(UpdateOldPickJobsDocument, options);
-}
-export type UpdateOldPickJobsMutationHookResult = ReturnType<
-  typeof useUpdateOldPickJobsMutation
->;
-export type UpdateOldPickJobsMutationResult =
-  Apollo.MutationResult<UpdateOldPickJobsMutation>;
-export type UpdateOldPickJobsMutationOptions = Apollo.BaseMutationOptions<
-  UpdateOldPickJobsMutation,
-  UpdateOldPickJobsMutationVariables
->;
-export const UpdatePickJobScoringWeightsDocument = gql`
-  mutation UpdatePickJobScoringWeights(
-    $input: UpdatePickJobScoringWeightsInput!
-  ) {
-    updatePickJobScoringWeights(input: $input) {
-      id
-      indicator
-      weight
-      displayOrder
-      updatedAt
-    }
-  }
-`;
-export type UpdatePickJobScoringWeightsMutationFn = Apollo.MutationFunction<
+export const UpdatePickJobScoringWeightsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdatePickJobScoringWeights" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdatePickJobScoringWeightsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updatePickJobScoringWeights" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "indicator" } },
+                { kind: "Field", name: { kind: "Name", value: "weight" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "displayOrder" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   UpdatePickJobScoringWeightsMutation,
   UpdatePickJobScoringWeightsMutationVariables
 >;
-
-/**
- * __useUpdatePickJobScoringWeightsMutation__
- *
- * To run a mutation, you first call `useUpdatePickJobScoringWeightsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdatePickJobScoringWeightsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updatePickJobScoringWeightsMutation, { data, loading, error }] = useUpdatePickJobScoringWeightsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdatePickJobScoringWeightsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdatePickJobScoringWeightsMutation,
-    UpdatePickJobScoringWeightsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdatePickJobScoringWeightsMutation,
-    UpdatePickJobScoringWeightsMutationVariables
-  >(UpdatePickJobScoringWeightsDocument, options);
-}
-export type UpdatePickJobScoringWeightsMutationHookResult = ReturnType<
-  typeof useUpdatePickJobScoringWeightsMutation
+export const RecalculatePickJobsForAdminDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "RecalculatePickJobsForAdmin" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "recalculatePickJobsForAdmin" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "updatedCount" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RecalculatePickJobsForAdminMutation,
+  RecalculatePickJobsForAdminMutationVariables
 >;
-export type UpdatePickJobScoringWeightsMutationResult =
-  Apollo.MutationResult<UpdatePickJobScoringWeightsMutation>;
-export type UpdatePickJobScoringWeightsMutationOptions =
-  Apollo.BaseMutationOptions<
-    UpdatePickJobScoringWeightsMutation,
-    UpdatePickJobScoringWeightsMutationVariables
-  >;
-export const RecalculatePickJobsDocument = gql`
-  mutation RecalculatePickJobs {
-    recalculatePickJobs {
-      updatedCount
-    }
-  }
-`;
-export type RecalculatePickJobsMutationFn = Apollo.MutationFunction<
-  RecalculatePickJobsMutation,
-  RecalculatePickJobsMutationVariables
->;
-
-/**
- * __useRecalculatePickJobsMutation__
- *
- * To run a mutation, you first call `useRecalculatePickJobsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRecalculatePickJobsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [recalculatePickJobsMutation, { data, loading, error }] = useRecalculatePickJobsMutation({
- *   variables: {
- *   },
- * });
- */
-export function useRecalculatePickJobsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RecalculatePickJobsMutation,
-    RecalculatePickJobsMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    RecalculatePickJobsMutation,
-    RecalculatePickJobsMutationVariables
-  >(RecalculatePickJobsDocument, options);
-}
-export type RecalculatePickJobsMutationHookResult = ReturnType<
-  typeof useRecalculatePickJobsMutation
->;
-export type RecalculatePickJobsMutationResult =
-  Apollo.MutationResult<RecalculatePickJobsMutation>;
-export type RecalculatePickJobsMutationOptions = Apollo.BaseMutationOptions<
-  RecalculatePickJobsMutation,
-  RecalculatePickJobsMutationVariables
->;
-export const GetPickJobScoringWeightsDocument = gql`
-  query GetPickJobScoringWeights {
-    getPickJobScoringWeights {
-      id
-      indicator
-      weight
-      displayOrder
-      updatedAt
-    }
-  }
-`;
-
-/**
- * __useGetPickJobScoringWeightsQuery__
- *
- * To run a query within a React component, call `useGetPickJobScoringWeightsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPickJobScoringWeightsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPickJobScoringWeightsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPickJobScoringWeightsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >(GetPickJobScoringWeightsDocument, options);
-}
-export function useGetPickJobScoringWeightsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >(GetPickJobScoringWeightsDocument, options);
-}
-// @ts-ignore
-export function useGetPickJobScoringWeightsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetPickJobScoringWeightsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetPickJobScoringWeights" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getPickJobScoringWeights" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "indicator" } },
+                { kind: "Field", name: { kind: "Name", value: "weight" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "displayOrder" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetPickJobScoringWeightsQuery,
   GetPickJobScoringWeightsQueryVariables
 >;
-export function useGetPickJobScoringWeightsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetPickJobScoringWeightsQuery,
-        GetPickJobScoringWeightsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetPickJobScoringWeightsQuery | undefined,
-  GetPickJobScoringWeightsQueryVariables
->;
-export function useGetPickJobScoringWeightsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetPickJobScoringWeightsQuery,
-        GetPickJobScoringWeightsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetPickJobScoringWeightsQuery,
-    GetPickJobScoringWeightsQueryVariables
-  >(GetPickJobScoringWeightsDocument, options);
-}
-export type GetPickJobScoringWeightsQueryHookResult = ReturnType<
-  typeof useGetPickJobScoringWeightsQuery
->;
-export type GetPickJobScoringWeightsLazyQueryHookResult = ReturnType<
-  typeof useGetPickJobScoringWeightsLazyQuery
->;
-export type GetPickJobScoringWeightsSuspenseQueryHookResult = ReturnType<
-  typeof useGetPickJobScoringWeightsSuspenseQuery
->;
-export type GetPickJobScoringWeightsQueryResult = Apollo.QueryResult<
-  GetPickJobScoringWeightsQuery,
-  GetPickJobScoringWeightsQueryVariables
->;
-export const GetJobsByPickListDocument = gql`
-  query GetJobsByPickList {
-    getJobsByPickList {
-      id
-      title
-    }
-  }
-`;
-
-/**
- * __useGetJobsByPickListQuery__
- *
- * To run a query within a React component, call `useGetJobsByPickListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetJobsByPickListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetJobsByPickListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetJobsByPickListQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-export function useGetJobsByPickListLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-// @ts-ignore
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetJobsByPickListDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobsByPickList" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getJobsByPickList" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "title" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetJobsByPickListQuery,
   GetJobsByPickListQueryVariables
 >;
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByPickListQuery,
-        GetJobsByPickListQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetJobsByPickListQuery | undefined,
-  GetJobsByPickListQueryVariables
->;
-export function useGetJobsByPickListSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetJobsByPickListQuery,
-        GetJobsByPickListQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetJobsByPickListQuery,
-    GetJobsByPickListQueryVariables
-  >(GetJobsByPickListDocument, options);
-}
-export type GetJobsByPickListQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListQuery
->;
-export type GetJobsByPickListLazyQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListLazyQuery
->;
-export type GetJobsByPickListSuspenseQueryHookResult = ReturnType<
-  typeof useGetJobsByPickListSuspenseQuery
->;
-export type GetJobsByPickListQueryResult = Apollo.QueryResult<
-  GetJobsByPickListQuery,
-  GetJobsByPickListQueryVariables
->;
-export const CreateAdditionalScoutTicketDocument = gql`
-  mutation CreateAdditionalScoutTicket(
-    $input: CreateAdditionalScoutTicketInput!
-  ) {
-    createAdditionalScoutTicket(input: $input) {
-      id
-      companyId
-      companyName
-      totalCount
-      usedCount
-      remainingCount
-      expiredAt
-      createdAt
-    }
-  }
-`;
-export type CreateAdditionalScoutTicketMutationFn = Apollo.MutationFunction<
+export const CreateAdditionalScoutTicketDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateAdditionalScoutTicket" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateAdditionalScoutTicketInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createAdditionalScoutTicket" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "companyId" } },
+                { kind: "Field", name: { kind: "Name", value: "companyName" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "usedCount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "remainingCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "expiredAt" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   CreateAdditionalScoutTicketMutation,
   CreateAdditionalScoutTicketMutationVariables
 >;
-
-/**
- * __useCreateAdditionalScoutTicketMutation__
- *
- * To run a mutation, you first call `useCreateAdditionalScoutTicketMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAdditionalScoutTicketMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAdditionalScoutTicketMutation, { data, loading, error }] = useCreateAdditionalScoutTicketMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateAdditionalScoutTicketMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateAdditionalScoutTicketMutation,
-    CreateAdditionalScoutTicketMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateAdditionalScoutTicketMutation,
-    CreateAdditionalScoutTicketMutationVariables
-  >(CreateAdditionalScoutTicketDocument, options);
-}
-export type CreateAdditionalScoutTicketMutationHookResult = ReturnType<
-  typeof useCreateAdditionalScoutTicketMutation
->;
-export type CreateAdditionalScoutTicketMutationResult =
-  Apollo.MutationResult<CreateAdditionalScoutTicketMutation>;
-export type CreateAdditionalScoutTicketMutationOptions =
-  Apollo.BaseMutationOptions<
-    CreateAdditionalScoutTicketMutation,
-    CreateAdditionalScoutTicketMutationVariables
-  >;
-export const GetAdditionalScoutTicketsDocument = gql`
-  query GetAdditionalScoutTickets($input: SearchAdditionalScoutTicketsInput!) {
-    getAdditionalScoutTickets(input: $input) {
-      items {
-        id
-        companyId
-        companyName
-        totalCount
-        usedCount
-        remainingCount
-        expiredAt
-        createdAt
-      }
-      totalCount
-      totalPages
-      page
-      limit
-    }
-  }
-`;
-
-/**
- * __useGetAdditionalScoutTicketsQuery__
- *
- * To run a query within a React component, call `useGetAdditionalScoutTicketsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAdditionalScoutTicketsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAdditionalScoutTicketsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetAdditionalScoutTicketsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  > &
-    (
-      | { variables: GetAdditionalScoutTicketsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  >(GetAdditionalScoutTicketsDocument, options);
-}
-export function useGetAdditionalScoutTicketsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  >(GetAdditionalScoutTicketsDocument, options);
-}
-// @ts-ignore
-export function useGetAdditionalScoutTicketsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const GetAdditionalScoutTicketsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetAdditionalScoutTickets" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: {
+                kind: "Name",
+                value: "SearchAdditionalScoutTicketsInput",
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getAdditionalScoutTickets" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "totalCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "usedCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "remainingCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "expiredAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetAdditionalScoutTicketsQuery,
   GetAdditionalScoutTicketsQueryVariables
 >;
-export function useGetAdditionalScoutTicketsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAdditionalScoutTicketsQuery,
-        GetAdditionalScoutTicketsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetAdditionalScoutTicketsQuery | undefined,
-  GetAdditionalScoutTicketsQueryVariables
->;
-export function useGetAdditionalScoutTicketsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetAdditionalScoutTicketsQuery,
-        GetAdditionalScoutTicketsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetAdditionalScoutTicketsQuery,
-    GetAdditionalScoutTicketsQueryVariables
-  >(GetAdditionalScoutTicketsDocument, options);
-}
-export type GetAdditionalScoutTicketsQueryHookResult = ReturnType<
-  typeof useGetAdditionalScoutTicketsQuery
->;
-export type GetAdditionalScoutTicketsLazyQueryHookResult = ReturnType<
-  typeof useGetAdditionalScoutTicketsLazyQuery
->;
-export type GetAdditionalScoutTicketsSuspenseQueryHookResult = ReturnType<
-  typeof useGetAdditionalScoutTicketsSuspenseQuery
->;
-export type GetAdditionalScoutTicketsQueryResult = Apollo.QueryResult<
-  GetAdditionalScoutTicketsQuery,
-  GetAdditionalScoutTicketsQueryVariables
->;
-export const SearchUsersDocument = gql`
-  query SearchUsers($input: SearchUsersInput!) {
-    searchUsers(input: $input) {
-      items {
-        id
-        avatarUrl
-        lastName
-        firstName
-        prefecture
-        university
-        faculty
-        department
-        grade
-        availableDaysPerWeek
-        availableHoursPerWeek
-        availableDurationMonths
-        entryCount
-        createdAt
-        deletedAt
-      }
-      limit
-      page
-      totalCount
-      totalPages
-      hasNextPage
-      hasPreviousPage
-    }
-  }
-`;
-
-/**
- * __useSearchUsersQuery__
- *
- * To run a query within a React component, call `useSearchUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchUsersQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSearchUsersQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    SearchUsersQuery,
-    SearchUsersQueryVariables
-  > &
-    (
-      | { variables: SearchUsersQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<SearchUsersQuery, SearchUsersQueryVariables>(
-    SearchUsersDocument,
-    options,
-  );
-}
-export function useSearchUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    SearchUsersQuery,
-    SearchUsersQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<SearchUsersQuery, SearchUsersQueryVariables>(
-    SearchUsersDocument,
-    options,
-  );
-}
-// @ts-ignore
-export function useSearchUsersSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    SearchUsersQuery,
-    SearchUsersQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<SearchUsersQuery, SearchUsersQueryVariables>;
-export function useSearchUsersSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchUsersQuery,
-        SearchUsersQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  SearchUsersQuery | undefined,
-  SearchUsersQueryVariables
->;
-export function useSearchUsersSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        SearchUsersQuery,
-        SearchUsersQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<SearchUsersQuery, SearchUsersQueryVariables>(
-    SearchUsersDocument,
-    options,
-  );
-}
-export type SearchUsersQueryHookResult = ReturnType<typeof useSearchUsersQuery>;
-export type SearchUsersLazyQueryHookResult = ReturnType<
-  typeof useSearchUsersLazyQuery
->;
-export type SearchUsersSuspenseQueryHookResult = ReturnType<
-  typeof useSearchUsersSuspenseQuery
->;
-export type SearchUsersQueryResult = Apollo.QueryResult<
-  SearchUsersQuery,
-  SearchUsersQueryVariables
->;
-export const GetUsersStatisticsDocument = gql`
-  query GetUsersStatistics($input: GetUsersStatisticsInput!) {
-    getUsersStatistics(input: $input) {
-      totalCount
-      applicantCount
-      acceptedCount
-      leavedCount
-    }
-  }
-`;
-
-/**
- * __useGetUsersStatisticsQuery__
- *
- * To run a query within a React component, call `useGetUsersStatisticsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUsersStatisticsQuery({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useGetUsersStatisticsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  > &
-    (
-      | { variables: GetUsersStatisticsQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    ),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  >(GetUsersStatisticsDocument, options);
-}
-export function useGetUsersStatisticsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  >(GetUsersStatisticsDocument, options);
-}
-// @ts-ignore
-export function useGetUsersStatisticsSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<
+export const SearchUsersDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "SearchUsers" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SearchUsersInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "searchUsers" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "avatarUrl" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lastName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "firstName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "prefecture" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "university" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "faculty" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "department" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "grade" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "availableDaysPerWeek" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "availableHoursPerWeek" },
+                      },
+                      {
+                        kind: "Field",
+                        name: {
+                          kind: "Name",
+                          value: "availableDurationMonths",
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdAt" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deletedAt" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "hasPreviousPage" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SearchUsersQuery, SearchUsersQueryVariables>;
+export const GetUsersStatisticsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetUsersStatistics" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetUsersStatisticsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getUsersStatistics" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "applicantCount" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "acceptedCount" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "leavedCount" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
   GetUsersStatisticsQuery,
   GetUsersStatisticsQueryVariables
 >;
-export function useGetUsersStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetUsersStatisticsQuery,
-        GetUsersStatisticsQueryVariables
-      >,
-): Apollo.UseSuspenseQueryResult<
-  GetUsersStatisticsQuery | undefined,
-  GetUsersStatisticsQueryVariables
->;
-export function useGetUsersStatisticsSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<
-        GetUsersStatisticsQuery,
-        GetUsersStatisticsQueryVariables
-      >,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    GetUsersStatisticsQuery,
-    GetUsersStatisticsQueryVariables
-  >(GetUsersStatisticsDocument, options);
-}
-export type GetUsersStatisticsQueryHookResult = ReturnType<
-  typeof useGetUsersStatisticsQuery
->;
-export type GetUsersStatisticsLazyQueryHookResult = ReturnType<
-  typeof useGetUsersStatisticsLazyQuery
->;
-export type GetUsersStatisticsSuspenseQueryHookResult = ReturnType<
-  typeof useGetUsersStatisticsSuspenseQuery
->;
-export type GetUsersStatisticsQueryResult = Apollo.QueryResult<
-  GetUsersStatisticsQuery,
-  GetUsersStatisticsQueryVariables
->;
-export const GetUserDocument = gql`
-  query GetUser($id: Int!) {
-    user(id: $id) {
-      id
-      lastName
-      firstName
-      avatarUrl
-      university
-      faculty
-      department
-      gender
-      birthDate
-      prefecture
-      email
-      phoneNumber
-      grade
-      graduationYear
-      availableDaysPerWeek
-      availableHoursPerWeek
-      availableDurationMonths
-      interestedIndustries
-      interestedJobTypes
-      selfPR
-      futureGoals
-    }
-  }
-`;
-
-/**
- * __useGetUserQuery__
- *
- * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetUserQuery(
-  baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables> &
-    ({ variables: GetUserQueryVariables; skip?: boolean } | { skip: boolean }),
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(
-    GetUserDocument,
-    options,
-  );
-}
-export function useGetUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUserQuery,
-    GetUserQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(
-    GetUserDocument,
-    options,
-  );
-}
-// @ts-ignore
-export function useGetUserSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    GetUserQuery,
-    GetUserQueryVariables
-  >,
-): Apollo.UseSuspenseQueryResult<GetUserQuery, GetUserQueryVariables>;
-export function useGetUserSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>,
-): Apollo.UseSuspenseQueryResult<
-  GetUserQuery | undefined,
-  GetUserQueryVariables
->;
-export function useGetUserSuspenseQuery(
-  baseOptions?:
-    | Apollo.SkipToken
-    | Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>,
-) {
-  const options =
-    baseOptions === Apollo.skipToken
-      ? baseOptions
-      : { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(
-    GetUserDocument,
-    options,
-  );
-}
-export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
-export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
-export type GetUserSuspenseQueryHookResult = ReturnType<
-  typeof useGetUserSuspenseQuery
->;
-export type GetUserQueryResult = Apollo.QueryResult<
-  GetUserQuery,
-  GetUserQueryVariables
->;
+export const GetUserDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetUser" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "user" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "firstName" } },
+                { kind: "Field", name: { kind: "Name", value: "avatarUrl" } },
+                { kind: "Field", name: { kind: "Name", value: "university" } },
+                { kind: "Field", name: { kind: "Name", value: "faculty" } },
+                { kind: "Field", name: { kind: "Name", value: "department" } },
+                { kind: "Field", name: { kind: "Name", value: "gender" } },
+                { kind: "Field", name: { kind: "Name", value: "birthDate" } },
+                { kind: "Field", name: { kind: "Name", value: "prefecture" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "phoneNumber" } },
+                { kind: "Field", name: { kind: "Name", value: "grade" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "graduationYear" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availableDaysPerWeek" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availableHoursPerWeek" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "availableDurationMonths" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "interestedIndustries" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "interestedJobTypes" },
+                },
+                { kind: "Field", name: { kind: "Name", value: "selfPR" } },
+                { kind: "Field", name: { kind: "Name", value: "futureGoals" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;

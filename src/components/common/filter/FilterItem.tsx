@@ -11,7 +11,7 @@ export default function FilterItem({
 }) {
   return (
     <Box className={`flex items-center gap-2 ${className}`}>
-      <Typography className="flex-1 text-nowrap text-sm">{label}</Typography>
+      <Typography className="flex-1 text-sm text-nowrap">{label}</Typography>
       {children}
     </Box>
   );

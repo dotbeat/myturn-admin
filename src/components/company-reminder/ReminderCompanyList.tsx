@@ -57,23 +57,23 @@ export default function ReminderCompanyList({
           />
         )}
       />
-      <Typography className="mb-2 text-xs text-[var(--myturn-sub-text)]">
+      <Typography className="mb-2 text-xs text-(--myturn-sub-text)">
         {onlyOverdue
           ? "基準超過のある企業（超過件数順）"
           : "未対応の新着応募がある全企業（超過件数順）"}
       </Typography>
-      <Box className="divide-y divide-[var(--myturn-border)] rounded-md border border-[var(--myturn-support-middle)]">
+      <Box className="divide-y divide-(--myturn-border) rounded-md border border-(--myturn-support-middle)">
         {companies.map((company) => {
           const isSelected = company.id === selectedCompanyId;
           return (
             <Button
               key={company.id}
               onClick={() => onSelect(isSelected ? null : company)}
-              className={`flex w-full items-center justify-between gap-2 rounded-none px-3 py-2 text-left text-sm normal-case ${isSelected ? "bg-[var(--myturn-main-opacity)] font-semibold" : "hover:bg-[var(--myturn-background)]"}`}
+              className={`flex w-full items-center justify-between gap-2 rounded-none px-3 py-2 text-left text-sm normal-case ${isSelected ? "bg-(--myturn-main-opacity) font-semibold" : "hover:bg-(--myturn-background)"}`}
             >
               <Typography
                 title={company.name}
-                className="line-clamp-2 text-sm text-[var(--myturn-main-text)]"
+                className="line-clamp-2 text-sm text-(--myturn-main-text)"
               >
                 {company.name}
               </Typography>
@@ -93,12 +93,12 @@ export default function ReminderCompanyList({
           );
         })}
         {isLoading && (
-          <Typography className="px-3 py-4 text-center text-sm text-[var(--myturn-sub-text)]">
+          <Typography className="px-3 py-4 text-center text-sm text-(--myturn-sub-text)">
             読み込み中です
           </Typography>
         )}
         {!isLoading && companies.length === 0 && (
-          <Typography className="px-3 py-4 text-center text-sm text-[var(--myturn-sub-text)]">
+          <Typography className="px-3 py-4 text-center text-sm text-(--myturn-sub-text)">
             該当する企業はありません
           </Typography>
         )}

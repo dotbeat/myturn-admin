@@ -13,11 +13,14 @@ export default function ApplicantList({
   items,
   isLoading,
   refetch,
+  readOnly = false,
   className = "",
 }: {
   items: ApplicantItem[];
   isLoading: boolean;
   refetch: () => void;
+  /** trueの場合は編集ボタンを表示しない */
+  readOnly?: boolean;
   className?: string;
 }) {
   // 編集ダイアログで編集中の応募情報
@@ -29,7 +32,7 @@ export default function ApplicantList({
     { property: "companyName", label: "企業名" },
     { property: "jobType", label: "職種" },
     { property: "industry", label: "業界" },
-    { property: "jobTitle", label: "求人タイトル", headCellClass: "w-[19rem]" },
+    { property: "jobTitle", label: "求人タイトル", headCellClass: "w-76" },
     { property: "entryDate", label: "応募日" },
     { property: "isScouted", label: "応募属性" },
     { property: "status", label: "ステータス" },
@@ -37,7 +40,7 @@ export default function ApplicantList({
     { property: "secondInterviewScheduledAt", label: "2回目面談日" },
     { property: "joinDate", label: "入社予定日" },
     { property: "joinDateByApplicant", label: "(学生報告)入社予定日" },
-    { property: "edit", label: "" },
+    ...(readOnly ? [] : [{ property: "edit", label: "" } as const]),
   ] as const satisfies TableColumn<(keyof ApplicantItem)[number]>[];
 
   const before3years = new Date();
@@ -91,7 +94,7 @@ export default function ApplicantList({
     jobType: getSelectItem(jobTypes, item.job.jobType)?.label ?? "",
     industry: getSelectItem(industries, item.job.industry)?.label ?? "",
     jobTitle: (
-      <Typography className="line-clamp-3 w-72 text-wrap text-left">
+      <Typography className="line-clamp-3 w-72 text-left text-wrap">
         {item.job.title}
       </Typography>
     ),
@@ -112,7 +115,7 @@ export default function ApplicantList({
       : "—",
     edit: (
       <Button
-        className="mr-2 text-nowrap rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
+        className="mr-2 rounded-md border border-(--myturn-sub-text) px-2 py-1 text-nowrap"
         onClick={() => setEditingItem(item)}
       >
         編集
@@ -125,7 +128,7 @@ export default function ApplicantList({
       <Table
         columns={columns}
         rows={rows}
-        className="text-nowrap py-2 [word-break:break-word]"
+        className="py-2 text-nowrap [word-break:break-word]"
       />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">

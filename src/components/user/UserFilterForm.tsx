@@ -76,7 +76,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
       </FilterGroup>
       <FilterGroup heading="勤務条件">
         <Box className="space-y-2">
-          <Typography className="flex-1 text-nowrap text-sm">
+          <Typography className="flex-1 text-sm text-nowrap">
             週の勤務可能日数
           </Typography>
           <Box className="flex items-center gap-1">
@@ -94,7 +94,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
           </Box>
         </Box>
         <Box className="space-y-2">
-          <Typography className="flex-1 text-nowrap text-sm">
+          <Typography className="flex-1 text-sm text-nowrap">
             週の勤務可能時間
           </Typography>
           <Box className="flex items-center gap-1">
@@ -112,7 +112,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
           </Box>
         </Box>
         <Box className="space-y-2">
-          <Typography className="flex-1 text-nowrap text-sm">
+          <Typography className="flex-1 text-sm text-nowrap">
             継続可能期間
           </Typography>
           <Box className="flex items-center gap-1">
@@ -132,7 +132,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
       </FilterGroup>
       <FilterGroup heading="興味関心">
         <Box className="space-y-2">
-          <Typography className="flex-1 text-nowrap text-sm">
+          <Typography className="flex-1 text-sm text-nowrap">
             興味のある業界
           </Typography>
           <SelectMini
@@ -142,7 +142,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
           />
         </Box>
         <Box className="space-y-2">
-          <Typography className="flex-1 text-nowrap text-sm">
+          <Typography className="flex-1 text-sm text-nowrap">
             興味のある職種
           </Typography>
           <SelectMini
@@ -162,7 +162,7 @@ export default function UserFilterForm({ isLoading }: { isLoading: boolean }) {
       <Button
         type="submit"
         disabled={isLoading}
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
+        className="self-center rounded-full bg-(--myturn-background) px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>

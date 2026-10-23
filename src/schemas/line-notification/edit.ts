@@ -11,8 +11,9 @@ export const scheduleConfigSchema = z.object({
   dayOfMonth: z
     .array(
       z.preprocess(
-        (val) => {
-          if (val == null || val === "") return null;
+        (val: number | null) => {
+          // 未入力の入力欄からは空文字が渡される
+          if (val == null || (val as unknown) === "") return null;
           const n = Number(val);
           return isNaN(n) ? null : n;
         },
@@ -29,12 +30,12 @@ export const scheduleConfigSchema = z.object({
     .max(3)
     .optional(),
   hour: z.coerce
-    .number({ message: "半角数字で入力してください" })
+    .number<number>({ message: "半角数字で入力してください" })
     .int()
     .min(0, "0以上を入力してください")
     .max(23, "23以下を入力してください"),
   minute: z.coerce
-    .number({ message: "半角数字で入力してください" })
+    .number<number>({ message: "半角数字で入力してください" })
     .int()
     .min(0, "0以上を入力してください")
     .max(59, "59以下を入力してください"),

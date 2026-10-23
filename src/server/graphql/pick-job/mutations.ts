@@ -17,8 +17,8 @@ export const UPDATE_PICK_JOB_SCORING_WEIGHTS = gql`
 
 // 指標ごとの重み設定に基づいて注目の求人を更新
 export const RECALCULATE_PICK_JOBS = gql`
-  mutation RecalculatePickJobs {
-    recalculatePickJobs {
+  mutation RecalculatePickJobsForAdmin {
+    recalculatePickJobsForAdmin {
       updatedCount
     }
   }

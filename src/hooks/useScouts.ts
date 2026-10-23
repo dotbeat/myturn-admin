@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import { ScoutFilterFormData } from "@/schemas/scout/filter";
 
@@ -47,7 +47,13 @@ export function useScouts(
   page: number,
   limit: number,
 ) {
-  const { data, loading, error, refetch } = useQuery(GET_SCOUTS, {
+  const { data, loading, error, refetch } = useQuery<{
+    scoutsForAdmin?: {
+      scouts?: any[];
+      totalCount?: number;
+      totalPages?: number;
+    };
+  }>(GET_SCOUTS, {
     variables: {
       filter: {
         scoutDateStart: filter.scoutDateStart || undefined,

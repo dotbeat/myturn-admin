@@ -83,7 +83,7 @@ export default async function Page({
   return (
     <Container className="max-w-4xl flex-1 px-8 py-6 [word-break:break-word]">
       <PageTitle className="mb-8">求職者アカウント詳細</PageTitle>
-      <Box className="bg-[var(--background)] px-4 pb-10 pt-5">
+      <Box className="bg-(--background) px-4 pt-5 pb-10">
         <Box className="mb-2 flex min-h-32 items-center gap-4">
           <Avatar src={user.avatarUrl} size={96} />
           <Box>
@@ -93,12 +93,12 @@ export default async function Page({
                 {user.firstName}
               </Typography>
             </Box>
-            <Typography className="mb-1 text-[var(--myturn-sub-text)]">
+            <Typography className="mb-1 text-(--myturn-sub-text)">
               {`${user.university}・${user.faculty} ${user.department}`}
             </Typography>
           </Box>
         </Box>
-        <Divider className="-mx-4 mb-8 border-[var(--myturn-sub-text)]" />
+        <Divider className="-mx-4 mb-8 border-(--myturn-sub-text)" />
         <UserProfileGroup heading="基本情報" className="mb-8">
           <Box className="flex items-center gap-8">
             <UserProfileItem headline="姓" className="min-w-32">

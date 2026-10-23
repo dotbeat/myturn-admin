@@ -44,7 +44,7 @@ export default function RadioGroup({
       {label && (
         <label htmlFor={name} className="inline-block text-sm font-semibold">
           {label}
-          {required && <span className="text-[var(--myturn-accent)]"> *</span>}
+          {required && <span className="text-(--myturn-accent)"> *</span>}
         </label>
       )}
       <MUIRadioGroup row className="gap-x-2 gap-y-1" value={currentValue || ""}>
@@ -56,7 +56,7 @@ export default function RadioGroup({
                 {...register(name)}
                 value={String(item.value)}
                 checked={currentValue === String(item.value)}
-                className="p-1 text-[var(--myturn-main)]"
+                className="p-1 text-(--myturn-main)"
               />
             }
             label={item.label}
@@ -65,7 +65,7 @@ export default function RadioGroup({
         ))}
       </MUIRadioGroup>
       {error?.message && (
-        <Typography variant="body2" className="text-[var(--myturn-accent)]">
+        <Typography variant="body2" className="text-(--myturn-accent)">
           {error.message}
         </Typography>
       )}

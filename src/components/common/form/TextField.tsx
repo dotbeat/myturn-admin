@@ -74,12 +74,12 @@ export default function TextField({
         required={required}
         disabled={disabled}
         {...register(name)}
-        className={`w-full rounded-md border px-3 py-2.5 shadow-sm outline-none placeholder:text-[var(--myturn-support-middle)] ${disabled ? "bg-[var(--myturn-background)]" : ""} ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"} ${inputClass}`}
+        className={`w-full rounded-md border px-3 py-2.5 shadow-xs outline-hidden placeholder:text-(--myturn-support-middle) ${disabled ? "bg-(--myturn-background)" : ""} ${error ? "border-(--myturn-accent) ring-1 ring-(--myturn-accent)" : "border-(--myturn-support-middle) focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"} ${inputClass}`}
         onInput={onInput}
         onBlur={onBlur}
       />
       {error?.message && (
-        <Typography variant="body2" className="text-[var(--myturn-accent)]">
+        <Typography variant="body2" className="text-(--myturn-accent)">
           {error.message}
         </Typography>
       )}
