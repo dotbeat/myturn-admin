@@ -28,7 +28,7 @@ export default function PageBody() {
   const renderGoogleButton = useCallback(() => {
     if (!window.google || !buttonRef.current) return;
     if (!googleClientId) {
-      setError("NEXT_PUBLIC_GOOGLE_CLIENT_ID が設定されていません");
+      setError("Google Identity Servicesの設定が登録されていません");
       return;
     }
 
