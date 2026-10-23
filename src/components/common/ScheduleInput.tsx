@@ -26,7 +26,13 @@ const DAYS_OF_WEEK = [
 
 const DAY_OF_MONTH_SLOTS = [0, 1, 2] as const;
 
-export default function ScheduleInput({ name }: { name: string }) {
+export default function ScheduleInput({
+  name,
+  disabled = false,
+}: {
+  name: string;
+  disabled?: boolean;
+}) {
   const {
     control,
     register,
@@ -48,17 +54,17 @@ export default function ScheduleInput({ name }: { name: string }) {
   const minuteError = getError(`${name}.minute`);
 
   const numberInputClass = (hasError: boolean) =>
-    `w-16 rounded-md border px-3 py-2 shadow-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+    `w-16 rounded-md border px-3 py-2 shadow-xs outline-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
       hasError
-        ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]"
-        : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"
+        ? "border-(--myturn-accent) ring-1 ring-(--myturn-accent)"
+        : "border-(--myturn-support-middle) focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"
     }`;
 
   return (
     <Box className="space-y-3">
       {/* 送信頻度 */}
       <Box className="flex flex-wrap items-center gap-3">
-        <Typography className="min-w-[4.5rem] text-sm font-semibold">
+        <Typography className="min-w-18 text-sm font-semibold">
           送信頻度
         </Typography>
         <Controller
@@ -69,16 +75,19 @@ export default function ScheduleInput({ name }: { name: string }) {
               <FormControlLabel
                 value="daily"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎日"
               />
               <FormControlLabel
                 value="weekly"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎週"
               />
               <FormControlLabel
                 value="monthly"
                 control={<Radio size="small" />}
+                disabled={disabled}
                 label="毎月"
               />
             </RadioGroup>
@@ -89,7 +98,7 @@ export default function ScheduleInput({ name }: { name: string }) {
       {/* 曜日選択（毎週の場合）複数選択可 */}
       {scheduleType === "weekly" && (
         <Box className="flex flex-wrap items-center gap-3">
-          <Typography className="min-w-[4.5rem] text-sm font-semibold">
+          <Typography className="min-w-18 text-sm font-semibold">
             曜日
           </Typography>
           <Controller
@@ -104,6 +113,7 @@ export default function ScheduleInput({ name }: { name: string }) {
                     control={
                       <Checkbox
                         size="small"
+                        disabled={disabled}
                         checked={(value as number[]).includes(day.value)}
                         onChange={(e) => {
                           const next = e.target.checked
@@ -127,7 +137,7 @@ export default function ScheduleInput({ name }: { name: string }) {
       {scheduleType === "monthly" && (
         <Box className="space-y-2">
           <Box className="flex flex-wrap items-start gap-3">
-            <Typography className="min-w-[4.5rem] pt-2 text-sm font-semibold">
+            <Typography className="min-w-18 pt-2 text-sm font-semibold">
               日付
             </Typography>
             <Box className="flex flex-col gap-1.5">
@@ -142,6 +152,7 @@ export default function ScheduleInput({ name }: { name: string }) {
                       <input
                         type="number"
                         {...register(`${name}.dayOfMonth.${i}`)}
+                        disabled={disabled}
                         min={1}
                         max={31}
                         className={numberInputClass(!!slotError)}
@@ -157,7 +168,7 @@ export default function ScheduleInput({ name }: { name: string }) {
                   <Box key={i} className="space-y-0.5">
                     <Typography
                       variant="body2"
-                      className="text-[var(--myturn-accent)]"
+                      className="text-(--myturn-accent)"
                     >
                       {i + 1}: {slotError.message}
                     </Typography>
@@ -172,13 +183,14 @@ export default function ScheduleInput({ name }: { name: string }) {
       {/* 送信時刻 */}
       <Box className="space-y-1">
         <Box className="flex flex-wrap items-center gap-3">
-          <Typography className="min-w-[4.5rem] text-sm font-semibold">
+          <Typography className="min-w-18 text-sm font-semibold">
             送信時刻
           </Typography>
           <Box className="flex items-center gap-1">
             <input
               type="number"
               {...register(`${name}.hour`)}
+              disabled={disabled}
               min={0}
               max={23}
               className={numberInputClass(!!hourError)}
@@ -187,6 +199,7 @@ export default function ScheduleInput({ name }: { name: string }) {
             <input
               type="number"
               {...register(`${name}.minute`)}
+              disabled={disabled}
               min={0}
               max={59}
               className={numberInputClass(!!minuteError)}
@@ -195,10 +208,7 @@ export default function ScheduleInput({ name }: { name: string }) {
           </Box>
         </Box>
         {(hourError?.message || minuteError?.message) && (
-          <Typography
-            variant="body2"
-            className="pl-[5.5rem] text-[var(--myturn-accent)]"
-          >
+          <Typography variant="body2" className="pl-22 text-(--myturn-accent)">
             {hourError?.message || minuteError?.message}
           </Typography>
         )}

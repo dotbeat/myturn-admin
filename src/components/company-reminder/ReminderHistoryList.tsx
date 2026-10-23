@@ -19,9 +19,7 @@ export default function ReminderHistoryList({
 
   if (isLoading) {
     return (
-      <Typography
-        className={`text-sm text-[var(--myturn-sub-text)] ${className}`}
-      >
+      <Typography className={`text-sm text-(--myturn-sub-text) ${className}`}>
         読み込み中です
       </Typography>
     );
@@ -29,16 +27,14 @@ export default function ReminderHistoryList({
 
   if (reminders.length === 0) {
     return (
-      <Typography
-        className={`text-sm text-[var(--myturn-sub-text)] ${className}`}
-      >
+      <Typography className={`text-sm text-(--myturn-sub-text) ${className}`}>
         まだ送信履歴はありません
       </Typography>
     );
   }
 
   return (
-    <Box className={`divide-y divide-[var(--myturn-border)] ${className}`}>
+    <Box className={`divide-y divide-(--myturn-border) ${className}`}>
       {reminders.map((reminder) => {
         const isExpanded = expandedId === reminder.id;
         return (
@@ -57,11 +53,11 @@ export default function ReminderHistoryList({
                   </ReminderBadge>
                 )}
               </Box>
-              <Typography className="text-xs text-[var(--myturn-sub-text)]">
+              <Typography className="text-xs text-(--myturn-sub-text)">
                 {reminder.createdAt.toLocaleString("ja")}
               </Typography>
             </Box>
-            <Typography className="mt-1 text-sm text-[var(--myturn-sub-text)]">
+            <Typography className="mt-1 text-sm text-(--myturn-sub-text)">
               {reminder.users
                 .map(
                   (s) =>
@@ -77,16 +73,16 @@ export default function ReminderHistoryList({
             <Button
               size="small"
               onClick={() => setExpandedId(isExpanded ? null : reminder.id)}
-              className="mt-1 px-1 py-0 text-xs text-[var(--myturn-sub-text)]"
+              className="mt-1 px-1 py-0 text-xs text-(--myturn-sub-text)"
             >
               {isExpanded ? "本文を閉じる" : "本文を表示"}
             </Button>
             {isExpanded && (
-              <Box className="mt-1 rounded-md bg-[var(--myturn-background)] px-3 py-2 text-sm">
-                <Typography className="mb-1 text-xs text-[var(--myturn-sub-text)]">
+              <Box className="mt-1 rounded-md bg-(--myturn-background) px-3 py-2 text-sm">
+                <Typography className="mb-1 text-xs text-(--myturn-sub-text)">
                   件名：{reminder.subject}
                 </Typography>
-                <Typography className="whitespace-pre-wrap text-sm">
+                <Typography className="text-sm whitespace-pre-wrap">
                   {reminder.body}
                 </Typography>
               </Box>

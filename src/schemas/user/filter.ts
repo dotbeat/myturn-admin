@@ -14,16 +14,16 @@ export const userFilterFormSchema = z
     faculty: z.string().trim(), // 学部
     department: z.string(), // 学科系統
     grade: z.string(), // 学年
-    availableDaysPerWeekMin: z.coerce.number().min(0), // 週の勤務可能日数(最小)
-    availableDaysPerWeekMax: z.coerce.number().min(0), // 週の勤務可能日数(最大)
-    availableHoursPerWeekMin: z.coerce.number().min(0), // 週の勤務可能時間(最小)
-    availableHoursPerWeekMax: z.coerce.number().min(0), // 週の勤務可能時間(最大)
-    availableDurationMonthsMin: z.coerce.number().min(0), // 継続可能期間(最小)
-    availableDurationMonthsMax: z.coerce.number().min(0), // 継続可能期間(最大)
+    availableDaysPerWeekMin: z.coerce.number<number>().min(0), // 週の勤務可能日数(最小)
+    availableDaysPerWeekMax: z.coerce.number<number>().min(0), // 週の勤務可能日数(最大)
+    availableHoursPerWeekMin: z.coerce.number<number>().min(0), // 週の勤務可能時間(最小)
+    availableHoursPerWeekMax: z.coerce.number<number>().min(0), // 週の勤務可能時間(最大)
+    availableDurationMonthsMin: z.coerce.number<number>().min(0), // 継続可能期間(最小)
+    availableDurationMonthsMax: z.coerce.number<number>().min(0), // 継続可能期間(最大)
     interestedIndustry: z.string(), // 興味のある業界
     interestedJobType: z.string(), // 興味のある職種
-    entryCountMin: z.coerce.number().min(0), // 応募階数(最小)
-    entryCountMax: z.coerce.number().min(0), // 応募階数(最大)
+    entryCountMin: z.coerce.number<number>().min(0), // 応募階数(最小)
+    entryCountMax: z.coerce.number<number>().min(0), // 応募階数(最大)
   })
   .superRefine(({ registerDateStart: start, registerDateEnd: end }, ctx) => {
     if (start != null && end != null && start > end) {

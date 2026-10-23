@@ -11,7 +11,7 @@ export default function IndicateItem({
 }) {
   return (
     <Box className={`text-center ${className}`}>
-      <Typography className="mb-1 text-nowrap text-[var(--myturn-sub-text)]">
+      <Typography className="mb-1 text-nowrap text-(--myturn-sub-text)">
         {label}
       </Typography>
       <Typography className="text-2xl font-semibold">

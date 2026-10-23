@@ -35,12 +35,12 @@ export default function SelectMini({
 
   return (
     <FormControl className={`space-y-1 ${className}`}>
-      <Box className="relative text-[var(--myturn-sub-text)]">
+      <Box className="relative text-(--myturn-sub-text)">
         <select
           id={inputId}
           {...register(name)}
           disabled={disabled}
-          className={`peer w-full appearance-none rounded-md border bg-[var(--background)] py-0.5 pl-1.5 pr-5 text-sm placeholder:text-[var(--myturn-support-middle)] disabled:opacity-60 ${error ? "border-[var(--myturn-accent)] ring-1 ring-[var(--myturn-accent)]" : "border-[var(--myturn-support-middle)] focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"}`}
+          className={`peer w-full appearance-none rounded-md border bg-(--background) py-0.5 pr-5 pl-1.5 text-sm placeholder:text-(--myturn-support-middle) disabled:opacity-60 ${error ? "border-(--myturn-accent) ring-1 ring-(--myturn-accent)" : "border-(--myturn-support-middle) focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"}`}
         >
           {groups?.map((group, i) => (
             <optgroup key={i} label={group.label}>
@@ -57,10 +57,10 @@ export default function SelectMini({
             </option>
           ))}
         </select>
-        <Box className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 peer-disabled:opacity-40">
+        <Box className="pointer-events-none absolute top-1/2 right-1.5 -translate-y-1/2 peer-disabled:opacity-40">
           <ArrowDownNarrowIcon
             size={12}
-            className={error ? "text-[var(--myturn-accent)]" : ""}
+            className={error ? "text-(--myturn-accent)" : ""}
           />
         </Box>
       </Box>

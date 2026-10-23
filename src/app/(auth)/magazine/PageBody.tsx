@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -15,7 +15,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { MagazineType } from "@/graphql-client";
+import { GetMagazineQuery } from "@/graphql-client";
 import {
   MagazineEditFormData,
   magazineEditFormSchema,
@@ -26,6 +26,7 @@ import { blobToDataUrl } from "@/utils/frontend/file";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import File from "@/components/common/form/File";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type EditingMagazineItem = {
   id: number;
@@ -39,12 +40,9 @@ type EditingMagazineItem = {
 };
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
 
-  // 取得した保存済みサムネイル画像のURL
-  const [thumbnailSrcs, setThumbnailSrcs] = useState<Record<number, string>>(
-    {},
-  );
   // 入力中のサムネイル画像
   const [thumbnails, setThumbnails] = useState<
     Record<number, { dataUrl: string; type: string }>
@@ -116,36 +114,34 @@ export default function PageBody() {
   });
 
   // Magazineデータ取得
-  useQuery(GET_MAGAZINE, {
+  const { data: magazineData } = useQuery<GetMagazineQuery>(GET_MAGAZINE, {
     fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      const fetchedMagazine: Pick<
-        MagazineType,
-        | "id"
-        | "title"
-        | "description"
-        | "category"
-        | "thumbnailUrl"
-        | "articleUrl"
-      >[] = data.magazines;
-      const initThumbnailSrcs: Record<number, string> = {};
-      fetchedMagazine.forEach((article) => {
-        initThumbnailSrcs[article.id] = article.thumbnailUrl;
-      });
-      setThumbnailSrcs(initThumbnailSrcs);
-
-      const articles = fetchedMagazine.map((item) => ({
-        articleId: item.id,
-        title: item.title,
-        description: item.description,
-        category: item.category,
-        thumbnail: null,
-        articleUrl: item.articleUrl,
-      }));
-      initFormArticles.splice(0, articles.length, ...articles);
-      methods.setValue("articles", initFormArticles);
-    },
   });
+
+  // 取得した保存済みサムネイル画像のURL
+  const thumbnailSrcs = useMemo(() => {
+    const srcs: Record<number, string> = {};
+    magazineData?.magazines.forEach((article) => {
+      srcs[article.id] = article.thumbnailUrl;
+    });
+    return srcs;
+  }, [magazineData]);
+
+  // 取得した記事をフォームの初期値に反映する
+  useEffect(() => {
+    if (!magazineData) return;
+    const articles = magazineData.magazines.map((item) => ({
+      articleId: item.id,
+      title: item.title,
+      description: item.description,
+      category: item.category,
+      thumbnail: null,
+      articleUrl: item.articleUrl,
+    }));
+    initFormArticles.splice(0, articles.length, ...articles);
+    methods.setValue("articles", initFormArticles);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [magazineData]);
 
   const changeOneOfThumbnail = async (articleId: number, file: File | null) => {
     const editingThumbnails = { ...thumbnails };
@@ -221,9 +217,9 @@ export default function PageBody() {
           className="flex flex-col items-center gap-6"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <Table className="bg-[var(--background)]">
+          <Table className="bg-(--background)">
             <TableHead>
-              <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+              <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                 <TableCell className="p-2"></TableCell>
                 <TableCell className="p-2">タイトル</TableCell>
                 <TableCell className="p-2">説明</TableCell>
@@ -237,7 +233,7 @@ export default function PageBody() {
                 return (
                   <TableRow
                     key={article.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">{i + 1}</TableCell>
                     <TableCell className="p-2">
@@ -248,37 +244,42 @@ export default function PageBody() {
                       />
                       <TextField
                         name={`articles.${i}.title`}
+                        disabled={!canEdit}
                         className="w-72"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
                       <TextField
                         name={`articles.${i}.description`}
                         rows={3}
+                        disabled={!canEdit}
                         className="w-64"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
                       <TextField
                         name={`articles.${i}.category`}
+                        disabled={!canEdit}
                         className="w-28"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                     <TableCell className="p-2">
                       <Box>
-                        <File
-                          name={`articles.${i}.thumbnail`}
-                          accept="image/*"
-                          buttonClass="text-nowrap rounded-md border border-[var(--myturn-sub-text)] bg-[var(--myturn-background)] px-2 py-1 text-sm"
-                          onChangeFiles={({ file }) =>
-                            changeOneOfThumbnail(article.articleId, file)
-                          }
-                        >
-                          ファイルを選択
-                        </File>
+                        {canEdit && (
+                          <File
+                            name={`articles.${i}.thumbnail`}
+                            accept="image/*"
+                            buttonClass="text-nowrap rounded-md border border-(--myturn-sub-text) bg-(--myturn-background) px-2 py-1 text-sm"
+                            onChangeFiles={({ file }) =>
+                              changeOneOfThumbnail(article.articleId, file)
+                            }
+                          >
+                            ファイルを選択
+                          </File>
+                        )}
                         {/* 入力画像のプレビュー */}
                         {thumbnails[article.articleId] && (
                           <Box className="mt-2 max-w-40">
@@ -306,8 +307,9 @@ export default function PageBody() {
                       <TextField
                         type="url"
                         name={`articles.${i}.articleUrl`}
+                        disabled={!canEdit}
                         className="w-48"
-                        inputClass="valid:border-[var(--myturn-support-middle)]"
+                        inputClass="valid:border-(--myturn-support-middle)"
                       />
                     </TableCell>
                   </TableRow>
@@ -316,16 +318,16 @@ export default function PageBody() {
             </TableBody>
           </Table>
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
-          <Button
-            type="submit"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
-          >
-            {isUpdating ? "更新中..." : "更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="submit"
+              className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground)"
+            >
+              {isUpdating ? "更新中..." : "更新する"}
+            </Button>
+          )}
         </form>
       </FormProvider>
 

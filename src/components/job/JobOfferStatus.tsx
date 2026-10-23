@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
 import type { JobStatus } from "@/types/job";
 import { jobOfferStatuses, jobOfferStatusIndex } from "@/utils/shared/job";
 import Menu from "@/components/common/Menu";
 import { ArrowDownNarrowIcon } from "@/icons/arrow/down-narrow";
-import { useMutation, ApolloError } from "@apollo/client";
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { UPDATE_JOB_STATUS } from "@/server/graphql/job/mutations";
 
 export default function JobOfferStatus({
@@ -14,6 +15,7 @@ export default function JobOfferStatus({
   className = "",
   onChange,
   onStatusUpdated,
+  readOnly = false,
 }: {
   id?: number;
   status: JobStatus;
@@ -21,8 +23,16 @@ export default function JobOfferStatus({
   onChange?: (newStatus: JobStatus) => void;
   companyId?: number;
   onStatusUpdated?: () => Promise<void>;
+  /** trueの場合はステータスの表示のみ（変更不可） */
+  readOnly?: boolean;
 }) {
   const [statusInfo, setStatusInfo] = useState(jobOfferStatusIndex[status]);
+  // 親から渡されるstatusが変わったら表示を追従させる
+  const [prevStatus, setPrevStatus] = useState(status);
+  if (status !== prevStatus) {
+    setPrevStatus(status);
+    setStatusInfo(jobOfferStatusIndex[status]);
+  }
 
   const [updateJobStatus] = useMutation(UPDATE_JOB_STATUS, {
     onCompleted: async () => {
@@ -64,10 +74,6 @@ export default function JobOfferStatus({
     });
   };
 
-  useEffect(() => {
-    setStatusInfo(jobOfferStatusIndex[status]);
-  }, [status]);
-
   const handleStatusChange = async (newStatus: JobStatus) => {
     if (id) {
       try {
@@ -93,10 +99,10 @@ export default function JobOfferStatus({
         // GraphQLエラーメッセージを抽出
         let errorMessage = "ステータスの更新に失敗しました";
 
-        if (error instanceof ApolloError) {
-          if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+        if (CombinedGraphQLErrors.is(error)) {
+          if (error.errors.length > 0) {
             // GraphQLエラーからメッセージを取得
-            const graphQLError = error.graphQLErrors[0];
+            const graphQLError = error.errors[0];
             if (graphQLError.message) {
               errorMessage = graphQLError.message;
 
@@ -166,6 +172,15 @@ export default function JobOfferStatus({
     onChange?.(newStatus);
   };
 
+  if (readOnly) {
+    return (
+      <Box className={`flex items-center gap-1 px-2 py-1 ${className}`}>
+        <Box className={`h-4 w-4 rounded-full ${statusInfo.colorClass}`} />
+        <Typography className="shrink-0">{statusInfo.label}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Menu
@@ -186,7 +201,7 @@ export default function JobOfferStatus({
         {jobOfferStatuses.map((statusItem) => (
           <Button
             key={statusItem}
-            className="flex w-full items-center gap-4 px-4 py-3 disabled:opacity-30 [&:not(:disabled)]:hover:bg-stone-300/30"
+            className="flex w-full items-center gap-4 px-4 py-3 not-disabled:hover:bg-stone-300/30 disabled:opacity-30"
             onClick={() => handleStatusChange(statusItem)}
           >
             <Box

@@ -1,8 +1,5 @@
 export type ReminderDelayType =
-  | "PENDING"
-  | "REVIEWING"
-  | "INTERVIEW"
-  | "OFFERED";
+  "PENDING" | "REVIEWING" | "INTERVIEW" | "OFFERED";
 
 export type ReminderCandidateCompany = {
   id: number;

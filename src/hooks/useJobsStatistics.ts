@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
+import {
+  GetJobsStatisticsQuery,
+  GetJobsStatisticsQueryVariables,
+} from "@/graphql-client";
 import { GET_JOBS_STATISTICS } from "@/server/graphql/job/queries";
 import { getPeriod, PeriodKeys } from "@/utils/shared/date";
 
 export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
   const [period, setPeriod] = useState(getPeriod(initialPeriodKey));
-  const [allJobCount, setAllJobCount] = useState(0); // 合計求人数
-  const [newPostedCount, setNewPostedCount] = useState(0); // 新規掲載数
-  const [activeCount, setActiveCount] = useState(0); // 募集中求人数
-  const [closedCount, setClosedCount] = useState(0); // 掲載終了数
 
   // 求人一覧情報を取得
-  const { loading } = useQuery(GET_JOBS_STATISTICS, {
+  const { data, previousData, loading } = useQuery<
+    GetJobsStatisticsQuery,
+    GetJobsStatisticsQueryVariables
+  >(GET_JOBS_STATISTICS, {
     variables: {
       input: {
         periodStart: period.start,
@@ -19,13 +22,9 @@ export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
       },
     },
     fetchPolicy: "no-cache",
-    onCompleted(result) {
-      setAllJobCount(result.getJobsStatistics.totalCount);
-      setNewPostedCount(result.getJobsStatistics.newPostedCount);
-      setActiveCount(result.getJobsStatistics.activeCount);
-      setClosedCount(result.getJobsStatistics.closedCount);
-    },
   });
+  // 再取得中も前回の結果を表示し続ける
+  const statistics = (data ?? previousData)?.getJobsStatistics;
 
   // 再リクエストする
   const refetchStatistics = async (periodKey: PeriodKeys) => {
@@ -33,10 +32,10 @@ export function useJobsStatistics(initialPeriodKey: PeriodKeys) {
   };
 
   return {
-    allJobCount,
-    newPostedCount,
-    activeCount,
-    closedCount,
+    allJobCount: statistics?.totalCount ?? 0, // 合計求人数
+    newPostedCount: statistics?.newPostedCount ?? 0, // 新規掲載数
+    activeCount: statistics?.activeCount ?? 0, // 募集中求人数
+    closedCount: statistics?.closedCount ?? 0, // 掲載終了数
     loading,
     refetchStatistics,
   };

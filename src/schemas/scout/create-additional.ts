@@ -10,11 +10,11 @@ export const PRICE_BY_COUNT: Record<number, number> = {
 
 export const createAdditionalScoutTicketSchema = z.object({
   companyId: z.coerce
-    .number()
+    .number<number>()
     .int()
     .min(1, { message: "企業を選択してください" }),
   totalCount: z.coerce
-    .number()
+    .number<number>()
     .refine((v) => (ALLOWED_TOTAL_COUNTS as readonly number[]).includes(v), {
       message: "追加数は 100 または 200 を選択してください",
     }),

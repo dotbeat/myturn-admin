@@ -4,6 +4,9 @@ documents: "src/server/graphql/**/*.{ts,tsx}"
 generates:
   src/graphql-client.ts:
     plugins:
-      - "typescript"
       - "typescript-operations"
-      - "typescript-react-apollo"
+      - "typed-document-node"
+    config:
+      enumType: "native"
+      scalars:
+        DateTime: "any"

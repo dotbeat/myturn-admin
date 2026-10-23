@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
@@ -24,12 +24,14 @@ import { UPDATE_OLD_PICK_JOBS } from "@/server/graphql/old-pick-job/mutations";
 import { GET_JOBS_BY_OLD_PICK_LIST } from "@/server/graphql/job/queries";
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type EditingOldPickJobItem = {
   jobId: number;
 };
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
 
   // トースト通知の状態
@@ -93,16 +95,20 @@ export default function PageBody() {
   });
 
   // 注目の求人データ取得
-  useQuery(GET_JOBS_BY_OLD_PICK_LIST, {
-    fetchPolicy: "network-only",
-    onCompleted: (data: GetJobsByOldPickListQuery) => {
-      const oldPickList = data.getJobsByOldPickList.map((job) => ({
-        jobId: job.id,
-      }));
-      initFormOldPickJobs.splice(0, oldPickList.length, ...oldPickList);
-      methods.setValue("oldPickJobs", initFormOldPickJobs);
-    },
-  });
+  const { data: oldPickJobsData } = useQuery<GetJobsByOldPickListQuery>(
+    GET_JOBS_BY_OLD_PICK_LIST,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した求人をフォームの初期値に反映する
+  useEffect(() => {
+    if (!oldPickJobsData) return;
+    const oldPickList = oldPickJobsData.getJobsByOldPickList.map((job) => ({
+      jobId: job.id,
+    }));
+    initFormOldPickJobs.splice(0, oldPickList.length, ...oldPickList);
+    methods.setValue("oldPickJobs", initFormOldPickJobs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [oldPickJobsData]);
 
   // フォームデータをGraphQLミューテーションの入力形式に変換する関数
   const convertFormDataToUpdateInput = async (data: OldPickJobEditFormData) => {
@@ -149,9 +155,9 @@ export default function PageBody() {
           className="flex flex-col items-start gap-6"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <Table className="max-w-64 bg-[var(--background)]">
+          <Table className="max-w-64 bg-(--background)">
             <TableHead>
-              <TableRow className="text-nowrap border border-[var(--myturn-support-middle)] text-center text-base">
+              <TableRow className="border border-(--myturn-support-middle) text-center text-base text-nowrap">
                 <TableCell className="p-2"></TableCell>
                 <TableCell className="p-2">求人ID</TableCell>
               </TableRow>
@@ -161,15 +167,16 @@ export default function PageBody() {
                 return (
                   <TableRow
                     key={oldPickJob.id}
-                    className="border-x border-b border-[var(--myturn-support-middle)] odd:bg-[var(--myturn-border)]"
+                    className="border-x border-b border-(--myturn-support-middle) odd:bg-(--myturn-border)"
                   >
                     <TableCell className="p-2 pl-4">{i + 1}</TableCell>
                     <TableCell className="p-2">
                       <TextField
                         name={`oldPickJobs.${i}.jobId`}
                         type="number"
+                        disabled={!canEdit}
                         className="w-32"
-                        inputClass="valid:border-[var(--myturn-support-middle)] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        inputClass="valid:border-(--myturn-support-middle) [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </TableCell>
                   </TableRow>
@@ -178,16 +185,16 @@ export default function PageBody() {
             </TableBody>
           </Table>
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
-          <Button
-            type="submit"
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-3 text-[var(--foreground)]"
-          >
-            {isUpdating ? "更新中..." : "更新する"}
-          </Button>
+          {canEdit && (
+            <Button
+              type="submit"
+              className="rounded-full bg-(--myturn-main) px-4 py-3 text-(--foreground)"
+            >
+              {isUpdating ? "更新中..." : "更新する"}
+            </Button>
+          )}
         </form>
       </FormProvider>
 

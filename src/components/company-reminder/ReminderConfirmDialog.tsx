@@ -34,12 +34,12 @@ export default function ReminderConfirmDialog({
 }) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle className="pb-0 pt-6 font-semibold">
+      <DialogTitle className="pt-6 pb-0 font-semibold">
         この内容で送信しますか？
       </DialogTitle>
       <DialogContent className="flex flex-col gap-3 pt-4">
         <Box>
-          <Typography className="text-xs text-[var(--myturn-sub-text)]">
+          <Typography className="text-xs text-(--myturn-sub-text)">
             送信先
           </Typography>
           <Typography className="text-sm">
@@ -47,33 +47,33 @@ export default function ReminderConfirmDialog({
           </Typography>
         </Box>
         <Box>
-          <Typography className="text-xs text-[var(--myturn-sub-text)]">
+          <Typography className="text-xs text-(--myturn-sub-text)">
             テンプレート
           </Typography>
           <Typography className="text-sm">{templateName}</Typography>
         </Box>
         <Box>
-          <Typography className="text-xs text-[var(--myturn-sub-text)]">
+          <Typography className="text-xs text-(--myturn-sub-text)">
             対象の学生
           </Typography>
           <Typography className="text-sm">{selectedCount}人</Typography>
         </Box>
         {underThresholdCount > 0 && (
-          <Typography className="rounded-md bg-[var(--myturn-info-light)] px-3 py-2 text-sm text-[var(--myturn-info)]">
+          <Typography className="rounded-md bg-(--myturn-info-light) px-3 py-2 text-sm text-(--myturn-info)">
             基準未満の学生が{underThresholdCount}人含まれています。
           </Typography>
         )}
         <Box>
-          <Typography className="text-xs text-[var(--myturn-sub-text)]">
+          <Typography className="text-xs text-(--myturn-sub-text)">
             件名
           </Typography>
           <Typography className="text-sm">{subject}</Typography>
         </Box>
         <Box>
-          <Typography className="text-xs text-[var(--myturn-sub-text)]">
+          <Typography className="text-xs text-(--myturn-sub-text)">
             本文
           </Typography>
-          <Typography className="max-h-64 overflow-auto whitespace-pre-wrap rounded-md bg-[var(--myturn-background)] px-3 py-2 text-sm">
+          <Typography className="max-h-64 overflow-auto rounded-md bg-(--myturn-background) px-3 py-2 text-sm whitespace-pre-wrap">
             {body}
           </Typography>
         </Box>
@@ -92,7 +92,7 @@ export default function ReminderConfirmDialog({
           type="button"
           onClick={onSend}
           disabled={isSending}
-          className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)] disabled:opacity-50"
+          className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground) disabled:opacity-50"
         >
           {isSending ? "送信中..." : "送信する"}
         </Button>

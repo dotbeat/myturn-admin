@@ -88,7 +88,7 @@ export default function ApplicantFilterForm({
       <Button
         type="submit"
         disabled={isLoading}
-        className="self-center rounded-full bg-[var(--myturn-background)] px-4 py-2 text-base disabled:opacity-50"
+        className="self-center rounded-full bg-(--myturn-background) px-4 py-2 text-base disabled:opacity-50"
       >
         検索
       </Button>

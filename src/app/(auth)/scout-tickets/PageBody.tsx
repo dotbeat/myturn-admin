@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -33,11 +33,13 @@ import {
 import { GET_ADDITIONAL_SCOUT_TICKETS } from "@/server/graphql/scout/queries";
 import { CREATE_ADDITIONAL_SCOUT_TICKET } from "@/server/graphql/scout/mutations";
 import { GET_ALL_COMPANIES } from "@/server/graphql/company/queries";
+import { GetAllCompaniesQuery } from "@/graphql-client";
 import { AdditionalScoutTicket } from "@/types/scout-ticket";
 import { ConvertUrlParamEntry } from "@/utils/frontend/form";
 import TextField from "@/components/common/form/TextField";
 import Select from "@/components/common/form/Select";
 import PageTitle from "@/components/common/PageTitle";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 type CompanyOption = { id: number; name: string };
 
@@ -70,13 +72,13 @@ function getPreviewExpiredAt(): string {
 }
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const searchParams = useSearchParams();
   const router = useRouter();
   const paramsConverter = new ConvertUrlParamEntry(searchParams);
   const page = paramsConverter.toNumber("page", 1);
   const limit = paramsConverter.toNumber("limit", 30);
 
-  const [companyOptions, setCompanyOptions] = useState<CompanyOption[]>([]);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
   const [toast, setToast] = useState<{
@@ -85,12 +87,11 @@ export default function PageBody() {
     severity: "success" | "error";
   }>({ open: false, message: "", severity: "success" });
 
-  useQuery(GET_ALL_COMPANIES, {
-    fetchPolicy: "no-cache",
-    onCompleted(data) {
-      setCompanyOptions(data.companies ?? []);
-    },
-  });
+  const { data: companiesData } = useQuery<GetAllCompaniesQuery>(
+    GET_ALL_COMPANIES,
+    { fetchPolicy: "no-cache" },
+  );
+  const companyOptions: CompanyOption[] = companiesData?.companies ?? [];
 
   const {
     loading: ticketsLoading,
@@ -182,69 +183,71 @@ export default function PageBody() {
       <PageTitle className="mb-8">追加スカウトチケット管理</PageTitle>
 
       {/* 付与フォーム */}
-      <Box className="mb-8 rounded-lg bg-[var(--background)] px-6 py-6">
-        <Typography className="mb-2 font-semibold">
-          スカウトチケットを付与する
-        </Typography>
-        <FormProvider {...createMethods}>
-          <form
-            className="flex flex-wrap items-end gap-4"
-            onSubmit={createMethods.handleSubmit(onCreateSubmit)}
-          >
-            <Box className="flex items-end gap-2">
-              <TextField
-                name="companyId"
-                label="企業ID"
-                type="number"
-                className="w-24"
-              />
-              <Button
-                type="button"
-                variant="outlined"
-                onClick={() => {
-                  setCompanySearch("");
-                  setCompanyDialogOpen(true);
-                }}
-                className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
-              >
-                企業選択
-              </Button>
-            </Box>
-            <Select
-              name="totalCount"
-              label="追加数"
-              items={ALLOWED_TOTAL_COUNTS.map((c) => ({
-                value: c,
-                label: `${c}通`,
-              }))}
-              className="w-28"
-            />
-            <Box>
-              <Typography className="text-sm">
-                料金：{priceDisplay ? `${priceDisplay}円` : "—"}
-              </Typography>
-              <Typography className="text-sm">
-                有効期限：付与日から{VALIDITY_DAYS}日 ({previewExpiredAt})
-              </Typography>
-            </Box>
-            <Button
-              type="submit"
-              disabled={isCreating}
-              className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+      {canEdit && (
+        <Box className="mb-8 rounded-lg bg-(--background) px-6 py-6">
+          <Typography className="mb-2 font-semibold">
+            スカウトチケットを付与する
+          </Typography>
+          <FormProvider {...createMethods}>
+            <form
+              className="flex flex-wrap items-end gap-4"
+              onSubmit={createMethods.handleSubmit(onCreateSubmit)}
             >
-              {isCreating ? "付与中..." : "付与する"}
-            </Button>
-          </form>
-        </FormProvider>
-      </Box>
+              <Box className="flex items-end gap-2">
+                <TextField
+                  name="companyId"
+                  label="企業ID"
+                  type="number"
+                  className="w-24"
+                />
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => {
+                    setCompanySearch("");
+                    setCompanyDialogOpen(true);
+                  }}
+                  className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
+                >
+                  企業選択
+                </Button>
+              </Box>
+              <Select
+                name="totalCount"
+                label="追加数"
+                items={ALLOWED_TOTAL_COUNTS.map((c) => ({
+                  value: c,
+                  label: `${c}通`,
+                }))}
+                className="w-28"
+              />
+              <Box>
+                <Typography className="text-sm">
+                  料金：{priceDisplay ? `${priceDisplay}円` : "—"}
+                </Typography>
+                <Typography className="text-sm">
+                  有効期限：付与日から{VALIDITY_DAYS}日 ({previewExpiredAt})
+                </Typography>
+              </Box>
+              <Button
+                type="submit"
+                disabled={isCreating}
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
+              >
+                {isCreating ? "付与中..." : "付与する"}
+              </Button>
+            </form>
+          </FormProvider>
+        </Box>
+      )}
 
       {/* 一覧 */}
       <Box className="mt-8">
         <Typography className="mb-2 px-4 text-lg font-semibold">
           スカウトチケット付与(有料分)一覧 {ticketsTotalCount} 件
         </Typography>
-        <Box className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]">
-          <Table className="max-w-5xl border-separate text-nowrap py-2">
+        <Box className="mb-4 overflow-x-auto rounded-lg bg-(--background)">
+          <Table className="max-w-5xl border-separate py-2 text-nowrap">
             <TableHead>
               <TableRow className="text-nowrap">
                 {[
@@ -258,7 +261,7 @@ export default function PageBody() {
                   <TableCell
                     key={h}
                     align="center"
-                    className="p-2 text-base text-[var(--myturn-sub-text)]"
+                    className="p-2 text-base text-(--myturn-sub-text)"
                   >
                     {h}
                   </TableCell>
@@ -350,7 +353,7 @@ export default function PageBody() {
             placeholder="企業名またはIDで検索"
             value={companySearch}
             onChange={(e) => setCompanySearch(e.target.value)}
-            className="mb-4 w-full border border-[var(--myturn-support-middle)] px-2 py-1"
+            className="mb-4 w-full border border-(--myturn-support-middle) px-2 py-1"
             autoFocus
           />
           <Table size="small">
@@ -376,7 +379,7 @@ export default function PageBody() {
                     <TableCell>{c.name}</TableCell>
                     <TableCell>
                       <Button
-                        className="border border-[var(--myturn-sub-text)] px-2 py-1"
+                        className="border border-(--myturn-sub-text) px-2 py-1"
                         onClick={() => {
                           createMethods.setValue("companyId", c.id, {
                             shouldValidate: true,

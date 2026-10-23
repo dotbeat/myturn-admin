@@ -13,7 +13,8 @@ export default function CompanyList({
 }: {
   items: CompanyItem[];
   isLoading: boolean;
-  onEditAgentPlanAmount: (item: CompanyItem) => void;
+  /** 未指定の場合は編集ボタンを表示しない */
+  onEditAgentPlanAmount?: (item: CompanyItem) => void;
   className?: string;
 }) {
   const columns = [
@@ -43,7 +44,7 @@ export default function CompanyList({
         src={item.iconImageUrl}
         size={64}
         alt={`${item.name}のロゴ`}
-        className="-my-1 mx-auto border border-[var(--myturn-border)]"
+        className="mx-auto -my-1 border border-(--myturn-border)"
         imageClass="object-contain"
       />
     ),
@@ -76,19 +77,21 @@ export default function CompanyList({
         <Typography className="min-w-20 text-start">
           {(item.agentPlanAmount ?? 250000).toLocaleString()}円
         </Typography>
-        <Button
-          className="rounded-md border border-[var(--myturn-sub-text)] px-2 py-1"
-          onClick={() => onEditAgentPlanAmount(item)}
-        >
-          編集
-        </Button>
+        {onEditAgentPlanAmount && (
+          <Button
+            className="rounded-md border border-(--myturn-sub-text) px-2 py-1"
+            onClick={() => onEditAgentPlanAmount(item)}
+          >
+            編集
+          </Button>
+        )}
       </Box>
     ),
   }));
 
   return (
     <Box className={className}>
-      <Table columns={columns} rows={rows} className="text-nowrap py-2" />
+      <Table columns={columns} rows={rows} className="py-2 text-nowrap" />
       {isLoading && (
         <Container className="flex flex-col items-center gap-4 py-8">
           <Typography className="font-semibold">読み込み中です</Typography>

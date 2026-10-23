@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -48,8 +48,10 @@ import PageTitle from "@/components/common/PageTitle";
 import PopUp from "@/components/common/PopUp";
 import InvoiceFilterForm from "@/components/invoice/InvoiceFilterForm";
 import InvoiceList from "@/components/invoice/InvoiceList";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから検索条件を取得
   const searchParams = useSearchParams();
 
@@ -183,21 +185,23 @@ export default function PageBody() {
         Object.fromEntries(newParams),
       )
     ) {
-      location.search = `${newParams.size ? "?" : ""}${newParams.toString()}`;
+      window.location.assign(
+        `${window.location.pathname}${newParams.size ? "?" : ""}${newParams.toString()}`,
+      );
     }
   };
 
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-8">請求ページ</PageTitle>
-      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-[var(--background)] py-2 pl-8 pr-2">
+      <Box className="mb-8 inline-flex gap-8 rounded-lg bg-(--background) py-2 pr-2 pl-8">
         <IndicateItem label="合計売上" count={totalAmount} className="py-4" />
         <IndicateItem label="入社人数" count={acceptedCount} className="py-4" />
         <IndicateItem label="総合職" count={generalCount} className="py-4" />
         <IndicateItem label="技術職" count={technicalCount} className="py-4" />
         <PopUp
           id="period-filter"
-          className="flex min-w-24 items-center justify-between gap-2 self-start rounded border border-current px-2 py-1"
+          className="flex min-w-24 items-center justify-between gap-2 self-start rounded-sm border border-current px-2 py-1"
           menuClass="p-2"
           activator={() => (
             <>
@@ -224,7 +228,7 @@ export default function PageBody() {
       <Box className="flex items-start gap-4">
         <FormProvider {...methods}>
           <form
-            className="flex flex-col gap-6 rounded-lg bg-[var(--background)] px-4 py-6"
+            className="flex flex-col gap-6 rounded-lg bg-(--background) px-4 py-6"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <InvoiceFilterForm isLoading={loading} />
@@ -237,9 +241,9 @@ export default function PageBody() {
           <InvoiceList
             items={invoices}
             isLoading={loading}
-            onEditInvoice={openEditInvoiceDialog}
-            onGuaranteeInvoice={setGuaranteeingInvoice}
-            className="mb-4 overflow-x-auto rounded-lg bg-[var(--background)]"
+            onEditInvoice={canEdit ? openEditInvoiceDialog : undefined}
+            onGuaranteeInvoice={canEdit ? setGuaranteeingInvoice : undefined}
+            className="mb-4 overflow-x-auto rounded-lg bg-(--background)"
           />
           <Box className="flex justify-center">
             <Pagination
@@ -273,14 +277,14 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           請求金額の編集
         </DialogTitle>
         <FormProvider {...invoiceEditMethods}>
           <form onSubmit={invoiceEditMethods.handleSubmit(onInvoiceEditSubmit)}>
             <DialogContent className="flex flex-col gap-4 pt-4">
               {editingInvoice && (
-                <Typography className="text-[var(--myturn-sub-text)]">
+                <Typography className="text-(--myturn-sub-text)">
                   採用企業：{editingInvoice.companyName}
                 </Typography>
               )}
@@ -298,7 +302,7 @@ export default function PageBody() {
               <Button
                 type="submit"
                 disabled={isUpdatingCompanyInvoice}
-                className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+                className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
               >
                 {isUpdatingCompanyInvoice ? "保存中..." : "保存する"}
               </Button>
@@ -314,12 +318,12 @@ export default function PageBody() {
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle className="pb-0 pt-6 font-semibold">
+        <DialogTitle className="pt-6 pb-0 font-semibold">
           早期退職保証
         </DialogTitle>
         <DialogContent className="flex flex-col gap-4 pt-4">
           {guaranteeingInvoice && (
-            <Typography className="text-[var(--myturn-sub-text)]">
+            <Typography className="text-(--myturn-sub-text)">
               採用企業：{guaranteeingInvoice.companyName}
             </Typography>
           )}
@@ -338,7 +342,7 @@ export default function PageBody() {
             type="button"
             disabled={isGuaranteeingCompanyInvoice}
             onClick={onGuaranteeInvoiceConfirm}
-            className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)]"
+            className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground)"
           >
             {isGuaranteeingCompanyInvoice ? "作成中..." : "作成する"}
           </Button>

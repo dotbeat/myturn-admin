@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { InvoiceFilterFormData } from "@/schemas/invoice/filter";
 import { SEARCH_COMPANY_INVOICE } from "@/server/graphql/invoice/queries";
 import { InvoiceItem } from "@/types/invoice";
@@ -9,32 +8,28 @@ export function useInvoices(
   page: number,
   limit: number,
 ) {
-  const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
-  const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
-  const [totalPages, setTotalPages] = useState(0); // 一覧表のページ数
-
   // 企業請求一覧情報を取得
-  const { loading, refetch } = useQuery(SEARCH_COMPANY_INVOICE, {
+  const { data, previousData, loading, refetch } = useQuery<{
+    getCompanyInvoices: {
+      items: InvoiceItem[];
+      totalCount: number;
+      totalPages: number;
+    };
+  }>(SEARCH_COMPANY_INVOICE, {
     variables: { input: { ...input, page, limit } },
     fetchPolicy: "no-cache",
-    onCompleted(result) {
-      setInvoices(result.getCompanyInvoices.items);
-      setTotalCount(result.getCompanyInvoices.totalCount);
-      setTotalPages(result.getCompanyInvoices.totalPages);
-    },
   });
+  // 再取得中も前回の結果を表示し続ける
+  const result = (data ?? previousData)?.getCompanyInvoices;
 
   const refetchInvoices = async () => {
-    const { data } = await refetch();
-    setInvoices(data.getCompanyInvoices.items);
-    setTotalCount(data.getCompanyInvoices.totalCount);
-    setTotalPages(data.getCompanyInvoices.totalPages);
+    await refetch();
   };
 
   return {
-    invoices,
-    totalCount,
-    totalPages,
+    invoices: result?.items ?? [],
+    totalCount: result?.totalCount ?? 0, // 検索結果数(全ページ)
+    totalPages: result?.totalPages ?? 0, // 一覧表のページ数
     loading,
     refetch: refetchInvoices,
   };

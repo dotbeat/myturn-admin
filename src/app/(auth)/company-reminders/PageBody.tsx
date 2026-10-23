@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import {
   Alert,
   Box,
@@ -35,8 +35,10 @@ import ReminderCompanyList from "@/components/company-reminder/ReminderCompanyLi
 import ReminderUserGroups from "@/components/company-reminder/ReminderUserGroups";
 import ReminderHistoryList from "@/components/company-reminder/ReminderHistoryList";
 import ReminderConfirmDialog from "@/components/company-reminder/ReminderConfirmDialog";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   // URLパラメータから選択中の企業を取得（リロードしても選択を維持する）
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -221,7 +223,7 @@ export default function PageBody() {
   return (
     <Box className="flex-1 px-8 py-6">
       <PageTitle className="mb-2">企業への催促</PageTitle>
-      <Typography className="mb-6 text-sm text-[var(--myturn-sub-text)]">
+      <Typography className="mb-6 text-sm text-(--myturn-sub-text)">
         対応が遅れている企業に、対象の学生をまとめて催促メールで送ります。基準日数を超えた学生がいる企業が候補として表示されます。
       </Typography>
 
@@ -237,15 +239,15 @@ export default function PageBody() {
               selectedCompanyId={selectedCompanyId}
               isLoading={companiesLoading}
               onSelect={selectCompany}
-              className="rounded-lg bg-[var(--background)] px-4 py-4"
+              className="rounded-lg bg-(--background) px-4 py-4"
             />
           </form>
         </FormProvider>
 
         {/* 学生の選択・本文の編集 */}
-        <Box className="min-w-0 flex-1 rounded-lg bg-[var(--background)] px-6 py-4">
+        <Box className="min-w-0 flex-1 rounded-lg bg-(--background) px-6 py-4">
           {selectedCompanyId === null ? (
-            <Typography className="py-8 text-center text-sm text-[var(--myturn-sub-text)]">
+            <Typography className="py-8 text-center text-sm text-(--myturn-sub-text)">
               左の一覧から企業を選択してください
             </Typography>
           ) : (
@@ -254,7 +256,7 @@ export default function PageBody() {
                 <Typography className="text-lg font-semibold">
                   {company?.name ?? "読み込み中です"}
                 </Typography>
-                <Typography className="text-xs text-[var(--myturn-sub-text)]">
+                <Typography className="text-xs text-(--myturn-sub-text)">
                   {company?.email}
                 </Typography>
               </Box>
@@ -266,92 +268,95 @@ export default function PageBody() {
                 onToggle={toggleUser}
               />
 
-              <Box className="mt-4 border-t border-[var(--myturn-border)] pt-4">
-                <Typography className="mb-1 text-sm font-semibold">
-                  テンプレート
-                </Typography>
-                <select
-                  value={templateName}
-                  onChange={(e) => changeTemplate(e.target.value)}
-                  className="mb-4 w-full rounded-md border border-[var(--myturn-support-middle)] bg-[var(--background)] px-3 py-2 text-sm focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"
-                >
-                  {reminderTemplates.map((t) => (
-                    <option key={t.name} value={t.name}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
-
-                {showRegenerateConfirm && (
-                  <Box className="mb-3 rounded-md bg-orange-100 px-3 py-2 text-sm text-[var(--myturn-orange)]">
-                    本文を作り直すと編集内容が消えます
-                    <Box className="mt-2 flex gap-2">
-                      <Button
-                        size="small"
-                        onClick={() => regenerate()}
-                        className="rounded-md border border-current px-2 py-0.5 text-xs"
-                      >
-                        作り直す
-                      </Button>
-                      <Button
-                        size="small"
-                        onClick={() => setShowRegenerateConfirm(false)}
-                        className="rounded-md border border-current px-2 py-0.5 text-xs"
-                      >
-                        今の本文を残す
-                      </Button>
-                    </Box>
-                  </Box>
-                )}
-
-                <Typography className="mb-1 text-sm font-semibold">
-                  件名
-                </Typography>
-                <MuiTextField
-                  value={subject}
-                  onChange={(e) => {
-                    setSubject(e.target.value);
-                    setIsDirty(true);
-                  }}
-                  size="small"
-                  className="mb-4 w-full"
-                />
-
-                <Typography className="mb-1 text-sm font-semibold">
-                  本文
-                  {isDirty && (
-                    <span className="ml-2 text-xs font-normal text-[var(--myturn-main)]">
-                      編集済み
-                    </span>
-                  )}
-                </Typography>
-                <textarea
-                  value={body}
-                  onChange={(e) => {
-                    setBody(e.target.value);
-                    setIsDirty(true);
-                  }}
-                  rows={14}
-                  className="w-full rounded-md border border-[var(--myturn-support-middle)] px-3 py-2 text-sm leading-relaxed outline-none focus:border-[var(--myturn-main)] focus:ring-1 focus:ring-[var(--myturn-main)]"
-                />
-
-                <Box className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                  <Typography className="text-xs text-[var(--myturn-sub-text)]">
-                    {selectedEntryIds.size}人を選択中
-                    {underThresholdCount > 0 &&
-                      `（うち基準未満${underThresholdCount}人）`}
+              {/* 閲覧のみ権限では催促メールを送信できない */}
+              {canEdit && (
+                <Box className="mt-4 border-t border-(--myturn-border) pt-4">
+                  <Typography className="mb-1 text-sm font-semibold">
+                    テンプレート
                   </Typography>
-                  <Button
-                    onClick={() => setConfirmOpen(true)}
-                    disabled={
-                      usersLoading || !company || selectedEntryIds.size === 0
-                    }
-                    className="rounded-full bg-[var(--myturn-main)] px-4 py-2 text-[var(--foreground)] disabled:opacity-50"
+                  <select
+                    value={templateName}
+                    onChange={(e) => changeTemplate(e.target.value)}
+                    className="mb-4 w-full rounded-md border border-(--myturn-support-middle) bg-(--background) px-3 py-2 text-sm focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"
                   >
-                    内容を確認する
-                  </Button>
+                    {reminderTemplates.map((t) => (
+                      <option key={t.name} value={t.name}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {showRegenerateConfirm && (
+                    <Box className="mb-3 rounded-md bg-orange-100 px-3 py-2 text-sm text-(--myturn-orange)">
+                      本文を作り直すと編集内容が消えます
+                      <Box className="mt-2 flex gap-2">
+                        <Button
+                          size="small"
+                          onClick={() => regenerate()}
+                          className="rounded-md border border-current px-2 py-0.5 text-xs"
+                        >
+                          作り直す
+                        </Button>
+                        <Button
+                          size="small"
+                          onClick={() => setShowRegenerateConfirm(false)}
+                          className="rounded-md border border-current px-2 py-0.5 text-xs"
+                        >
+                          今の本文を残す
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
+
+                  <Typography className="mb-1 text-sm font-semibold">
+                    件名
+                  </Typography>
+                  <MuiTextField
+                    value={subject}
+                    onChange={(e) => {
+                      setSubject(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    size="small"
+                    className="mb-4 w-full"
+                  />
+
+                  <Typography className="mb-1 text-sm font-semibold">
+                    本文
+                    {isDirty && (
+                      <span className="ml-2 text-xs font-normal text-(--myturn-main)">
+                        編集済み
+                      </span>
+                    )}
+                  </Typography>
+                  <textarea
+                    value={body}
+                    onChange={(e) => {
+                      setBody(e.target.value);
+                      setIsDirty(true);
+                    }}
+                    rows={14}
+                    className="w-full rounded-md border border-(--myturn-support-middle) px-3 py-2 text-sm leading-relaxed outline-hidden focus:border-(--myturn-main) focus:ring-1 focus:ring-(--myturn-main)"
+                  />
+
+                  <Box className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                    <Typography className="text-xs text-(--myturn-sub-text)">
+                      {selectedEntryIds.size}人を選択中
+                      {underThresholdCount > 0 &&
+                        `（うち基準未満${underThresholdCount}人）`}
+                    </Typography>
+                    <Button
+                      onClick={() => setConfirmOpen(true)}
+                      disabled={
+                        usersLoading || !company || selectedEntryIds.size === 0
+                      }
+                      className="rounded-full bg-(--myturn-main) px-4 py-2 text-(--foreground) disabled:opacity-50"
+                    >
+                      内容を確認する
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </>
           )}
         </Box>
@@ -359,11 +364,11 @@ export default function PageBody() {
 
       {/* 送信履歴 */}
       {selectedCompanyId !== null && (
-        <Box className="mt-4 rounded-lg bg-[var(--background)] px-6 py-4">
+        <Box className="mt-4 rounded-lg bg-(--background) px-6 py-4">
           <Typography className="mb-3 font-semibold">
             送信履歴
             {company && (
-              <span className="ml-4 text-sm font-normal text-[var(--myturn-sub-text)]">
+              <span className="ml-4 text-sm font-normal text-(--myturn-sub-text)">
                 {company.name}
               </span>
             )}

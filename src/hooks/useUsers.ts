@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { UserFilterFormData } from "@/schemas/user/filter";
 import { SEARCH_USERS } from "@/server/graphql/user/queries";
 import { UserItem } from "@/types/user";
@@ -10,10 +9,6 @@ export function useUsers(
   page: number,
   limit: number,
 ) {
-  const [users, setUsers] = useState<UserItem[]>([]);
-  const [totalCount, setTotalCount] = useState(0); // 検索結果数(全ページ)
-  const [totalPages, setTotalPages] = useState(0); // 一覧表のページ数
-
   const input: SearchUsersInput = {
     name: formData.name,
     gender: formData.gender,
@@ -43,20 +38,19 @@ export function useUsers(
   };
 
   // 求職者一覧情報を取得
-  const { loading } = useQuery(SEARCH_USERS, {
+  const { data, previousData, loading } = useQuery<{
+    searchUsers: { items: UserItem[]; totalCount: number; totalPages: number };
+  }>(SEARCH_USERS, {
     variables: { input: { ...input, isIncludeDeleted: true, page, limit } },
     fetchPolicy: "no-cache",
-    onCompleted(result) {
-      setTotalCount(result.searchUsers.totalCount);
-      setUsers(result.searchUsers.items);
-      setTotalPages(result.searchUsers.totalPages);
-    },
   });
+  // 再取得中も前回の結果を表示し続ける
+  const result = (data ?? previousData)?.searchUsers;
 
   return {
-    users,
-    totalCount,
-    totalPages,
+    users: result?.items ?? [],
+    totalCount: result?.totalCount ?? 0, // 検索結果数(全ページ)
+    totalPages: result?.totalPages ?? 0, // 一覧表のページ数
     loading,
   };
 }

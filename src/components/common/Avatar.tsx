@@ -40,12 +40,12 @@ export default function Avatar({
       <Box
         component={href ? "a" : "div"}
         href={href}
-        className={`flex items-center justify-center rounded-full bg-[var(--myturn-support-middle)] ${className}`}
+        className={`flex items-center justify-center rounded-full bg-(--myturn-support-middle) ${className}`}
         sx={{ width: size, height: size }}
       >
         <ProfileFillIcon
           size={Math.round(size / 2.5)}
-          className="text-[var(--foreground)]"
+          className="text-(--foreground)"
         />
       </Box>
     );

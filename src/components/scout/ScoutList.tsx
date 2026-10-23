@@ -136,7 +136,7 @@ export default function ScoutList({ items, isLoading, className }: Props) {
                 <TableCell className="text-base">
                   {item.jobType || "-"}
                 </TableCell>
-                <TableCell className="min-w-80 text-wrap text-base">
+                <TableCell className="min-w-80 text-base text-wrap">
                   {item.jobTitle}
                 </TableCell>
                 <TableCell className="text-base">

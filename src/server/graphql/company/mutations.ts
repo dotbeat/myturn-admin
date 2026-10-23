@@ -1,8 +1,10 @@
 import { gql } from "@apollo/client";
 
 export const UPDATE_COMPANY_AGENT_PLAN_AMOUNT = gql`
-  mutation UpdateCompany($input: UpdateCompanyInput!) {
-    updateCompany(input: $input) {
+  mutation UpdateCompanyAgentPlanAmount(
+    $input: UpdateCompanyAgentPlanAmountInput!
+  ) {
+    updateCompanyAgentPlanAmount(input: $input) {
       id
       agentPlanAmount
     }
@@ -42,8 +44,8 @@ export const DELETE_COMPANY_ACCEPT_TICKET = gql`
 `;
 
 export const CREATE_COMPANY_INVOICES = gql`
-  mutation CreateCompanyInvoices($entryIds: [Int!]!) {
-    createCompanyInvoices(entryIds: $entryIds) {
+  mutation CreateCompanyInvoicesForAdmin($entryIds: [Int!]!) {
+    createCompanyInvoicesForAdmin(entryIds: $entryIds) {
       id
     }
   }

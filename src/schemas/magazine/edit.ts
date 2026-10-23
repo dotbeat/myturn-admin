@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const magazineItemSchema = z.object({
-  articleId: z.coerce.number().min(1),
+  articleId: z.coerce.number<number>().min(1),
   title: z.string().trim().nonempty("タイトルを入力してください"),
   description: z.string().trim().nonempty("説明を入力してください"),
   category: z.string().trim().nonempty("カテゴリを入力してください"),

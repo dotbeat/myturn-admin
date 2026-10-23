@@ -9,12 +9,11 @@ export default function SideNavigationItem({
   label?: string;
   className?: string;
 } & (
-  | { href: string; onClick?: never }
-  | { href?: never; onClick: () => void }
+  { href: string; onClick?: never } | { href?: never; onClick: () => void }
 )) {
   return (
     <Button
-      className={`w-full justify-start text-nowrap px-4 py-3 text-base font-semibold hover:bg-stone-300/30 ${className}`}
+      className={`w-full justify-start px-4 py-3 text-base font-semibold text-nowrap hover:bg-stone-300/30 ${className}`}
       href={href}
       onClick={onClick}
     >

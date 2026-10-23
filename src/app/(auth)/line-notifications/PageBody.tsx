@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -23,8 +23,9 @@ import {
 import PageTitle from "@/components/common/PageTitle";
 import TextField from "@/components/common/form/TextField";
 import ScheduleInput from "@/components/common/ScheduleInput";
+import { useAdminUser } from "@/lib/AdminUserProvider";
 
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 import {
   GetLineNotificationSettingsQuery,
   UpdateLineNotificationSettingsMutation,
@@ -190,6 +191,7 @@ const createDefaultValues = (): LineNotificationEditFormData => ({
 });
 
 export default function PageBody() {
+  const { canEdit } = useAdminUser();
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     open: boolean;
@@ -210,34 +212,33 @@ export default function PageBody() {
     defaultValues: createDefaultValues(),
   });
 
-  useQuery<GetLineNotificationSettingsQuery>(GET_LINE_NOTIFICATION_SETTINGS, {
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      const updated = createDefaultValues();
-      data.getLineNotificationSettings.forEach((setting) => {
-        const index = NOTIFICATION_TYPES.findIndex(
-          (n) => n.key === setting.key,
-        );
-        if (index !== -1) {
-          updated.notifications[index].isEnabled = setting.isEnabled;
-          updated.notifications[index].message = setting.message;
-          if (setting.schedule) {
-            updated.notifications[index].schedule = {
-              scheduleType: setting.schedule.scheduleType as
-                | "daily"
-                | "weekly"
-                | "monthly",
-              dayOfWeek: setting.schedule.dayOfWeek ?? [],
-              dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
-              hour: setting.schedule.hour ?? 0,
-              minute: setting.schedule.minute ?? 0,
-            };
-          }
+  const { data: settingsData } = useQuery<GetLineNotificationSettingsQuery>(
+    GET_LINE_NOTIFICATION_SETTINGS,
+    { fetchPolicy: "network-only" },
+  );
+  // 取得した設定をフォームに反映する
+  useEffect(() => {
+    if (!settingsData) return;
+    const updated = createDefaultValues();
+    settingsData.getLineNotificationSettings.forEach((setting) => {
+      const index = NOTIFICATION_TYPES.findIndex((n) => n.key === setting.key);
+      if (index !== -1) {
+        updated.notifications[index].isEnabled = setting.isEnabled;
+        updated.notifications[index].message = setting.message;
+        if (setting.schedule) {
+          updated.notifications[index].schedule = {
+            scheduleType: setting.schedule.scheduleType as
+              "daily" | "weekly" | "monthly",
+            dayOfWeek: setting.schedule.dayOfWeek ?? [],
+            dayOfMonth: setting.schedule.dayOfMonth ?? [null, null, null],
+            hour: setting.schedule.hour ?? 0,
+            minute: setting.schedule.minute ?? 0,
+          };
         }
-      });
-      methods.reset(updated);
-    },
-  });
+      }
+    });
+    methods.reset(updated);
+  }, [settingsData, methods]);
 
   const [updateLineNotificationSettings, { loading: isUpdating }] =
     useMutation<UpdateLineNotificationSettingsMutation>(
@@ -293,12 +294,9 @@ export default function PageBody() {
   };
 
   return (
-    <Box className="flex-1 px-8 pb-12 pt-6">
+    <Box className="flex-1 px-8 pt-6 pb-12">
       <PageTitle className="mb-1">LINE通知メッセージ設定</PageTitle>
-      <Typography
-        variant="body2"
-        className="mb-8 text-[var(--myturn-sub-text)]"
-      >
+      <Typography variant="body2" className="mb-8 text-(--myturn-sub-text)">
         使用可能なプレースホルダー ...{" "}
         {"{候補者名} {企業名} {求人名} {面談日時}"}
       </Typography>
@@ -314,10 +312,7 @@ export default function PageBody() {
               <Typography className="mb-1 text-lg font-bold">
                 トランザクション通知
               </Typography>
-              <Typography
-                variant="body2"
-                className="text-[var(--myturn-sub-text)]"
-              >
+              <Typography variant="body2" className="text-(--myturn-sub-text)">
                 特定のイベント発生時に自動的に送信される通知です。送信タイミングはシステムにより固定されています。
               </Typography>
               <Divider className="mt-3" />
@@ -332,6 +327,7 @@ export default function PageBody() {
                     key={notification.key}
                     notification={notification}
                     formIndex={index}
+                    disabled={!canEdit}
                   />
                 );
               })}
@@ -344,10 +340,7 @@ export default function PageBody() {
               <Typography className="mb-1 text-lg font-bold">
                 スケジュール通知
               </Typography>
-              <Typography
-                variant="body2"
-                className="text-[var(--myturn-sub-text)]"
-              >
+              <Typography variant="body2" className="text-(--myturn-sub-text)">
                 定期的なスケジュールで送信される通知です。通知ごとに送信タイミングを設定できます。
               </Typography>
               <Divider className="mt-3" />
@@ -362,6 +355,7 @@ export default function PageBody() {
                     key={notification.key}
                     notification={notification}
                     formIndex={index}
+                    disabled={!canEdit}
                   />
                 );
               })}
@@ -369,20 +363,20 @@ export default function PageBody() {
           </Box>
 
           {error && (
-            <Typography className="text-[var(--myturn-accent)]">
-              {error}
-            </Typography>
+            <Typography className="text-(--myturn-accent)">{error}</Typography>
           )}
 
-          <Box>
-            <Button
-              type="submit"
-              disabled={isUpdating}
-              className="rounded-full bg-[var(--myturn-main)] px-6 py-3 text-[var(--foreground)] disabled:opacity-50"
-            >
-              {isUpdating ? "更新中..." : "すべての設定を保存する"}
-            </Button>
-          </Box>
+          {canEdit && (
+            <Box>
+              <Button
+                type="submit"
+                disabled={isUpdating}
+                className="rounded-full bg-(--myturn-main) px-6 py-3 text-(--foreground) disabled:opacity-50"
+              >
+                {isUpdating ? "更新中..." : "すべての設定を保存する"}
+              </Button>
+            </Box>
+          )}
         </form>
       </FormProvider>
 
@@ -407,15 +401,17 @@ export default function PageBody() {
 function NotificationCard({
   notification,
   formIndex,
+  disabled,
 }: {
   notification: NotificationTypeInfo;
   formIndex: number;
+  disabled: boolean;
 }) {
   const { control: isEnabledControl } =
     useFormContext<LineNotificationEditFormData>();
 
   return (
-    <Box className="space-y-2 rounded-lg border border-[var(--myturn-border)] bg-[var(--background)] p-3">
+    <Box className="space-y-2 rounded-lg border border-(--myturn-border) bg-(--background) p-3">
       <Box className="p-2">
         {/* ヘッダー */}
         <Box className="mb-1 flex items-center justify-between">
@@ -430,14 +426,12 @@ function NotificationCard({
                 checked={field.value}
                 onChange={(e) => field.onChange(e.target.checked)}
                 size="small"
+                disabled={disabled}
               />
             )}
           />
         </Box>
-        <Typography
-          variant="body2"
-          className="mb-2 text-[var(--myturn-sub-text)]"
-        >
+        <Typography variant="body2" className="mb-2 text-(--myturn-sub-text)">
           {notification.description}
         </Typography>
 
@@ -446,14 +440,15 @@ function NotificationCard({
           name={`notifications.${formIndex}.message`}
           label="メッセージ"
           rows={6}
+          disabled={disabled}
           placeholder="{候補者名}さんへのメッセージを入力してください..."
         />
       </Box>
 
       {/* 送信タイミング */}
       {notification.notificationType === "transaction" ? (
-        <Box className="rounded bg-[var(--myturn-background)] p-2">
-          <Typography variant="body2" className="text-[var(--myturn-sub-text)]">
+        <Box className="rounded-sm bg-(--myturn-background) p-2">
+          <Typography variant="body2" className="text-(--myturn-sub-text)">
             送信タイミング：{notification.timingDescription}
           </Typography>
         </Box>
@@ -462,8 +457,11 @@ function NotificationCard({
           <Typography className="px-2 text-sm font-semibold">
             送信タイミング
           </Typography>
-          <Box className="rounded border border-[var(--myturn-border)] bg-[var(--myturn-background)] p-2">
-            <ScheduleInput name={`notifications.${formIndex}.schedule`} />
+          <Box className="rounded-sm border border-(--myturn-border) bg-(--myturn-background) p-2">
+            <ScheduleInput
+              name={`notifications.${formIndex}.schedule`}
+              disabled={disabled}
+            />
           </Box>
         </Box>
       )}
