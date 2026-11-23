@@ -74,3 +74,17 @@ export function get1YearLaterFormatted(): string {
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
+
+const jstDateFormatter = new Intl.DateTimeFormat("sv-SE", {
+  timeZone: "Asia/Tokyo",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/**
+ * 日時をJSTの日付文字列（YYYY-MM-DD）に変換する
+ */
+export function toJstDateString(date: Date | string = new Date()): string {
+  return jstDateFormatter.format(new Date(date));
+}

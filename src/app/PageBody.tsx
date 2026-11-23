@@ -34,6 +34,9 @@ export default function Page() {
         <Link href="/invoices" className="underline">
           請求
         </Link>
+        <Link href="/job-pickups" className="underline">
+          求人ピックアップ
+        </Link>
         <Link href="/company-accept-tickets" className="underline">
           企業の採用デポジット
         </Link>
