@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client/react";
@@ -11,6 +12,7 @@ import { CREATE_JOB_PICKUP_PERIOD } from "@/server/graphql/job-pickup/mutations"
 import { NotifyFn } from "@/types/job-pickup";
 import { toJstDateString } from "@/utils/shared/date";
 import TextField from "@/components/common/form/TextField";
+import JobSelectDialog from "@/components/job-pickup/JobSelectDialog";
 
 const getDefaultValues = (): CreateJobPickupFormData => ({
   jobId: 0,
@@ -30,6 +32,7 @@ export default function JobPickupCreateForm({
     resolver: zodResolver(createJobPickupSchema),
     defaultValues: getDefaultValues(),
   });
+  const [jobDialogOpen, setJobDialogOpen] = useState(false);
 
   const [createPickup, { loading }] = useMutation(CREATE_JOB_PICKUP_PERIOD, {
     onCompleted() {
@@ -56,12 +59,22 @@ export default function JobPickupCreateForm({
           className="flex flex-wrap items-end gap-4"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <TextField
-            name="jobId"
-            label="求人ID"
-            type="number"
-            className="w-28"
-          />
+          <Box className="flex items-end gap-2">
+            <TextField
+              name="jobId"
+              label="求人ID"
+              type="number"
+              className="w-28"
+            />
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => setJobDialogOpen(true)}
+              className="mb-1.5 shrink-0 rounded-md border border-current px-2 py-1"
+            >
+              求人選択
+            </Button>
+          </Box>
           <TextField
             name="startDate"
             label="開始日"
@@ -89,6 +102,16 @@ export default function JobPickupCreateForm({
           </Button>
         </form>
       </FormProvider>
+
+      {/* ピックアップする求人の選択ダイアログ */}
+      <JobSelectDialog
+        open={jobDialogOpen}
+        onClose={() => setJobDialogOpen(false)}
+        onSelect={(jobId) => {
+          methods.setValue("jobId", jobId, { shouldValidate: true });
+          setJobDialogOpen(false);
+        }}
+      />
     </Box>
   );
 }
