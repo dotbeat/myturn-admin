@@ -52,6 +52,9 @@ export default function SideNavigation({
           <SideNavigationItem href="/invoices" label="請求" />
         </ListItem>
         <ListItem className="p-0">
+          <SideNavigationItem href="/job-pickups" label="求人ピックアップ" />
+        </ListItem>
+        <ListItem className="p-0">
           <SideNavigationItem
             href="/company-accept-tickets"
             label="企業の採用デポジット"

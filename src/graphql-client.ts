@@ -39,6 +39,16 @@ export type CreateCompanyAcceptTicketInput = {
   service?: string | null | undefined;
 };
 
+export type CreateJobPickupPeriodInput = {
+  /** 請求金額 */
+  amount: number;
+  /** 終了日（JST、YYYY-MM-DD）。終了日当日も期間に含む */
+  endDate: string;
+  jobId: number;
+  /** 開始日（JST、YYYY-MM-DD） */
+  startDate: string;
+};
+
 export type DeleteAdminAllowedEmailInput = {
   id: number;
 };
@@ -48,6 +58,10 @@ export type DeleteAdminUserInput = {
 };
 
 export type DeleteCompanyAcceptTicketInput = {
+  id: number;
+};
+
+export type DeleteJobPickupPeriodInput = {
   id: number;
 };
 
@@ -125,6 +139,11 @@ export type GetCompanyRemindersInput = {
 export type GetEntriesStatisticsInput = {
   periodEnd?: any;
   periodStart?: any;
+};
+
+export type GetJobPickupPeriodsInput = {
+  limit?: number | null | undefined;
+  page?: number | null | undefined;
 };
 
 export type GetJobsStatisticsInput = {
@@ -336,6 +355,16 @@ export type UpdateHotJobScoringWeightsInput = {
 export type UpdateJobIsAgentPlanOnlyInput = {
   id: number;
   isAgentPlanOnly: boolean;
+};
+
+export type UpdateJobPickupPeriodInput = {
+  /** 請求金額 */
+  amount: number;
+  /** 終了日（JST、YYYY-MM-DD）。終了日当日も期間に含む */
+  endDate: string;
+  id: number;
+  /** 開始日（JST、YYYY-MM-DD） */
+  startDate: string;
 };
 
 export type UpdateJobStatusInput = {
@@ -818,6 +847,55 @@ export type GetCompanyInvoicesStatisticsQuery = {
     acceptedCount: number;
     generalCount: number;
     technicalCount: number;
+  };
+};
+
+export type CreateJobPickupPeriodMutationVariables = Exact<{
+  input: CreateJobPickupPeriodInput;
+}>;
+
+export type CreateJobPickupPeriodMutation = {
+  createJobPickupPeriod: { id: number };
+};
+
+export type UpdateJobPickupPeriodMutationVariables = Exact<{
+  input: UpdateJobPickupPeriodInput;
+}>;
+
+export type UpdateJobPickupPeriodMutation = {
+  updateJobPickupPeriod: { id: number };
+};
+
+export type DeleteJobPickupPeriodMutationVariables = Exact<{
+  input: DeleteJobPickupPeriodInput;
+}>;
+
+export type DeleteJobPickupPeriodMutation = {
+  deleteJobPickupPeriod: { id: number };
+};
+
+export type GetJobPickupPeriodsQueryVariables = Exact<{
+  input: GetJobPickupPeriodsInput;
+}>;
+
+export type GetJobPickupPeriodsQuery = {
+  jobPickupPeriods: {
+    totalCount: number;
+    totalPages: number;
+    items: Array<{
+      id: number;
+      jobId: number;
+      jobTitle: string;
+      startAt: any;
+      endAt: any;
+      amount: number;
+      searchHitCount: number;
+      pvCount: number;
+      entryCount: number;
+      companyName: string;
+      jobType: string;
+      industry: string;
+    }>;
   };
 };
 
@@ -3321,6 +3399,271 @@ export const GetCompanyInvoicesStatisticsDocument = {
 } as unknown as DocumentNode<
   GetCompanyInvoicesStatisticsQuery,
   GetCompanyInvoicesStatisticsQueryVariables
+>;
+export const CreateJobPickupPeriodDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateJobPickupPeriod" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateJobPickupPeriodInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createJobPickupPeriod" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CreateJobPickupPeriodMutation,
+  CreateJobPickupPeriodMutationVariables
+>;
+export const UpdateJobPickupPeriodDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "UpdateJobPickupPeriod" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateJobPickupPeriodInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "updateJobPickupPeriod" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateJobPickupPeriodMutation,
+  UpdateJobPickupPeriodMutationVariables
+>;
+export const DeleteJobPickupPeriodDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteJobPickupPeriod" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DeleteJobPickupPeriodInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteJobPickupPeriod" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteJobPickupPeriodMutation,
+  DeleteJobPickupPeriodMutationVariables
+>;
+export const GetJobPickupPeriodsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetJobPickupPeriods" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "GetJobPickupPeriodsInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "jobPickupPeriods" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "input" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "input" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "items" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "jobId" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobTitle" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "startAt" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "endAt" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "amount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchHitCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "pvCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "entryCount" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "companyName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "jobType" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "industry" },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "totalCount" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetJobPickupPeriodsQuery,
+  GetJobPickupPeriodsQueryVariables
 >;
 export const UpdateJobIsAgentPlanOnlyDocument = {
   kind: "Document",
