@@ -1,24 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Box, Button, Typography } from "@mui/material";
 import {
   CreateJobPickupFormData,
   createJobPickupSchema,
 } from "@/schemas/job-pickup/edit";
+import { GetJobPickupPeriodsQuery } from "@/graphql-client";
 import { CREATE_JOB_PICKUP_PERIOD } from "@/server/graphql/job-pickup/mutations";
+import { GET_JOB_PICKUP_PERIODS } from "@/server/graphql/job-pickup/queries";
 import { NotifyFn } from "@/types/job-pickup";
 import { toJstDateString } from "@/utils/shared/date";
 import TextField from "@/components/common/form/TextField";
 import JobSelectDialog from "@/components/job-pickup/JobSelectDialog";
 
-const getDefaultValues = (): CreateJobPickupFormData => ({
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** 既存のピックアップが無い場合の請求金額の初期値 */
+const DEFAULT_AMOUNT = 30000;
+
+// 開始日は翌日、終了日は開始日から2週間（例: 12/3 開始なら 12/16 終了）
+const getDefaultValues = (amount: number): CreateJobPickupFormData => ({
   jobId: 0,
-  startDate: toJstDateString(new Date(Date.now() + 24 * 60 * 60 * 1000)),
-  endDate: "",
-  amount: 0,
+  startDate: toJstDateString(new Date(Date.now() + DAY_MS)),
+  endDate: toJstDateString(new Date(Date.now() + 14 * DAY_MS)),
+  amount,
 });
 
 export default function JobPickupCreateForm({
@@ -28,16 +35,34 @@ export default function JobPickupCreateForm({
   onCreated: () => void;
   notify: NotifyFn;
 }) {
+  // 請求金額の初期値には直近（開始日が最も新しい）のピックアップ金額を使う
+  const { data: latestData, refetch: refetchLatest } =
+    useQuery<GetJobPickupPeriodsQuery>(GET_JOB_PICKUP_PERIODS, {
+      fetchPolicy: "no-cache",
+      variables: { input: { page: 1, limit: 1 } },
+    });
+  const defaultAmount =
+    latestData?.jobPickupPeriods.items[0]?.amount ?? DEFAULT_AMOUNT;
+
   const methods = useForm<CreateJobPickupFormData>({
     resolver: zodResolver(createJobPickupSchema),
-    defaultValues: getDefaultValues(),
+    defaultValues: getDefaultValues(defaultAmount),
   });
+
+  // 既存ピックアップの取得完了後、未編集なら請求金額の初期値を差し替える
+  useEffect(() => {
+    if (!methods.getFieldState("amount").isDirty) {
+      methods.resetField("amount", { defaultValue: defaultAmount });
+    }
+  }, [defaultAmount, methods]);
+
   const [jobDialogOpen, setJobDialogOpen] = useState(false);
 
   const [createPickup, { loading }] = useMutation(CREATE_JOB_PICKUP_PERIOD, {
     onCompleted() {
       notify("ピックアップを追加しました", "success");
-      methods.reset(getDefaultValues());
+      methods.reset(getDefaultValues(defaultAmount));
+      refetchLatest();
       onCreated();
     },
     onError(error) {
